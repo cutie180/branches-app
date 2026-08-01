@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Loader2, AlertCircle, Upload, X, CheckCircle2, Eye, MessageCircle, Zap, Copy, Check } from 'lucide-react'
+import { Loader2, AlertCircle, Upload, X, CheckCircle2, Eye, MessageCircle, Zap, Copy, Check, Sparkles } from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import CitySearchDropdown from '@/components/ui/city-search-dropdown'
@@ -312,21 +312,21 @@ export default function AddBussinessClient() {
       const generatedDocId = 'biz_' + Date.now()
 
       const businessData = {
-        ...formData,
         businessId: uniqueBizId,
-        businessName: formData.businessName.trim(),
-        description: formData.description.trim(),
-        phone: formData.phone.trim(),
-        whatsapp: formData.whatsapp.trim(),
-        email: formData.email.trim().toLowerCase(),
-        websiteUrl: formData.website.trim(),
-        address: formData.address.trim(),
-        city: formData.city.trim(),
-        branchCode: formData.branchCode?.trim() || '',
-        category: normalizeCategoryForStorage(formData.category),
-        categoryId: normalizeCategoryForStorage(formData.category),
-        categorySlug: normalizeCategoryForStorage(formData.category),
-        subCategory: formData.subcategory.trim(),
+        businessName: (formData.businessName || '').trim(),
+        description: (formData.description || '').trim(),
+        phone: (formData.phone || '').trim(),
+        whatsapp: (formData.whatsapp || '').trim(),
+        email: (formData.email || '').trim().toLowerCase(),
+        websiteUrl: (formData.website || '').trim(),
+        address: (formData.address || '').trim(),
+        city: (formData.city || '').trim(),
+        branchCode: (formData.branchCode || '').trim(),
+        category: normalizeCategoryForStorage(formData.category || ''),
+        categoryId: normalizeCategoryForStorage(formData.category || ''),
+        categorySlug: normalizeCategoryForStorage(formData.category || ''),
+        subCategory: (formData.subcategory || '').trim(),
+        logoUrl: (formData.logoUrl || '').trim(),
         slug: finalSlug,
         status: 'pending',
         createdAt: new Date().toISOString(),
@@ -335,11 +335,12 @@ export default function AddBussinessClient() {
 
       // Save to Firestore Database
       try {
-        await addDoc(collection(db, 'businesses'), {
+        const docRef = await addDoc(collection(db, 'businesses'), {
           ...businessData,
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
         })
+        console.log('Successfully saved to Firestore with ID:', docRef.id)
       } catch (err) {
         console.error('Firestore submission save error:', err)
       }
@@ -400,45 +401,45 @@ export default function AddBussinessClient() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-        <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+      <main className="min-h-screen bg-[#F4F7FC] text-[#0F172A] font-sans pb-16">
+        <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
           {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0F172A] mb-4">
+          <div className="text-center mb-10">
+            <h1 className="text-3xl sm:text-5xl font-extrabold text-[#0F172A] mb-4 tracking-tight">
               Add Your Business Free to ListPak
             </h1>
-            <p className="text-base sm:text-lg text-[#475569] max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-[#475569] max-w-2xl mx-auto font-normal">
               List your business 100% free and reach thousands of customers across Pakistan. Join 10,000+ local services discovered every day.
             </p>
           </div>
 
           {/* SEO Benefits Section */}
           <section className="mb-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex gap-4 items-center">
-              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-                <Zap className="w-6 h-6 text-blue-600" />
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-[#D9E2F1] flex gap-4 items-center">
+              <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
+                <Zap className="w-6 h-6 text-[#2563EB]" />
               </div>
               <div>
-                <h3 className="font-bold text-slate-800 text-sm">Boost Local SEO</h3>
-                <p className="text-xs text-slate-500">Get a high-quality local citation to rank better in Google Search.</p>
+                <h3 className="font-bold text-[#0F172A] text-sm">Boost Local SEO</h3>
+                <p className="text-xs text-[#64748B]">Get a high-quality local citation to rank better in Google Search.</p>
               </div>
             </div>
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex gap-4 items-center">
-              <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
-                <MessageCircle className="w-6 h-6 text-emerald-600" />
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-[#D9E2F1] flex gap-4 items-center">
+              <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
+                <MessageCircle className="w-6 h-6 text-[#16A34A]" />
               </div>
               <div>
-                <h3 className="font-bold text-slate-800 text-sm">Direct Contact</h3>
-                <p className="text-xs text-slate-500">Enable WhatsApp and phone calls directly from potential customers.</p>
+                <h3 className="font-bold text-[#0F172A] text-sm">Direct Contact</h3>
+                <p className="text-xs text-[#64748B]">Enable WhatsApp and phone calls directly from potential customers.</p>
               </div>
             </div>
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex gap-4 items-center">
-              <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center shrink-0">
-                <Eye className="w-6 h-6 text-purple-600" />
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-[#D9E2F1] flex gap-4 items-center">
+              <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center shrink-0">
+                <Eye className="w-6 h-6 text-[#F97316]" />
               </div>
               <div>
-                <h3 className="font-bold text-slate-800 text-sm">100% Free</h3>
-                <p className="text-xs text-slate-500">No registration or credit card required for standard listings.</p>
+                <h3 className="font-bold text-[#0F172A] text-sm">100% Free</h3>
+                <p className="text-xs text-[#64748B]">No credit card or payment required for any listing feature.</p>
               </div>
             </div>
           </section>
