@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Loader2, AlertCircle, Upload, X, CheckCircle2, Eye, MessageCircle, Zap, Copy, Check, Sparkles, Smartphone, Landmark, HelpCircle } from 'lucide-react'
+import { Loader2, AlertCircle, Upload, X, CheckCircle2, Eye, MessageCircle, Zap, Copy, Check } from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import CitySearchDropdown from '@/components/ui/city-search-dropdown'
@@ -61,20 +61,10 @@ export default function AddBussinessClient() {
   const [existingBusinesses, setExistingBusinesses] = useState<string[]>([])
   const [submittedSlug, setSubmittedSlug] = useState<string | null>(null)
 
-  // Payment portal & sound notification states
+  // Submission confirmation states
   const [submittedBusinessId, setSubmittedBusinessId] = useState<string | null>(null)
   const [submittedDocId, setSubmittedDocId] = useState<string | null>(null)
-  const [paymentStep, setPaymentStep] = useState<'details' | 'upload' | 'complete'>('details')
-  const [selectedMethod, setSelectedMethod] = useState<'easypaisa' | 'jazzcash'>('easypaisa')
-  const [screenshotFile, setScreenshotFile] = useState<File | null>(null)
-  const [screenshotPreview, setScreenshotPreview] = useState<string | null>(null)
-  const [screenshotUploading, setScreenshotUploading] = useState(false)
-  const [businessIdInput, setBusinessIdInput] = useState('')
   const [copiedField, setCopiedField] = useState<string | null>(null)
-  const [selectedPlan, setSelectedPlan] = useState<'standard' | 'express' | 'authority'>('authority')
-  const [showWhyPayModal, setShowWhyPayModal] = useState(false)
-  const [customerMessage, setCustomerMessage] = useState('')
-  const screenshotInputRef = useRef<HTMLInputElement>(null)
 
   // Web Audio chime synthesis
   const playChime = () => {
@@ -201,6 +191,47 @@ export default function AddBussinessClient() {
     if (name === 'description') {
       setDescriptionCharCount(value.length)
     }
+  }
+
+  function compressImage(base64Str: string, maxWidth = 200, maxHeight = 200): Promise<string> {
+    return new Promise((resolve) => {
+      const img = new Image()
+      const timeout = setTimeout(() => resolve(base64Str), 2000)
+
+      img.src = base64Str
+      img.onload = () => {
+        clearTimeout(timeout)
+        try {
+          const canvas = document.createElement('canvas')
+          let width = img.width
+          let height = img.height
+          
+          if (width > height) {
+            if (width > maxWidth) {
+              height *= maxWidth / width
+              width = maxWidth
+            }
+          } else {
+            if (height > maxHeight) {
+              width *= maxHeight / height
+              height = maxHeight
+            }
+          }
+          
+          canvas.width = width
+          canvas.height = height
+          const ctx = canvas.getContext('2d')
+          ctx?.drawImage(img, 0, 0, width, height)
+          resolve(canvas.toDataURL('image/webp', 0.8))
+        } catch (e) {
+          resolve(base64Str)
+        }
+      }
+      img.onerror = () => {
+        clearTimeout(timeout)
+        resolve(base64Str)
+      }
+    })
   }
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -350,10 +381,7 @@ export default function AddBussinessClient() {
       // Set submission states
       setSubmittedBusinessId(uniqueBizId)
       setSubmittedDocId(generatedDocId)
-      setBusinessIdInput(uniqueBizId)
       setSubmittedSlug(businessData.slug)
-      setSelectedPlan('authority')
-      setPaymentStep('details')
       setStatus('success')
       
       // Scroll to top to see success message
@@ -362,97 +390,6 @@ export default function AddBussinessClient() {
     } catch (error) {
       console.error('Error submitting business:', error)
       setStatus('error')
-    }
-  }
-
-  const handleScreenshotSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-
-    if (file.size > 5 * 1024 * 1024) {
-      alert('Screenshot file size must be less than 5MB')
-      return
-    }
-
-    setScreenshotFile(file)
-    const reader = new FileReader()
-    reader.onload = async (e) => {
-      const result = e.target?.result as string
-      try {
-        const compressed = await compressImage(result, 800, 800)
-        setScreenshotPreview(compressed)
-      } catch (err) {
-        setScreenshotPreview(result)
-      }
-    }
-    reader.readAsDataURL(file)
-  }
-
-  function compressImage(base64Str: string, maxWidth = 800, maxHeight = 800): Promise<string> {
-    return new Promise((resolve) => {
-      const img = new Image()
-      const timeout = setTimeout(() => {
-        console.warn('Image compression timed out. Using original image.')
-        resolve(base64Str)
-      }, 2000)
-
-      img.src = base64Str
-      img.onload = () => {
-        clearTimeout(timeout)
-        try {
-          const canvas = document.createElement('canvas')
-          let width = img.width
-          let height = img.height
-          
-          if (width > height) {
-            if (width > maxWidth) {
-              height *= maxWidth / width
-              width = maxWidth
-            }
-          } else {
-            if (height > maxHeight) {
-              width *= maxHeight / height
-              height = maxHeight
-            }
-          }
-          
-          canvas.width = width
-          canvas.height = height
-          const ctx = canvas.getContext('2d')
-          ctx?.drawImage(img, 0, 0, width, height)
-          resolve(canvas.toDataURL('image/webp', 0.7)) // Compress to next-gen WebP format
-        } catch (e) {
-          resolve(base64Str)
-        }
-      }
-      img.onerror = () => {
-        clearTimeout(timeout)
-        resolve(base64Str)
-      }
-    })
-  }
-
-  const handleScreenshotSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!screenshotPreview) {
-      alert('Please upload a screenshot first')
-      return
-    }
-    if (!businessIdInput.trim()) {
-      alert('Please enter your Business ID')
-      return
-    }
-
-    setScreenshotUploading(true)
-    try {
-      const compressedBase64 = await compressImage(screenshotPreview)
-      playChime()
-      setPaymentStep('complete')
-    } catch (error) {
-      console.error('Error submitting payment screenshot:', error)
-      alert('Failed to upload screenshot. Please try again.')
-    } finally {
-      setScreenshotUploading(false)
     }
   }
 
@@ -1027,7 +964,7 @@ export default function AddBussinessClient() {
               <p>• Your business will be reviewed within 24 hours</p>
               <p>• Make sure your description is detailed for better visibility</p>
               <p>• Include your WhatsApp number for direct customer contact</p>
-              <p>• For support, email us at admin@pakbizbranhces.online</p>
+              <p>• For support, email us at support@listpak.com</p>
             </div>
           </div>
         </div>
@@ -1035,115 +972,6 @@ export default function AddBussinessClient() {
     </div>
   </main>
 
-      {/* Why Pay This Fee Full-Width Popup Modal */}
-      {showWhyPayModal && (
-        <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[9999] flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fadeIn">
-          <div className="bg-white rounded-3xl w-full max-w-5xl max-h-[92vh] overflow-y-auto p-6 sm:p-8 shadow-2xl border border-slate-100 relative text-left my-auto">
-            {/* Close Button */}
-            <button
-              type="button"
-              onClick={() => setShowWhyPayModal(false)}
-              className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2.5 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors cursor-pointer z-10"
-              title="Close Popup"
-            >
-              <X className="w-6 h-6" />
-            </button>
-
-            {/* Header */}
-            <div className="flex items-center gap-4 mb-6 pr-12">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-bold shadow-md shadow-blue-500/20 shrink-0">
-                <Sparkles className="w-6 h-6 text-amber-300" />
-              </div>
-              <div>
-                <h3 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Why Pay This Fee?</h3>
-                <p className="text-xs sm:text-sm text-slate-500 font-semibold mt-0.5">
-                  Instant Homepage Listing & High Authority SEO Ranking Benefits
-                </p>
-              </div>
-            </div>
-
-            {/* High-Resolution Screenshot Image Card */}
-            <div className="my-5 border-2 border-slate-200/80 rounded-2xl overflow-hidden shadow-lg bg-slate-900/5">
-              <div className="bg-slate-100 px-4 py-2 border-b border-slate-200 flex items-center justify-between text-[11px] font-bold text-slate-600">
-                <span className="flex items-center gap-1.5">
-                  🔍 Verified Website Domain Authority & Page Authority SEO Report
-                </span>
-                <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-mono text-[10px]">
-                  VERIFIED SEO METRICS
-                </span>
-              </div>
-              <img
-                src="/seo-dapa-report.png"
-                alt="Website Domain Authority & Page Authority SEO Report"
-                className="w-full h-auto object-contain max-h-[55vh] bg-white"
-              />
-            </div>
-
-            {/* Verified Metric Highlights */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 my-4">
-              <div className="bg-blue-50/70 border border-blue-100 p-3.5 rounded-2xl text-center">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-blue-600 block">Domain Authority (DA)</span>
-                <span className="text-2xl font-black text-slate-900">9</span>
-                <span className="text-[10px] text-slate-500 block font-medium">High Moz Authority score</span>
-              </div>
-
-              <div className="bg-indigo-50/70 border border-indigo-100 p-3.5 rounded-2xl text-center">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-600 block">Page Authority (PA)</span>
-                <span className="text-2xl font-black text-slate-900">33</span>
-                <span className="text-[10px] text-slate-500 block font-medium">Strong Page Ranking potential</span>
-              </div>
-
-              <div className="bg-amber-50/70 border border-amber-100 p-3.5 rounded-2xl text-center">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-amber-700 block">Homepage Visibility</span>
-                <span className="text-2xl font-black text-slate-900">7 Days</span>
-                <span className="text-[10px] text-slate-500 block font-medium">Featured on Homepage instantly</span>
-              </div>
-            </div>
-
-            {/* Explanatory Message Box */}
-            <div className="space-y-3.5 text-xs sm:text-sm text-slate-700 leading-relaxed bg-slate-50 p-5 rounded-2xl border border-slate-200/80">
-              <p className="font-semibold text-slate-900 text-sm sm:text-base">
-                🚀 If you pay this fee, your business will be added to this website <span className="text-blue-600 font-extrabold underline">instantly</span> and remain on the <span className="text-blue-600 font-extrabold underline">homepage for the next 7 days</span>!
-              </p>
-
-              <p className="text-slate-700 leading-relaxed">
-                📊 You can check the <strong className="text-slate-900">DA (Domain Authority)</strong> of the website which is <strong className="text-blue-600 font-extrabold">9</strong> and the <strong className="text-slate-900">PA (Page Authority)</strong> of the website which is <strong className="text-blue-600 font-extrabold">33</strong> (also see in the screenshot above, you can also verify using any SEO tool).
-              </p>
-
-              <div className="p-4 bg-emerald-50 border border-emerald-200/80 rounded-xl text-emerald-900 font-bold text-xs sm:text-sm leading-relaxed flex items-start gap-2.5">
-                <span className="text-lg shrink-0">💡</span>
-                <span>
-                  So send us <strong className="text-emerald-700 font-extrabold underline text-sm sm:text-base">50 rupees</strong> so your business will stay on the homepage for better results and ranking!
-                </span>
-              </div>
-
-              {/* 6 Months Featured Offer Box */}
-              <div className="p-4 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/90 rounded-xl text-amber-900 font-semibold text-xs sm:text-sm leading-relaxed flex items-start gap-3 shadow-sm">
-                <span className="text-xl shrink-0">🌟</span>
-                <div>
-                  <span className="text-orange-900 font-black text-xs sm:text-sm uppercase tracking-wider block mb-1">
-                    🔥 6-Month Homepage Featured Offer (RS: 200)
-                  </span>
-                  <span>
-                    Want your business to remain on the homepage for the next <strong>6 months</strong>? Pay <strong>RS 200</strong> per business! Simply mention that you paid 200 RS in the optional message field when submitting your payment screenshot.
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Modal Action Button */}
-            <div className="mt-6 text-center">
-              <button
-                type="button"
-                onClick={() => setShowWhyPayModal(false)}
-                className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-2xl font-black text-base transition-all shadow-xl shadow-blue-600/20 hover:scale-[1.01] cursor-pointer"
-              >
-                Got It, Proceed with Payment (RS: 50)
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
       <Footer />
     </>
   )
