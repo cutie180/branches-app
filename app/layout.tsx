@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans } from 'next/font/google'
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/next"
 import './globals.css'
 import BottomNav from '@/components/bottom-nav'
 
@@ -42,6 +43,7 @@ export default function RootLayout({
         {children}
         <BottomNav />
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   )
