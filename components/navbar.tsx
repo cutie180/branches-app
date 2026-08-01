@@ -16,17 +16,17 @@ export default function Navbar() {
   const pathname = usePathname()
 
   return (
-    <header className="sticky top-0 z-50 bg-[#0F172A] border-b border-slate-800 shadow-[0_8px_40px_rgba(15,23,42,0.12)]">
+    <header className="sticky top-0 z-50 bg-[#0F172A] border-b border-slate-800 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           
-          {/* Logo */}
+          {/* Brand Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#2563EB] to-[#1D4ED8] flex items-center justify-center text-white font-bold text-xl shadow-md border border-white/10 group-hover:scale-105 transition-transform">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#2563EB] to-[#1D4ED8] flex items-center justify-center text-white font-bold text-xl shadow-lg border border-white/20 group-hover:scale-105 transition-transform">
               <Building2 className="w-5 h-5 text-white" />
             </div>
             <span className="text-white font-extrabold text-2xl tracking-tight">
-              List<span className="text-[#2563EB]">Pak</span>
+              List<span className="text-[#3B82F6]">Pak</span>
             </span>
           </Link>
 
@@ -38,7 +38,7 @@ export default function Navbar() {
                 href={link.href}
                 className={`text-sm font-semibold transition-colors duration-200 ${
                   pathname === link.href
-                    ? 'text-[#2563EB]'
+                    ? 'text-[#60A5FA]'
                     : 'text-slate-300 hover:text-white'
                 }`}
               >
@@ -49,7 +49,7 @@ export default function Navbar() {
             {/* CTA Button */}
             <Link
               href="/add-business"
-              className="ml-2 px-5 py-2.5 rounded-[14px] bg-[#F97316] text-white text-sm font-bold hover:bg-[#EA580C] transition-all duration-200 shadow-[0_8px_40px_rgba(15,23,42,0.08)] hover:shadow-lg inline-flex items-center gap-2"
+              className="ml-2 px-5 py-2.5 rounded-xl bg-[#F97316] text-white text-sm font-bold hover:bg-[#EA580C] transition-all duration-200 shadow-md hover:shadow-lg inline-flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
               <span>Add Business Free</span>
@@ -85,7 +85,7 @@ export default function Navbar() {
               onClick={() => setOpen(false)}
               className={`text-sm font-semibold py-3 px-4 rounded-xl transition-colors ${
                 pathname === link.href
-                  ? 'bg-slate-800 text-[#2563EB]'
+                  ? 'bg-slate-800 text-[#60A5FA]'
                   : 'text-slate-300 hover:bg-slate-800 hover:text-white'
               }`}
             >
