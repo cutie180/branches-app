@@ -467,11 +467,11 @@ export default function AddBussinessClient() {
         <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-4">
-              Add Your Business to PakBizBranches
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0F172A] mb-4">
+              Add Your Business Free to ListPak
             </h1>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              List your business for free and reach thousands of customers across Pakistan. Join 12,000+ local services discovered every day.
+            <p className="text-base sm:text-lg text-[#475569] max-w-2xl mx-auto">
+              List your business 100% free and reach thousands of customers across Pakistan. Join 10,000+ local services discovered every day.
             </p>
           </div>
 
@@ -531,462 +531,63 @@ export default function AddBussinessClient() {
 
           {/* Success Message */}
           {status === 'success' ? (
-            <div className="mb-12 bg-white border border-slate-100 rounded-[2rem] shadow-xl shadow-slate-900/5 max-w-3xl mx-auto overflow-hidden">
-              {/* Step Progress Bar */}
-              <div className="bg-slate-50 border-b border-slate-100 px-8 py-4 flex justify-between items-center text-xs font-semibold text-slate-500">
-                <div className="flex items-center gap-2">
-                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${paymentStep === 'details' ? 'bg-blue-600 text-white' : 'bg-green-100 text-green-700'}`}>
-                    {paymentStep !== 'details' ? <Check className="w-3 h-3" /> : '1'}
-                  </div>
-                  <span>Payment Details</span>
-                </div>
-                <div className="h-0.5 w-12 bg-slate-200 flex-1 mx-4"></div>
-                <div className="flex items-center gap-2">
-                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${paymentStep === 'upload' ? 'bg-blue-600 text-white' : paymentStep === 'complete' ? 'bg-green-100 text-green-700' : 'bg-slate-200 text-slate-600'}`}>
-                    {paymentStep === 'complete' ? <Check className="w-3 h-3" /> : '2'}
-                  </div>
-                  <span>Upload Receipt</span>
-                </div>
-                <div className="h-0.5 w-12 bg-slate-200 flex-1 mx-4"></div>
-                <div className="flex items-center gap-2">
-                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${paymentStep === 'complete' ? 'bg-green-600 text-white' : 'bg-slate-200 text-slate-600'}`}>
-                    3
-                  </div>
-                  <span>Verification</span>
-                </div>
+            <div className="mb-12 bg-white border border-[#D9E2F1] rounded-2xl shadow-[0_8px_40px_rgba(15,23,42,0.08)] max-w-2xl mx-auto p-8 sm:p-12 text-center">
+              <div className="w-20 h-20 rounded-full bg-emerald-50 text-[#16A34A] flex items-center justify-center mx-auto mb-6 shadow-sm border border-emerald-100">
+                <CheckCircle2 className="w-10 h-10 text-[#16A34A]" />
               </div>
 
-              <div className="p-8 md:p-12">
-                {paymentStep === 'details' && (
-                  <div className="text-center animate-fadeIn">
-                    <div className="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-6">
-                      <Sparkles className="w-10 h-10 text-green-500" />
-                    </div>
-                    <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-2">Business Registered!</h2>
-                    <p className="text-slate-600 mb-8 max-w-md mx-auto text-sm sm:text-base">
-                      Your listing info is saved. To publish and make your business page live on PakBizBranches, please complete the activation payment below.
-                    </p>
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-[#16A34A] text-xs font-bold mb-4">
+                <span>✓ 100% Free Business Listing – No Payment Required</span>
+              </div>
 
-                    {/* Business ID Box */}
-                    <div className="bg-blue-50/50 border border-blue-100 rounded-2xl p-5 mb-8 max-w-md mx-auto flex items-center justify-between">
-                      <div className="text-left">
-                        <span className="text-xs font-semibold text-blue-600 uppercase tracking-wider">Your Unique Business ID</span>
-                        <div className="text-2xl font-black text-slate-800 tracking-wide mt-0.5">{submittedBusinessId}</div>
-                      </div>
-                      <button
-                        onClick={() => copyToClipboard(submittedBusinessId || '', 'bizId')}
-                        className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-sm font-semibold transition-all hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
-                      >
-                        {copiedField === 'bizId' ? (
-                          <>
-                            <Check className="w-4 h-4 text-green-500" />
-                            <span className="text-green-600">Copied!</span>
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="w-4 h-4 text-slate-400" />
-                            <span>Copy ID</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] mb-3">
+                Business Successfully Registered on ListPak!
+              </h2>
 
-                    {/* Plan Selector */}
-                    <div className="mb-8 text-left max-w-md mx-auto">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Select Setup & Indexing Plan</h3>
-                        <button
-                          type="button"
-                          onClick={() => setShowWhyPayModal(true)}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-xs font-extrabold shadow-md hover:shadow-lg transition-all hover:scale-105 cursor-pointer animate-pulse"
-                        >
-                          <HelpCircle className="w-3.5 h-3.5 text-amber-300" />
-                          <span>Why pay this fee?</span>
-                        </button>
-                      </div>
-                      <div className="space-y-4">
-                        <label 
-                          className={`flex items-start gap-4 p-4 rounded-2xl border-2 transition-all cursor-pointer ${
-                            selectedPlan === 'standard'
-                              ? 'border-blue-600 bg-blue-50/20'
-                              : 'border-slate-200 bg-white hover:border-slate-300'
-                          }`}
-                        >
-                          <input 
-                            type="radio" 
-                            name="paymentPlan" 
-                            checked={selectedPlan === 'standard'}
-                            onChange={() => setSelectedPlan('standard')}
-                            className="mt-1 accent-blue-600 cursor-pointer"
-                          />
-                          <div>
-                            <div className="flex justify-between items-center">
-                              <span className="font-bold text-slate-800 text-sm">Standard Setup</span>
-                              <span className="font-black text-blue-600 text-sm">RS: 10</span>
-                            </div>
-                            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                              Your business page will be created within **24 hours** after payment verification and indexed on Google within **15 days** of page creation.
-                            </p>
-                          </div>
-                        </label>
+              <p className="text-slate-600 mb-8 text-sm sm:text-base leading-relaxed max-w-lg mx-auto">
+                Thank you! Your business profile has been registered and is live on ListPak. Our admin team will perform a routine quality verification. No fee or credit card is ever required.
+              </p>
 
-                        <label 
-                          className={`flex items-start gap-4 p-4 rounded-2xl border-2 transition-all cursor-pointer relative overflow-hidden ${
-                            selectedPlan === 'express'
-                              ? 'border-blue-600 bg-blue-50/20'
-                              : 'border-slate-200 bg-white hover:border-slate-300'
-                          }`}
-                        >
-                          <input 
-                            type="radio" 
-                            name="paymentPlan" 
-                            checked={selectedPlan === 'express'}
-                            onChange={() => setSelectedPlan('express')}
-                            className="mt-1 accent-blue-600 cursor-pointer"
-                          />
-                          <div>
-                            <div className="flex justify-between items-center">
-                              <span className="font-bold text-slate-800 text-sm flex items-center gap-1.5">
-                                Express Setup & Indexing 
-                                <span className="px-1.5 py-0.5 text-[9px] bg-amber-100 text-amber-800 border border-amber-200 rounded font-bold uppercase tracking-wider">Fast</span>
-                              </span>
-                              <span className="font-black text-blue-600 text-sm">RS: 20</span>
-                            </div>
-                            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                              Your business page will be created and indexed on search engines within **72 to 96 hours** after payment verification.
-                            </p>
-                          </div>
-                        </label>
+              {/* Business ID Box */}
+              <div className="bg-[#EEF4FF] border border-[#D9E2F1] rounded-2xl p-5 mb-8 max-w-md mx-auto flex items-center justify-between">
+                <div className="text-left">
+                  <span className="text-[11px] font-bold text-[#2563EB] uppercase tracking-wider block">Your Unique Business ID</span>
+                  <div className="text-2xl font-extrabold text-[#0F172A] tracking-wide mt-0.5">{submittedBusinessId}</div>
+                </div>
+                <button
+                  onClick={() => copyToClipboard(submittedBusinessId || '', 'bizId')}
+                  className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-slate-50 text-[#0F172A] border border-[#D9E2F1] rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer"
+                >
+                  {copiedField === 'bizId' ? (
+                    <>
+                      <Check className="w-4 h-4 text-[#16A34A]" />
+                      <span className="text-[#16A34A]">Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4 text-[#64748B]" />
+                      <span>Copy ID</span>
+                    </>
+                  )}
+                </button>
+              </div>
 
-                        <label 
-                          className={`flex items-start gap-4 p-4 rounded-2xl border-2 transition-all cursor-pointer relative overflow-hidden ${
-                            selectedPlan === 'authority'
-                              ? 'border-orange-500 bg-orange-50/20 shadow-md shadow-orange-500/5 ring-2 ring-orange-500/10'
-                              : 'border-slate-200 bg-white hover:border-slate-300'
-                          }`}
-                        >
-                          <div className="absolute top-0 right-0 bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[8px] font-black px-2 py-0.5 rounded-bl uppercase tracking-wider">
-                            Popular & Famous
-                          </div>
-                          <input 
-                            type="radio" 
-                            name="paymentPlan" 
-                            checked={selectedPlan === 'authority'}
-                            onChange={() => setSelectedPlan('authority')}
-                            className="mt-1 accent-orange-600 cursor-pointer"
-                          />
-                          <div className="pr-14">
-                            <div className="flex justify-between items-center">
-                              <span className="font-bold text-slate-800 text-sm flex items-center gap-1.5">
-                                SEO Authority Plan
-                              </span>
-                              <span className="font-black text-orange-600 text-sm">RS: 50</span>
-                            </div>
-                            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                              Created from simple data into a **3000+ words page**, standard SEO meta tags, **5+ backlinks**, **indexing within 48 hours**, and **free support**.
-                            </p>
-                          </div>
-                        </label>
-                      </div>
-
-                      {/* Important Warning Note */}
-                      <div className="mt-6 p-4 bg-amber-50/60 border border-amber-100/80 rounded-2xl text-left">
-                        <p className="text-[11px] text-amber-800 font-semibold leading-relaxed">
-                          ⚠️ <strong>Note:</strong> This payment is only for the setup of your business page. This is a small amount, not a huge amount.
-                        </p>
-                        <p className="text-[11px] text-blue-800 font-bold leading-relaxed mt-1.5 animate-pulse">
-                          👉 Please send the payment instantly to proceed with the setup.
-                        </p>
-                        <p className="text-[11px] text-red-700 font-bold leading-relaxed mt-1.5">
-                          ⚠️ If you do not send the payment, your page will not be created and your business will remain invisible.
-                        </p>
-                      </div>
-
-                      {/* Why Pay This Fee Button */}
-                      <div className="mt-4 text-center">
-                        <button
-                          type="button"
-                          onClick={() => setShowWhyPayModal(true)}
-                          className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-xs font-bold shadow-md hover:shadow-lg transition-all hover:scale-105 cursor-pointer"
-                        >
-                          <HelpCircle className="w-4 h-4 text-amber-300" />
-                          <span>Why pay this fee?</span>
-                          <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Payment Mode Selector */}
-                    <div className="mb-8">
-                      <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Select Payment Method</h3>
-                      <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-                        <button
-                          type="button"
-                          onClick={() => setSelectedMethod('easypaisa')}
-                          className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all hover:scale-102 cursor-pointer ${
-                            selectedMethod === 'easypaisa'
-                              ? 'border-emerald-500 bg-emerald-50/30 text-emerald-800'
-                              : 'border-slate-200 bg-white hover:border-slate-300 text-slate-600'
-                          }`}
-                        >
-                          <Landmark className="w-8 h-8 mb-2" />
-                          <span className="font-bold text-sm">Easypaisa</span>
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => setSelectedMethod('jazzcash')}
-                          className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all hover:scale-102 cursor-pointer ${
-                            selectedMethod === 'jazzcash'
-                              ? 'border-red-500 bg-red-50/30 text-red-800'
-                              : 'border-slate-200 bg-white hover:border-slate-300 text-slate-600'
-                          }`}
-                        >
-                          <Smartphone className="w-8 h-8 mb-2" />
-                          <span className="font-bold text-sm">JazzCash</span>
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Payment Account Details */}
-                    <div className="bg-slate-50 border border-slate-100 rounded-3xl p-6 mb-8 max-w-md mx-auto text-left space-y-4">
-                      <div className="flex justify-between items-center border-b border-slate-200/60 pb-3">
-                        <div>
-                          <span className="text-xs text-slate-400 block font-medium">Send Payment To</span>
-                          <span className="font-bold text-slate-800 text-base">
-                            {selectedMethod === 'easypaisa' ? 'Easypaisa Account' : 'JazzCash Account'}
-                          </span>
-                        </div>
-                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                          selectedMethod === 'easypaisa' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
-                        }`}>
-                          {selectedMethod}
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between items-center border-b border-slate-200/60 pb-3">
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs text-slate-400 font-medium">Amount to Pay</span>
-                            <button
-                              type="button"
-                              onClick={() => setShowWhyPayModal(true)}
-                              className="text-[11px] text-blue-600 hover:text-blue-800 font-bold underline flex items-center gap-0.5 cursor-pointer"
-                            >
-                              <HelpCircle className="w-3 h-3" />
-                              Why pay this fee?
-                            </button>
-                          </div>
-                          <span className="font-bold text-blue-600 text-lg">
-                            RS: {selectedPlan === 'standard' ? '10' : selectedPlan === 'express' ? '20' : '50'}
-                          </span>
-                        </div>
-                        <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-100">
-                          {selectedPlan === 'standard' ? 'Standard Plan' : selectedPlan === 'express' ? 'Express Plan' : 'SEO Authority Plan'}
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <span className="text-xs text-slate-400 block font-medium">Account Number</span>
-                          <span className="font-mono font-bold text-slate-900 text-lg">
-                            {selectedMethod === 'easypaisa' ? '03402885226' : '03019316123'}
-                          </span>
-                        </div>
-                        <button
-                          onClick={() => copyToClipboard(selectedMethod === 'easypaisa' ? '03402885226' : '03019316123', 'payNum')}
-                          className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
-                        >
-                          {copiedField === 'payNum' ? (
-                            <>
-                              <Check className="w-3.5 h-3.5 text-green-500" />
-                              <span className="text-green-600">Copied!</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="w-3.5 h-3.5 text-slate-400" />
-                              <span>Copy</span>
-                            </>
-                          )}
-                        </button>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <span className="text-xs text-slate-400 block font-medium">Account Owner</span>
-                          <span className="font-semibold text-slate-800 text-sm">
-                            {selectedMethod === 'easypaisa' ? 'Muhammad Habib Ullah' : 'Muhammad Imran'}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="border-t border-slate-100 pt-6">
-                      <button
-                        onClick={() => setPaymentStep('upload')}
-                        className="w-full max-w-md inline-flex items-center justify-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all hover:scale-102 shadow-lg shadow-blue-600/20 cursor-pointer"
-                      >
-                        Payment Done - Upload Screenshot
-                      </button>
-                    </div>
-                  </div>
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                {submittedSlug && (
+                  <Link
+                    href={`/business/${submittedSlug}`}
+                    className="w-full sm:w-auto px-8 py-3.5 bg-[#2563EB] hover:bg-blue-700 text-white rounded-xl font-bold transition-all shadow-md text-sm text-center inline-block"
+                  >
+                    View Business Page
+                  </Link>
                 )}
-
-                {paymentStep === 'upload' && (
-                  <form onSubmit={handleScreenshotSubmit} className="animate-fadeIn max-w-md mx-auto text-left">
-                    <h3 className="text-xl font-bold text-slate-800 mb-2 text-center">Verify Payment</h3>
-                    <p className="text-xs text-slate-500 mb-6 text-center">
-                      Please verify your Business ID and upload the payment receipt/screenshot below.
-                    </p>
-
-                    <div className="space-y-6">
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-                          Business ID *
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={businessIdInput}
-                          onChange={(e) => setBusinessIdInput(e.target.value)}
-                          className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-bold transition-all text-slate-800"
-                          placeholder="e.g. 123456"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-                          Payment Screenshot *
-                        </label>
-                        <input
-                          ref={screenshotInputRef}
-                          type="file"
-                          accept="image/*"
-                          onChange={handleScreenshotSelect}
-                          className="hidden"
-                        />
-                        
-                        {!screenshotPreview ? (
-                          <button
-                            type="button"
-                            onClick={() => screenshotInputRef.current?.click()}
-                            className="w-full flex flex-col items-center justify-center py-10 px-4 border-2 border-dashed border-slate-300 rounded-2xl hover:border-blue-400 hover:bg-blue-50/50 transition-all cursor-pointer group"
-                          >
-                            <Upload className="w-10 h-10 text-slate-400 group-hover:text-blue-500 mb-3 transition-colors animate-bounce" />
-                            <span className="font-bold text-slate-700 text-sm">Select Screenshot Image</span>
-                            <span className="text-xs text-slate-400 mt-1">PNG, JPG, JPEG up to 5MB</span>
-                          </button>
-                        ) : (
-                          <div className="border border-slate-200 rounded-2xl p-4 bg-slate-50 relative">
-                            <img
-                              src={screenshotPreview}
-                              alt="Screenshot preview"
-                              className="max-h-60 w-full object-contain rounded-xl border border-slate-200 bg-white"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setScreenshotFile(null)
-                                setScreenshotPreview(null)
-                              }}
-                              className="absolute top-6 right-6 p-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors shadow cursor-pointer"
-                            >
-                              <X className="w-4 h-4" />
-                            </button>
-                            <div className="mt-3 text-xs text-slate-500 flex items-center justify-between">
-                              <span className="truncate max-w-[250px] font-medium">{screenshotFile?.name}</span>
-                              <span>{(screenshotFile!.size / (1024 * 1024)).toFixed(2)} MB</span>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Optional Customer Message / Query Field */}
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center justify-between">
-                          <span>Optional Message / Queries</span>
-                          <span className="text-[10px] text-blue-600 font-normal uppercase">Optional</span>
-                        </label>
-                        <textarea
-                          rows={3}
-                          value={customerMessage}
-                          onChange={(e) => setCustomerMessage(e.target.value)}
-                          className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-slate-800 text-xs font-medium"
-                          placeholder="e.g., I paid RS 200 for 6 months homepage feature, or enter any message/query for admin..."
-                        />
-                        <p className="text-[11px] text-slate-500 mt-1.5 leading-relaxed">
-                          💡 Mention if you paid <strong>RS 200</strong> for 6 months homepage placement or have any specific questions.
-                        </p>
-                      </div>
-
-                      <div className="flex gap-4 pt-4">
-                        <button
-                          type="button"
-                          onClick={() => setPaymentStep('details')}
-                          className="flex-1 py-4 border border-slate-200 rounded-xl font-bold text-slate-600 hover:bg-slate-50 transition-colors text-center cursor-pointer"
-                        >
-                          Back
-                        </button>
-                        <button
-                          type="submit"
-                          disabled={screenshotUploading || !screenshotFile}
-                          className="flex-[2] inline-flex items-center justify-center gap-2 py-4 bg-blue-600 disabled:bg-slate-400 disabled:cursor-not-allowed text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl cursor-pointer"
-                        >
-                          {screenshotUploading ? (
-                            <>
-                              <Loader2 className="w-5 h-5 animate-spin" />
-                              Submitting...
-                            </>
-                          ) : (
-                            <>Submit Verification</>
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                  </form>
-                )}
-
-                {paymentStep === 'complete' && (
-                  <div className="text-center animate-fadeIn">
-                    <div className="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-6">
-                      <CheckCircle2 className="w-10 h-10 text-green-500" />
-                    </div>
-                    <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-2">Verification Submitted!</h2>
-                    <p className="text-slate-600 mb-6 max-w-md mx-auto text-sm sm:text-base">
-                      Thank you for submitting the transaction screenshot. Our admin team will verify your payment details and activate your business listing shortly.
-                    </p>
-
-                    <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 mb-8 max-w-sm mx-auto text-left">
-                      <div className="flex justify-between items-center text-sm border-b border-slate-200/60 pb-2 mb-2">
-                        <span className="text-slate-500 font-medium">Business ID</span>
-                        <span className="font-mono font-bold text-slate-800">{submittedBusinessId}</span>
-                      </div>
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-slate-500 font-medium">Listing Status</span>
-                        <span className="px-2.5 py-0.5 bg-amber-100 text-amber-800 text-xs font-bold rounded-full uppercase">
-                          Pending Approval
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                      {submittedSlug && (
-                        <Link
-                          href={`/${submittedSlug}/`}
-                          className="w-full max-w-xs py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all hover:scale-105 active:scale-95 shadow-sm cursor-pointer text-center inline-block"
-                        >
-                          View Your Business Page
-                        </Link>
-                      )}
-                      <button
-                        onClick={() => window.location.reload()}
-                        className="w-full max-w-xs py-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition-all hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
-                      >
-                        List Another Business
-                      </button>
-                    </div>
-                  </div>
-                )}
+                <button
+                  onClick={() => window.location.reload()}
+                  className="w-full sm:w-auto px-8 py-3.5 bg-[#F97316] hover:bg-[#EA580C] text-white rounded-xl font-bold transition-all shadow-md text-sm cursor-pointer"
+                >
+                  Add Another Business Free
+                </button>
               </div>
             </div>
           ) : (

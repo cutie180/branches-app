@@ -1,0 +1,25 @@
+[
+  {
+    "businessName": "Muhammad Imran",
+    "category": "finance",
+    "subcategory": "Loans",
+    "branchCode": "",
+    "description": "dfafsssssssfdasssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssdfafsssssssfdasssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssdfafsssssssfdasssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssdfafsssssssfdasssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssdfafsssssssfdasssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssdfafsssssssfdasssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssdfafsssssssfdasssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss",
+    "phone": "03323337980",
+    "whatsapp": "",
+    "email": "malanhans777@gmail.com",
+    "website": "",
+    "address": "12 Kotahywala Multan",
+    "city": "Karachi",
+    "logoUrl": "",
+    "businessId": "767888",
+    "websiteUrl": "",
+    "categoryId": "finance",
+    "categorySlug": "finance",
+    "subCategory": "Loans",
+    "slug": "muhammad-imran-karachi",
+    "status": "pending",
+    "createdAt": "2026-08-01T08:47:27.498Z",
+    "updatedAt": "2026-08-01T08:47:27.498Z"
+  }
+]
