@@ -9,7 +9,6 @@ import Footer from '@/components/footer'
 import CitySearchDropdown from '@/components/ui/city-search-dropdown'
 import { CATEGORIES } from '@/lib/data'
 import { sendBusinessSubmissionEmail } from '@/lib/email-service'
-import { BannerAdLoader, NativeAdLoader } from '@/components/ads/ads-loader'
 
 const normalizeCategoryForStorage = (cat: string) => cat ? cat.toLowerCase().replace(/[^a-z0-9]+/g, '-') : ''
 
@@ -452,9 +451,6 @@ export default function AddBussinessClient() {
     <>
       <Navbar />
       <main className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-        <div className="max-w-7xl mx-auto px-4 pt-6 sm:px-6 lg:px-8">
-          <BannerAdLoader variant="inline" />
-        </div>
         <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="text-center mb-8">
@@ -1420,16 +1416,10 @@ export default function AddBussinessClient() {
               <p>• For support, email us at admin@pakbizbranhces.online</p>
             </div>
           </div>
-
-          {/* Adsterra Native Ad */}
-          <div className="mt-8">
-            <NativeAdLoader />
-          </div>
-            </div>
-
-          </div>
         </div>
-      </main>
+      </div>
+    </div>
+  </main>
 
       {/* Why Pay This Fee Full-Width Popup Modal */}
       {showWhyPayModal && (

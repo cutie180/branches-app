@@ -3,7 +3,6 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import Link from 'next/link'
 import { Target, Users, Globe, Award } from 'lucide-react'
-import { BannerAdLoader, NativeAdLoader } from '@/components/ads/ads-loader'
 
 export const metadata: Metadata = {
   title: 'About PakBizBranches: Local Business Directory',
@@ -46,9 +45,6 @@ export default function AboutPage() {
     <>
       <Navbar />
       <main>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 -mb-6">
-          <BannerAdLoader variant="inline" />
-        </div>
         {/* Hero */}
         <section className="bg-[#0f2b3d] py-20" aria-labelledby="about-heading">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -116,7 +112,7 @@ export default function AboutPage() {
               <div className="pt-4 border-t border-slate-200/60">
                 <h4 className="font-bold text-[#0f2b3d] mb-2">Directory Data Quality & Verification framework</h4>
                 <p className="text-xs sm:text-sm text-gray-500">
-                  Every listing submitted to PakBizBranches is verified using an automated OTP check on the owner&apos;s mobile number. Additionally, our administrative team manually reviews each listing to check the listed shopfront/office photos and WhatsApp handles, ensuring dead contacts and duplicate profiles are kept off the platform. Verified listings receive our signature green <strong>Verified Badge</strong>.
+                  Every listing submitted to PakBizBranches is verified using an automated check on the owner&apos;s mobile number. Additionally, our administrative team manually reviews each listing to check the listed shopfront/office photos and WhatsApp handles, ensuring dead contacts and duplicate profiles are kept off the platform. Verified listings receive our signature green <strong>Verified Badge</strong>.
                 </p>
               </div>
             </div>
@@ -168,11 +164,6 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Ads and CTA */}
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <NativeAdLoader />
-        </div>
-
         <section className="py-14 bg-[#0f2b3d] text-center">
           <div className="max-w-xl mx-auto px-4">
             <h2 className="text-2xl font-bold text-white">Ready to list your business?</h2>
@@ -185,10 +176,6 @@ export default function AboutPage() {
             </Link>
           </div>
         </section>
-        
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <BannerAdLoader variant="inline" />
-        </div>
       </main>
       <Footer />
     </>

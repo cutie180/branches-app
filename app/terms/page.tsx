@@ -1,7 +1,6 @@
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { Metadata } from 'next'
-import { BannerAdLoader, NativeAdLoader } from '@/components/ads/ads-loader'
 import React from 'react'
 
 export const metadata: Metadata = {
@@ -18,9 +17,6 @@ export default function TermsPage() {
     <>
       <Navbar />
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="mb-8 -mt-6">
-          <BannerAdLoader variant="inline" />
-        </div>
         <h1 className="text-3xl font-bold text-[#0f2b3d] mb-8">Terms of Service</h1>
         <div className="prose prose-blue max-w-none text-gray-600 leading-relaxed">
           <p className="mb-4">Last Updated: May 9, 2026</p>
@@ -50,10 +46,6 @@ export default function TermsPage() {
             <li>You will not use the Site for any illegal or unauthorized purpose.</li>
           </ul>
 
-          <div className="my-8">
-            <NativeAdLoader />
-          </div>
-
           <h2 className="text-xl font-bold text-[#0f2b3d] mt-8 mb-4">4. Business Listings & Submissions</h2>
           <p className="mb-4">
             Users who add business listings represent that the information provided is accurate and that they have the right to publish it. PakBizBranches reserves the right to review, edit, or remove any listing at its sole discretion if it violates our quality standards or community guidelines.
@@ -64,7 +56,7 @@ export default function TermsPage() {
             You may not access or use the Site for any purpose other than that for which we make the Site available. The Site may not be used in connection with any commercial endeavors except those that are specifically endorsed or approved by us.
           </p>
 
-          <h2 className="text-xl font-bold text-[#0f2b3d] mt-8 mb-4">6. Limitation of Liability</h2>
+          <h2 className="text-[#0f2b3d] font-bold text-xl mt-8 mb-4">6. Limitation of Liability</h2>
           <p className="mb-4">
             PakBizBranches is a directory service. We do not guarantee the quality, safety, or legality of services provided by the businesses listed on our platform. In no event will we be liable to you or any third party for any direct, indirect, consequential, exemplary, incidental, special, or punitive damages arising from your use of the Site.
           </p>
@@ -83,9 +75,6 @@ export default function TermsPage() {
             Email: admin@pakbizbranhces.online<br />
             Address: Gulghast Colony, Urdu Bazar, Multan, Pakistan
           </p>
-          <div className="mt-8">
-            <BannerAdLoader variant="inline" />
-          </div>
         </div>
       </main>
       <Footer />
