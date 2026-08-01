@@ -1,12 +1,28 @@
 import Link from 'next/link'
+import { Building2 } from 'lucide-react'
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0F172A] text-white pt-16 pb-12 border-t border-[#E2E8F0]/10 font-sans">
+    <footer className="bg-[#0F172A] text-white pt-16 pb-12 border-t border-slate-800 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* 4 Column Keyword Links */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-12 border-b border-slate-800">
+        {/* Top Branding Bar */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-10 border-b border-slate-800 gap-4">
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#2563EB] to-[#1D4ED8] flex items-center justify-center text-white font-bold text-xl shadow-md border border-white/10">
+              <Building2 className="w-5 h-5 text-white" />
+            </div>
+            <span className="text-white font-extrabold text-2xl tracking-tight">
+              List<span className="text-[#2563EB]">Pak</span>
+            </span>
+          </Link>
+          <p className="text-xs text-slate-400 max-w-md">
+            Pakistan&apos;s premier free business listing & directory platform connecting local businesses, job seekers, and employers nationwide.
+          </p>
+        </div>
+
+        {/* 4 Column Links */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 py-12 border-b border-slate-800">
           
           {/* Section 1 */}
           <div>
@@ -55,7 +71,7 @@ export default function Footer() {
 
           {/* Section 4 */}
           <div>
-            <h3 className="font-bold text-white text-base mb-4 text-[#F97316]">Resources & Navigation</h3>
+            <h3 className="font-bold text-white text-base mb-4 text-[#F97316]">Resources & Links</h3>
             <ul className="space-y-2.5 text-xs text-slate-300">
               <li><Link href="/" className="hover:text-[#2563EB] transition-colors">Home</Link></li>
               <li><Link href="/about" className="hover:text-[#2563EB] transition-colors">About ListPak</Link></li>
@@ -63,7 +79,6 @@ export default function Footer() {
               <li><Link href="/privacy" className="hover:text-[#2563EB] transition-colors">Privacy Policy</Link></li>
               <li><Link href="/terms" className="hover:text-[#2563EB] transition-colors">Terms of Service</Link></li>
               <li><Link href="/add-business" className="hover:text-[#2563EB] transition-colors">Local SEO Tips Pakistan</Link></li>
-              <li><Link href="/add-business" className="hover:text-[#2563EB] transition-colors">Free Job Posting Guide</Link></li>
             </ul>
           </div>
         </div>

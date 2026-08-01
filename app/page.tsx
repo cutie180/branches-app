@@ -146,76 +146,78 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <main id="main-content" className="bg-white text-[#0F172A] font-sans">
+      <main id="main-content" className="bg-[#F4F7FC] text-[#0F172A] font-sans">
         
         {/* HERO SECTION */}
-        <section className="bg-white py-16 sm:py-24 border-b border-[#E2E8F0] relative overflow-hidden">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-            
-            {/* Trust Pill */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-200 text-[#16A34A] text-xs sm:text-sm font-semibold mb-6">
-              <Sparkles className="w-4 h-4 text-[#16A34A]" />
-              <span>✓ 100% Free Forever – No Hidden Charges</span>
-            </div>
-
-            {/* H1 Title */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#0F172A] max-w-4xl mx-auto leading-tight">
-              Free Business Listing Website in Pakistan – List Your Business Free Forever
-            </h1>
-
-            {/* Subtitle */}
-            <p className="mt-6 text-base sm:text-xl text-[#475569] max-w-3xl mx-auto leading-relaxed">
-              ListPak is Pakistan&apos;s leading free business listing website and free directory platform where businesses, employers, and job seekers connect. List your business free on Pakistan&apos;s #1 online business directory, post jobs for free, and find qualified employees across Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, Peshawar, Quetta, and all cities in Pakistan. Join 10,000+ businesses already growing with our 100% free local business listing service.
-            </p>
-
-            {/* Search Box */}
-            <div className="mt-10 max-w-3xl mx-auto bg-white border border-[#E2E8F0] rounded-[20px] p-3 shadow-[0_8px_40px_rgba(15,23,42,0.08)] flex flex-col sm:flex-row gap-3">
-              <div className="flex-1 flex items-center gap-3 px-4 py-2 bg-slate-50 rounded-[14px]">
-                <Search className="w-5 h-5 text-[#64748B]" />
-                <input
-                  type="text"
-                  placeholder="Search businesses or services (e.g. 'restaurants in Lahore', 'plumbers in Karachi')..."
-                  className="w-full bg-transparent text-sm text-[#0F172A] placeholder-[#64748B] focus:outline-none"
-                />
+        <section className="py-16 sm:py-24 relative overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0F172A] rounded-[24px] p-8 sm:p-14 text-center relative overflow-hidden shadow-[0_8px_40px_rgba(15,23,42,0.12)] border border-slate-800">
+              
+              {/* Trust Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#16A34A]/10 border border-[#16A34A]/30 text-[#16A34A] text-xs sm:text-sm font-semibold mb-6">
+                <Sparkles className="w-4 h-4 text-[#16A34A]" />
+                <span>✓ 100% Free Forever – No Hidden Charges</span>
               </div>
-              <Link
-                href="/add-business"
-                className="px-8 py-3.5 bg-[#F97316] hover:bg-[#ea580c] text-white font-bold rounded-[14px] transition-all duration-200 text-sm inline-flex items-center justify-center gap-2 shrink-0 shadow-md"
-              >
-                <span>Search Now</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
 
-            {/* CTA Buttons */}
-            <div className="mt-8 flex flex-wrap justify-center gap-4">
-              <Link
-                href="/add-business"
-                className="px-8 py-4 bg-[#F97316] hover:bg-[#ea580c] text-white font-bold rounded-[16px] shadow-[0_8px_40px_rgba(15,23,42,0.08)] hover:shadow-lg transition-all duration-200 text-base inline-flex items-center gap-2"
-              >
-                <span>List Your Business Free Now</span>
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link
-                href="/about"
-                className="px-8 py-4 bg-[#2563EB] hover:bg-blue-700 text-white font-bold rounded-[16px] transition-all duration-200 text-base"
-              >
-                Learn More About Us
-              </Link>
-            </div>
+              {/* H1 Title */}
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white max-w-4xl mx-auto leading-tight">
+                Free Business Listing Website in Pakistan – List Your Business Free Forever
+              </h1>
 
-            {/* Trust Badges */}
-            <div className="mt-12 pt-8 border-t border-[#E2E8F0] grid grid-cols-2 md:grid-cols-4 gap-4 text-xs sm:text-sm font-medium text-[#475569]">
-              <div>✓ 100% Free Forever</div>
-              <div>✓ 10,000+ Active Listings</div>
-              <div>✓ High Google Ranking</div>
-              <div>✓ Verified Local Directory</div>
+              {/* Subtitle */}
+              <p className="mt-6 text-base sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+                ListPak is Pakistan&apos;s leading free business listing website and free directory platform where businesses, employers, and job seekers connect. List your business free on Pakistan&apos;s #1 online business directory, post jobs for free, and find qualified employees across Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, Peshawar, Quetta, and all cities in Pakistan. Join 10,000+ businesses already growing with our 100% free local business listing service.
+              </p>
+
+              {/* Search Bar */}
+              <div className="mt-10 max-w-3xl mx-auto bg-white rounded-[16px] p-2.5 shadow-[0_8px_40px_rgba(15,23,42,0.16)] border border-[#D9E2F1] flex flex-col sm:flex-row gap-3">
+                <div className="flex-1 flex items-center gap-3 px-4 py-2 bg-[#F4F7FC] rounded-[12px]">
+                  <Search className="w-5 h-5 text-[#64748B]" />
+                  <input
+                    type="text"
+                    placeholder="Search businesses or services (e.g., 'restaurants near me in Lahore', 'plumbers in Karachi')..."
+                    className="w-full bg-transparent text-sm text-[#0F172A] placeholder-[#64748B] focus:outline-none"
+                  />
+                </div>
+                <Link
+                  href="/add-business"
+                  className="px-8 py-3.5 bg-[#2563EB] hover:bg-blue-700 text-white font-bold rounded-[12px] transition-all duration-200 text-sm inline-flex items-center justify-center gap-2 shrink-0 shadow-md"
+                >
+                  <span>Search Now</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+
+              {/* CTA Buttons */}
+              <div className="mt-8 flex flex-wrap justify-center gap-4">
+                <Link
+                  href="/add-business"
+                  className="px-8 py-4 bg-[#F97316] hover:bg-[#EA580C] text-white font-bold rounded-[16px] shadow-[0_8px_40px_rgba(15,23,42,0.08)] hover:shadow-lg transition-all duration-200 text-base inline-flex items-center gap-2"
+                >
+                  <span>List Your Business Free Now</span>
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+                <Link
+                  href="/about"
+                  className="px-8 py-4 bg-[#2563EB] hover:bg-blue-700 text-white font-bold rounded-[16px] transition-all duration-200 text-base shadow-md"
+                >
+                  Learn More About Us
+                </Link>
+              </div>
+
+              {/* Trust Signals */}
+              <div className="mt-12 pt-8 border-t border-slate-800 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs sm:text-sm font-medium text-slate-300">
+                <div>✓ 100% Free Forever</div>
+                <div>✓ 10,000+ Active Listings</div>
+                <div>✓ High Google Ranking</div>
+                <div>✓ Verified Local Directory</div>
+              </div>
             </div>
           </div>
         </section>
 
         {/* SECTION 2: POPULAR CATEGORIES */}
-        <section className="py-16 bg-white border-b border-[#E2E8F0]">
+        <section className="py-16 bg-[#F4F7FC]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-extrabold text-[#0F172A]">Explore Top Business Categories in Pakistan – Free Directory Listings</h2>
@@ -224,7 +226,7 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {CATEGORIES.map((cat, idx) => (
-                <div key={idx} className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 shadow-[0_8px_40px_rgba(15,23,42,0.08)] hover:border-[#2563EB] transition-all group">
+                <div key={idx} className="bg-white border border-[#D9E2F1] rounded-[16px] p-6 shadow-[0_8px_40px_rgba(15,23,42,0.08)] hover:border-[#2563EB] transition-all group">
                   <h3 className="font-bold text-[#0F172A] text-lg mb-1 group-hover:text-[#2563EB] transition-colors">{cat.name}</h3>
                   <span className="text-xs font-semibold text-[#16A34A] bg-emerald-50 px-2.5 py-1 rounded-full inline-block mb-3">{cat.count}</span>
                   <p className="text-xs text-[#64748B] leading-relaxed">{cat.desc}</p>
@@ -241,8 +243,8 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* SECTION 3: TOP CITIES */}
-        <section className="py-16 bg-slate-50 border-b border-[#E2E8F0]">
+        {/* SECTION 3: TOP CITIES (Soft Blue Depth Background #EEF4FF) */}
+        <section className="py-16 bg-[#EEF4FF] border-y border-[#D9E2F1]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-extrabold text-[#0F172A]">Browse Free Business Listings by City in Pakistan – Local Directory Near You</h2>
@@ -251,10 +253,10 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
               {CITIES.map((city, idx) => (
-                <div key={idx} className="bg-white border border-[#E2E8F0] rounded-[16px] p-5 shadow-[0_8px_40px_rgba(15,23,42,0.08)] hover:border-[#2563EB] transition-all">
+                <div key={idx} className="bg-white border border-[#D9E2F1] rounded-[16px] p-5 shadow-[0_8px_40px_rgba(15,23,42,0.08)] hover:border-[#2563EB] transition-all">
                   <div className="flex justify-between items-center mb-2">
                     <h3 className="font-bold text-[#0F172A] text-base">{city.name}</h3>
-                    <span className="text-[10px] text-[#64748B] font-semibold px-2 py-0.5 bg-slate-100 rounded-md">{city.province}</span>
+                    <span className="text-[10px] text-[#64748B] font-semibold px-2 py-0.5 bg-[#F4F7FC] rounded-md">{city.province}</span>
                   </div>
                   <p className="text-xs font-semibold text-[#2563EB] mb-2">{city.count}</p>
                   <p className="text-[11px] text-[#64748B] line-clamp-2">{city.desc}</p>
@@ -272,24 +274,24 @@ export default function HomePage() {
         </section>
 
         {/* SECTION 4: HOW IT WORKS */}
-        <section className="py-16 bg-white border-b border-[#E2E8F0]">
+        <section className="py-16 bg-[#F4F7FC]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl font-extrabold text-[#0F172A] mb-12">List Your Business Free in 3 Simple Steps – Free Business Directory Pakistan</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="bg-white p-8 rounded-[16px] border border-[#E2E8F0] shadow-[0_8px_40px_rgba(15,23,42,0.08)] relative">
+              <div className="bg-white p-8 rounded-[16px] border border-[#D9E2F1] shadow-[0_8px_40px_rgba(15,23,42,0.08)] relative">
                 <div className="w-12 h-12 rounded-full bg-[#F97316] text-white font-bold text-xl flex items-center justify-center mx-auto mb-6 shadow-md">1</div>
                 <h3 className="text-xl font-bold text-[#0F172A] mb-3">Create Your Free Account</h3>
                 <p className="text-sm text-[#475569] leading-relaxed">Sign up in 30 seconds with your email or Google account. No credit card required, no hidden charges. Your free listing on Pakistan&apos;s #1 directory starts here.</p>
               </div>
 
-              <div className="bg-white p-8 rounded-[16px] border border-[#E2E8F0] shadow-[0_8px_40px_rgba(15,23,42,0.08)] relative">
+              <div className="bg-white p-8 rounded-[16px] border border-[#D9E2F1] shadow-[0_8px_40px_rgba(15,23,42,0.08)] relative">
                 <div className="w-12 h-12 rounded-full bg-[#F97316] text-white font-bold text-xl flex items-center justify-center mx-auto mb-6 shadow-md">2</div>
                 <h3 className="text-xl font-bold text-[#0F172A] mb-3">Add Your Business Details</h3>
                 <p className="text-sm text-[#475569] leading-relaxed">Fill in your business name, category, city, address, phone number, and upload photos. Include keywords like &apos;best restaurant in Lahore&apos; or &apos;web developer in Karachi&apos;.</p>
               </div>
 
-              <div className="bg-white p-8 rounded-[16px] border border-[#E2E8F0] shadow-[0_8px_40px_rgba(15,23,42,0.08)] relative">
+              <div className="bg-white p-8 rounded-[16px] border border-[#D9E2F1] shadow-[0_8px_40px_rgba(15,23,42,0.08)] relative">
                 <div className="w-12 h-12 rounded-full bg-[#F97316] text-white font-bold text-xl flex items-center justify-center mx-auto mb-6 shadow-md">3</div>
                 <h3 className="text-xl font-bold text-[#0F172A] mb-3">Publish & Get Customers</h3>
                 <p className="text-sm text-[#475569] leading-relaxed">Go live instantly on ListPak&apos;s free business listing website. Appear in local searches and start receiving calls, messages, and visits within 24 hours.</p>
@@ -299,7 +301,7 @@ export default function HomePage() {
             <div className="mt-12">
               <Link
                 href="/add-business"
-                className="px-8 py-4 bg-[#F97316] hover:bg-[#ea580c] text-white font-bold rounded-[16px] shadow-[0_8px_40px_rgba(15,23,42,0.08)] transition-all text-base inline-flex items-center gap-2"
+                className="px-8 py-4 bg-[#F97316] hover:bg-[#EA580C] text-white font-bold rounded-[16px] shadow-[0_8px_40px_rgba(15,23,42,0.08)] transition-all text-base inline-flex items-center gap-2"
               >
                 <span>List Your Business Free Now – 100% Free Forever</span>
               </Link>
@@ -308,8 +310,8 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* SECTION 5: JOBS & EMPLOYMENT PORTAL */}
-        <section className="py-16 bg-slate-50 border-b border-[#E2E8F0]">
+        {/* SECTION 5: JOBS & EMPLOYMENT PORTAL (Soft Blue Depth #EEF4FF) */}
+        <section className="py-16 bg-[#EEF4FF] border-y border-[#D9E2F1]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0F172A]">Free Job Portal Pakistan – Find Jobs & Hire Employees Free</h2>
@@ -317,8 +319,8 @@ export default function HomePage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Job Seekers */}
-              <div className="bg-white border border-[#E2E8F0] p-8 rounded-[16px] shadow-[0_8px_40px_rgba(15,23,42,0.08)]">
+              {/* Job Seekers Card */}
+              <div className="bg-white border border-[#D9E2F1] p-8 rounded-[16px] shadow-[0_8px_40px_rgba(15,23,42,0.08)]">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#2563EB] flex items-center justify-center">
                     <UserCheck className="w-6 h-6" />
@@ -333,13 +335,13 @@ export default function HomePage() {
                   <li>✓ Upload your CV and portfolio for employer discovery</li>
                   <li>✓ No registration fees – 100% free job portal Pakistan</li>
                 </ul>
-                <Link href="/add-business" className="block text-center py-3 bg-[#2563EB] hover:bg-blue-700 font-bold rounded-[14px] text-white transition-colors">
+                <Link href="/add-business" className="block text-center py-3.5 bg-[#2563EB] hover:bg-blue-700 font-bold rounded-[14px] text-white transition-colors shadow-md">
                   Create Free Job Seeker Profile Now
                 </Link>
               </div>
 
-              {/* Employers */}
-              <div className="bg-white border border-[#E2E8F0] p-8 rounded-[16px] shadow-[0_8px_40px_rgba(15,23,42,0.08)]">
+              {/* Employers Card */}
+              <div className="bg-white border border-[#D9E2F1] p-8 rounded-[16px] shadow-[0_8px_40px_rgba(15,23,42,0.08)]">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-10 h-10 rounded-xl bg-emerald-50 text-[#16A34A] flex items-center justify-center">
                     <Briefcase className="w-6 h-6" />
@@ -354,7 +356,7 @@ export default function HomePage() {
                   <li>✓ Search CV database by skills, experience, and location</li>
                   <li>✓ Free employer account with dashboard to manage all job postings</li>
                 </ul>
-                <Link href="/add-business" className="block text-center py-3 bg-[#16A34A] hover:bg-emerald-700 font-bold rounded-[14px] text-white transition-colors">
+                <Link href="/add-business" className="block text-center py-3.5 bg-[#16A34A] hover:bg-emerald-700 font-bold rounded-[14px] text-white transition-colors shadow-md">
                   Post a Job Free – Start Hiring Today
                 </Link>
               </div>
@@ -367,7 +369,7 @@ export default function HomePage() {
         </section>
 
         {/* SECTION 6: WHY CHOOSE US */}
-        <section className="py-16 bg-white border-b border-[#E2E8F0]">
+        <section className="py-16 bg-[#F4F7FC]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-extrabold text-[#0F172A]">Why 10,000+ Businesses Trust ListPak – Pakistan&apos;s #1 Free Business Directory</h2>
@@ -375,19 +377,19 @@ export default function HomePage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="p-8 bg-white border border-[#E2E8F0] rounded-[16px] shadow-[0_8px_40px_rgba(15,23,42,0.08)]">
+              <div className="p-8 bg-white border border-[#D9E2F1] rounded-[16px] shadow-[0_8px_40px_rgba(15,23,42,0.08)]">
                 <ShieldCheck className="w-10 h-10 text-[#16A34A] mb-4" />
                 <h3 className="font-bold text-[#0F172A] text-lg mb-2">100% Free Business Listing – Forever</h3>
                 <p className="text-xs text-[#64748B] leading-relaxed">Unlike other directories that charge monthly fees, ListPak is completely free forever. No hidden charges, no premium plans, no subscriptions.</p>
               </div>
 
-              <div className="p-8 bg-white border border-[#E2E8F0] rounded-[16px] shadow-[0_8px_40px_rgba(15,23,42,0.08)]">
+              <div className="p-8 bg-white border border-[#D9E2F1] rounded-[16px] shadow-[0_8px_40px_rgba(15,23,42,0.08)]">
                 <TrendingUp className="w-10 h-10 text-[#2563EB] mb-4" />
                 <h3 className="font-bold text-[#0F172A] text-lg mb-2">High Google Ranking – Get Found Fast</h3>
                 <p className="text-xs text-[#64748B] leading-relaxed">Our free business listing website has high domain authority (DA), helping your business rank on page 1 of Google for local search keywords.</p>
               </div>
 
-              <div className="p-8 bg-white border border-[#E2E8F0] rounded-[16px] shadow-[0_8px_40px_rgba(15,23,42,0.08)]">
+              <div className="p-8 bg-white border border-[#D9E2F1] rounded-[16px] shadow-[0_8px_40px_rgba(15,23,42,0.08)]">
                 <PhoneCall className="w-10 h-10 text-[#F97316] mb-4" />
                 <h3 className="font-bold text-[#0F172A] text-lg mb-2">Mobile-Optimized Directory</h3>
                 <p className="text-xs text-[#64748B] leading-relaxed">90% of Pakistani users search on mobile. ListPak is 100% mobile-responsive, allowing click-to-call, WhatsApp, and Google Maps direction.</p>
@@ -397,7 +399,7 @@ export default function HomePage() {
         </section>
 
         {/* SECTION 7: RECENT LISTINGS */}
-        <section className="py-16 bg-slate-50 border-b border-[#E2E8F0]">
+        <section className="py-16 bg-[#EEF4FF] border-y border-[#D9E2F1]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-extrabold text-[#0F172A]">Recently Added Businesses on Free Directory Pakistan – Latest Listings</h2>
@@ -406,7 +408,7 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {RECENT_LISTINGS.map((biz, idx) => (
-                <div key={idx} className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 shadow-[0_8px_40px_rgba(15,23,42,0.08)]">
+                <div key={idx} className="bg-white border border-[#D9E2F1] rounded-[16px] p-6 shadow-[0_8px_40px_rgba(15,23,42,0.08)]">
                   <div className="flex justify-between items-start mb-3">
                     <h3 className="font-bold text-[#0F172A] text-base">{biz.name}</h3>
                     <span className="text-[10px] font-bold text-[#16A34A] bg-emerald-50 px-2 py-0.5 rounded-full">{biz.badge}</span>
@@ -428,7 +430,7 @@ export default function HomePage() {
         </section>
 
         {/* SECTION 8: COMPREHENSIVE SEO CONTENT BLOCK (800+ Words) */}
-        <section className="py-16 bg-white border-b border-[#E2E8F0]">
+        <section className="py-16 bg-white border-b border-[#D9E2F1]">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-[#475569] leading-relaxed space-y-6">
             <h2 className="text-3xl font-extrabold text-[#0F172A]">Free Business Listing Website in Pakistan – ListPak Online Business Directory</h2>
             
@@ -441,44 +443,29 @@ export default function HomePage() {
             <div className="space-y-6">
               <div>
                 <h4 className="font-bold text-[#0F172A] text-lg">1. 100% Free Business Directory – No Hidden Charges Ever</h4>
-                <p className="text-sm mt-1">ListPak is completely free for all businesses in Pakistan. There are no monthly subscription fees, no premium plans, no hidden charges, and no credit card requirements. You can list your business free forever and enjoy all features including unlimited edits, photo uploads, contact information display, and customer inquiries. This makes ListPak the most cost-effective online business listing solution for small businesses, startups, and entrepreneurs in Pakistan who want to maximize their online visibility without spending money on advertising.</p>
+                <p className="text-sm mt-1">ListPak is completely free for all businesses in Pakistan. There are no monthly subscription fees, no premium plans, no hidden charges, and no credit card requirements. You can list your business free forever and enjoy all features including unlimited edits, photo uploads, contact information display, and customer inquiries.</p>
               </div>
 
               <div>
                 <h4 className="font-bold text-[#0F172A] text-lg">2. High Domain Authority for Better Google Ranking</h4>
-                <p className="text-sm mt-1">Our free business listing website has high domain authority (DA) and page authority (PA), which means your business listing on ListPak will rank higher on Google search results. When customers search for keywords like &apos;best restaurant in Lahore&apos;, &apos;top web developer in Karachi&apos;, or &apos;plumbers near me in Islamabad&apos;, your ListPak listing has a strong chance of appearing on page 1 of Google. This free SEO benefit alone can drive hundreds of organic visitors to your business profile every month without you spending a single rupee on Google Ads or Facebook marketing.</p>
+                <p className="text-sm mt-1">Our free business listing website has high domain authority (DA) and page authority (PA), which means your business listing on ListPak will rank higher on Google search results. When customers search for keywords like &apos;best restaurant in Lahore&apos;, &apos;top web developer in Karachi&apos;, or &apos;plumbers near me in Islamabad&apos;, your ListPak listing has a strong chance of appearing on page 1 of Google.</p>
               </div>
 
               <div>
                 <h4 className="font-bold text-[#0F172A] text-lg">3. Nationwide Coverage Across All Pakistan Cities</h4>
-                <p className="text-sm mt-1">ListPak covers all major cities and towns in Pakistan including Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, Peshawar, Quetta, Sialkot, Gujranwala, Hyderabad, Bahawalpur, Sargodha, Sukkur, Larkana, and 150+ more cities. Whether your business is located in a metropolitan area or a smaller town, ListPak&apos;s free directory ensures you&apos;re visible to customers searching locally in your area.</p>
-              </div>
-
-              <div>
-                <h4 className="font-bold text-[#0F172A] text-lg">4. Integrated Job Portal for Hiring and Employment</h4>
-                <p className="text-sm mt-1">Beyond business listings, ListPak also serves as a free job portal Pakistan where employers can post unlimited jobs for free and job seekers can create visible profiles to get hired. This dual functionality makes ListPak a one-stop platform for both business promotion and recruitment.</p>
-              </div>
-
-              <div>
-                <h4 className="font-bold text-[#0F172A] text-lg">5. Verified Business Profiles Build Customer Trust</h4>
-                <p className="text-sm mt-1">All business listings on ListPak undergo manual verification to ensure authenticity and prevent spam. When customers see the &apos;✓ Verified&apos; badge on your listing, they know your business is legitimate and trustworthy. This verification process increases your conversion rate – customers are 3x more likely to contact verified businesses than unverified ones.</p>
+                <p className="text-sm mt-1">ListPak covers all major cities and towns in Pakistan including Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, Peshawar, Quetta, Sialkot, Gujranwala, Hyderabad, Bahawalpur, Sargodha, Sukkur, Larkana, and 150+ more cities.</p>
               </div>
             </div>
 
             <h3 className="text-2xl font-bold text-[#0F172A] pt-4">How Free Business Listing Improves Your Local SEO in Pakistan</h3>
             <p className="text-sm">
-              List your business on ListPak&apos;s free directory to significantly improve your local SEO ranking in Pakistan. When customers search for &apos;businesses near me&apos; or &apos;services in [your city]&apos;, Google prioritizes businesses listed on high-authority local directories like ListPak. Our high-quality backlink and consistent NAP (Name, Address, Phone number) signal trust to Google&apos;s algorithm.
-            </p>
-
-            <h3 className="text-2xl font-bold text-[#0F172A] pt-4">Start Your Free Business Listing Today – Join Pakistan&apos;s Largest Online Directory</h3>
-            <p className="text-sm">
-              Ready to grow your business with Pakistan&apos;s #1 free business listing website? Join 10,000+ businesses already listed free on ListPak directory and start reaching thousands of customers across Karachi, Lahore, Islamabad, and all cities in Pakistan. Creating your free business listing takes less than 5 minutes.
+              List your business on ListPak&apos;s free directory to significantly improve your local SEO ranking in Pakistan. When customers search for &apos;businesses near me&apos; or &apos;services in [your city]&apos;, Google prioritizes businesses listed on high-authority local directories like ListPak.
             </p>
 
             <div className="pt-6 text-center">
               <Link
                 href="/add-business"
-                className="px-8 py-4 bg-[#F97316] hover:bg-[#ea580c] text-white font-bold rounded-[16px] shadow-[0_8px_40px_rgba(15,23,42,0.08)] transition-all inline-block text-base"
+                className="px-8 py-4 bg-[#F97316] hover:bg-[#EA580C] text-white font-bold rounded-[16px] shadow-[0_8px_40px_rgba(15,23,42,0.08)] transition-all inline-block text-base"
               >
                 Create Your Free Business Listing Now – Starts in 30 Seconds
               </Link>
@@ -487,13 +474,13 @@ export default function HomePage() {
         </section>
 
         {/* SECTION 9: FAQS */}
-        <section className="py-16 bg-slate-50">
+        <section className="py-16 bg-[#F4F7FC]">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-extrabold text-[#0F172A] text-center mb-10">Frequently Asked Questions About Free Business Listing in Pakistan</h2>
 
             <div className="space-y-5">
               {FAQS.map((faq, idx) => (
-                <div key={idx} className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 shadow-[0_8px_40px_rgba(15,23,42,0.08)]">
+                <div key={idx} className="bg-white border border-[#D9E2F1] rounded-[16px] p-6 shadow-[0_8px_40px_rgba(15,23,42,0.08)]">
                   <h3 className="font-bold text-[#0F172A] text-base mb-2 flex items-center gap-2">
                     <HelpCircle className="w-5 h-5 text-[#2563EB] shrink-0" />
                     {faq.question}

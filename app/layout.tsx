@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Plus_Jakarta_Sans } from 'next/font/google'
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import './globals.css'
 import BottomNav from '@/components/bottom-nav'
 
-const inter = Inter({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   display: 'swap',
@@ -37,8 +37,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="font-sans antialiased bg-white text-[#0F172A] pb-16 md:pb-0">
+    <html lang="en" className={jakarta.variable}>
+      <body className="font-sans antialiased bg-[#F4F7FC] text-[#0F172A] pb-16 md:pb-0">
         {children}
         <BottomNav />
         <SpeedInsights />
