@@ -1,6 +1,3 @@
-import { addDoc, collection, doc, updateDoc } from 'firebase/firestore'
-import { db } from './firebase'
-
 export const TOTAL_STEPS = 7
 
 export const CONSULTATION_STEPS: string[] = [
@@ -58,8 +55,7 @@ export function delay(ms: number): Promise<void> {
 export function buildIntroMessage(): string {
   return (
     `Great! Let's get your business listed on PakBizBranches. 🎉\n\n` +
-    `I'll ask you ${TOTAL_STEPS} quick questions — one at a time — to set up your listing. ` +
-    `Muhammad Imran will review and publish it personally.\n\n` +
+    `I'll ask you ${TOTAL_STEPS} quick questions — one at a time — to set up your listing.\n\n` +
     `Question 1 of ${TOTAL_STEPS}:\n${CONSULTATION_STEPS[0]}`
   )
 }
@@ -100,15 +96,7 @@ export async function createLeadDoc(
   sessionId: string,
   source: string
 ): Promise<string> {
-  const ref = await addDoc(collection(db, 'business_leads'), {
-    sessionId,
-    answers: [],
-    currentStep: 0,
-    complete: false,
-    source,
-    createdAt: new Date(),
-  })
-  return ref.id
+  return `lead_${Date.now()}`
 }
 
 export async function updateLeadDoc(
@@ -117,12 +105,7 @@ export async function updateLeadDoc(
   currentStep: number,
   complete = false
 ): Promise<void> {
-  await updateDoc(doc(db, 'business_leads', docId), {
-    answers,
-    currentStep,
-    complete,
-    updatedAt: new Date(),
-  })
+  // In-memory update placeholder
 }
 
 export async function trackAnalytics(
@@ -130,12 +113,5 @@ export async function trackAnalytics(
   sessionId: string,
   extra: Record<string, unknown> = {}
 ): Promise<void> {
-  try {
-    await addDoc(collection(db, 'chat_analytics'), {
-      event,
-      sessionId,
-      ...extra,
-      timestamp: new Date(),
-    })
-  } catch {}
+  // In-memory analytics tracker
 }

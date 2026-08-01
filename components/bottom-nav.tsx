@@ -1,24 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, LayoutGrid, Plus, LogIn, User, MapPin } from 'lucide-react'
-import { auth } from '@/lib/firebase'
-import { onAuthStateChanged } from 'firebase/auth'
+import { Home, Plus, Info } from 'lucide-react'
 
 export default function BottomNav() {
   const pathname = usePathname()
-  const [user, setUser] = useState<any>(null)
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser)
-    })
-    return () => unsubscribe()
-  }, [])
-
-  // Navigation items definition
   const items = [
     {
       label: 'Home',
@@ -27,28 +15,16 @@ export default function BottomNav() {
       active: pathname === '/'
     },
     {
-      label: 'Categories',
-      href: '/categories/',
-      icon: LayoutGrid,
-      active: pathname.startsWith('/categories') || pathname.startsWith('/category')
-    },
-    {
-      label: 'Add',
-      href: '/add-business/',
+      label: 'Add Business',
+      href: '/add-business',
       icon: Plus,
       isCenter: true
     },
     {
-      label: user ? 'Profile' : 'Login',
-      href: user ? '/user/profile/' : '/auth/login/',
-      icon: user ? User : LogIn,
-      active: pathname.startsWith('/auth/login') || pathname.startsWith('/user/profile')
-    },
-    {
-      label: 'Cities',
-      href: '/cities/',
-      icon: MapPin,
-      active: pathname.startsWith('/cities') || pathname.startsWith('/city')
+      label: 'About',
+      href: '/about',
+      icon: Info,
+      active: pathname === '/about'
     }
   ]
 

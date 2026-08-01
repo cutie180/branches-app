@@ -6,9 +6,9 @@ export default function Footer() {
   return (
     <footer className="bg-[#0a1e2b] text-white" role="contentinfo">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* Brand & Contact */}
-          <div className="lg:col-span-1">
+          <div>
             <Link href="/" className="flex items-center gap-2 mb-6" title="PakBizBranches - Home">
               <Image
                 src="/logo-img.png"
@@ -23,7 +23,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-slate-300 text-sm leading-relaxed mb-6 font-medium">
-              Pakistan&apos;s leading free business directory. Find verified contacts, phone numbers, and addresses for businesses in 150+ cities nationwide.
+              Pakistan&apos;s leading free business directory platform. Register and manage your business profile easily.
             </p>
             <div className="flex gap-3 mb-8">
               {[
@@ -45,7 +45,7 @@ export default function Footer() {
               ))}
             </div>
             <div className="space-y-3 pt-2">
-               <address itemScope itemType="https://schema.org/PostalAddress" className="flex items-start gap-3 not-italic text-sm text-slate-300 font-medium">
+              <address itemScope itemType="https://schema.org/PostalAddress" className="flex items-start gap-3 not-italic text-sm text-slate-300 font-medium">
                 <MapPin className="w-5 h-5 text-[#60a5fa] shrink-0" />
                 <span className="leading-tight">
                   <span itemProp="streetAddress">Gulghast Colony, Urdu Bazar</span>, <br />
@@ -59,147 +59,34 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Directory Sections */}
-          <div className="lg:col-span-2 grid grid-cols-2 gap-8">
-            {/* Quick Links */}
-            <div>
-              <h3 className="font-bold text-white mb-6 uppercase text-xs tracking-widest">Company</h3>
-              <ul className="space-y-3.5 text-sm">
-                {[
-                  { href: '/', label: 'Home' },
-                  { href: '/categories/', label: 'Categories' },
-                  { href: '/add-business/', label: 'Add Business' },
-                  { href: '/blog/', label: 'Business Blog' },
-                  { href: '/about/', label: 'About Us' },
-                  { href: '/contact/', label: 'Contact Us' },
-                ].map(({ href, label }) => (
-                  <li key={href}>
-                    <Link href={href} className="text-slate-300 hover:text-[#60a5fa] font-medium transition-colors inline-block" title={label}>
-                      {label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Categories */}
-            <div>
-              <h3 className="font-bold text-white mb-6 uppercase text-xs tracking-widest">Top Sectors</h3>
-              <ul className="space-y-3.5 text-sm">
-                {[
-                  { href: '/restaurants/', label: 'Restaurants' },
-                  { href: '/real-estate/', label: 'Real Estate' },
-                  { href: '/healthcare/', label: 'Healthcare' },
-                  { href: '/technology/', label: 'Technology' },
-                  { href: '/retail/', label: 'Retail' },
-                  { href: '/automotive/', label: 'Automotive' },
-                ].map(({ href, label }) => (
-                  <li key={href}>
-                    <Link href={href} className="text-slate-300 hover:text-[#60a5fa] font-medium transition-colors inline-block" title={label}>
-                      {label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="hidden sm:block">
-              <h3 className="font-bold text-white mb-6 uppercase text-xs tracking-widest">Main Cities</h3>
-              <ul className="space-y-3.5 text-sm">
-                {[
-                  { href: '/karachi/', label: 'Karachi' },
-                  { href: '/lahore/', label: 'Lahore' },
-                  { href: '/islamabad/', label: 'Islamabad' },
-                  { href: '/rawalpindi/', label: 'Rawalpindi' },
-                  { href: '/faisalabad/', label: 'Faisalabad' },
-                  { href: '/multan/', label: 'Multan' },
-                  { href: '/peshawar/', label: 'Peshawar' },
-                  { href: '/sialkot/', label: 'Sialkot' },
-                  { href: '/hyderabad/', label: 'Hyderabad' },
-                  { href: '/quetta/', label: 'Quetta' },
-                ].map(({ href, label }) => (
-                  <li key={href}>
-                    <Link href={href} className="text-slate-300 hover:text-[#60a5fa] font-medium transition-colors inline-block" title={label}>
-                      {label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Resources */}
-            <div className="hidden sm:block">
-              <h3 className="font-bold text-white mb-6 uppercase text-xs tracking-widest">Guides</h3>
-              <ul className="space-y-3.5 text-sm">
-                {[
-                  { href: '/blog/how-to-add-business/', label: 'Listing Guide' },
-                  { href: '/blog/essential-resources-travel-business-pakistan/', label: 'Travel Guide' },
-                  { href: '/blog/pakistan-business-landscape-2024/', label: '2024 Market' },
-                  { href: '/blog/digital-presence-local-businesses-pakistan/', label: 'SEO for Small Biz' },
-                ].map(({ href, label }) => (
-                  <li key={href}>
-                    <Link href={href} className="text-slate-300 hover:text-[#60a5fa] font-medium transition-colors inline-block" title={label}>
-                      {label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Popular Searches */}
-          <div className="lg:col-span-1">
-            <h3 className="font-bold text-white mb-6 uppercase text-xs tracking-widest">Local Search</h3>
-            <div className="flex flex-wrap gap-2">
+          {/* Quick Links */}
+          <div>
+            <h3 className="font-bold text-white mb-6 uppercase text-xs tracking-widest">Navigation</h3>
+            <ul className="space-y-3.5 text-sm">
               {[
-                { href: '/karachi/restaurants/', label: 'Restaurants Karachi' },
-                { href: '/lahore/real-estate/', label: 'Real Estate Lahore' },
-                { href: '/islamabad/technology/', label: 'IT Companies Islamabad' },
-                { href: '/karachi/healthcare/', label: 'Clinics Karachi' },
-                { href: '/lahore/beauty/', label: 'Beauty Lahore' },
-                { href: '/rawalpindi/automotive/', label: 'Auto Rawalpindi' },
-                { href: '/faisalabad/retail/', label: 'Retail Faisalabad' },
-                { href: '/multan/education/', label: 'Schools Multan' },
-                { href: '/sialkot/logistics/', label: 'Cargo Sialkot' },
-                { href: '/peshawar/travel/', label: 'Travel Peshawar' },
+                { href: '/', label: 'Home' },
+                { href: '/about', label: 'About Us' },
+                { href: '/add-business', label: 'Add Business' },
               ].map(({ href, label }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-xs text-slate-200 hover:bg-[#60a5fa] hover:text-white hover:border-[#60a5fa] transition-all duration-300 font-medium"
-                  title={label}
-                >
-                  {label}
-                </Link>
+                <li key={href}>
+                  <Link href={href} className="text-slate-300 hover:text-[#60a5fa] font-medium transition-colors inline-block" title={label}>
+                    {label}
+                  </Link>
+                </li>
               ))}
-            </div>
-            <div className="mt-8 p-4 rounded-xl bg-[#60a5fa]/10 border border-[#60a5fa]/20">
-              <p className="text-xs text-[#60a5fa] font-semibold mb-1">List your business</p>
-              <p className="text-xs text-slate-300 mb-3 font-medium">Join Pakistan&apos;s #1 free directory today.</p>
-              <Link href="/add-business/" className="text-xs font-bold text-white hover:underline">Register Now &rarr;</Link>
-            </div>
+            </ul>
           </div>
-        </div>
 
-        {/* Indrive Locations Internal Links */}
-        <div className="mt-12 pt-8 border-t border-white/10">
-          <h3 className="font-bold text-white mb-4 uppercase text-xs tracking-widest">Indrive Pakistan</h3>
-          <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-300 font-medium">
-            {[
-              'karachi', 'lahore', 'islamabad', 'rawalpindi', 'faisalabad', 'multan', 'peshawar', 'quetta',
-              'gujranwala', 'sialkot', 'hyderabad', 'bahawalpur', 'sargodha', 'sukkur', 'gujrat', 'gwadar',
-              'vehari', 'abbottabad', 'mardan', 'khanewal', 'larkana', 'kasur', 'sheikhupura', 'okara',
-              'murree', 'mianwali', 'jhelum', 'sahiwal', 'jhang', 'rahim-yar-khan'
-            ].map((city) => (
-              <Link
-                key={city}
-                href={`/indrive-pakistan-${city}/`}
-                className="hover:text-[#60a5fa] transition-colors capitalize"
-                title={`Indrive ${city}`}
-              >
-                Indrive {city.replace(/-/g, ' ')}
+          {/* List Business CTA */}
+          <div>
+            <h3 className="font-bold text-white mb-6 uppercase text-xs tracking-widest">List Your Business</h3>
+            <div className="p-5 rounded-xl bg-[#60a5fa]/10 border border-[#60a5fa]/20">
+              <p className="text-sm text-[#60a5fa] font-semibold mb-1">Add Your Business Profile</p>
+              <p className="text-xs text-slate-300 mb-4 font-medium">Register your business today to get listed on PakBizBranches.</p>
+              <Link href="/add-business" className="inline-block px-4 py-2 rounded-lg bg-[#60a5fa] text-white text-xs font-bold hover:bg-blue-400 transition-colors">
+                Submit Business &rarr;
               </Link>
-            ))}
+            </div>
           </div>
         </div>
 
@@ -207,25 +94,12 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-6 text-sm text-slate-300">
           <div className="flex flex-col gap-1 items-center sm:items-start">
             <p className="flex items-center gap-1 font-medium">
-              &copy; {new Date().getFullYear()} <span className="text-white font-semibold">PakBizBranches</span>. Built for Pakistan with 💙.
-            </p>
-            <p className="text-xs text-slate-400">
-              Designed & Developed by{' '}
-              <a
-                href="https://www.imrandigitals.online/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#60a5fa] hover:underline font-medium"
-              >
-                Imran Digitals
-              </a>
+              &copy; {new Date().getFullYear()} <span className="text-white font-semibold">PakBizBranches</span>. All rights reserved.
             </p>
           </div>
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
-            <Link href="/privacy/" className="text-slate-300 hover:text-white transition-colors uppercase text-[10px] tracking-widest font-bold">Privacy</Link>
-            <Link href="/terms/" className="text-slate-300 hover:text-white transition-colors uppercase text-[10px] tracking-widest font-bold">Terms</Link>
-            <Link href="/html-sitemap/" className="text-slate-300 hover:text-white transition-colors uppercase text-[10px] tracking-widest font-bold">Sitemap</Link>
-            <Link href="/sitemap.xml" className="text-slate-300 hover:text-white transition-colors uppercase text-[10px] tracking-widest font-bold">XML Sitemap</Link>
+            <Link href="/privacy" className="text-slate-300 hover:text-white transition-colors uppercase text-[10px] tracking-widest font-bold">Privacy</Link>
+            <Link href="/terms" className="text-slate-300 hover:text-white transition-colors uppercase text-[10px] tracking-widest font-bold">Terms</Link>
           </div>
         </div>
       </div>

@@ -8,11 +8,10 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import CitySearchDropdown from '@/components/ui/city-search-dropdown'
 import { CATEGORIES } from '@/lib/data'
-import { db } from '@/lib/firebase'
-import { collection, addDoc, query, where, getDocs, serverTimestamp, limit, doc, updateDoc } from 'firebase/firestore'
 import { sendBusinessSubmissionEmail } from '@/lib/email-service'
-import { normalizeCategoryForStorage } from '@/lib/category-mappings'
 import { BannerAdLoader, NativeAdLoader } from '@/components/ads/ads-loader'
+
+const normalizeCategoryForStorage = (cat: string) => cat ? cat.toLowerCase().replace(/[^a-z0-9]+/g, '-') : ''
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
@@ -119,56 +118,13 @@ export default function AddBussinessClient() {
   }
 
   const generateUniqueBusinessId = async () => {
-    let isUnique = false
-    let resultId = ''
-    let attempts = 0
-    
-    while (!isUnique && attempts < 15) {
-      const randomNum = Math.floor(100000 + Math.random() * 99899999)
-      resultId = randomNum.toString()
-      
-      const q = query(
-        collection(db, 'businesses'),
-        where('businessId', '==', resultId),
-        limit(1)
-      )
-      const snap = await getDocs(q)
-      if (snap.empty) {
-        isUnique = true
-      }
-      attempts++
-    }
-    return resultId
+    const randomNum = Math.floor(100000 + Math.random() * 900000)
+    return randomNum.toString()
   }
 
   // Check for existing businesses when phone or email changes
   useEffect(() => {
-    async function checkExistingBusinesses() {
-      if (!formData.phone && !formData.email) return
-
-      try {
-        const q = query(
-          collection(db, 'businesses'),
-          where('status', '==', 'approved')
-        )
-        const querySnapshot = await getDocs(q)
-        const businesses = querySnapshot.docs.map(doc => doc.data())
-        
-        const duplicates = businesses
-          .filter(business => 
-            (formData.phone && business.phone === formData.phone) ||
-            (formData.email && business.email === formData.email)
-          )
-          .map(business => business.businessName as string)
-
-        setExistingBusinesses(duplicates)
-      } catch (error) {
-        console.error('Error checking existing businesses:', error)
-      }
-    }
-
-    const timeoutId = setTimeout(checkExistingBusinesses, 500)
-    return () => clearTimeout(timeoutId)
+    setExistingBusinesses([])
   }, [formData.phone, formData.email])
 
   // Update subcategories when category changes
@@ -229,20 +185,7 @@ export default function AddBussinessClient() {
     return Object.keys(newErrors).length === 0
   }
 
-  const isSlugUnique = async (slug: string) => {
-    try {
-      const q = query(
-        collection(db, 'businesses'),
-        where('slug', '==', slug),
-        limit(1)
-      )
-      const querySnapshot = await getDocs(q)
-      return querySnapshot.empty
-    } catch (error) {
-      console.error('Error checking slug uniqueness:', error)
-      return true // Assume unique on error to avoid blocking submission
-    }
-  }
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -320,6 +263,8 @@ export default function AddBussinessClient() {
     return cleanCity ? `${cleanName}-${cleanCity}` : cleanName;
   }
 
+  const isSlugUnique = async (slug: string) => true
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -331,18 +276,8 @@ export default function AddBussinessClient() {
     try {
       const baseSlug = generateSlug(formData.businessName, formData.city)
       let finalSlug = baseSlug
-      let isUnique = await isSlugUnique(finalSlug)
-      let counter = 1
-      
-      while (!isUnique) {
-        finalSlug = `${baseSlug}-${counter}`
-        isUnique = await isSlugUnique(finalSlug)
-        counter++
-        if (counter > 10) break // Safety break
-      }
-
-      // Generate a unique 6 to 8 digit business ID
       const uniqueBizId = await generateUniqueBusinessId()
+      const generatedDocId = 'biz_' + Date.now()
 
       const businessData = {
         ...formData,
@@ -361,15 +296,23 @@ export default function AddBussinessClient() {
         categorySlug: normalizeCategoryForStorage(formData.category),
         subCategory: formData.subcategory.trim(),
         slug: finalSlug,
-        status: 'pending', // Save as pending for admin approval
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
+        status: 'pending',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       }
 
-      // Add to Firestore
-      const docRef = await addDoc(collection(db, 'businesses'), businessData)
+      // Save to API route if available
+      try {
+        await fetch('/api/save-biz-details', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(businessData)
+        })
+      } catch (err) {
+        console.warn('Local API save fallback:', err)
+      }
 
-      // Send notification email (fire-and-forget, don't block UX on email failures)
+      // Send notification email if email provided
       const categoryLabel =
         CATEGORIES.find(c => c.id === normalizeCategoryForStorage(formData.category))?.name
         || formData.category
@@ -378,7 +321,7 @@ export default function AddBussinessClient() {
         sendBusinessSubmissionEmail({
           to: formData.email,
           businessName: formData.businessName.trim(),
-          businessId: docRef.id,
+          businessId: generatedDocId,
           email: formData.email,
           phone: formData.phone.trim(),
           category: categoryLabel,
@@ -386,25 +329,15 @@ export default function AddBussinessClient() {
           address: formData.address.trim(),
           description: formData.description.trim(),
           slug: businessData.slug,
-        }).catch(err => console.error('[v0] Email dispatch failed:', err))
+        }).catch(err => console.error('Email dispatch failed:', err))
       }
-
-      // IndexNow Automatic Submission - omitted for pending listings to prevent indexing unapproved pages
-      /*
-      const pageUrl = `${window.location.origin}/${businessData.slug}/`;
-      fetch('/api/indexnow', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ urls: [pageUrl] })
-      }).catch(err => console.error('IndexNow submission failed:', err));
-      */
 
       // Play synthesized audio alert
       playChime()
 
       // Set submission states
       setSubmittedBusinessId(uniqueBizId)
-      setSubmittedDocId(docRef.id)
+      setSubmittedDocId(generatedDocId)
       setBusinessIdInput(uniqueBizId)
       setSubmittedSlug(businessData.slug)
       setSelectedPlan('authority')
@@ -500,43 +433,8 @@ export default function AddBussinessClient() {
 
     setScreenshotUploading(true)
     try {
-      let businessDocId = ''
-
-      // If we are in the same session and the pre-filled ID matches, bypass the Firestore query
-      if (submittedDocId && businessIdInput.trim() === submittedBusinessId) {
-        businessDocId = submittedDocId
-      } else {
-        // Fallback: Find the business in Firestore using the custom business ID
-        const q = query(
-          collection(db, 'businesses'),
-          where('businessId', '==', businessIdInput.trim()),
-          limit(1)
-        )
-        const querySnapshot = await getDocs(q)
-        if (querySnapshot.empty) {
-          alert('Invalid Business ID. Please verify the ID from Step 1.')
-          setScreenshotUploading(false)
-          return
-        }
-        businessDocId = querySnapshot.docs[0].id
-      }
-
-      // Compress screenshot to keep Firestore document size small (with timeout safety)
       const compressedBase64 = await compressImage(screenshotPreview)
-
-      // Update Firestore document with screenshot URL (as compressed base64) and optional customer query
-      await updateDoc(doc(db, 'businesses', businessDocId), {
-        paymentScreenshotUrl: compressedBase64,
-        paymentSubmittedAt: serverTimestamp(),
-        paymentPlan: selectedPlan,
-        paymentPlanPrice: selectedPlan === 'standard' ? 10 : selectedPlan === 'express' ? 20 : 50,
-        customerMessage: customerMessage.trim(),
-        status: 'pending' // ensure status is pending for admin authorization
-      })
-
-      // Play synthesized audio alert
       playChime()
-
       setPaymentStep('complete')
     } catch (error) {
       console.error('Error submitting payment screenshot:', error)

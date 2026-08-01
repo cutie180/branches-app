@@ -12,10 +12,12 @@ export default function HeroSearchForm() {
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault()
-    const params = new URLSearchParams()
-    if (query) params.set('q', query)
-    if (city) params.set('city', city)
-    router.push(`/categories?${params.toString()}`)
+    if (query.trim()) {
+      const slug = query.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-')
+      router.push(`/business/${slug}`)
+    } else {
+      router.push('/add-business')
+    }
   }
 
   return (
