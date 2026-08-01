@@ -9,6 +9,8 @@ import Footer from '@/components/footer'
 import CitySearchDropdown from '@/components/ui/city-search-dropdown'
 import { CATEGORIES } from '@/lib/data'
 import { sendBusinessSubmissionEmail } from '@/lib/email-service'
+import { db } from '@/lib/firebase'
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
 
 const normalizeCategoryForStorage = (cat: string) => cat ? cat.toLowerCase().replace(/[^a-z0-9]+/g, '-') : ''
 
@@ -298,6 +300,17 @@ export default function AddBussinessClient() {
         status: 'pending',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+      }
+
+      // Save to Firestore Database
+      try {
+        await addDoc(collection(db, 'businesses'), {
+          ...businessData,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        })
+      } catch (err) {
+        console.error('Firestore submission save error:', err)
       }
 
       // Save to API route if available

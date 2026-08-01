@@ -75,6 +75,7 @@ export default function Footer() {
             <ul className="space-y-2.5 text-xs text-slate-300">
               <li><Link href="/" className="hover:text-[#2563EB] transition-colors">Home</Link></li>
               <li><Link href="/about" className="hover:text-[#2563EB] transition-colors">About ListPak</Link></li>
+              <li><Link href="/contact" className="hover:text-[#2563EB] transition-colors">Contact Support</Link></li>
               <li><Link href="/add-business" className="hover:text-[#2563EB] transition-colors">Add Business Free</Link></li>
               <li><Link href="/privacy" className="hover:text-[#2563EB] transition-colors">Privacy Policy</Link></li>
               <li><Link href="/terms" className="hover:text-[#2563EB] transition-colors">Terms of Service</Link></li>
