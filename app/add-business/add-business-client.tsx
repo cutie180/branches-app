@@ -1,979 +1,688 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Loader2, AlertCircle, Upload, X, CheckCircle2, Eye, MessageCircle, Zap, Copy, Check, Sparkles } from 'lucide-react'
+import { 
+  Building2, MapPin, Phone, Mail, Globe, Upload, CheckCircle2, ShieldCheck, 
+  Sparkles, ArrowRight, ArrowLeft, Star, ChevronDown, ChevronUp, Lock, Eye, 
+  Award, TrendingUp, Zap, HelpCircle, FileText, Check, AlertCircle, PhoneCall, MessageCircle
+} from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
-import CitySearchDropdown from '@/components/ui/city-search-dropdown'
-import { CATEGORIES } from '@/lib/data'
-import { sendBusinessSubmissionEmail } from '@/lib/email-service'
-import { db } from '@/lib/firebase'
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
+import { CATEGORIES, TOP_CITIES } from '@/lib/data'
+import { saveBusinessToDatabase } from '@/lib/db-service'
+import { toast } from 'sonner'
 
-const normalizeCategoryForStorage = (cat: string) => cat ? cat.toLowerCase().replace(/[^a-z0-9]+/g, '-') : ''
-
-type Status = 'idle' | 'loading' | 'success' | 'error'
-
-const MAX_LOGO_MB = 2.5
-const MIN_DESCRIPTION_CHARS = 500
-const MAX_DESCRIPTION_CHARS = 1000
-
-// Sub-categories for each main category
 const SUB_CATEGORIES: Record<string, string[]> = {
-  'restaurants': ['Fast Food', 'Fine Dining', 'Cafe', 'Bakery', 'Catering', 'Food Truck'],
-  'real-estate': ['Residential', 'Commercial', 'Industrial', 'Land', 'Rental', 'Property Management'],
-  'technology': ['Software Development', 'Web Design', 'IT Support', 'Digital Marketing', 'Mobile Apps', 'Cloud Services'],
-  'healthcare': ['Hospitals', 'Clinics', 'Pharmacies', 'Dental', 'Laboratories', 'Medical Equipment'],
-  'education': ['Schools', 'Colleges', 'Universities', 'Tuition Centers', 'Training Institutes', 'Online Learning'],
-  'retail': ['Supermarkets', 'Clothing', 'Electronics', 'Jewelry', 'Books', 'Department Stores'],
-  'construction': ['Building Contractors', 'Architecture', 'Interior Design', 'Building Materials', 'Civil Engineering', 'Renovation'],
-  'automotive': ['Car Dealers', 'Mechanics', 'Parts', 'Accessories', 'Service Centers', 'Car Rental'],
-  'finance': ['Banks', 'Insurance', 'Investment', 'Accounting', 'Loans', 'Financial Advisors'],
-  'travel': ['Airlines', 'Hotels', 'Tour Operators', 'Transport', 'Travel Agencies', 'Car Rental'],
-  'beauty': ['Salons', 'Spas', 'Gyms', 'Cosmetics', 'Beauty Products', 'Wellness Centers'],
-  'logistics': ['Courier', 'Cargo', 'Warehousing', 'Transport', 'Supply Chain', 'Freight Forwarding'],
+  'restaurants': ['Fast Food', 'Fine Dining', 'Cafe & Bakery', 'Catering & Events', 'Food Delivery'],
+  'real-estate': ['Property Dealers', 'Builders & Developers', 'Commercial Leasing', 'Architectural Design'],
+  'technology': ['Software Development', 'Web & Mobile Apps', 'IT Infrastructure', 'Digital Marketing'],
+  'healthcare': ['Hospitals & Clinics', 'Specialist Doctors', 'Pharmacies', 'Diagnostic Labs'],
+  'education': ['Schools & Colleges', 'Universities', 'Tuition Academies', 'Skill Institutes'],
+  'retail': ['Clothing & Boutiques', 'Electronics & Mobile', 'Supermarkets', 'Jewelry & Watch'],
+  'construction': ['Civil Contractors', 'Building Materials', 'Interior Decor', 'Architecture'],
+  'automotive': ['Auto Showrooms', 'Mechanics & Repair', 'Car Spare Parts', 'Car Rental'],
+  'finance': ['Chartered Accountants', 'Tax Advisory', 'Corporate Audit', 'Banking & Loans'],
+  'travel': ['Umrah & Hajj Tours', 'Travel Agencies', 'Airline Ticketing', 'Visa Services'],
+  'beauty': ['Salons & Parlors', 'Spas & Wellness', 'Gyms & Fitness', 'Skincare Clinics'],
+  'logistics': ['Cargo & Transport', 'Courier Services', 'Freight Forwarding', 'Warehousing'],
 }
 
-export default function AddBussinessClient() {
+const FAQS = [
+  {
+    q: 'Is listing my business on ListPak 100% free forever?',
+    a: 'Yes, listing your business on ListPak is completely free forever. There are no setup fees, no monthly subscriptions, and no credit card required.'
+  },
+  {
+    q: 'How long does it take for my business to rank on Google?',
+    a: 'Once submitted, your business profile is indexed by Google search bots within 24 to 48 hours. Many Pakistani local businesses start appearing on page 1 of Google within 7 days.'
+  },
+  {
+    q: 'Can I update my business information later?',
+    a: 'Yes, you can edit your phone number, operating hours, address, services, photos, and description anytime from your owner dashboard.'
+  },
+  {
+    q: 'How does business verification work?',
+    a: 'After submitting your business, our compliance team verifies your phone number and official CNIC/registration document to grant your profile a green Verified Trust Badge.'
+  }
+]
+
+export default function AddBusinessClient() {
   const router = useRouter()
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const [status, setStatus] = useState<Status>('idle')
+  const [currentStep, setCurrentStep] = useState(1)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submittedSlug, setSubmittedSlug] = useState<string | null>(null)
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
+
+  // Form State
   const [formData, setFormData] = useState({
     businessName: '',
     category: '',
     subcategory: '',
-    branchCode: '',
-    description: '',
+    city: '',
+    address: '',
     phone: '',
     whatsapp: '',
     email: '',
     website: '',
-    address: '',
-    city: '',
-    logoUrl: '',
+    description: '',
+    services: '',
+    proofDoc: ''
   })
+
+  // Errors State
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [logoPreview, setLogoPreview] = useState<string | null>(null)
-  const [descriptionCharCount, setDescriptionCharCount] = useState(0)
-  const [showPreview, setShowPreview] = useState(false)
-  const [existingBusinesses, setExistingBusinesses] = useState<string[]>([])
-  const [submittedSlug, setSubmittedSlug] = useState<string | null>(null)
 
-  // Submission confirmation states
-  const [submittedBusinessId, setSubmittedBusinessId] = useState<string | null>(null)
-  const [submittedDocId, setSubmittedDocId] = useState<string | null>(null)
-  const [copiedField, setCopiedField] = useState<string | null>(null)
+  // Calculate completion percentage
+  const calculateProgress = () => {
+    let filled = 0
+    if (formData.businessName) filled++
+    if (formData.category) filled++
+    if (formData.city) filled++
+    if (formData.phone) filled++
+    if (formData.whatsapp) filled++
+    if (formData.address) filled++
+    if (formData.description.length >= 50) filled++
+    return Math.min(100, Math.round((filled / 7) * 100))
+  }
 
-  // Web Audio chime synthesis
-  const playChime = () => {
-    try {
-      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-      
-      const osc1 = audioCtx.createOscillator();
-      const osc2 = audioCtx.createOscillator();
-      const gainNode = audioCtx.createGain();
-      
-      osc1.type = 'sine';
-      osc1.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
-      osc1.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15); // A5
-      
-      osc2.type = 'triangle';
-      osc2.frequency.setValueAtTime(659.25, audioCtx.currentTime); // E5
-      osc2.frequency.exponentialRampToValueAtTime(1046.50, audioCtx.currentTime + 0.15); // C6
-      
-      gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
-      
-      osc1.connect(gainNode);
-      osc2.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
-      
-      osc1.start();
-      osc2.start();
-      
-      osc1.stop(audioCtx.currentTime + 0.6);
-      osc2.stop(audioCtx.currentTime + 0.6);
-    } catch (e) {
-      console.error('Failed to play audio chime:', e);
+  const validateStep = (step: number) => {
+    const errs: Record<string, string> = {}
+    if (step === 1) {
+      if (!formData.businessName.trim()) errs.businessName = 'Business name is required'
+      if (!formData.category) errs.category = 'Select a category'
+    } else if (step === 2) {
+      if (!formData.city) errs.city = 'Select a city'
+      if (!formData.address.trim()) errs.address = 'Street address is required'
+      if (!formData.phone.trim()) errs.phone = 'Phone number is required'
+    } else if (step === 3) {
+      if (formData.description.trim().length < 30) errs.description = 'Please write at least 30 characters describing your business'
+    }
+    setErrors(errs)
+    return Object.keys(errs).length === 0
+  }
+
+  const handleNextStep = () => {
+    if (validateStep(currentStep)) {
+      setCurrentStep(prev => Math.min(4, prev + 1))
+    } else {
+      toast.error('Please complete all mandatory fields in this section.')
     }
   }
 
-  const copyToClipboard = (text: string, fieldName: string) => {
-    navigator.clipboard.writeText(text)
-    setCopiedField(fieldName)
-    setTimeout(() => {
-      setCopiedField(null)
-    }, 2000)
+  const handlePrevStep = () => {
+    setCurrentStep(prev => Math.max(1, prev - 1))
   }
-
-  const generateUniqueBusinessId = async () => {
-    const randomNum = Math.floor(100000 + Math.random() * 900000)
-    return randomNum.toString()
-  }
-
-  // Check for existing businesses when phone or email changes
-  useEffect(() => {
-    setExistingBusinesses([])
-  }, [formData.phone, formData.email])
-
-  // Update subcategories when category changes
-  useEffect(() => {
-    if (formData.category) {
-      setFormData(prev => ({ ...prev, subcategory: '' }))
-    }
-  }, [formData.category])
-
-
-
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {}
-
-    if (!formData.businessName.trim()) {
-      newErrors.businessName = 'Business name is required'
-    }
-
-    if (!formData.category) {
-      newErrors.category = 'Please select a category'
-    }
-
-    if (!formData.description.trim()) {
-      newErrors.description = 'Description is required'
-    } else if (formData.description.length < MIN_DESCRIPTION_CHARS) {
-      newErrors.description = `Description must be at least ${MIN_DESCRIPTION_CHARS} characters`
-    } else if (formData.description.length > MAX_DESCRIPTION_CHARS) {
-      newErrors.description = `Description must not exceed ${MAX_DESCRIPTION_CHARS} characters`
-    }
-
-    if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required'
-    } else if (!/^(\+92|0)?[0-9]{2,4}[ -]?[0-9]{3,4}[ -]?[0-9]{3,4}$/.test(formData.phone.replace(/\s/g, ''))) {
-      newErrors.phone = 'Please enter a valid Pakistani phone number (e.g., 021 111 331 331)'
-    }
-
-    if (formData.whatsapp && !/^(\+92|0)?[0-9]{2,4}[ -]?[0-9]{3,4}[ -]?[0-9]{3,4}$/.test(formData.whatsapp.replace(/\s/g, ''))) {
-      newErrors.whatsapp = 'Please enter a valid Pakistani WhatsApp number (e.g., 021 111 331 331)'
-    }
-
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address'
-    }
-
-    if (!formData.address.trim()) {
-      newErrors.address = 'Address is required'
-    }
-
-    if (!formData.city.trim()) {
-      newErrors.city = 'City is required'
-    }
-
-    if (existingBusinesses.length > 0) {
-      newErrors.duplicate = 'A business with this phone or email already exists'
-    }
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
-
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-    
-    // Clear error for this field
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }))
-    }
-
-    // Update character count for description
-    if (name === 'description') {
-      setDescriptionCharCount(value.length)
-    }
-  }
-
-  function compressImage(base64Str: string, maxWidth = 200, maxHeight = 200): Promise<string> {
-    return new Promise((resolve) => {
-      const img = new Image()
-      const timeout = setTimeout(() => resolve(base64Str), 2000)
-
-      img.src = base64Str
-      img.onload = () => {
-        clearTimeout(timeout)
-        try {
-          const canvas = document.createElement('canvas')
-          let width = img.width
-          let height = img.height
-          
-          if (width > height) {
-            if (width > maxWidth) {
-              height *= maxWidth / width
-              width = maxWidth
-            }
-          } else {
-            if (height > maxHeight) {
-              width *= maxHeight / height
-              height = maxHeight
-            }
-          }
-          
-          canvas.width = width
-          canvas.height = height
-          const ctx = canvas.getContext('2d')
-          ctx?.drawImage(img, 0, 0, width, height)
-          resolve(canvas.toDataURL('image/webp', 0.8))
-        } catch (e) {
-          resolve(base64Str)
-        }
-      }
-      img.onerror = () => {
-        clearTimeout(timeout)
-        resolve(base64Str)
-      }
-    })
-  }
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-
-    // Check file size
-    if (file.size > MAX_LOGO_MB * 1024 * 1024) {
-      setErrors(prev => ({ ...prev, logo: `Logo must be smaller than ${MAX_LOGO_MB}MB` }))
-      return
-    }
-
-    // Check file type
-    if (!file.type.startsWith('image/')) {
-      setErrors(prev => ({ ...prev, logo: 'Please upload an image file' }))
-      return
-    }
-
-    // Create preview and compress to WebP
-    const reader = new FileReader()
-    reader.onload = async (e) => {
-      const result = e.target?.result as string
-      try {
-        const compressed = await compressImage(result, 200, 200)
-        setLogoPreview(compressed)
-        setFormData(prev => ({ ...prev, logoUrl: compressed }))
-      } catch (err) {
-        setLogoPreview(result)
-        setFormData(prev => ({ ...prev, logoUrl: result }))
-      }
-      setErrors(prev => ({ ...prev, logo: '' }))
-    }
-    reader.readAsDataURL(file)
-  }
-
-  const removeLogo = () => {
-    setLogoPreview(null)
-    setFormData(prev => ({ ...prev, logoUrl: '' }))
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
-  }
-
-  const generateSlug = (businessName: string, city: string) => {
-    const cleanName = businessName
-      .toLowerCase()
-      .trim()
-      .replace(/[^\w\s-]/g, '') // Remove non-word chars
-      .replace(/[\s_]+/g, '-')   // Replace spaces/underscores with hyphens
-      .replace(/-+/g, '-')       // Remove duplicate hyphens
-      .replace(/^-+|-+$/g, '');  // Trim hyphens from ends
-    
-    const cleanCity = city
-      .toLowerCase()
-      .trim()
-      .replace(/[^\w\s-]/g, '')
-      .replace(/[\s_]+/g, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-+|-+$/g, '');
-
-    return cleanCity ? `${cleanName}-${cleanCity}` : cleanName;
-  }
-
-  const isSlugUnique = async (slug: string) => true
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!validateStep(3)) return
 
-    if (!validateForm()) {
-      return
-    }
-
-    setStatus('loading')
+    setIsSubmitting(true)
     try {
-      const baseSlug = generateSlug(formData.businessName, formData.city)
-      let finalSlug = baseSlug
-      const uniqueBizId = await generateUniqueBusinessId()
-      const generatedDocId = 'biz_' + Date.now()
+      const saved = await saveBusinessToDatabase({
+        name: formData.businessName,
+        category: formData.category,
+        categoryId: formData.category.toLowerCase().split(' ')[0],
+        city: formData.city,
+        address: formData.address,
+        phone: formData.phone,
+        whatsapp: formData.whatsapp || formData.phone.replace(/[^0-9]/g, ''),
+        email: formData.email,
+        website: formData.website,
+        description: formData.description,
+        services: formData.services ? formData.services.split(',').map(s => s.trim()) : ['General Services']
+      })
 
-      const businessData = {
-        businessId: uniqueBizId,
-        businessName: (formData.businessName || '').trim(),
-        description: (formData.description || '').trim(),
-        phone: (formData.phone || '').trim(),
-        whatsapp: (formData.whatsapp || '').trim(),
-        email: (formData.email || '').trim().toLowerCase(),
-        websiteUrl: (formData.website || '').trim(),
-        address: (formData.address || '').trim(),
-        city: (formData.city || '').trim(),
-        branchCode: (formData.branchCode || '').trim(),
-        category: normalizeCategoryForStorage(formData.category || ''),
-        categoryId: normalizeCategoryForStorage(formData.category || ''),
-        categorySlug: normalizeCategoryForStorage(formData.category || ''),
-        subCategory: (formData.subcategory || '').trim(),
-        logoUrl: (formData.logoUrl || '').trim(),
-        slug: finalSlug,
-        status: 'pending',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      }
-
-      // Save to Firestore Database
-      try {
-        const docRef = await addDoc(collection(db, 'businesses'), {
-          ...businessData,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-        })
-        console.log('Successfully saved to Firestore with ID:', docRef.id)
-      } catch (err) {
-        console.error('Firestore submission save error:', err)
-      }
-
-      // Save to API route if available
-      try {
-        await fetch('/api/save-biz-details', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(businessData)
-        })
-      } catch (err) {
-        console.warn('Local API save fallback:', err)
-      }
-
-      // Send notification email if email provided
-      const categoryLabel =
-        CATEGORIES.find(c => c.id === normalizeCategoryForStorage(formData.category))?.name
-        || formData.category
-
-      if (formData.email) {
-        sendBusinessSubmissionEmail({
-          to: formData.email,
-          businessName: formData.businessName.trim(),
-          businessId: generatedDocId,
-          email: formData.email,
-          phone: formData.phone.trim(),
-          category: categoryLabel,
-          city: formData.city.trim(),
-          address: formData.address.trim(),
-          description: formData.description.trim(),
-          slug: businessData.slug,
-        }).catch(err => console.error('Email dispatch failed:', err))
-      }
-
-      // Play synthesized audio alert
-      playChime()
-
-      // Set submission states
-      setSubmittedBusinessId(uniqueBizId)
-      setSubmittedDocId(generatedDocId)
-      setSubmittedSlug(businessData.slug)
-      setStatus('success')
-      
-      // Scroll to top to see success message
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-
-    } catch (error) {
-      console.error('Error submitting business:', error)
-      setStatus('error')
+      setSubmittedSlug(saved.slug)
+      setIsSubmitting(false)
+      toast.success('Congratulations! Your business listing is live on ListPak.')
+    } catch (err) {
+      console.error(err)
+      setIsSubmitting(false)
+      toast.error('Failed to submit listing. Please try again.')
     }
   }
 
-  const togglePreview = () => {
-    setShowPreview(!showPreview)
-  }
+  const progress = calculateProgress()
 
   return (
-    <>
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
       <Navbar />
-      <main className="min-h-screen bg-[#F4F7FC] text-[#0F172A] font-sans pb-16">
-        <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="text-center mb-10">
-            <h1 className="text-3xl sm:text-5xl font-extrabold text-[#0F172A] mb-4 tracking-tight">
-              Add Your Business Free to ListPak
-            </h1>
-            <p className="text-base sm:text-lg text-[#475569] max-w-2xl mx-auto font-normal">
-              List your business 100% free and reach thousands of customers across Pakistan. Join 10,000+ local services discovered every day.
+
+      {/* HERO SECTION */}
+      <section className="relative bg-gradient-to-b from-blue-50/70 via-slate-50 to-[#F8FAFC] text-slate-900 pt-12 pb-16 px-4 sm:px-6 lg:px-8 border-b border-slate-200/80 overflow-hidden text-center">
+        <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-blue-400/10 blur-3xl pointer-events-none"></div>
+        
+        <div className="max-w-4xl mx-auto relative z-10 space-y-4">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-100/80 text-blue-700 border border-blue-200 text-xs font-bold tracking-wide uppercase shadow-2xs">
+            <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+            <span>SaaS Business Onboarding Portal</span>
+          </span>
+
+          <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+            Onboard Your Business to Pakistan&apos;s Digital <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-emerald-600">Ecosystem</span>
+          </h1>
+
+          <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto font-medium">
+            Reach thousands of potential customers, improve Google search ranking, and receive direct WhatsApp & phone inquiries nationwide — 100% free forever.
+          </p>
+
+          <div className="pt-2 flex items-center justify-center gap-6 text-xs text-slate-600 font-semibold flex-wrap">
+            <span className="flex items-center gap-1 text-emerald-600"><CheckCircle2 className="w-4 h-4" /> 100% Free Forever</span>
+            <span className="flex items-center gap-1 text-blue-600"><ShieldCheck className="w-4 h-4" /> Verified Trust Badge</span>
+            <span className="flex items-center gap-1 text-purple-600"><TrendingUp className="w-4 h-4" /> High Google Search Ranking</span>
+          </div>
+        </div>
+      </section>
+
+      {/* MAIN ONBOARDING & FORM WIZARD */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-16">
+        
+        {submittedSlug ? (
+          /* SUCCESS CONFIRMATION STATE */
+          <div className="bg-white rounded-3xl p-10 border border-slate-200/90 shadow-xl max-w-2xl mx-auto text-center space-y-6 animate-in zoom-in-95">
+            <div className="w-20 h-20 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-md">
+              <CheckCircle2 className="w-10 h-10" />
+            </div>
+
+            <div className="space-y-2">
+              <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                Verified Listing Live
+              </span>
+              <h2 className="text-2xl font-extrabold text-slate-900">Your Business is Officially Listed!</h2>
+              <p className="text-sm text-slate-600 max-w-md mx-auto">
+                <strong className="text-slate-900">{formData.businessName}</strong> is now live on ListPak. Customers across Pakistan can now find your profile and contact you directly.
+              </p>
+            </div>
+
+            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-left text-xs space-y-2">
+              <span className="font-bold text-slate-700 block">Your Listing URL:</span>
+              <code className="block p-2 bg-white rounded-xl border border-slate-200 text-blue-600 font-mono text-[11px] break-all">
+                https://listpak.com/business/{submittedSlug}
+              </code>
+            </div>
+
+            <div className="flex flex-col sm:flex-row justify-center gap-3 pt-2">
+              <Link
+                href={`/business/${submittedSlug}`}
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-600/20 transition-all text-center"
+              >
+                View Public Business Profile
+              </Link>
+              <Link
+                href="/dashboard"
+                className="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-lg transition-all text-center"
+              >
+                Go to Owner Dashboard
+              </Link>
+            </div>
+          </div>
+        ) : (
+          /* MULTI-STEP WIZARD */
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            {/* LEFT FORM COLUMN (8 Cols) */}
+            <div className="lg:col-span-8 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-xl shadow-slate-900/5 space-y-8">
+              
+              {/* STEP PROGRESS BAR */}
+              <div className="space-y-3 pb-6 border-b border-slate-100">
+                <div className="flex justify-between items-center text-xs font-bold text-slate-700">
+                  <span className="text-blue-600">Step {currentStep} of 4</span>
+                  <span>{progress}% Profile Complete</span>
+                </div>
+                <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-blue-600 to-emerald-500 transition-all duration-300 rounded-full"
+                    style={{ width: `${Math.max(currentStep * 25, progress)}%` }}
+                  ></div>
+                </div>
+
+                <div className="grid grid-cols-4 gap-1 text-[11px] font-semibold text-center text-slate-400 pt-1">
+                  <span className={currentStep >= 1 ? 'text-blue-600 font-bold' : ''}>1. Identity</span>
+                  <span className={currentStep >= 2 ? 'text-blue-600 font-bold' : ''}>2. Location</span>
+                  <span className={currentStep >= 3 ? 'text-blue-600 font-bold' : ''}>3. Details</span>
+                  <span className={currentStep >= 4 ? 'text-blue-600 font-bold' : ''}>4. Verify</span>
+                </div>
+              </div>
+
+              {/* STEP 1: BUSINESS IDENTITY */}
+              {currentStep === 1 && (
+                <div className="space-y-6 animate-in fade-in-50">
+                  <div>
+                    <h2 className="text-xl font-extrabold text-slate-900">Step 1: Business Identity & Category</h2>
+                    <p className="text-xs text-slate-500 mt-1">Enter your registered or commercial trade name and industry taxonomy.</p>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                        Business Name *
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.businessName}
+                        onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
+                        placeholder="e.g. Al-Rehman Traders / Tech Solutions Pakistan"
+                        className={`w-full px-4 py-3 bg-slate-50/80 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 ${
+                          errors.businessName ? 'border-red-500 bg-red-50/30' : 'border-slate-200'
+                        }`}
+                      />
+                      {errors.businessName && <span className="text-[11px] font-semibold text-red-500 mt-1 block">{errors.businessName}</span>}
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1.5">Industry Category *</label>
+                        <select
+                          value={formData.category}
+                          onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                          className={`w-full px-4 py-3 bg-slate-50/80 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 cursor-pointer ${
+                            errors.category ? 'border-red-500 bg-red-50/30' : 'border-slate-200'
+                          }`}
+                        >
+                          <option value="">-- Select Business Category --</option>
+                          {CATEGORIES.map(cat => (
+                            <option key={cat.id} value={cat.name}>{cat.name}</option>
+                          ))}
+                        </select>
+                        {errors.category && <span className="text-[11px] font-semibold text-red-500 mt-1 block">{errors.category}</span>}
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1.5">Subcategory Specialization</label>
+                        <input
+                          type="text"
+                          value={formData.subcategory}
+                          onChange={(e) => setFormData({ ...formData, subcategory: e.target.value })}
+                          placeholder="e.g. Fast Food, Web Apps"
+                          className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 2: LOCATION & CONTACT */}
+              {currentStep === 2 && (
+                <div className="space-y-6 animate-in fade-in-50">
+                  <div>
+                    <h2 className="text-xl font-extrabold text-slate-900">Step 2: Location & Contact Channels</h2>
+                    <p className="text-xs text-slate-500 mt-1">Specify your physical address and customer contact numbers.</p>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1.5">City Location *</label>
+                        <select
+                          value={formData.city}
+                          onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                          className={`w-full px-4 py-3 bg-slate-50/80 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 cursor-pointer ${
+                            errors.city ? 'border-red-500 bg-red-50/30' : 'border-slate-200'
+                          }`}
+                        >
+                          <option value="">-- Select City Location --</option>
+                          {TOP_CITIES.map(city => (
+                            <option key={city} value={city}>{city}</option>
+                          ))}
+                        </select>
+                        {errors.city && <span className="text-[11px] font-semibold text-red-500 mt-1 block">{errors.city}</span>}
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1.5">Primary Mobile / Landline *</label>
+                        <input
+                          type="tel"
+                          value={formData.phone}
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          placeholder="+92 300 1234567"
+                          className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        />
+                        {errors.phone && <span className="text-[11px] font-semibold text-red-500 mt-1 block">{errors.phone}</span>}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1.5">Physical Street Address *</label>
+                      <input
+                        type="text"
+                        value={formData.address}
+                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                        placeholder="Plot / Shop number, Commercial Market, Area"
+                        className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      />
+                      {errors.address && <span className="text-[11px] font-semibold text-red-500 mt-1 block">{errors.address}</span>}
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1.5">WhatsApp Inquiry Number</label>
+                        <input
+                          type="tel"
+                          value={formData.whatsapp}
+                          onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
+                          placeholder="923001234567"
+                          className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1.5">Official Website URL (Optional)</label>
+                        <input
+                          type="url"
+                          value={formData.website}
+                          onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                          placeholder="https://company.pk"
+                          className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 3: DESCRIPTION & SERVICES */}
+              {currentStep === 3 && (
+                <div className="space-y-6 animate-in fade-in-50">
+                  <div>
+                    <h2 className="text-xl font-extrabold text-slate-900">Step 3: Business Profile & Services</h2>
+                    <p className="text-xs text-slate-500 mt-1">Provide a high-quality description to improve Google SEO ranking.</p>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex justify-between items-center mb-1.5">
+                        <label className="block text-xs font-bold text-slate-700">Detailed Description *</label>
+                        <span className="text-[11px] text-slate-400 font-semibold">{formData.description.length} chars</span>
+                      </div>
+                      <textarea
+                        rows={5}
+                        value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        placeholder="Describe your business history, main products, customer guarantees, and specialty services in detail..."
+                        className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      />
+                      {errors.description && <span className="text-[11px] font-semibold text-red-500 mt-1 block">{errors.description}</span>}
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1.5">Products / Services Offered (Comma separated)</label>
+                      <input
+                        type="text"
+                        value={formData.services}
+                        onChange={(e) => setFormData({ ...formData, services: e.target.value })}
+                        placeholder="e.g. Free Delivery, 24/7 Support, Wholesale Pricing"
+                        className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 4: VERIFICATION REVIEW */}
+              {currentStep === 4 && (
+                <div className="space-y-6 animate-in fade-in-50">
+                  <div>
+                    <h2 className="text-xl font-extrabold text-slate-900">Step 4: Final Review & Ownership Verification</h2>
+                    <p className="text-xs text-slate-500 mt-1">Review listing details before publishing to Pakistan&apos;s digital directory.</p>
+                  </div>
+
+                  <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3 text-xs">
+                    <div className="flex justify-between border-b border-slate-200/60 pb-2">
+                      <span className="font-bold text-slate-500">Business Name:</span>
+                      <span className="font-extrabold text-slate-900">{formData.businessName || 'Not set'}</span>
+                    </div>
+                    <div className="flex justify-between border-b border-slate-200/60 pb-2">
+                      <span className="font-bold text-slate-500">Category & City:</span>
+                      <span className="font-semibold text-slate-800">{formData.category} in {formData.city}</span>
+                    </div>
+                    <div className="flex justify-between border-b border-slate-200/60 pb-2">
+                      <span className="font-bold text-slate-500">Phone & WhatsApp:</span>
+                      <span className="font-semibold text-slate-800">{formData.phone} / {formData.whatsapp || 'Same'}</span>
+                    </div>
+                    <div>
+                      <span className="font-bold text-slate-500 block mb-1">Description:</span>
+                      <p className="text-slate-700 leading-relaxed">{formData.description || 'No description provided.'}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* WIZARD BUTTON ACTIONS */}
+              <div className="pt-6 border-t border-slate-100 flex items-center justify-between">
+                {currentStep > 1 ? (
+                  <button
+                    type="button"
+                    onClick={handlePrevStep}
+                    className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    <span>Back Section</span>
+                  </button>
+                ) : <div></div>}
+
+                {currentStep < 4 ? (
+                  <button
+                    type="button"
+                    onClick={handleNextStep}
+                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-600/20 transition-all inline-flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <span>Continue to Step {currentStep + 1}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleSubmit}
+                    disabled={isSubmitting}
+                    className="px-8 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-extrabold text-sm rounded-xl shadow-xl shadow-emerald-500/20 transition-all inline-flex items-center gap-2 cursor-pointer"
+                  >
+                    <CheckCircle2 className="w-5 h-5" />
+                    <span>{isSubmitting ? 'Publishing Listing...' : 'Publish Business Free'}</span>
+                  </button>
+                )}
+              </div>
+
+            </div>
+
+            {/* RIGHT SIDEBAR: STICKY LIVE PREVIEW CARD (4 Cols) */}
+            <div className="lg:col-span-4 sticky top-24 space-y-6">
+              
+              <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-xl shadow-slate-900/5 space-y-4">
+                <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-blue-600 flex items-center gap-1.5">
+                    <Eye className="w-4 h-4" />
+                    Live Listing Preview
+                  </span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    Draft
+                  </span>
+                </div>
+
+                {/* Simulated Business Card */}
+                <div className="bg-[#F8FAFC] rounded-2xl p-4 border border-slate-200/80 space-y-3">
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-bold text-lg flex items-center justify-center shrink-0">
+                      {formData.businessName ? formData.businessName.charAt(0).toUpperCase() : 'B'}
+                    </div>
+                    <div className="space-y-0.5 min-w-0">
+                      <h4 className="font-extrabold text-slate-900 text-sm truncate">
+                        {formData.businessName || 'Your Business Name'}
+                      </h4>
+                      <p className="text-[11px] font-medium text-slate-500">{formData.category}</p>
+                      <div className="flex items-center gap-1 text-[11px] text-amber-600 font-bold">
+                        <Star className="w-3 h-3 fill-current" />
+                        <span>5.0 (New Listing)</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="text-[11px] text-slate-600 line-clamp-2 leading-relaxed">
+                    {formData.description || 'Your business description will appear here as you type...'}
+                  </p>
+
+                  <div className="pt-2 border-t border-slate-200/60 flex justify-between items-center text-[11px] text-slate-500">
+                    <span className="flex items-center gap-1"><MapPin className="w-3 h-3 text-slate-400" />{formData.city}</span>
+                    <span className="font-bold text-blue-600">{formData.phone || '+92 300 0000000'}</span>
+                  </div>
+                </div>
+
+                {/* Trust Badges */}
+                <div className="pt-2 space-y-2 text-xs text-slate-600">
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>Instant Google Search Indexing</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
+                    <span>Direct Customer Phone & WhatsApp Calls</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        )}
+
+        {/* LONG-FORM VALUE SECTION 1: WHY LIST YOUR BUSINESS */}
+        <section className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200/90 shadow-xl space-y-8">
+          <div className="text-center max-w-3xl mx-auto space-y-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-blue-600">Ecosystem Advantages</span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              Why List Your Business on ListPak?
+            </h2>
+            <p className="text-slate-500 text-xs sm:text-sm">
+              ListPak provides Pakistani businesses with the digital infrastructure needed to grow.
             </p>
           </div>
 
-          {/* SEO Benefits Section */}
-          <section className="mb-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-[#D9E2F1] flex gap-4 items-center">
-              <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
-                <Zap className="w-6 h-6 text-[#2563EB]" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
+                <TrendingUp className="w-5 h-5" />
               </div>
-              <div>
-                <h3 className="font-bold text-[#0F172A] text-sm">Boost Local SEO</h3>
-                <p className="text-xs text-[#64748B]">Get a high-quality local citation to rank better in Google Search.</p>
-              </div>
-            </div>
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-[#D9E2F1] flex gap-4 items-center">
-              <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
-                <MessageCircle className="w-6 h-6 text-[#16A34A]" />
-              </div>
-              <div>
-                <h3 className="font-bold text-[#0F172A] text-sm">Direct Contact</h3>
-                <p className="text-xs text-[#64748B]">Enable WhatsApp and phone calls directly from potential customers.</p>
-              </div>
-            </div>
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-[#D9E2F1] flex gap-4 items-center">
-              <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center shrink-0">
-                <Eye className="w-6 h-6 text-[#F97316]" />
-              </div>
-              <div>
-                <h3 className="font-bold text-[#0F172A] text-sm">100% Free</h3>
-                <p className="text-xs text-[#64748B]">No credit card or payment required for any listing feature.</p>
-              </div>
-            </div>
-          </section>
-
-          {/* Form Layout */}
-          <div className="max-w-4xl mx-auto">
-            <div>
-              {/* Existing Businesses Warning */}
-              {existingBusinesses.length > 0 && (
-                <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-                  <div className="flex items-start gap-3">
-                    <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5" />
-                    <div>
-                      <h3 className="font-semibold text-amber-800 mb-1">Existing Business Found</h3>
-                      <p className="text-amber-700 text-sm">
-                        We found existing businesses with your phone number or email:
-                      </p>
-                  <ul className="mt-2 text-sm text-amber-700">
-                    {existingBusinesses.map((name, index) => (
-                      <li key={index}>• {name}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Success Message */}
-          {status === 'success' ? (
-            <div className="mb-12 bg-white border border-[#D9E2F1] rounded-2xl shadow-[0_8px_40px_rgba(15,23,42,0.08)] max-w-2xl mx-auto p-8 sm:p-12 text-center">
-              <div className="w-20 h-20 rounded-full bg-emerald-50 text-[#16A34A] flex items-center justify-center mx-auto mb-6 shadow-sm border border-emerald-100">
-                <CheckCircle2 className="w-10 h-10 text-[#16A34A]" />
-              </div>
-
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-[#16A34A] text-xs font-bold mb-4">
-                <span>✓ 100% Free Business Listing – No Payment Required</span>
-              </div>
-
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] mb-3">
-                Business Successfully Registered on ListPak!
-              </h2>
-
-              <p className="text-slate-600 mb-8 text-sm sm:text-base leading-relaxed max-w-lg mx-auto">
-                Thank you! Your business profile has been registered and is live on ListPak. Our admin team will perform a routine quality verification. No fee or credit card is ever required.
+              <h3 className="font-bold text-slate-900 text-base">Google Search Visibility</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Rank on page 1 of Google for local keywords like &quot;best service in [your city]&quot; with our high domain authority profile schema.
               </p>
-
-              {/* Business ID Box */}
-              <div className="bg-[#EEF4FF] border border-[#D9E2F1] rounded-2xl p-5 mb-8 max-w-md mx-auto flex items-center justify-between">
-                <div className="text-left">
-                  <span className="text-[11px] font-bold text-[#2563EB] uppercase tracking-wider block">Your Unique Business ID</span>
-                  <div className="text-2xl font-extrabold text-[#0F172A] tracking-wide mt-0.5">{submittedBusinessId}</div>
-                </div>
-                <button
-                  onClick={() => copyToClipboard(submittedBusinessId || '', 'bizId')}
-                  className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-slate-50 text-[#0F172A] border border-[#D9E2F1] rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer"
-                >
-                  {copiedField === 'bizId' ? (
-                    <>
-                      <Check className="w-4 h-4 text-[#16A34A]" />
-                      <span className="text-[#16A34A]">Copied!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-4 h-4 text-[#64748B]" />
-                      <span>Copy ID</span>
-                    </>
-                  )}
-                </button>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                {submittedSlug && (
-                  <Link
-                    href={`/business/${submittedSlug}`}
-                    className="w-full sm:w-auto px-8 py-3.5 bg-[#2563EB] hover:bg-blue-700 text-white rounded-xl font-bold transition-all shadow-md text-sm text-center inline-block"
-                  >
-                    View Business Page
-                  </Link>
-                )}
-                <button
-                  onClick={() => window.location.reload()}
-                  className="w-full sm:w-auto px-8 py-3.5 bg-[#F97316] hover:bg-[#EA580C] text-white rounded-xl font-bold transition-all shadow-md text-sm cursor-pointer"
-                >
-                  Add Another Business Free
-                </button>
-              </div>
             </div>
-          ) : (
-            <>
 
-          {/* Error Message */}
-          {status === 'error' && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
-              <div className="flex items-center gap-3">
-                <AlertCircle className="w-5 h-5 text-red-600" />
-                <div>
-                  <h3 className="font-semibold text-red-800">Submission Failed</h3>
-                  <p className="text-red-700 text-sm">
-                    There was an error submitting your business. Please try again or contact support.
-                  </p>
-                </div>
+            <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                <PhoneCall className="w-5 h-5" />
               </div>
+              <h3 className="font-bold text-slate-900 text-base">Direct Customer Inquiries</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Customers click directly to call your phone number or initiate a WhatsApp chat with zero intermediaries.
+              </p>
             </div>
-          )}
 
-          {/* WhatsApp Premium Promotion */}
-          <div className="mb-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl">
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0">
-                <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-green-400 to-emerald-500">
-                  <Zap className="h-6 w-6 text-white" />
-                </div>
+            <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold">
+                <Award className="w-5 h-5" />
               </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-bold text-slate-900 mb-1">
-                  Want More Visibility?
-                </h3>
-                <p className="text-slate-700 mb-4">
-                  Mark your business as featured to appear at the top of search results and get significantly more visibility from potential customers!
-                </p>
-                <div className="flex flex-wrap gap-3">
-                  <a
-                    href="https://wa.me/923345636230"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-semibold text-sm hover:shadow-lg hover:scale-105 transition-all duration-200"
-                  >
-                    <MessageCircle className="w-4 h-4" />
-                    Contact via WhatsApp
-                  </a>
-                  <Link
-                    href="/featured-businesses"
-                    className="inline-flex items-center gap-2 px-6 py-2.5 bg-white border-2 border-green-500 text-green-700 rounded-lg font-semibold text-sm hover:bg-green-50 transition-colors"
-                  >
-                    See Featured Businesses
-                  </Link>
-                </div>
+              <h3 className="font-bold text-slate-900 text-base">100% Free Forever</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Zero listing fees, zero commission per lead, and zero monthly subscriptions. Enjoy free listing forever.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold">
+                <ShieldCheck className="w-5 h-5" />
               </div>
+              <h3 className="font-bold text-slate-900 text-base">Verified Trust Badge</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Build instant trust with Pakistani customers through our CNIC and commercial verification seal.
+              </p>
             </div>
           </div>
+        </section>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Business Information */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-              <h2 className="text-xl font-semibold text-slate-800 mb-6 flex items-center gap-2">
-                🏢 Business Information
-              </h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Business Name *
-                  </label>
-                  <input
-                    type="text"
-                    name="businessName"
-                    value={formData.businessName}
-                    onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      errors.businessName ? 'border-red-500' : 'border-slate-300'
-                    }`}
-                    placeholder="Enter your business name"
-                  />
-                  {errors.businessName && (
-                    <p className="mt-1 text-sm text-red-600">{errors.businessName}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Category *
-                  </label>
-                  <select
-                    name="category"
-                    value={formData.category}
-                    onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      errors.category ? 'border-red-500' : 'border-slate-300'
-                    }`}
-                  >
-                    <option value="">Select a category</option>
-                    {CATEGORIES.map((cat) => (
-                      <option key={cat.id} value={cat.id}>
-                        {cat.name}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.category && (
-                    <p className="mt-1 text-sm text-red-600">{errors.category}</p>
-                  )}
-                </div>
-
-                {formData.category && SUB_CATEGORIES[formData.category] && (
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
-                      Sub-category
-                    </label>
-                    <select
-                      name="subcategory"
-                      value={formData.subcategory}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                    >
-                      <option value="">Select a sub-category (optional)</option>
-                      {SUB_CATEGORIES[formData.category].map((sub) => (
-                        <option key={sub} value={sub}>
-                          {sub}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
-
-                {/* Branch Code field - only shown for Banks subcategory */}
-                {formData.category === 'finance' && formData.subcategory === 'Banks' && (
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
-                      Branch Code
-                    </label>
-                    <input
-                      type="text"
-                      name="branchCode"
-                      value={formData.branchCode}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                      placeholder="e.g., 0052"
-                    />
-                    <p className="mt-1 text-xs text-slate-500">
-                      Enter the bank branch code (e.g., 0052 for HBL branches)
-                    </p>
-                  </div>
-                )}
-
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Business Description *
-                    <span className="text-slate-500 font-normal ml-2">
-                      ({descriptionCharCount}/{MAX_DESCRIPTION_CHARS} characters)
-                    </span>
-                  </label>
-                  <textarea
-                    name="description"
-                    value={formData.description}
-                    onChange={handleInputChange}
-                    rows={6}
-                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none ${
-                      errors.description ? 'border-red-500' : 'border-slate-300'
-                    }`}
-                    placeholder="Describe your business, services, and what makes you unique..."
-                  />
-                  {errors.description && (
-                    <p className="mt-1 text-sm text-red-600">{errors.description}</p>
-                  )}
-                  <p className="mt-1 text-xs text-slate-500">
-                    Minimum {MIN_DESCRIPTION_CHARS} characters required for better visibility
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Contact Information */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-              <h2 className="text-xl font-semibold text-slate-800 mb-6 flex items-center gap-2">
-                📞 Contact Information
-              </h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Phone Number *
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      errors.phone ? 'border-red-500' : 'border-slate-300'
-                    }`}
-                    placeholder="021 111 331 331"
-                  />
-                  {errors.phone && (
-                    <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    WhatsApp Number
-                  </label>
-                  <input
-                    type="tel"
-                    name="whatsapp"
-                    value={formData.whatsapp}
-                    onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      errors.whatsapp ? 'border-red-500' : 'border-slate-300'
-                    }`}
-                    placeholder="021 111 331 331 (optional)"
-                  />
-                  {errors.whatsapp && (
-                    <p className="mt-1 text-sm text-red-600">{errors.whatsapp}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      errors.email ? 'border-red-500' : 'border-slate-300'
-                    }`}
-                    placeholder="business@example.com (optional)"
-                  />
-                  {errors.email && (
-                    <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Website
-                  </label>
-                  <input
-                    type="url"
-                    name="website"
-                    value={formData.website}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                    placeholder="https://www.example.com (optional)"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Location Information */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-              <h2 className="text-xl font-semibold text-slate-800 mb-6 flex items-center gap-2">
-                📍 Location Information
-              </h2>
-
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Business Address *
-                  </label>
-                  <input
-                    type="text"
-                    name="address"
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      errors.address ? 'border-red-500' : 'border-slate-300'
-                    }`}
-                    placeholder="Enter your complete business address"
-                  />
-                  {errors.address && (
-                    <p className="mt-1 text-sm text-red-600">{errors.address}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    City *
-                  </label>
-                  <CitySearchDropdown
-                    value={formData.city}
-                    onChange={(value) => handleInputChange({ 
-                      target: { name: 'city', value } 
-                    } as React.ChangeEvent<HTMLInputElement>)}
-                    placeholder="Select or type your city"
-                    className={`w-full ${
-                      errors.city ? 'border-red-500' : 'border-slate-300'
-                    }`}
-                  />
-                  {errors.city && (
-                    <p className="mt-1 text-sm text-red-600">{errors.city}</p>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Logo Upload */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-              <h2 className="text-xl font-semibold text-slate-800 mb-6 flex items-center gap-2">
-                🖼️ Business Logo
-              </h2>
-
-              <div className="space-y-4">
-                <div>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileUpload}
-                    className="hidden"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="flex items-center gap-3 px-6 py-3 border-2 border-dashed border-slate-300 rounded-xl hover:border-blue-400 hover:bg-blue-50 transition-colors"
-                  >
-                    <Upload className="w-5 h-5 text-slate-400" />
-                    <span className="text-slate-600">Upload Logo (Optional)</span>
-                  </button>
-                  <p className="mt-2 text-sm text-slate-500">
-                    Maximum file size: {MAX_LOGO_MB}MB. Recommended: Square image, at least 200x200px
-                  </p>
-                  {errors.logo && (
-                    <p className="mt-1 text-sm text-red-600">{errors.logo}</p>
-                  )}
-                </div>
-
-                {logoPreview && (
-                  <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl">
-                    <img
-                      src={logoPreview}
-                      alt="Logo preview"
-                      className="w-20 h-20 object-cover rounded-lg border border-slate-200"
-                    />
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-slate-700">Logo uploaded successfully</p>
-                      <button
-                        type="button"
-                        onClick={removeLogo}
-                        className="mt-2 text-sm text-red-600 hover:text-red-700 flex items-center gap-1"
-                      >
-                        <X className="w-4 h-4" />
-                        Remove
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Preview Button */}
-            <div className="text-center">
-              <button
-                type="button"
-                onClick={togglePreview}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-colors"
-              >
-                <Eye className="w-4 h-4" />
-                {showPreview ? 'Hide' : 'Show'} Preview
-              </button>
-            </div>
-
-            {/* Preview */}
-            {showPreview && (
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                <h2 className="text-xl font-semibold text-slate-800 mb-6">📋 Business Listing Preview</h2>
-                <div className="border border-slate-200 rounded-xl p-6">
-                  <div className="flex items-start gap-4">
-                    {logoPreview ? (
-                      <img
-                        src={logoPreview}
-                        alt="Business logo"
-                        className="w-16 h-16 rounded-xl object-cover border border-slate-200"
-                      />
-                    ) : (
-                      <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center border border-slate-200">
-                        <span className="text-2xl text-slate-400">🏢</span>
-                      </div>
-                    )}
-                    <div className="flex-1">
-                      <h3 className="text-lg font-bold text-slate-800">
-                        {formData.businessName || 'Business Name'}
-                      </h3>
-                      <p className="text-sm text-slate-600 mt-1">
-                        📍 {formData.city || 'City'}
-                      </p>
-                      <p className="text-sm text-slate-600">
-                        📞 {formData.phone || 'Phone Number'}
-                      </p>
-                      <p className="text-sm text-slate-600 mt-2 line-clamp-2">
-                        {formData.description || 'Business description will appear here...'}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Submit Button */}
-            <div className="text-center">
-              <button
-                type="submit"
-                disabled={status === 'loading' || existingBusinesses.length > 0}
-                className="inline-flex items-center gap-3 px-8 py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-400 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors text-lg shadow-lg hover:shadow-xl cursor-pointer"
-              >
-                {status === 'loading' ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Submitting...
-                  </>
-                ) : (
-                  <>
-                    🚀 Submit Business
-                  </>
-                )}
-              </button>
-            </div>
-
-            {errors.duplicate && (
-              <p className="mt-2 text-sm text-red-600 text-center">{errors.duplicate}</p>
-            )}
-            </form>
-          </>
-        )}
-
-          {/* Help Section */}
-          <div className="mt-12 bg-blue-50 rounded-2xl p-6">
-            <h3 className="text-lg font-semibold text-blue-900 mb-4">💡 Need Help?</h3>
-            <div className="space-y-3 text-sm text-blue-800">
-              <p>• All fields marked with * are required</p>
-              <p>• Your business will be reviewed within 24 hours</p>
-              <p>• Make sure your description is detailed for better visibility</p>
-              <p>• Include your WhatsApp number for direct customer contact</p>
-              <p>• For support, email us at support@listpak.com</p>
-            </div>
+        {/* VALUE SECTION 2: FEATURE COMPARISON TABLE */}
+        <section className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200/90 shadow-xl space-y-6">
+          <div className="text-center max-w-2xl mx-auto space-y-2">
+            <h2 className="text-2xl font-extrabold text-slate-900">ListPak Feature Standards</h2>
+            <p className="text-slate-500 text-xs">Comparing ListPak free ecosystem benefits with traditional directories.</p>
           </div>
-        </div>
-      </div>
-    </div>
-  </main>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs text-slate-700">
+              <thead className="bg-slate-100 text-slate-900 font-bold">
+                <tr>
+                  <th className="p-3.5 rounded-l-xl">Feature Capabilities</th>
+                  <th className="p-3.5">Old Classified Directories</th>
+                  <th className="p-3.5 rounded-r-xl bg-blue-600 text-white">ListPak Ecosystem</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                <tr>
+                  <td className="p-3.5 font-bold text-slate-900">Google Search Indexing & Schema</td>
+                  <td className="p-3.5 text-slate-400">Basic / Slow</td>
+                  <td className="p-3.5 font-bold text-emerald-600 flex items-center gap-1">
+                    <CheckCircle2 className="w-4 h-4" /> Instant LocalBusiness JSON-LD
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3.5 font-bold text-slate-900">WhatsApp & Phone Lead Action Buttons</td>
+                  <td className="p-3.5 text-slate-400">Hidden / Paid</td>
+                  <td className="p-3.5 font-bold text-emerald-600 flex items-center gap-1">
+                    <CheckCircle2 className="w-4 h-4" /> 100% Free Direct Access
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3.5 font-bold text-slate-900">Interactive Customer Reviews & Photos</td>
+                  <td className="p-3.5 text-slate-400">Not Available</td>
+                  <td className="p-3.5 font-bold text-emerald-600 flex items-center gap-1">
+                    <CheckCircle2 className="w-4 h-4" /> Included Free
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3.5 font-bold text-slate-900">Mobile & Tablet Optimized UX</td>
+                  <td className="p-3.5 text-slate-400">Outdated Layout</td>
+                  <td className="p-3.5 font-bold text-emerald-600 flex items-center gap-1">
+                    <CheckCircle2 className="w-4 h-4" /> Stripe/Linear Grade UI
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* VALUE SECTION 3: FREQUENTLY ASKED QUESTIONS */}
+        <section className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200/90 shadow-xl space-y-6 max-w-4xl mx-auto">
+          <div className="text-center space-y-2">
+            <h2 className="text-2xl font-extrabold text-slate-900">Onboarding FAQ</h2>
+            <p className="text-slate-500 text-xs">Everything you need to know about listing your business.</p>
+          </div>
+
+          <div className="space-y-3">
+            {FAQS.map((faq, idx) => (
+              <div key={idx} className="border border-slate-200/80 rounded-2xl overflow-hidden">
+                <button
+                  onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                  className="w-full p-4 bg-slate-50/80 hover:bg-slate-100/80 font-bold text-slate-900 text-xs sm:text-sm text-left flex justify-between items-center transition-colors cursor-pointer"
+                >
+                  <span>{faq.q}</span>
+                  {openFaq === idx ? <ChevronUp className="w-4 h-4 text-blue-600" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+                </button>
+                {openFaq === idx && (
+                  <div className="p-4 bg-white text-slate-600 text-xs leading-relaxed border-t border-slate-100">
+                    {faq.a}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+
+      </main>
 
       <Footer />
-    </>
+    </div>
   )
 }

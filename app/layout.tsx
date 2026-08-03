@@ -1,28 +1,29 @@
 import type { Metadata } from 'next'
-import { Plus_Jakarta_Sans } from 'next/font/google'
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/next"
+import { Toaster } from 'sonner'
 import './globals.css'
 import BottomNav from '@/components/bottom-nav'
 
-const jakarta = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-  variable: '--font-sans',
-})
-
 export const metadata: Metadata = {
-  title: 'Free Business Listing Website Pakistan | List Your Business Free - ListPak',
-  description: 'ListPak is Pakistan\'s #1 free business listing website & free directory. List your business free forever, post jobs, find employees. 100% free with high Google ranking.',
+  title: "ListPak — Pakistan's Digital Business & Enterprise Ecosystem",
+  description: "Discover, connect, and grow with Pakistan's largest digital business platform. Explore verified business listings, jobs, professional talent, and enterprise services across Karachi, Lahore, Islamabad, and nationwide.",
   metadataBase: new URL('https://listpak.com/'),
+  keywords: [
+    'Pakistan business directory',
+    'free business listing Pakistan',
+    'jobs in Pakistan',
+    'Pakistani professionals',
+    'verified companies Lahore Karachi Islamabad',
+    'ListPak enterprise ecosystem'
+  ],
   icons: {
     icon: [{ url: '/favicon.png', sizes: 'any' }],
     apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
   },
   openGraph: {
-    title: 'Free Business Listing Website Pakistan | ListPak Directory',
-    description: 'Pakistan\'s #1 free business listing website. List your business free forever, reach thousands of customers across Karachi, Lahore, Islamabad.',
+    title: "ListPak — Pakistan's Digital Business & Enterprise Ecosystem",
+    description: "Discover, connect, and grow with Pakistan's largest digital business platform. Verified businesses, hiring portal, and professional talent.",
     url: 'https://listpak.com/',
     siteName: 'ListPak',
     locale: 'en_PK',
@@ -32,16 +33,29 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  verification: {
+    google: 'L_LW7Dtxekn-M81A11zjxYVWGI7LGGoI-bJw02chIc8',
+    other: {
+      'msvalidate.01': '32107703ABE97F472472231CBA07F2E5',
+    },
+  },
 }
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={jakarta.variable}>
-      <body className="font-sans antialiased bg-[#F4F7FC] text-[#0F172A] pb-16 md:pb-0">
+    <html lang="en">
+      <head>
+        <meta name="msvalidate.01" content="32107703ABE97F472472231CBA07F2E5" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+      </head>
+      <body className="font-sans antialiased bg-[#F8FAFC] text-[#0F172A] pb-16 md:pb-0 min-h-screen selection:bg-blue-500 selection:text-white">
         {children}
         <BottomNav />
+        <Toaster position="top-right" richColors />
         <SpeedInsights />
         <Analytics />
       </body>

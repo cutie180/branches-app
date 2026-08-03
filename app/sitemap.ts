@@ -1,28 +1,23 @@
 import { MetadataRoute } from 'next'
-import { db } from '@/lib/firebase'
-import { collection, getDocs } from 'firebase/firestore'
+import { CATEGORIES, TOP_CITIES, MOCK_BUSINESSES, MOCK_JOBS, MOCK_PROFESSIONALS } from '@/lib/data'
 
-function safeDate(val: any): Date {
-  if (!val) return new Date()
-  try {
-    const d = new Date(val)
-    return isNaN(d.getTime()) ? new Date() : d
-  } catch (e) {
-    return new Date()
-  }
-}
-
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://listpak.com'
 
   const staticRoutes = [
     '',
+    '/search',
+    '/jobs',
+    '/post-job',
+    '/professionals',
+    '/categories',
+    '/cities',
+    '/dashboard',
     '/about',
     '/contact',
-    '/blog',
-    '/add-business',
     '/privacy',
     '/terms',
+    '/add-business'
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
@@ -30,42 +25,47 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: route === '' ? 1.0 : 0.8,
   }))
 
-  // Static Blog Posts
-  const blogPosts = [
-    'how-to-list-business-free-listpak-guide',
-    'local-seo-pakistan-businesses-google-ranking',
-    'free-job-posting-pakistan-hire-employees',
-    'best-free-business-listing-websites-pakistan-2026',
-    'first-100-customers-free-business-directory',
-    'google-my-business-vs-listpak-comparison',
-    'free-job-posting-pakistan-5-platforms',
-    'local-seo-keywords-pakistani-businesses',
-    'verify-business-listpak-step-by-step',
-  ].map((slug) => ({
-    url: `${baseUrl}/blog/${slug}`,
+  const categoryRoutes = CATEGORIES.map((cat) => ({
+    url: `${baseUrl}/category/${cat.id}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.8,
+  }))
+
+  const cityRoutes = TOP_CITIES.map((city) => ({
+    url: `${baseUrl}/city/${city.toLowerCase()}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.8,
+  }))
+
+  const businessRoutes = MOCK_BUSINESSES.map((biz) => ({
+    url: `${baseUrl}/business/${biz.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'daily' as const,
+    priority: 0.9,
+  }))
+
+  const jobRoutes = MOCK_JOBS.map((job) => ({
+    url: `${baseUrl}/jobs/${job.id}`,
+    lastModified: new Date(),
+    changeFrequency: 'daily' as const,
+    priority: 0.8,
+  }))
+
+  const professionalRoutes = MOCK_PROFESSIONALS.map((pro) => ({
+    url: `${baseUrl}/professionals/${pro.username}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.7,
   }))
 
-  // Dynamic business profiles from Firestore
-  let businessRoutes: MetadataRoute.Sitemap = []
-  try {
-    const snapshot = await getDocs(collection(db, 'businesses'))
-    snapshot.forEach((doc) => {
-      const data = doc.data()
-      if (data.slug) {
-        businessRoutes.push({
-          url: `${baseUrl}/business/${data.slug}`,
-          lastModified: safeDate(data.updatedAt || data.createdAt),
-          changeFrequency: 'weekly' as const,
-          priority: 0.7,
-        })
-      }
-    })
-  } catch (err) {
-    console.warn('Sitemap Firestore fetch warning:', err)
-  }
-
-  return [...staticRoutes, ...blogPosts, ...businessRoutes]
+  return [
+    ...staticRoutes,
+    ...categoryRoutes,
+    ...cityRoutes,
+    ...businessRoutes,
+    ...jobRoutes,
+    ...professionalRoutes
+  ]
 }

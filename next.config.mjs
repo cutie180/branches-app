@@ -1,11 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   trailingSlash: true,
-
-  // ─── Compress responses with gzip/brotli ────────────────────────────────────
   compress: true,
 
-  // ─── Tree-shake large icon/UI packages — eliminates unused exports ───────────
   experimental: {
     optimizePackageImports: [
       'lucide-react',
@@ -34,10 +31,8 @@ const nextConfig = {
   },
 
   images: {
-    // Serve AVIF first (smallest), fall back to WebP
     formats: ['image/avif', 'image/webp'],
-    // Aggressive caching — business logos rarely change
-    minimumCacheTTL: 86400, // 24 hours
+    minimumCacheTTL: 86400,
     remotePatterns: [
       {
         protocol: 'https',
@@ -54,21 +49,13 @@ const nextConfig = {
     ],
   },
 
-  // ─── Cache-Control headers for static assets ────────────────────────────────
   async headers() {
+    // Only apply static cache-control in production to avoid breaking Turbopack dev HMR
+    if (process.env.NODE_ENV !== 'production') {
+      return []
+    }
     return [
       {
-        // Immutable cache for hashed Next.js static chunks
-        source: '/_next/static/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-      {
-        // Long cache for public images/fonts/icons
         source: '/:path*\\.(png|jpg|jpeg|webp|avif|svg|ico|woff|woff2|ttf|otf)',
         headers: [
           {
@@ -78,7 +65,6 @@ const nextConfig = {
         ],
       },
       {
-        // ISR pages — allow CDN caching with stale-while-revalidate
         source: '/((?!_next|api).*)',
         headers: [
           {
@@ -90,101 +76,6 @@ const nextConfig = {
             value: 'SAMEORIGIN',
           },
         ],
-      },
-    ]
-  },
-
-  async redirects() {
-    return [
-      // ─── Enforce WWW Canonical Domain Redirection ──────────────────────────────────
-      // ─── Enforce WWW Canonical Domain Redirection (1-Hop Trailing Slash Aware) ───
-      {
-        source: '/',
-        has: [{ type: 'host', value: 'pakbizbranhces.online' }],
-        destination: 'https://www.pakbizbranhces.online/',
-        permanent: true,
-      },
-      {
-        source: '/:path+',
-        has: [{ type: 'host', value: 'pakbizbranhces.online' }],
-        destination: 'https://www.pakbizbranhces.online/:path*/',
-        permanent: true,
-      },
-      {
-        source: '/add-bussiness',
-        destination: 'https://www.pakbizbranhces.online/add-business/',
-        permanent: true,
-      },
-      {
-        source: '/best-restaurants',
-        destination: 'https://www.pakbizbranhces.online/restaurants/',
-        permanent: true,
-      },
-      {
-        source: '/healthcare-services',
-        destination: 'https://www.pakbizbranhces.online/healthcare/',
-        permanent: true,
-      },
-      {
-        source: '/top-real-estate',
-        destination: 'https://www.pakbizbranhces.online/real-estate/',
-        permanent: true,
-      },
-      // Canonical Top-Level Absolute Redirects (1-Hop)
-      {
-        source: '/business/:slug',
-        destination: 'https://www.pakbizbranhces.online/:slug/',
-        permanent: true,
-      },
-      {
-        source: '/category/:slug',
-        destination: 'https://www.pakbizbranhces.online/:slug/',
-        permanent: true,
-      },
-      {
-        source: '/categories/:slug',
-        destination: 'https://www.pakbizbranhces.online/:slug/',
-        permanent: true,
-      },
-      {
-        source: '/cities/:city',
-        destination: 'https://www.pakbizbranhces.online/:city/',
-        permanent: true,
-      },
-      {
-        source: '/businesses/:city/:categorySlug',
-        destination: 'https://www.pakbizbranhces.online/:city/:categorySlug/',
-        permanent: true,
-      },
-      {
-        source: '/locations/:city/:categorySlug',
-        destination: 'https://www.pakbizbranhces.online/:city/:categorySlug/',
-        permanent: true,
-      },
-      {
-        source: '/smarttalk',
-        destination: 'https://www.pakbizbranhces.online/',
-        permanent: true,
-      },
-      {
-        source: '/developer',
-        destination: 'https://www.pakbizbranhces.online/',
-        permanent: true,
-      },
-      {
-        source: '/sitemap-areas.xml',
-        destination: 'https://www.pakbizbranhces.online/sitemap.xml',
-        permanent: true,
-      },
-      {
-        source: '/sitemap-services.xml',
-        destination: 'https://www.pakbizbranhces.online/sitemap.xml',
-        permanent: true,
-      },
-      {
-        source: '/sitemap-pages.xml',
-        destination: 'https://www.pakbizbranhces.online/sitemap.xml',
-        permanent: true,
       },
     ]
   },

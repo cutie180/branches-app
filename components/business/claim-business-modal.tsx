@@ -1,0 +1,140 @@
+'use client'
+
+import { useState } from 'react'
+import { ShieldCheck, Upload, FileText, CheckCircle2 } from 'lucide-react'
+import { toast } from 'sonner'
+
+interface ClaimBusinessModalProps {
+  businessName: string
+  isOpen: boolean
+  onClose: () => void
+}
+
+export default function ClaimBusinessModal({ businessName, isOpen, onClose }: ClaimBusinessModalProps) {
+  const [submitted, setSubmitted] = useState(false)
+  const [ownerName, setOwnerName] = useState('')
+  const [cnic, setCnic] = useState('')
+  const [phone, setPhone] = useState('')
+  const [proofFile, setProofFile] = useState<File | null>(null)
+
+  if (!isOpen) return null
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!ownerName || !cnic || !phone) {
+      toast.error('Please complete all verification details.')
+      return
+    }
+    setSubmitted(true)
+    toast.success('Ownership claim submitted! Our team will verify your documents within 24 hours.')
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl animate-in zoom-in-95 font-sans">
+        <div className="flex justify-between items-center pb-3 border-b border-slate-100">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="w-5 h-5 text-emerald-600" />
+            <h3 className="font-extrabold text-slate-900 text-base">Claim Business Ownership</h3>
+          </div>
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 cursor-pointer">✕</button>
+        </div>
+
+        {submitted ? (
+          <div className="py-6 text-center space-y-4">
+            <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
+              <CheckCircle2 className="w-7 h-7" />
+            </div>
+            <h4 className="font-extrabold text-slate-900 text-base">Claim Under Verification</h4>
+            <p className="text-slate-600 text-xs leading-relaxed max-w-xs mx-auto">
+              We received your ownership request for <strong className="text-slate-900">{businessName}</strong>. Our compliance team will reach out via WhatsApp/Phone within 24 hours.
+            </p>
+            <button
+              onClick={onClose}
+              className="px-5 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold"
+            >
+              Close Window
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Verify ownership for <strong className="text-slate-900">{businessName}</strong> to gain full control over profile edits, customer review replies, and leads dashboard.
+            </p>
+
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Owner / Authorized Manager Name *</label>
+                <input
+                  type="text"
+                  required
+                  value={ownerName}
+                  onChange={(e) => setOwnerName(e.target.value)}
+                  placeholder="e.g. Asad Ali Khan"
+                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">CNIC / ID Number *</label>
+                  <input
+                    type="text"
+                    required
+                    value={cnic}
+                    onChange={(e) => setCnic(e.target.value)}
+                    placeholder="35202-xxxxxxx-x"
+                    className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Official Mobile / WhatsApp *</label>
+                  <input
+                    type="tel"
+                    required
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="+92 300 1234567"
+                    className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Proof Document (Visiting Card / Utility Bill / Tax Certificate)</label>
+                <div className="border-2 border-dashed border-slate-200 rounded-xl p-4 text-center cursor-pointer hover:bg-slate-50 transition-colors">
+                  <Upload className="w-6 h-6 text-slate-400 mx-auto mb-1" />
+                  <span className="text-xs text-slate-600 font-medium block">
+                    {proofFile ? proofFile.name : 'Click to upload proof of ownership'}
+                  </span>
+                  <input
+                    type="file"
+                    className="hidden"
+                    onChange={(e) => e.target.files?.[0] && setProofFile(e.target.files[0])}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-2 flex gap-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 py-2.5 bg-slate-100 text-slate-700 font-bold text-xs rounded-xl"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md"
+              >
+                Submit Ownership Claim
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
+    </div>
+  )
+}

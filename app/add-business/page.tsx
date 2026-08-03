@@ -2,13 +2,25 @@ import { Metadata } from 'next'
 import AddBusinessClient from './add-business-client'
 
 export const metadata: Metadata = {
-  title: 'Add Business: List Your Pakistan Business Free Now',
-  description:
-    'Submit your business to Pakistan\'s leading free directory. Reach local customers, add contact info, and get verified instantly on PakBizBranches.',
-  keywords: 'list business free Pakistan, add business Pakistan directory, free business listing Pakistan, register business online Pakistan, business directory submission Pakistan',
+  title: "List Your Business Free — Pakistan's Digital Business Platform | ListPak",
+  description: "Join Pakistan's largest digital business platform. List your business free, reach thousands of customers across Karachi, Lahore, Islamabad, and nationwide with high Google search ranking.",
+  keywords: 'list business free Pakistan, add business Pakistan directory, register business online Pakistan, free business directory Pakistan, ListPak onboarding',
   alternates: {
-    canonical: 'https://www.pakbizbranhces.online/add-business/',
+    canonical: 'https://listpak.com/add-business',
   },
+  openGraph: {
+    title: "List Your Business Free — Pakistan's Digital Ecosystem | ListPak",
+    description: "Onboard your business to Pakistan's premier digital platform. 100% free listing forever with high Google search ranking.",
+    url: 'https://listpak.com/add-business',
+    siteName: 'ListPak',
+    locale: 'en_PK',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'List Your Business Free on ListPak Pakistan',
+    description: "Onboard your company to Pakistan's flagship business platform.",
+  }
 }
 
 export default function AddBusinessPage() {

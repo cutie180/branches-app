@@ -4,60 +4,46 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* PakBizBranches Color System */
-  --brand-navy: #0f2b3d;
-  --brand-blue: #60a5fa;
-  --brand-teal: #0ea5e9;
-  --brand-green: #10b981;
-  --brand-orange: #f59e0b;
+  --brand-navy: #0f172a;
+  --brand-blue: #2563eb;
+  --brand-sky: #3b82f6;
+  --brand-emerald: #10b981;
+  --brand-amber: #f59e0b;
+  --brand-orange: #f97316;
 
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.13 0.03 240);
+  --background: #f8fafc;
+  --foreground: #0f172a;
 
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.13 0.03 240);
+  --card: #ffffff;
+  --card-foreground: #0f172a;
 
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.13 0.03 240);
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
 
-  /* Primary = navy #0f2b3d */
-  --primary: oklch(0.24 0.06 230);
-  --primary-foreground: oklch(0.98 0 0);
+  --secondary: #0f172a;
+  --secondary-foreground: #ffffff;
 
-  /* Secondary = sky blue #60a5fa */
-  --secondary: oklch(0.7 0.18 225);
-  --secondary-foreground: oklch(0.98 0 0);
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
 
-  --muted: oklch(0.97 0.005 240);
-  --muted-foreground: oklch(0.52 0.03 230);
+  --accent: #3b82f6;
+  --accent-foreground: #ffffff;
 
-  --accent: oklch(0.7 0.18 225);
-  --accent-foreground: oklch(0.98 0 0);
-
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.98 0 0);
-
-  --border: oklch(0.91 0.01 240);
-  --input: oklch(0.91 0.01 240);
-  --ring: oklch(0.7 0.18 225);
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #3b82f6;
 
   --radius: 0.75rem;
-
-  /* Section backgrounds */
-  --surface: oklch(0.98 0.003 240);
-  --hero-bg: oklch(0.24 0.06 230);
 }
 
 @theme inline {
-  --font-sans: 'Outfit', 'system-ui', sans-serif;
-  --font-mono: 'Geist Mono', 'Geist Mono Fallback';
+  --font-heading: var(--font-poppins), 'Poppins', sans-serif;
+  --font-sans: var(--font-inter), 'Inter', sans-serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
@@ -66,65 +52,86 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-surface: var(--surface);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: 1rem;
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
-    /* scroll-behavior: smooth removed — it forces synchronous layout on every
-       programmatic scroll and hurts TBT. Use CSS scroll-behavior only on
-       specific containers that need it. */
+    @apply border-border;
   }
   html {
     scroll-behavior: smooth;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    font-family: var(--font-inter), 'Inter', sans-serif;
+    background-color: var(--background);
+    color: var(--foreground);
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-sans;
+    font-family: var(--font-poppins), 'Poppins', sans-serif;
   }
-  /* Prevent layout shift for images without explicit dimensions */
   img {
     max-width: 100%;
     height: auto;
   }
 }
 
-/* Card hover lift — use will-change only on hover to avoid compositing cost */
+/* Glassmorphism & Elevation Utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.dark-glass-panel {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(30, 41, 59, 0.8);
+}
+
+/* Card hover lift effect */
 .card-hover {
-  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .card-hover:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(15, 43, 61, 0.13);
+  box-shadow: 0 20px 30px -10px rgba(15, 23, 42, 0.08), 0 10px 15px -5px rgba(15, 23, 42, 0.04);
 }
 
-/* Animated underline for nav links */
-.nav-link {
-  position: relative;
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: #60a5fa;
-  transition: width 0.22s ease;
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
 }
-.nav-link:hover::after {
-  width: 100%;
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
 }
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Pulse Glow Animation */
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.05); }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s infinite ease-in-out;
+}
+
