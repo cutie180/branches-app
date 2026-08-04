@@ -47,7 +47,7 @@ export default function CookiePolicyPage() {
 
             <h2 className="text-xl font-bold text-slate-900 pt-4">4. Contact Us</h2>
             <p>
-              If you have any questions regarding our Cookie Policy, please contact our support team at <a href="mailto:support@listpak.com" className="text-blue-600 underline">support@listpak.com</a>.
+              If you have any questions regarding our Cookie Policy, please contact our support team at <a href="mailto:admin@listpak.com" className="text-blue-600 underline">admin@listpak.com</a>.
             </p>
           </div>
         </div>

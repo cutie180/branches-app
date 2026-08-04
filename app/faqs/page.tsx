@@ -30,7 +30,7 @@ const faqs = [
   },
   {
     q: "How can I update or delete my business listing?",
-    a: "You can submit an edit or removal request through our Contact Page or by emailing support@listpak.com with proof of business ownership."
+    a: "You can submit an edit or removal request through our Contact Page or by emailing admin@listpak.com with proof of business ownership."
   }
 ]
 

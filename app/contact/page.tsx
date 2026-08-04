@@ -95,9 +95,9 @@ export default function ContactPage() {
                   </div>
                 </div>
                 <ul className="space-y-2 text-xs sm:text-sm text-[#475569] mb-4">
-                  <li><strong>General:</strong> support@listpak.com</li>
-                  <li><strong>Listing Support:</strong> listings@listpak.com</li>
-                  <li><strong>Job Portal:</strong> jobs@listpak.com</li>
+                  <li><strong>Official Email:</strong> admin@listpak.com</li>
+                  <li><strong>Listing Support:</strong> admin@listpak.com</li>
+                  <li><strong>Job Portal:</strong> admin@listpak.com</li>
                 </ul>
                 <p className="text-xs text-[#64748B] leading-relaxed">We respond to all emails during business hours (9 AM - 9 PM PKT).</p>
               </div>

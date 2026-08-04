@@ -44,7 +44,7 @@ export default function SupportPage() {
               <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
                 <Mail className="w-6 h-6 text-blue-600 mx-auto mb-2" />
                 <h4 className="font-bold text-slate-900 text-sm">Email Support</h4>
-                <p className="text-xs text-slate-500 mt-1">support@listpak.com</p>
+                <p className="text-xs text-slate-500 mt-1">admin@listpak.com</p>
               </div>
 
               <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">

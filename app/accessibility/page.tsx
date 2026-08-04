@@ -37,7 +37,7 @@ export default function AccessibilityPage() {
 
             <h2 className="text-xl font-bold text-slate-900 pt-4">2. Feedback & Support</h2>
             <p>
-              We welcome your feedback on the accessibility of ListPak. If you encounter accessibility barriers, please notify us at <a href="mailto:support@listpak.com" className="text-blue-600 underline">support@listpak.com</a>.
+              We welcome your feedback on the accessibility of ListPak. If you encounter accessibility barriers, please notify us at <a href="mailto:admin@listpak.com" className="text-blue-600 underline">admin@listpak.com</a>.
             </p>
           </div>
         </div>

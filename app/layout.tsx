@@ -52,7 +52,7 @@ export default function RootLayout({
     url: 'https://listpak.com',
     logo: 'https://listpak.com/logo.png',
     telephone: '+92 334 5636230',
-    email: 'info@listpak.com',
+    email: 'admin@listpak.com',
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'Office 303, Evacuee Trust Complex, F-5/1',
