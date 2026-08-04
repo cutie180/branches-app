@@ -10,7 +10,7 @@ import {
 } from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
-import { CATEGORIES, TOP_CITIES } from '@/lib/data'
+import { CATEGORIES, CITIES } from '@/lib/data'
 import { saveBusinessToDatabase } from '@/lib/db-service'
 import { toast } from 'sonner'
 
@@ -54,6 +54,14 @@ export default function AddBusinessClient() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submittedSlug, setSubmittedSlug] = useState<string | null>(null)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
+
+  // Searchable City Selector state
+  const [citySearchQuery, setCitySearchQuery] = useState('')
+  const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false)
+
+  const filteredCities = CITIES.filter(city =>
+    city.toLowerCase().includes(citySearchQuery.toLowerCase().trim())
+  )
 
   // Form State
   const [formData, setFormData] = useState({
@@ -310,20 +318,74 @@ export default function AddBusinessClient() {
 
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1.5">City Location *</label>
-                        <select
-                          value={formData.city}
-                          onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                          className={`w-full px-4 py-3 bg-slate-50/80 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 cursor-pointer ${
-                            errors.city ? 'border-red-500 bg-red-50/30' : 'border-slate-200'
-                          }`}
-                        >
-                          <option value="">-- Select City Location --</option>
-                          {TOP_CITIES.map(city => (
-                            <option key={city} value={city}>{city}</option>
-                          ))}
-                        </select>
+                      <div className="relative">
+                        <label className="block text-xs font-bold text-slate-700 mb-1.5 flex justify-between items-center">
+                          <span>City Location * ({CITIES.length} Pakistani Cities)</span>
+                          {formData.city && (
+                            <span className="text-[11px] font-semibold text-emerald-600">
+                              ✓ {formData.city}
+                            </span>
+                          )}
+                        </label>
+                        
+                        <div className="relative">
+                          <button
+                            type="button"
+                            onClick={() => setIsCityDropdownOpen(!isCityDropdownOpen)}
+                            className={`w-full px-4 py-3 bg-slate-50/80 border rounded-2xl text-sm flex items-center justify-between text-left focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition ${
+                              errors.city ? 'border-red-500 bg-red-50/30' : 'border-slate-200 hover:border-slate-300'
+                            }`}
+                          >
+                            <span className={formData.city ? 'font-semibold text-slate-900' : 'text-slate-400'}>
+                              {formData.city ? formData.city : `-- Search or Select City (${CITIES.length} Cities) --`}
+                            </span>
+                            <ChevronDown className={`w-4 h-4 text-slate-400 flex-shrink-0 ml-2 transition-transform duration-200 ${isCityDropdownOpen ? 'rotate-180' : ''}`} />
+                          </button>
+
+                          {isCityDropdownOpen && (
+                            <div className="absolute z-50 mt-2 w-full bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden animate-in fade-in-50 duration-150">
+                              <div className="p-2.5 border-b border-slate-100 bg-slate-50/80 sticky top-0">
+                                <input
+                                  type="text"
+                                  value={citySearchQuery}
+                                  onChange={(e) => setCitySearchQuery(e.target.value)}
+                                  placeholder="Search city... (e.g. Swat, Karachi, Mirpur, Multan, Quetta)"
+                                  className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                                  autoFocus
+                                />
+                              </div>
+
+                              <div className="max-h-60 overflow-y-auto divide-y divide-slate-50 p-1">
+                                {filteredCities.length > 0 ? (
+                                  filteredCities.map((city) => (
+                                    <button
+                                      key={city}
+                                      type="button"
+                                      onClick={() => {
+                                        setFormData({ ...formData, city })
+                                        setErrors({ ...errors, city: '' })
+                                        setIsCityDropdownOpen(false)
+                                        setCitySearchQuery('')
+                                      }}
+                                      className={`w-full px-3 py-2 text-left text-xs rounded-xl flex items-center justify-between transition ${
+                                        formData.city === city
+                                          ? 'bg-blue-50 text-blue-700 font-bold'
+                                          : 'text-slate-700 hover:bg-slate-50'
+                                      }`}
+                                    >
+                                      <span>{city}</span>
+                                      {formData.city === city && <Check className="w-3.5 h-3.5 text-blue-600" />}
+                                    </button>
+                                  ))
+                                ) : (
+                                  <div className="p-4 text-center text-xs text-slate-400">
+                                    No matching city found for "{citySearchQuery}"
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
                         {errors.city && <span className="text-[11px] font-semibold text-red-500 mt-1 block">{errors.city}</span>}
                       </div>
 
