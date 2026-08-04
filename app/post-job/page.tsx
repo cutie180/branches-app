@@ -3,26 +3,72 @@
 import { useState } from 'react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
-import { Briefcase, Building2, MapPin, CheckCircle2, Plus, Globe, Mail, AlertCircle, Info, ShieldCheck } from 'lucide-react'
+import { Briefcase, Building2, MapPin, CheckCircle2, Plus, Globe, Mail, AlertCircle, Info, ShieldCheck, ArrowRight, Sparkles, Trash2 } from 'lucide-react'
+import { saveJobToDatabase } from '@/lib/job-service'
 import { toast } from 'sonner'
 import Link from 'next/link'
+import { CITIES } from '@/lib/data'
 
 export default function PostJobPage() {
   const [submitted, setSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submittedSlug, setSubmittedSlug] = useState('')
+
+  // Form State
   const [title, setTitle] = useState('')
   const [company, setCompany] = useState('')
   const [city, setCity] = useState('Karachi')
   const [category, setCategory] = useState('Technology & IT')
   const [type, setType] = useState('Full-time')
-  const [salary, setSalary] = useState('')
+  const [salary, setSalary] = useState('PKR 150,000 - 250,000 / month')
+  const [experience, setExperience] = useState('2 - 4 Years')
+  const [vacancies, setVacancies] = useState('1')
   const [description, setDescription] = useState('')
   
+  // Skills input
+  const [skillInput, setSkillInput] = useState('')
+  const [skills, setSkills] = useState<string[]>(['TypeScript', 'React'])
+
+  // Responsibilities & Requirements
+  const [responsibilities, setResponsibilities] = useState<string[]>([
+    'Lead product execution and collaborate with cross-functional teams.'
+  ])
+  const [respInput, setRespInput] = useState('')
+
+  const [requirements, setRequirements] = useState<string[]>([
+    'Relevant Bachelor degree or equivalent field experience.'
+  ])
+  const [reqInput, setReqInput] = useState('')
+
   // Application Method Fields
+  const [applicationMethod, setApplicationMethod] = useState<'both' | 'website' | 'email' | 'listpak'>('both')
   const [applicationWebsite, setApplicationWebsite] = useState('')
   const [applicationEmail, setApplicationEmail] = useState('')
   const [appMethodError, setAppMethodError] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const addSkill = () => {
+    if (skillInput.trim() && !skills.includes(skillInput.trim())) {
+      setSkills(prev => [...prev, skillInput.trim()])
+      setSkillInput('')
+    }
+  }
+  const removeSkill = (s: string) => setSkills(p => p.filter(item => item !== s))
+
+  const addResp = () => {
+    if (respInput.trim()) {
+      setResponsibilities(p => [...p, respInput.trim()])
+      setRespInput('')
+    }
+  }
+
+  const addReq = () => {
+    if (reqInput.trim()) {
+      setRequirements(p => [...p, reqInput.trim()])
+      setReqInput('')
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setAppMethodError('')
 
@@ -31,41 +77,46 @@ export default function PostJobPage() {
       return
     }
 
-    // Validation: At least ONE application method must be provided
     const cleanWeb = applicationWebsite.trim()
     const cleanMail = applicationEmail.trim()
 
-    if (!cleanWeb && !cleanMail) {
-      const msg = 'Please provide at least an Application Website URL or an Application Email Address for candidates.'
+    if (applicationMethod !== 'listpak' && !cleanWeb && !cleanMail) {
+      const msg = 'Please provide at least an Application Website URL or an Application Email Address.'
       setAppMethodError(msg)
       toast.error(msg)
       return
     }
 
-    // Validate URL if provided
-    if (cleanWeb) {
-      try {
-        const urlToCheck = cleanWeb.startsWith('http://') || cleanWeb.startsWith('https://') ? cleanWeb : `https://${cleanWeb}`
-        new URL(urlToCheck)
-      } catch (err) {
-        setAppMethodError('Please enter a valid website URL (e.g. https://company.com/careers).')
-        toast.error('Invalid Application Website URL format.')
-        return
-      }
-    }
+    setIsSubmitting(true)
+    try {
+      const createdJob = await saveJobToDatabase({
+        title,
+        company,
+        city,
+        category,
+        type,
+        employmentType: type,
+        salary,
+        experience,
+        vacancies: Number(vacancies) || 1,
+        description,
+        skills,
+        responsibilities,
+        requirements,
+        applicationWebsite: cleanWeb,
+        applicationEmail: cleanMail,
+        applicationMethod,
+        applicationUrl: cleanWeb
+      })
 
-    // Validate Email if provided
-    if (cleanMail) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (!emailRegex.test(cleanMail)) {
-        setAppMethodError('Please enter a valid email address (e.g. careers@company.com).')
-        toast.error('Invalid Application Email format.')
-        return
-      }
+      setSubmittedSlug(createdJob.slug || createdJob.id)
+      setSubmitted(true)
+      toast.success('Job opening published successfully!')
+    } catch (err) {
+      toast.error('Failed to publish job opening.')
+    } finally {
+      setIsSubmitting(false)
     }
-
-    setSubmitted(true)
-    toast.success('Job opening published successfully! Live on ListPak Jobs.')
   }
 
   return (
@@ -80,7 +131,7 @@ export default function PostJobPage() {
           </span>
           <h1 className="text-3xl font-extrabold text-slate-900">Post a Job Opening in Pakistan</h1>
           <p className="text-slate-600 text-sm font-medium">
-            Reach qualified Pakistani professionals. Candidates apply directly through your website or direct email.
+            Reach qualified Pakistani professionals. Candidate matches will be automatically suggested from the Professional network.
           </p>
         </div>
       </section>
@@ -96,34 +147,42 @@ export default function PostJobPage() {
               Your job posting for <strong className="text-slate-900">{title}</strong> at {company} is now live on ListPak Jobs.
             </p>
             <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-left text-xs space-y-1.5">
-              <span className="font-bold text-slate-700 block">Candidate Application Endpoint:</span>
+              <span className="font-bold text-slate-700 block">Candidate Application Channel:</span>
               {applicationWebsite && (
-                <div className="flex items-center gap-2 text-blue-600 font-semibold">
-                  <Globe className="w-3.5 h-3.5" />
-                  <span>Website: {applicationWebsite}</span>
+                <div className="text-slate-600">
+                  <span>Website: </span>
+                  <a href={applicationWebsite} target="_blank" className="text-blue-600 font-bold underline">{applicationWebsite}</a>
                 </div>
               )}
               {applicationEmail && (
-                <div className="flex items-center gap-2 text-emerald-600 font-semibold">
-                  <Mail className="w-3.5 h-3.5" />
-                  <span>Email: {applicationEmail}</span>
+                <div className="text-slate-600">
+                  <span>Email: </span>
+                  <span className="font-bold text-slate-900">{applicationEmail}</span>
                 </div>
               )}
             </div>
-            <div className="pt-4 flex justify-center gap-3">
-              <Link href="/jobs" className="px-5 py-2.5 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 transition-colors">
-                View Job Listings Portal
+            <div className="pt-4 flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
+                href={`/jobs/${submittedSlug}`}
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
+              >
+                <span>View Job Page & Candidate Matches</span>
+                <ArrowRight className="w-4 h-4" />
               </Link>
+              <button
+                onClick={() => setSubmitted(false)}
+                className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl transition-all"
+              >
+                Post Another Job
+              </button>
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-8 border border-slate-200/90 shadow-xl space-y-8">
-            <div>
-              <h2 className="text-xl font-extrabold text-slate-900 pb-3 border-b border-slate-100">
-                1. Position Details
-              </h2>
-
-              <div className="space-y-4 pt-4">
+          <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-md space-y-6">
+            <div className="space-y-4">
+              <h2 className="text-lg font-extrabold text-slate-900">Position Overview</h2>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">Job Title *</label>
                   <input
@@ -131,149 +190,139 @@ export default function PostJobPage() {
                     required
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    placeholder="e.g. Senior Software Engineer / Store Manager"
-                    className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    placeholder="e.g. Senior React Developer, HR Manager"
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Company Name *</label>
-                    <input
-                      type="text"
-                      required
-                      value={company}
-                      onChange={(e) => setCompany(e.target.value)}
-                      placeholder="Company name"
-                      className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">City Location *</label>
-                    <select
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
-                      className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 cursor-pointer"
-                    >
-                      <option value="Karachi">Karachi</option>
-                      <option value="Lahore">Lahore</option>
-                      <option value="Islamabad">Islamabad</option>
-                      <option value="Rawalpindi">Rawalpindi</option>
-                      <option value="Faisalabad">Faisalabad</option>
-                      <option value="Multan">Multan</option>
-                      <option value="Peshawar">Peshawar</option>
-                      <option value="Quetta">Quetta</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Job Type *</label>
-                    <select
-                      value={type}
-                      onChange={(e) => setType(e.target.value)}
-                      className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 cursor-pointer"
-                    >
-                      <option value="Full-time">Full-time</option>
-                      <option value="Part-time">Part-time</option>
-                      <option value="Contract">Contract</option>
-                      <option value="Remote">Remote</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Offered Salary Package *</label>
-                    <input
-                      type="text"
-                      required
-                      value={salary}
-                      onChange={(e) => setSalary(e.target.value)}
-                      placeholder="e.g. PKR 150,000 - 250,000 / month"
-                      className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                    />
-                  </div>
-                </div>
-
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Detailed Job Description & Requirements *</label>
-                  <textarea
-                    rows={5}
-                    required
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Outline responsibilities, key skills required, and benefits..."
-                    className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* DEDICATED APPLICATION METHOD SECTION */}
-            <div className="space-y-4 pt-4 border-t border-slate-100">
-              <div>
-                <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
-                  <span>2. Candidate Application Method</span>
-                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 border border-blue-200">
-                    Mandatory Section
-                  </span>
-                </h2>
-                <p className="text-xs text-slate-500 mt-1">
-                  Candidates will apply directly through your external website portal or via formatted email. At least one method is required.
-                </p>
-              </div>
-
-              {appMethodError && (
-                <div className="p-3.5 bg-red-50 border border-red-200 rounded-2xl text-xs text-red-700 font-semibold flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
-                  <span>{appMethodError}</span>
-                </div>
-              )}
-
-              <div className="space-y-4 p-5 rounded-2xl bg-slate-50/80 border border-slate-200/80">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
-                    <Globe className="w-4 h-4 text-blue-600" />
-                    <span>Application Website / Career Portal URL</span>
-                  </label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Company / Employer Name *</label>
                   <input
                     type="text"
-                    value={applicationWebsite}
-                    onChange={(e) => setApplicationWebsite(e.target.value)}
-                    placeholder="e.g. https://yourcompany.com/careers/apply-123"
-                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    required
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
+                    placeholder="e.g. Tech Solutions Pakistan"
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
                   />
-                  <span className="text-[11px] text-slate-500 mt-1 block">
-                    Candidates clicking &quot;Apply on Company Website&quot; will be redirected securely to this URL in a new tab.
-                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">City *</label>
+                  <select
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
+                  >
+                    {CITIES.map(c => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
-                    <Mail className="w-4 h-4 text-emerald-600" />
-                    <span>Application Email Address</span>
-                  </label>
-                  <input
-                    type="email"
-                    value={applicationEmail}
-                    onChange={(e) => setApplicationEmail(e.target.value)}
-                    placeholder="e.g. careers@yourcompany.com"
-                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                  />
-                  <span className="text-[11px] text-slate-500 mt-1 block">
-                    Candidates clicking &quot;Apply via Email&quot; will open their default email client with pre-filled subject and application body.
-                  </span>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Employment Type</label>
+                  <select
+                    value={type}
+                    onChange={(e) => setType(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="Full-time">Full-time</option>
+                    <option value="Part-time">Part-time</option>
+                    <option value="Contract">Contract</option>
+                    <option value="Remote">Remote</option>
+                    <option value="Hybrid">Hybrid</option>
+                    <option value="Internship">Internship</option>
+                  </select>
                 </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Salary Range *</label>
+                  <input
+                    type="text"
+                    required
+                    value={salary}
+                    onChange={(e) => setSalary(e.target.value)}
+                    placeholder="e.g. PKR 150,000 - 250,000 / month"
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Required Skills Tagging</label>
+                <div className="flex gap-2 mb-2">
+                  <input
+                    type="text"
+                    value={skillInput}
+                    onChange={(e) => setSkillInput(e.target.value)}
+                    placeholder="Add required skill (e.g. Next.js, Node.js)..."
+                    className="flex-1 px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs"
+                  />
+                  <button type="button" onClick={addSkill} className="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold">Add</button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {skills.map(s => (
+                    <span key={s} className="px-3 py-1 bg-blue-50 text-blue-800 rounded-lg text-xs font-semibold flex items-center gap-1.5 border border-blue-200">
+                      <span>{s}</span>
+                      <button type="button" onClick={() => removeSkill(s)} className="text-red-600">✕</button>
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Job Description *</label>
+                <textarea
+                  rows={4}
+                  required
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Provide an overview of the role, team environment, and daily objectives..."
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* Application Methods */}
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
+                <label className="block text-xs font-extrabold text-slate-900">Application Methods</label>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Careers / ATS URL</label>
+                    <input
+                      type="url"
+                      value={applicationWebsite}
+                      onChange={(e) => setApplicationWebsite(e.target.value)}
+                      placeholder="https://company.com/careers/job"
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Direct HR Email</label>
+                    <input
+                      type="email"
+                      value={applicationEmail}
+                      onChange={(e) => setApplicationEmail(e.target.value)}
+                      placeholder="careers@company.com"
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs"
+                    />
+                  </div>
+                </div>
+                {appMethodError && <p className="text-red-500 text-[11px] font-bold">{appMethodError}</p>}
               </div>
             </div>
 
             <button
               type="submit"
-              className="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-extrabold text-sm rounded-2xl shadow-xl shadow-emerald-500/20 transition-all cursor-pointer flex items-center justify-center gap-2"
+              disabled={isSubmitting}
+              className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
-              <CheckCircle2 className="w-5 h-5" />
-              <span>Publish Job Opening Now</span>
+              <ShieldCheck className="w-4 h-4" />
+              <span>{isSubmitting ? 'Publishing Job...' : 'Publish Job Opening'}</span>
             </button>
           </form>
         )}

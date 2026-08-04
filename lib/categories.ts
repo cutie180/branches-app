@@ -10,7 +10,9 @@ import {
   CreditCard, 
   Plane, 
   Sparkles, 
-  Truck 
+  Truck,
+  Users,
+  Briefcase
 } from 'lucide-react'
 
 export const CATEGORY_ICONS = {
@@ -26,6 +28,10 @@ export const CATEGORY_ICONS = {
   'travel': Plane,
   'beauty': Sparkles,
   'logistics': Truck,
+  'professional-job-seeker': Users,
+  'professionals': Users,
+  'hiring-company-hr': Briefcase,
+  'companies': Briefcase,
 }
 
 export const CATEGORY_GRADIENTS = {
@@ -41,6 +47,10 @@ export const CATEGORY_GRADIENTS = {
   'travel': 'from-sky-400 to-blue-500',
   'beauty': 'from-purple-400 to-pink-500',
   'logistics': 'from-lime-400 to-green-500',
+  'professional-job-seeker': 'from-blue-500 to-indigo-600',
+  'professionals': 'from-blue-500 to-indigo-600',
+  'hiring-company-hr': 'from-sky-500 to-blue-600',
+  'companies': 'from-sky-500 to-blue-600',
 }
 
 export const CATEGORY_BG_COLORS = {
@@ -56,4 +66,8 @@ export const CATEGORY_BG_COLORS = {
   'travel': 'bg-gradient-to-br from-sky-50 to-blue-50',
   'beauty': 'bg-gradient-to-br from-purple-50 to-pink-50',
   'logistics': 'bg-gradient-to-br from-lime-50 to-green-50',
+  'professional-job-seeker': 'bg-gradient-to-br from-blue-50 to-indigo-50',
+  'professionals': 'bg-gradient-to-br from-blue-50 to-indigo-50',
+  'hiring-company-hr': 'bg-gradient-to-br from-sky-50 to-blue-50',
+  'companies': 'bg-gradient-to-br from-sky-50 to-blue-50',
 }

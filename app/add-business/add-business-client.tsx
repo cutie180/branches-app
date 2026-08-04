@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { 
   Building2, MapPin, Phone, Mail, Globe, Upload, CheckCircle2, ShieldCheck, 
   Sparkles, ArrowRight, ArrowLeft, Star, ChevronDown, ChevronUp, Lock, Eye, 
-  Award, TrendingUp, Zap, HelpCircle, FileText, Check, AlertCircle, PhoneCall, MessageCircle
+  Award, TrendingUp, Zap, HelpCircle, FileText, Check, AlertCircle, PhoneCall, MessageCircle, Users, Briefcase
 } from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
@@ -253,6 +253,48 @@ export default function AddBusinessClient() {
               {/* STEP 1: BUSINESS IDENTITY */}
               {currentStep === 1 && (
                 <div className="space-y-6 animate-in fade-in-50">
+                  {/* Category Type Switcher Banner */}
+                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
+                    <label className="block text-xs font-bold text-slate-700">What profile type are you creating on ListPak?</label>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div className="p-3 bg-white border-2 border-blue-600 rounded-xl flex items-center gap-3">
+                        <div className="p-2 bg-blue-50 text-blue-600 rounded-lg shrink-0">
+                          <Building2 className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-extrabold text-slate-900">Business / Store</p>
+                          <p className="text-[10px] text-slate-500">Retail shops & vendors</p>
+                        </div>
+                      </div>
+
+                      <Link
+                        href="/add-professional"
+                        className="p-3 bg-white border border-slate-200 hover:border-blue-400 rounded-xl flex items-center gap-3 transition-all hover:bg-blue-50/50 group cursor-pointer"
+                      >
+                        <div className="p-2 bg-slate-100 group-hover:bg-blue-100 text-slate-600 group-hover:text-blue-600 rounded-lg shrink-0">
+                          <Users className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-extrabold text-slate-900 group-hover:text-blue-600">Professional</p>
+                          <p className="text-[10px] text-slate-500">Personal & Freelancer</p>
+                        </div>
+                      </Link>
+
+                      <Link
+                        href="/add-company"
+                        className="p-3 bg-white border border-slate-200 hover:border-blue-400 rounded-xl flex items-center gap-3 transition-all hover:bg-blue-50/50 group cursor-pointer"
+                      >
+                        <div className="p-2 bg-slate-100 group-hover:bg-blue-100 text-slate-600 group-hover:text-blue-600 rounded-lg shrink-0">
+                          <Briefcase className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-extrabold text-slate-900 group-hover:text-blue-600">Hiring Company / HR</p>
+                          <p className="text-[10px] text-slate-500">Employers & Jobs</p>
+                        </div>
+                      </Link>
+                    </div>
+                  </div>
+
                   <div>
                     <h2 className="text-xl font-extrabold text-slate-900">Step 1: Business Identity & Category</h2>
                     <p className="text-xs text-slate-500 mt-1">Enter your registered or commercial trade name and industry taxonomy.</p>

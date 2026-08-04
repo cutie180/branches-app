@@ -1,6 +1,9 @@
 import { MetadataRoute } from 'next'
-import { CATEGORIES, CITIES, MOCK_JOBS, MOCK_PROFESSIONALS, BusinessItem } from '@/lib/data'
+import { CATEGORIES, CITIES, MOCK_JOBS, MOCK_PROFESSIONALS, BusinessItem, ProfessionalItem, CompanyItem, JobItem } from '@/lib/data'
 import { getAllBusinesses } from '@/lib/db-service'
+import { getAllProfessionals } from '@/lib/professional-service'
+import { getAllCompanies } from '@/lib/company-service'
+import { getAllJobs } from '@/lib/job-service'
 import { FEATURED_POSTS, RECENT_POSTS } from '@/app/blog/page'
 
 export const revalidate = 3600 // Revalidate sitemap XML every hour
@@ -10,7 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const currentDate = new Date()
   const fixedPolicyDate = new Date('2026-08-01T00:00:00.000Z')
 
-  // 1. Homepage (Priority: 1.0, Frequency: daily, Canonical trailing slash)
+  // 1. Homepage
   const homepageRoute = {
     url: `${baseUrl}/`,
     lastModified: currentDate,
@@ -18,14 +21,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 1.0,
   }
 
-  // 2. Core Portal Pages (Priority: 0.7, Frequency: weekly)
+  // 2. Core Portal Pages
   const corePages = [
     '/search',
     '/categories',
     '/cities',
     '/jobs',
     '/post-job',
+    '/companies',
+    '/add-company',
     '/professionals',
+    '/add-professional',
     '/blog',
     '/add-business',
     '/html-sitemap',
@@ -43,7 +49,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
-  // 3. Legal, Policies & Terms Pages (Priority: 0.3, Frequency: yearly)
+  // 3. Policy Pages
   const policyPages = [
     '/privacy',
     '/terms',
@@ -64,7 +70,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.3,
   }))
 
-  // 4. Industry Category Pages (Priority: 0.9, Frequency: daily)
+  // 4. Industry Categories
   const categoryRoutes = CATEGORIES.map((cat) => ({
     url: `${baseUrl}/category/${cat.id}`,
     lastModified: currentDate,
@@ -72,7 +78,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.9,
   }))
 
-  // 5. City Hub Pages (Priority: 0.9, Frequency: daily)
+  // 5. City Hub Pages
   const cityRoutes = CITIES.map((city) => ({
     url: `${baseUrl}/city/${encodeURIComponent(city.toLowerCase().trim().replace(/\s+/g, '-'))}`,
     lastModified: currentDate,
@@ -80,7 +86,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.9,
   }))
 
-  // 6. Dynamic Business Pages - ONLY Approved Businesses (Priority: 0.9, Frequency: weekly)
+  // 6. Business Pages
   let rawBusinesses: BusinessItem[] = []
   try {
     rawBusinesses = await getAllBusinesses(false)
@@ -88,17 +94,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Error fetching businesses for sitemap:', err)
   }
 
-  // Strict filter: only approved items
   const approvedBusinesses = rawBusinesses.filter(b => (b.status || 'approved') === 'approved')
-
   const businessRoutes = approvedBusinesses.map((biz) => {
     let modDate = currentDate
-    if (biz.approvedAt) {
-      modDate = new Date(biz.approvedAt)
-    } else if (biz.submittedAt) {
-      modDate = new Date(biz.submittedAt)
-    }
-
+    if (biz.approvedAt) modDate = new Date(biz.approvedAt)
     return {
       url: `${baseUrl}/business/${biz.slug}`,
       lastModified: isNaN(modDate.getTime()) ? currentDate : modDate,
@@ -107,16 +106,44 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   })
 
-  // 7. Dynamic Job Openings (Priority: 0.9, Frequency: weekly)
-  const jobRoutes = MOCK_JOBS.map((job) => ({
-    url: `${baseUrl}/jobs/${job.id}`,
+  // 7. Dynamic Job Openings
+  let rawJobs: JobItem[] = []
+  try {
+    rawJobs = await getAllJobs(false)
+  } catch (err) {
+    console.error('Error fetching jobs for sitemap:', err)
+  }
+  const approvedJobs = rawJobs.length > 0 ? rawJobs : MOCK_JOBS
+  const jobRoutes = approvedJobs.map((job) => ({
+    url: `${baseUrl}/jobs/${job.slug || job.id}`,
     lastModified: currentDate,
     changeFrequency: 'weekly' as const,
     priority: 0.9,
   }))
 
-  // 8. Dynamic Professional Profiles (Priority: 0.9, Frequency: weekly)
-  const professionalRoutes = MOCK_PROFESSIONALS.map((pro) => ({
+  // 8. Dynamic Companies
+  let rawCompanies: CompanyItem[] = []
+  try {
+    rawCompanies = await getAllCompanies(false)
+  } catch (err) {
+    console.error('Error fetching companies for sitemap:', err)
+  }
+  const companyRoutes = rawCompanies.map((comp) => ({
+    url: `${baseUrl}/companies/${comp.slug}`,
+    lastModified: currentDate,
+    changeFrequency: 'weekly' as const,
+    priority: 0.9,
+  }))
+
+  // 9. Dynamic Professional Profiles
+  let rawProfessionals: ProfessionalItem[] = []
+  try {
+    rawProfessionals = await getAllProfessionals(false)
+  } catch (err) {
+    console.error('Error fetching professionals for sitemap:', err)
+  }
+  const approvedPros = rawProfessionals.length > 0 ? rawProfessionals : MOCK_PROFESSIONALS
+  const professionalRoutes = approvedPros.map((pro) => ({
     url: `${baseUrl}/professionals/${pro.username}`,
     lastModified: currentDate,
     changeFrequency: 'weekly' as const,
@@ -144,6 +171,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...cityRoutes,
     ...businessRoutes,
     ...jobRoutes,
+    ...companyRoutes,
     ...professionalRoutes,
     ...blogRoutes,
   ]

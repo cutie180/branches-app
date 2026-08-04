@@ -7,12 +7,15 @@ import { collection, getDocs, updateDoc, deleteDoc, doc, query, orderBy, setDoc 
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth'
 import { 
   Building2, ShieldCheck, CheckCircle2, XCircle, Trash2, Search, Filter, LogOut, 
-  Eye, RefreshCw, Phone, Mail, MapPin, ExternalLink, Lock, Inbox, AlertTriangle, Users, BookOpen, Star, Sparkles, Check
+  Eye, RefreshCw, Phone, Mail, MapPin, ExternalLink, Lock, Inbox, AlertTriangle, Users, BookOpen, Star, Sparkles, Check, Briefcase
 } from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
-import { BusinessItem, ContactMessage, CATEGORIES, MOCK_PROFESSIONALS } from '@/lib/data'
+import { BusinessItem, ContactMessage, CATEGORIES, ProfessionalItem, CompanyItem, JobItem } from '@/lib/data'
 import { getAllBusinesses, getPendingBusinesses, approveBusiness, rejectBusiness, getContactMessages, markContactMessageRead, deleteContactMessage } from '@/lib/db-service'
+import { getAllProfessionals, approveProfessional, rejectProfessional } from '@/lib/professional-service'
+import { getAllCompanies, approveCompany, rejectCompany } from '@/lib/company-service'
+import { getAllJobs, approveJob, rejectJob } from '@/lib/job-service'
 import { toast } from 'sonner'
 
 export default function AdminPage() {
@@ -22,13 +25,17 @@ export default function AdminPage() {
   const [loginError, setLoginError] = useState('')
   const [adminUid, setAdminUid] = useState('admin-master')
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'pending' | 'businesses' | 'messages'>('overview')
+  const [activeTab, setActiveTab] = useState<'overview' | 'pending' | 'businesses' | 'professionals' | 'companies' | 'jobs' | 'messages'>('overview')
 
   const [allBusinesses, setAllBusinesses] = useState<BusinessItem[]>([])
+  const [allProfessionals, setAllProfessionals] = useState<ProfessionalItem[]>([])
+  const [allCompanies, setAllCompanies] = useState<CompanyItem[]>([])
+  const [allJobs, setAllJobs] = useState<JobItem[]>([])
   const [contactMessages, setContactMessages] = useState<ContactMessage[]>([])
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedBiz, setSelectedBiz] = useState<BusinessItem | null>(null)
+  const [selectedPro, setSelectedPro] = useState<ProfessionalItem | null>(null)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
 
   useEffect(() => {
@@ -55,12 +62,105 @@ export default function AdminPage() {
     try {
       const bizList = await getAllBusinesses(true)
       setAllBusinesses(bizList)
+      const proList = await getAllProfessionals(true)
+      setAllProfessionals(proList)
+      const compList = await getAllCompanies(true)
+      setAllCompanies(compList)
+      const jobList = await getAllJobs(true)
+      setAllJobs(jobList)
       const msgs = await getContactMessages()
       setContactMessages(msgs)
     } catch (err) {
       console.error('Error fetching admin data:', err)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleApprovePro = async (id: string, name: string) => {
+    setActionLoading(id)
+    try {
+      await approveProfessional(id, adminUid)
+      setAllProfessionals(prev => prev.map(p => (p.id === id || p.username === id) ? { ...p, status: 'approved' } : p))
+      toast.success(`Professional "${name}" approved & verified!`)
+    } catch (err) {
+      toast.error('Failed to approve professional.')
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
+  const handleRejectPro = async (id: string, name: string) => {
+    const reason = prompt(`Reason for rejecting "${name}":`, 'Does not meet identity verification guidelines.')
+    if (reason === null) return
+
+    setActionLoading(id)
+    try {
+      await rejectProfessional(id, reason)
+      setAllProfessionals(prev => prev.map(p => (p.id === id || p.username === id) ? { ...p, status: 'rejected', rejectionReason: reason } : p))
+      toast.info(`Professional profile "${name}" rejected.`)
+    } catch (err) {
+      toast.error('Failed to reject professional profile.')
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
+  const handleApproveCompany = async (id: string, name: string) => {
+    setActionLoading(id)
+    try {
+      await approveCompany(id, adminUid)
+      setAllCompanies(prev => prev.map(c => (c.id === id || c.slug === id) ? { ...c, status: 'approved' } : c))
+      toast.success(`Hiring Company "${name}" approved & verified!`)
+    } catch (err) {
+      toast.error('Failed to approve company.')
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
+  const handleRejectCompany = async (id: string, name: string) => {
+    const reason = prompt(`Reason for rejecting company "${name}":`, 'Missing official business verification.')
+    if (reason === null) return
+
+    setActionLoading(id)
+    try {
+      await rejectCompany(id, reason)
+      setAllCompanies(prev => prev.map(c => (c.id === id || c.slug === id) ? { ...c, status: 'rejected', rejectionReason: reason } : c))
+      toast.info(`Company profile "${name}" rejected.`)
+    } catch (err) {
+      toast.error('Failed to reject company profile.')
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
+  const handleApproveJob = async (id: string, title: string) => {
+    setActionLoading(id)
+    try {
+      await approveJob(id, adminUid)
+      setAllJobs(prev => prev.map(j => (j.id === id || j.slug === id) ? { ...j, status: 'approved' } : j))
+      toast.success(`Job Opening "${title}" approved!`)
+    } catch (err) {
+      toast.error('Failed to approve job opening.')
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
+  const handleRejectJob = async (id: string, title: string) => {
+    const reason = prompt(`Reason for rejecting job "${title}":`, 'Spam or inaccurate salary information.')
+    if (reason === null) return
+
+    setActionLoading(id)
+    try {
+      await rejectJob(id, reason)
+      setAllJobs(prev => prev.map(j => (j.id === id || j.slug === id) ? { ...j, status: 'rejected' } : j))
+      toast.info(`Job opening "${title}" rejected.`)
+    } catch (err) {
+      toast.error('Failed to reject job opening.')
+    } finally {
+      setActionLoading(null)
     }
   }
 
@@ -180,7 +280,7 @@ export default function AdminPage() {
     approved: approvedListings.length,
     featured: featuredListings.length,
     categories: CATEGORIES.length,
-    professionals: MOCK_PROFESSIONALS.length,
+    professionals: allProfessionals.length,
     messages: contactMessages.length,
     unreadMessages: contactMessages.filter(m => m.status === 'unread').length
   }
@@ -316,6 +416,36 @@ export default function AdminPage() {
             >
               <Building2 className="w-4 h-4 text-emerald-400" />
               <span>All Businesses ({stats.totalBiz})</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('professionals')}
+              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                activeTab === 'professionals' ? 'bg-[#0F172A] text-white shadow-md' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
+              }`}
+            >
+              <Users className="w-4 h-4 text-blue-400" />
+              <span>Professionals ({allProfessionals.length})</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('companies')}
+              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                activeTab === 'companies' ? 'bg-[#0F172A] text-white shadow-md' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
+              }`}
+            >
+              <Building2 className="w-4 h-4 text-[#0284c7]" />
+              <span>Hiring Companies ({allCompanies.length})</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('jobs')}
+              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                activeTab === 'jobs' ? 'bg-[#0F172A] text-white shadow-md' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
+              }`}
+            >
+              <Briefcase className="w-4 h-4 text-emerald-400" />
+              <span>Job Vacancies ({allJobs.length})</span>
             </button>
 
             <button
@@ -608,6 +738,236 @@ export default function AdminPage() {
                         >
                           Delete Message
                         </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 4: PROFESSIONALS MANAGEMENT */}
+          {activeTab === 'professionals' && (
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-4">
+                <div>
+                  <h2 className="text-xl font-extrabold text-slate-900">Professional Profiles Directory</h2>
+                  <p className="text-xs text-slate-500">Approve, verify, or reject personal profiles submitted by job seekers and professionals.</p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    placeholder="Filter by name, profession, city..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs"
+                  />
+                </div>
+              </div>
+
+              {allProfessionals.length === 0 ? (
+                <p className="text-xs text-slate-500 italic py-8 text-center">No professional profiles registered yet.</p>
+              ) : (
+                <div className="space-y-4">
+                  {allProfessionals
+                    .filter(p => !searchQuery || p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.profession.toLowerCase().includes(searchQuery.toLowerCase()) || p.city.toLowerCase().includes(searchQuery.toLowerCase()))
+                    .map((pro) => (
+                      <div
+                        key={pro.username}
+                        className="p-5 bg-slate-50 rounded-2xl border border-slate-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                      >
+                        <div className="flex items-center gap-4">
+                          <img src={pro.avatar} alt={pro.name} className="w-14 h-14 rounded-2xl object-cover border border-slate-200 shrink-0" />
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-extrabold text-slate-900 text-base">{pro.name}</h3>
+                              {pro.verified && <ShieldCheck className="w-4.5 h-4.5 text-emerald-500 shrink-0" />}
+                              <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase ${
+                                (pro.status || 'approved') === 'approved'
+                                  ? 'bg-emerald-100 text-emerald-800'
+                                  : pro.status === 'pending'
+                                  ? 'bg-amber-100 text-amber-800'
+                                  : 'bg-red-100 text-red-800'
+                              }`}>
+                                {pro.status || 'approved'}
+                              </span>
+                            </div>
+                            <p className="text-xs font-bold text-blue-600">{pro.title} ({pro.profession})</p>
+                            <p className="text-[11px] text-slate-500">📍 {pro.city} • {pro.hourlyRate} • {pro.experienceYears}y Exp</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                          <Link
+                            href={`/professionals/${pro.username}`}
+                            target="_blank"
+                            className="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-xl"
+                          >
+                            Preview
+                          </Link>
+
+                          {(pro.status === 'pending' || pro.status === 'rejected') && (
+                            <button
+                              onClick={() => handleApprovePro(pro.id || pro.username, pro.name)}
+                              className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-xs cursor-pointer"
+                            >
+                              Approve & Verify
+                            </button>
+                          )}
+
+                          {pro.status !== 'rejected' && (
+                            <button
+                              onClick={() => handleRejectPro(pro.id || pro.username, pro.name)}
+                              className="px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 text-xs font-bold rounded-xl cursor-pointer"
+                            >
+                              Reject
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 5: HIRING COMPANIES MANAGEMENT */}
+          {activeTab === 'companies' && (
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-4">
+                <div>
+                  <h2 className="text-xl font-extrabold text-slate-900">Hiring Companies Directory</h2>
+                  <p className="text-xs text-slate-500">Approve, verify employer status, or reject company profile submissions.</p>
+                </div>
+              </div>
+
+              {allCompanies.length === 0 ? (
+                <p className="text-xs text-slate-500 italic py-8 text-center">No hiring companies registered yet.</p>
+              ) : (
+                <div className="space-y-4">
+                  {allCompanies.map((comp) => (
+                    <div
+                      key={comp.slug}
+                      className="p-5 bg-slate-50 rounded-2xl border border-slate-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                    >
+                      <div className="flex items-center gap-4">
+                        <img src={comp.logo} alt={comp.name} className="w-12 h-12 rounded-2xl object-cover border border-slate-200 shrink-0" />
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-extrabold text-slate-900 text-base">{comp.name}</h3>
+                            {comp.verified && <ShieldCheck className="w-4.5 h-4.5 text-emerald-500 shrink-0" />}
+                            <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase ${
+                              (comp.status || 'approved') === 'approved'
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : comp.status === 'pending'
+                                ? 'bg-amber-100 text-amber-800'
+                                : 'bg-red-100 text-red-800'
+                            }`}>
+                              {comp.status || 'approved'}
+                            </span>
+                          </div>
+                          <p className="text-xs font-bold text-blue-600">{comp.industry} • {comp.companySize}</p>
+                          <p className="text-[11px] text-slate-500">📍 {comp.city} • HR: {comp.hrName || comp.hrEmail || 'HR Team'}</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                        <Link
+                          href={`/companies/${comp.slug}`}
+                          target="_blank"
+                          className="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-xl"
+                        >
+                          Preview
+                        </Link>
+
+                        {(comp.status === 'pending' || comp.status === 'rejected') && (
+                          <button
+                            onClick={() => handleApproveCompany(comp.id || comp.slug, comp.name)}
+                            className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl cursor-pointer"
+                          >
+                            Approve & Verify
+                          </button>
+                        )}
+
+                        {comp.status !== 'rejected' && (
+                          <button
+                            onClick={() => handleRejectCompany(comp.id || comp.slug, comp.name)}
+                            className="px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 text-xs font-bold rounded-xl cursor-pointer"
+                          >
+                            Reject
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 6: JOB VACANCIES MODERATION */}
+          {activeTab === 'jobs' && (
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+              <div className="flex justify-between items-center border-b border-slate-100 pb-4">
+                <div>
+                  <h2 className="text-xl font-extrabold text-slate-900">Job Openings Moderation</h2>
+                  <p className="text-xs text-slate-500">Review job postings published across Pakistan.</p>
+                </div>
+              </div>
+
+              {allJobs.length === 0 ? (
+                <p className="text-xs text-slate-500 italic py-8 text-center">No job openings posted yet.</p>
+              ) : (
+                <div className="space-y-4">
+                  {allJobs.map((job) => (
+                    <div
+                      key={job.id}
+                      className="p-5 bg-slate-50 rounded-2xl border border-slate-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                    >
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-extrabold text-slate-900 text-base">{job.title}</h3>
+                          <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase ${
+                            (job.status || 'approved') === 'approved'
+                              ? 'bg-emerald-100 text-emerald-800'
+                              : job.status === 'pending'
+                              ? 'bg-amber-100 text-amber-800'
+                              : 'bg-red-100 text-red-800'
+                          }`}>
+                            {job.status || 'approved'}
+                          </span>
+                        </div>
+                        <p className="text-xs font-bold text-blue-600">{job.company} • 📍 {job.city}</p>
+                        <p className="text-[11px] text-slate-500">{job.type} • {job.salary}</p>
+                      </div>
+
+                      <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                        <Link
+                          href={`/jobs/${job.slug || job.id}`}
+                          target="_blank"
+                          className="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-xl"
+                        >
+                          Preview
+                        </Link>
+
+                        {(job.status === 'pending' || job.status === 'rejected') && (
+                          <button
+                            onClick={() => handleApproveJob(job.id, job.title)}
+                            className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl cursor-pointer"
+                          >
+                            Approve
+                          </button>
+                        )}
+
+                        {job.status !== 'rejected' && (
+                          <button
+                            onClick={() => handleRejectJob(job.id, job.title)}
+                            className="px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 text-xs font-bold rounded-xl cursor-pointer"
+                          >
+                            Reject
+                          </button>
+                        )}
                       </div>
                     </div>
                   ))}

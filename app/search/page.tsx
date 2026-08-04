@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useMemo, Suspense } from 'react'
+import { useState, useMemo, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import SearchFilters from '@/components/search/search-filters'
-import { MOCK_BUSINESSES, MOCK_JOBS, MOCK_PROFESSIONALS } from '@/lib/data'
+import { MOCK_BUSINESSES, MOCK_JOBS, MOCK_PROFESSIONALS, ProfessionalItem } from '@/lib/data'
+import { getAllProfessionals } from '@/lib/professional-service'
 import Link from 'next/link'
 import { Search, MapPin, Building2, Briefcase, Users, ShieldCheck, Star, ArrowRight, Grid, List, Phone, CheckCircle2, Filter } from 'lucide-react'
 
@@ -24,6 +25,21 @@ function SearchContent() {
   const [minRating, setMinRating] = useState(0)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [showMobileFilter, setShowMobileFilter] = useState(false)
+  const [professionalsList, setProfessionalsList] = useState<ProfessionalItem[]>(MOCK_PROFESSIONALS)
+
+  useEffect(() => {
+    async function loadPros() {
+      try {
+        const data = await getAllProfessionals(false)
+        if (data && data.length > 0) {
+          setProfessionalsList(data)
+        }
+      } catch (err) {
+        // fallback
+      }
+    }
+    loadPros()
+  }, [])
 
   // Filtered Businesses
   const filteredBusinesses = useMemo(() => {
@@ -59,10 +75,11 @@ function SearchContent() {
 
   // Filtered Professionals
   const filteredProfessionals = useMemo(() => {
-    return MOCK_PROFESSIONALS.filter(pro => {
+    return professionalsList.filter(pro => {
       const matchesQuery = !query || 
         pro.name.toLowerCase().includes(query.toLowerCase()) ||
         pro.title.toLowerCase().includes(query.toLowerCase()) ||
+        pro.profession.toLowerCase().includes(query.toLowerCase()) ||
         pro.skills.some(s => s.toLowerCase().includes(query.toLowerCase()))
 
       const matchesCity = !selectedCity || pro.city.toLowerCase() === selectedCity.toLowerCase()
@@ -72,7 +89,7 @@ function SearchContent() {
 
       return matchesQuery && matchesCity && matchesCategory && matchesVerified && matchesRating
     })
-  }, [query, selectedCity, selectedCategory, onlyVerified, minRating])
+  }, [query, selectedCity, selectedCategory, onlyVerified, minRating, professionalsList])
 
   const handleReset = () => {
     setQuery('')

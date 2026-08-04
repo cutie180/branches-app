@@ -51,6 +51,8 @@ export const TOP_CITIES = [
 ]
 
 export const CATEGORIES = [
+  { id: 'professional-job-seeker', name: 'Professional / Job Seeker', icon: 'users', count: 1450, color: '#2563eb', desc: 'Verified personal profiles for professionals, freelancers, doctors, engineers, skilled workers & job seekers' },
+  { id: 'hiring-company-hr', name: 'Hiring Company / HR', icon: 'briefcase', count: 980, color: '#0284c7', desc: 'Verified company hiring profiles, recruitment agencies, HR departments & job vacancy postings across Pakistan' },
   { id: 'restaurants', name: 'Restaurants & Food', icon: 'restaurant', count: 8420, color: '#f59e0b', desc: 'Find local cafes, fine dining, fast food, and food caterers' },
   { id: 'real-estate', name: 'Real Estate & Property', icon: 'real-estate', count: 5210, color: '#10b981', desc: 'Verified property dealers, builders, and real estate consultants' },
   { id: 'technology', name: 'Technology & IT', icon: 'technology', count: 4890, color: '#3b82f6', desc: 'Software houses, web developers, mobile apps, and IT agencies' },
@@ -415,25 +417,176 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
   }
 ]
 
+export interface CompanyItem {
+  id: string
+  slug: string
+  name: string
+  logo: string
+  coverImage?: string
+  description: string
+  industry: string
+  category?: string
+  companySize: string
+  employeeCount?: number
+  establishedYear: string
+  registrationNumber?: string
+  companyType: 'Private' | 'Public' | 'Government' | 'NGO' | 'Startup' | 'Educational Institution' | 'Recruitment Agency' | 'Other'
+  headquarters: string
+  branchLocations?: string[]
+  website?: string
+  careersUrl?: string
+  googleMapUrl?: string
+
+  // HR Contact
+  hrName?: string
+  hrDesignation?: string
+  hrEmail?: string
+  companyEmail?: string
+  phone?: string
+  whatsapp?: string
+  address?: string
+  city: string
+  province?: string
+  country?: string
+
+  // Social Links
+  linkedin?: string // Highlighted
+  facebook?: string
+  instagram?: string
+  twitter?: string
+  youtube?: string
+  github?: string
+  customSocialLinks?: ProfessionalCustomSocialLink[]
+
+  // Status & Verification
+  verified: boolean
+  isFeatured?: boolean
+  status?: 'pending' | 'approved' | 'rejected'
+  submittedAt?: string
+  approvedAt?: string
+  approvedBy?: string
+  rejectionReason?: string
+
+  reviews?: { id: string; userName: string; rating: number; date: string; comment: string }[]
+  faqs?: { question: string; answer: string }[]
+  activeJobsCount?: number
+}
+
 export interface JobItem {
   id: string
+  slug?: string
   title: string
   company: string
   companySlug: string
   companyLogo: string
   city: string
+  province?: string
+  country?: string
   category: string
-  type: 'Full-time' | 'Part-time' | 'Contract' | 'Remote'
+  department?: string
+  type: string
+  employmentType?: string
   salary: string
   experience: string
+  education?: string
+  skills?: string[]
+  vacancies?: number
+  genderPreference?: string
+  ageRequirement?: string
+  deadline?: string
+  joiningDate?: string
+  workingHours?: string
+  shiftType?: string
+  benefits?: string[]
   postedDate: string
   description: string
   responsibilities: string[]
   requirements: string[]
+  preferredQualifications?: string[]
   applicationWebsite?: string
   applicationEmail?: string
-  applicationMethod: 'website' | 'email' | 'both'
+  applicationMethod?: string
+  applicationUrl?: string
+  verified?: boolean
+  isFeatured?: boolean
+  status?: 'pending' | 'approved' | 'rejected'
 }
+
+export const MOCK_COMPANIES: CompanyItem[] = [
+  {
+    id: 'comp-1',
+    slug: 'tech-solutions-pakistan',
+    name: 'Tech Solutions Pakistan',
+    logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
+    description: 'Tech Solutions Pakistan is a leading software engineering house and IT consultancy specializing in web application development, cloud architecture, and mobile products for North American and European clients.',
+    industry: 'Technology & IT',
+    category: 'Software & Cloud Services',
+    companySize: '50 - 200 Employees',
+    employeeCount: 140,
+    establishedYear: '2015',
+    registrationNumber: 'SECP-0092817',
+    companyType: 'Private',
+    headquarters: 'Blue Area, Islamabad, Pakistan',
+    branchLocations: ['Lahore', 'Karachi'],
+    website: 'https://techsolutions.pk',
+    careersUrl: 'https://techsolutions.pk/careers',
+    hrName: 'Mariam Farooq',
+    hrDesignation: 'Head of Talent Acquisition & HR',
+    hrEmail: 'careers@techsolutions.pk',
+    companyEmail: 'info@techsolutions.pk',
+    phone: '+92 51 8899770',
+    whatsapp: '923005544332',
+    address: 'Plot 42, Sector G-7/1, Blue Area, Islamabad',
+    city: 'Islamabad',
+    province: 'Federal Capital',
+    country: 'Pakistan',
+    linkedin: 'https://linkedin.com/company/techsolutionspk',
+    facebook: 'https://facebook.com/techsolutionspk',
+    github: 'https://github.com/techsolutionspk',
+    twitter: 'https://twitter.com/techsolutionspk',
+    verified: true,
+    isFeatured: true,
+    status: 'approved',
+    activeJobsCount: 2,
+    reviews: [
+      { id: 'cr1', userName: 'Hamza Shaikh', rating: 5, date: '1 month ago', comment: 'Great engineering culture, modern tech stack (Next.js/React), and smooth onboarding process.' }
+    ],
+    faqs: [
+      { question: 'Does Tech Solutions offer remote work options?', answer: 'Yes, we support hybrid working models and full-time remote roles for senior engineers.' }
+    ]
+  },
+  {
+    id: 'comp-2',
+    slug: 'modern-builders-contractors',
+    name: 'Modern Builders & Contractors',
+    logo: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=200&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?auto=format&fit=crop&w=1200&q=80',
+    description: 'Modern Builders is a premier civil construction firm executing commercial high-rise towers, residential housing schemes, and infrastructure projects across Punjab and Islamabad.',
+    industry: 'Construction & Building',
+    category: 'Civil Contracting & Architecture',
+    companySize: '200 - 500 Employees',
+    employeeCount: 320,
+    establishedYear: '2008',
+    companyType: 'Private',
+    headquarters: 'Saddar, Rawalpindi, Pakistan',
+    website: 'https://modernbuilders.pk',
+    hrName: 'Engr. Kamran Shah',
+    hrDesignation: 'General Manager HR & Admin',
+    hrEmail: 'hr@modernbuilders.pk',
+    phone: '+92 51 5566778',
+    whatsapp: '923335566778',
+    address: 'Saddar Executive Tower, Rawalpindi',
+    city: 'Rawalpindi',
+    province: 'Punjab',
+    country: 'Pakistan',
+    linkedin: 'https://linkedin.com/company/modernbuilderspk',
+    verified: true,
+    isFeatured: true,
+    status: 'approved',
+    activeJobsCount: 1
+  }
+]
 
 export const MOCK_JOBS: JobItem[] = [
   {
@@ -517,102 +670,469 @@ export const MOCK_JOBS: JobItem[] = [
   }
 ]
 
-export interface ProfessionalItem {
-  username: string
-  name: string
+export interface ProfessionalWorkExperience {
+  id?: string
   title: string
+  company: string
+  duration: string
+  description: string
+}
+
+export interface ProfessionalEducation {
+  id?: string
+  degree: string
+  institution: string
+  year: string
+}
+
+export interface ProfessionalCertification {
+  id?: string
+  title: string
+  issuer: string
+  year: string
+}
+
+export interface ProfessionalCustomSocialLink {
+  name: string
+  url: string
+}
+
+export interface ProfessionalItem {
+  id?: string
+  username: string
+  slug?: string
+  name: string
+  fullName?: string
+  title: string
+  profession: string
   category: string
+  specialization?: string
   city: string
+  province?: string
+  country?: string
+  address?: string
+  googleMapUrl?: string
   rating: number
+  reviewCount?: number
   hourlyRate: string
+  availability?: string
   avatar: string
+  coverImage?: string
   bio: string
+  about?: string
   skills: string[]
   experienceYears: number
   verified: boolean
-  // 18 Contact and Social Media Links
+  isFeatured?: boolean
+  status?: 'pending' | 'approved' | 'rejected'
+  submittedAt?: string
+  approvedAt?: string
+  approvedBy?: string
+  rejectionReason?: string
+
+  // Contact Info
   phone?: string
   email?: string
   whatsapp?: string
   website?: string
   portfolio?: string
-  linkedin?: string
+  resumeUrl?: string
+  currentCompany?: string
+
+  // Arrays
+  education?: ProfessionalEducation[]
+  certifications?: ProfessionalCertification[]
+  languages?: string[]
+  previousExperience?: ProfessionalWorkExperience[]
+  servicesOffered?: string[]
+  reviews?: {
+    id: string
+    userName: string
+    rating: number
+    date: string
+    comment: string
+  }[]
+  faqs?: { question: string; answer: string }[]
+
+  // Dedicated Social Links
+  linkedin?: string // Highlighted / Highest priority
   github?: string
   facebook?: string
-  twitter?: string
   instagram?: string
+  twitter?: string
+  youtube?: string
   behance?: string
   dribbble?: string
-  youtube?: string
-  medium?: string
   stackoverflow?: string
+  medium?: string
   fiverr?: string
   upwork?: string
+  freelancer?: string
+  kaggle?: string
+  researchgate?: string
+  orcid?: string
+  googleScholar?: string
+  customSocialLinks?: ProfessionalCustomSocialLink[]
+
+  // Dynamic profession-specific fields
+  dynamicFields?: Record<string, any>
 }
 
 export const MOCK_PROFESSIONALS: ProfessionalItem[] = [
   {
+    id: 'pro-1',
     username: 'hamza-shaikh-dev',
+    slug: 'hamza-shaikh-dev',
     name: 'Hamza Shaikh',
     title: 'Principal UI/UX Architect & Next.js Lead',
+    profession: 'Software Developer',
     category: 'Technology & IT',
+    specialization: 'Full Stack & Mobile Development',
     city: 'Lahore',
+    province: 'Punjab',
+    country: 'Pakistan',
+    address: 'Gulberg III, Lahore, Pakistan',
     rating: 4.95,
+    reviewCount: 28,
     hourlyRate: 'PKR 4,500 / hr',
+    availability: 'Open to Work',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-    bio: 'Over 8+ years experience designing enterprise web applications, design systems, and cloud architectures for startups in US, UK, and Pakistan.',
-    skills: ['Next.js', 'React', 'Tailwind CSS', 'Figma', 'TypeScript', 'System Architecture'],
+    coverImage: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80',
+    bio: 'Over 8+ years experience designing enterprise web applications, scalable APIs, design systems, and cloud architectures for international & Pakistani clients.',
+    about: 'I am a passionate Principal Software Architect based in Lahore with over 8 years of hands-on experience building mission-critical web and mobile applications. Specializing in modern JavaScript/TypeScript technologies like Next.js, React, Node.js, and Tailwind CSS. I have built design systems used by over 500,000 active monthly users.',
+    skills: ['Next.js', 'React', 'Tailwind CSS', 'Figma', 'TypeScript', 'Node.js', 'PostgreSQL', 'GraphQL'],
     experienceYears: 8,
     verified: true,
+    isFeatured: true,
+    status: 'approved',
+    currentCompany: 'Apex Tech Solutions',
     phone: '+92 300 1234567',
     email: 'hamza.shaikh@dev.pk',
     whatsapp: '923001234567',
     website: 'https://hamzashaikh.dev',
     portfolio: 'https://hamzashaikh.dev/portfolio',
+    resumeUrl: 'https://hamzashaikh.dev/resume.pdf',
+    languages: ['Urdu', 'English', 'Punjabi'],
+    servicesOffered: [
+      'Custom Web Application Development',
+      'Next.js & React Frontend Engineering',
+      'UI/UX Design Systems & Wireframing',
+      'API Integration & Performance Audit'
+    ],
+    education: [
+      { degree: 'BS Computer Science', institution: 'FAST-NUCES Lahore', year: '2017' }
+    ],
+    certifications: [
+      { title: 'AWS Certified Solutions Architect', issuer: 'Amazon Web Services', year: '2022' },
+      { title: 'Meta Certified Frontend Developer', issuer: 'Meta', year: '2021' }
+    ],
+    previousExperience: [
+      { title: 'Senior Frontend Architect', company: 'DevSinc', duration: '2021 - 2024', description: 'Led team of 12 engineers migrating monolithic apps to Next.js App Router.' },
+      { title: 'Full Stack Engineer', company: 'Systems Limited', duration: '2018 - 2021', description: 'Developed fintech modules and real-time transaction processing dashboards.' }
+    ],
     linkedin: 'https://linkedin.com/in/hamzashaikh',
     github: 'https://github.com/hamzashaikh',
     twitter: 'https://twitter.com/hamzashaikhdev',
     behance: 'https://behance.net/hamzashaikh',
-    upwork: 'https://upwork.com/freelancers/~0123456789'
+    upwork: 'https://upwork.com/freelancers/~0123456789',
+    stackoverflow: 'https://stackoverflow.com/users/1234567/hamzashaikh',
+    dynamicFields: {
+      programmingLanguages: 'TypeScript, JavaScript, Python, Go, SQL',
+      frameworks: 'Next.js, React, Node.js, Express, Tailwind CSS',
+      technologies: 'Docker, Vercel, Firebase, PostgreSQL, Redis',
+      openToRemote: 'Yes - Available for Global Remote Contracts'
+    },
+    reviews: [
+      { id: 'r1', userName: 'Omer Farooq', rating: 5, date: '2 weeks ago', comment: 'Hamza delivered an outstanding Next.js platform ahead of deadline. Code architecture is top tier!' },
+      { id: 'r2', userName: 'Ayesha Tariq', rating: 5, date: '1 month ago', comment: 'Extremely professional, clear communication, and incredible attention to UI details.' }
+    ],
+    faqs: [
+      { question: 'What is your standard project turn-around time?', answer: 'For medium-scale Web Applications, average delivery is 3 to 5 weeks including full QA & deployment.' },
+      { question: 'Are you open to full-time remote opportunities?', answer: 'Yes, I am available for both project contracts and full-time remote senior leadership roles.' }
+    ]
   },
   {
+    id: 'pro-2',
     username: 'dr-zainab-malik',
+    slug: 'dr-zainab-malik',
     name: 'Dr. Zainab Malik',
     title: 'Consultant Dermatologist & Skincare Specialist',
+    profession: 'Doctor',
     category: 'Healthcare & Medical',
+    specialization: 'Dermatology & Aesthetic Medicine',
     city: 'Karachi',
-    rating: 4.9,
+    province: 'Sindh',
+    country: 'Pakistan',
+    address: 'Clifton Block 5, Karachi, Pakistan',
+    rating: 4.90,
+    reviewCount: 42,
     hourlyRate: 'PKR 3,000 / consultation',
+    availability: 'In-Clinic & Online',
     avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=300&q=80',
-    bio: 'Board-certified dermatologist with 10+ years expertise in clinical skincare, laser treatments, and aesthetic medicine.',
-    skills: ['Clinical Dermatology', 'Laser Therapy', 'Cosmetic Procedures', 'Medical Research'],
+    coverImage: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&q=80',
+    bio: 'Board-certified dermatologist with 10+ years expertise in clinical skincare, laser treatments, acne scars, and aesthetic medicine.',
+    about: 'Dr. Zainab Malik is a leading consultant dermatologist in Karachi certified by PMDC and the College of Physicians and Surgeons Pakistan. She has treated over 15,000 patients with skin, hair, and nail conditions using state-of-the-art US-FDA approved laser lasers and evidence-based clinical protocols.',
+    skills: ['Clinical Dermatology', 'Laser Therapy', 'Cosmetic Procedures', 'Acne Treatment', 'Anti-Aging Therapy'],
     experienceYears: 10,
     verified: true,
+    isFeatured: true,
+    status: 'approved',
+    currentCompany: 'Skin & Laser Medical Center Clifton',
     phone: '+92 21 35849201',
     email: 'dr.zainab@skincare.pk',
     whatsapp: '923219876543',
     website: 'https://drzainabmalik.pk',
+    languages: ['Urdu', 'English', 'Sindhi'],
+    servicesOffered: [
+      'Dermatological Consultation',
+      'Laser Hair & Pigmentation Removal',
+      'Chemical Peels & Hydrafacial',
+      'Eczema & Psoriasis Clinical Management'
+    ],
+    education: [
+      { degree: 'MBBS', institution: 'Dow University of Health Sciences', year: '2012' },
+      { degree: 'FCPS Dermatology', institution: 'College of Physicians & Surgeons Pakistan', year: '2017' }
+    ],
+    certifications: [
+      { title: 'PMDC Permanent Medical License', issuer: 'Pakistan Medical & Dental Council', year: '2013' },
+      { title: 'Diplomate Aesthetic Medicine', issuer: 'American Academy of Aesthetic Medicine', year: '2019' }
+    ],
+    previousExperience: [
+      { title: 'Consultant Dermatologist', company: 'South City Hospital', duration: '2018 - Present', description: 'In-patient dermatology consultations and laser procedural suite.' }
+    ],
+    linkedin: 'https://linkedin.com/in/drzainabmalik',
     facebook: 'https://facebook.com/drzainabmalik',
     instagram: 'https://instagram.com/drzainabmalik',
-    youtube: 'https://youtube.com/@drzainabmalik'
+    youtube: 'https://youtube.com/@drzainabmalik',
+    googleScholar: 'https://scholar.google.com/citations?user=zainabmalik',
+    dynamicFields: {
+      specialization: 'Dermatology & Cosmetic Surgery',
+      pmdcNumber: 'PMDC-68291-S',
+      hospitalClinic: 'Skin & Laser Medical Center Clifton',
+      consultationFee: 'PKR 3,000',
+      workingHours: 'Mon - Sat: 4:00 PM - 8:00 PM',
+      emergencyAvailability: 'Yes - On-call for clinic emergencies'
+    },
+    reviews: [
+      { id: 'r3', userName: 'Kashif Mehmood', rating: 5, date: '3 days ago', comment: 'Dr. Zainab cured my chronic skin allergy within 2 weeks. Highly knowledgeable doctor!' }
+    ],
+    faqs: [
+      { question: 'Do I need a prior appointment for consultation?', answer: 'Yes, prior appointment via phone or WhatsApp is recommended to prevent wait times.' }
+    ]
   },
   {
+    id: 'pro-3',
     username: 'shehryar-khan-ca',
+    slug: 'shehryar-khan-ca',
     name: 'Shehryar Khan, FCA',
-    title: 'Chartered Accountant & Tax Consultant',
+    title: 'Chartered Accountant & Tax Advisory Partner',
+    profession: 'Accountant',
     category: 'Finance & Banking',
+    specialization: 'Taxation, Corporate Law & Auditing',
     city: 'Islamabad',
+    province: 'Federal Capital',
+    country: 'Pakistan',
+    address: 'Blue Area, Islamabad, Pakistan',
     rating: 4.88,
+    reviewCount: 19,
     hourlyRate: 'PKR 6,000 / hr',
+    availability: 'Consulting',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
-    bio: 'Helping Pakistani SMBs and foreign entities with FBR tax filing, corporate registration (SECP), and financial auditing.',
-    skills: ['FBR Tax Advisory', 'SECP Registration', 'Corporate Audit', 'Financial Modeling'],
+    coverImage: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80',
+    bio: 'Fellow Chartered Accountant (FCA) assisting corporate clients & high net worth individuals with FBR income tax, SECP compliance, and corporate financial planning.',
+    about: 'Shehryar Khan is an ICAP Fellow Chartered Accountant with 12+ years experience advising private limited companies, IT exporters, and multinational branch offices on Pakistani corporate law, tax optimization, withholding tax audits, and SECP annual returns.',
+    skills: ['FBR Tax Advisory', 'SECP Compliance', 'Corporate Audit', 'Financial Modeling', 'Wealth Statement Filing'],
     experienceYears: 12,
     verified: true,
+    isFeatured: true,
+    status: 'approved',
+    currentCompany: 'Shehryar & Co. Chartered Accountants',
     phone: '+92 51 8483920',
     email: 'shehryar@taxconsultant.pk',
     whatsapp: '923008889900',
+    website: 'https://taxconsultant.pk',
+    languages: ['Urdu', 'English'],
+    servicesOffered: [
+      'FBR Income Tax & Sales Tax Return Filing',
+      'SECP Private Limited Company Registration',
+      'Annual Financial Audit & Statements',
+      'Foreign Remittance Tax Exemption Certificates'
+    ],
+    education: [
+      { degree: 'CA (FCA Member)', institution: 'Institute of Chartered Accountants of Pakistan (ICAP)', year: '2012' }
+    ],
+    certifications: [
+      { title: 'ICAP Practicing Certificate', issuer: 'ICAP', year: '2014' }
+    ],
     linkedin: 'https://linkedin.com/in/shehryarkhanfca',
-    medium: 'https://medium.com/@shehryarkhanfca'
+    medium: 'https://medium.com/@shehryarkhanfca',
+    dynamicFields: {
+      icapNumber: 'ICAP-FCA-5421',
+      firmName: 'Shehryar & Co. Chartered Accountants',
+      taxSpecialization: 'FBR Corporate & Foreign Income Tax',
+      clientConsultation: 'In-Person (Islamabad) & Online Zoom'
+    },
+    reviews: [
+      { id: 'r4', userName: 'Bilal Ahmad', rating: 5, date: '1 month ago', comment: 'Resolved our SECP registration and tax exemption smoothly. Recommended for tech startups!' }
+    ]
+  },
+  {
+    id: 'pro-4',
+    username: 'tariq-mehmood-master-electrician',
+    slug: 'tariq-mehmood-master-electrician',
+    name: 'Tariq Mehmood',
+    title: 'Licensed Industrial & Residential Electrician',
+    profession: 'Electrician',
+    category: 'Home Services & Repairs',
+    specialization: 'Solar & High Voltage Wiring',
+    city: 'Rawalpindi',
+    province: 'Punjab',
+    country: 'Pakistan',
+    address: 'Saddar, Rawalpindi, Pakistan',
+    rating: 4.85,
+    reviewCount: 35,
+    hourlyRate: 'PKR 1,500 / visit',
+    availability: 'On-Call 24/7',
+    avatar: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=300&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80',
+    bio: 'Certified master electrician with 14 years experience handling residential DB box wiring, hybrid solar inverter setup, three-phase industrial connections, and emergency fault finding.',
+    about: 'Tariq Mehmood provides reliable electrical contracting across Rawalpindi and Islamabad. Equipped with digital multi-meters, thermal imagery tools, and certified safety gear to execute clean conduit wiring, automatic generator changeover switches, and solar net-metering installations.',
+    skills: ['Three-Phase Wiring', 'Solar Inverter Setup', 'DB Panel Design', 'Short Circuit Troubleshooting', 'Automatic Changeover'],
+    experienceYears: 14,
+    verified: true,
+    isFeatured: true,
+    status: 'approved',
+    phone: '+92 333 5554433',
+    email: 'tariq.electrician@gmail.com',
+    whatsapp: '923335554433',
+    languages: ['Urdu', 'Punjabi'],
+    servicesOffered: [
+      'Full House Electrical Conduit Wiring',
+      'Solar Panel Inverter & Battery Cable Hookup',
+      'Automatic Generator Changeover Switch',
+      'Industrial Panel Repairs & Breaker Replacement'
+    ],
+    education: [
+      { degree: 'Diploma in Electrical Engineering (DAE)', institution: 'Government Polytechnic Institute Rawalpindi', year: '2010' }
+    ],
+    certifications: [
+      { title: 'Certified Master Wireman', issuer: 'Punjab Vocational Training Council', year: '2011' }
+    ],
+    dynamicFields: {
+      skillType: 'Licensed Master Electrician & Solar Installer',
+      dailyRate: 'PKR 3,500 / day',
+      availableForTravel: 'Yes - Rawalpindi, Islamabad & Surrounding Districts',
+      experience: '14 Years Field Experience',
+      equipmentOwned: 'Digital Insulation Tester, Cable Crimper, Safety Ladders, Hole Saw Sets'
+    },
+    reviews: [
+      { id: 'r5', userName: 'Asad Shah', rating: 5, date: '1 week ago', comment: 'Tariq Bhai solved a dangerous neutral wiring issue that 3 other electricians failed to locate. Excellent work!' }
+    ]
+  },
+  {
+    id: 'pro-5',
+    username: 'saima-riaz-designer',
+    slug: 'saima-riaz-designer',
+    name: 'Saima Riaz',
+    title: 'Senior Graphic Designer & Brand Identity Specialist',
+    profession: 'Graphic Designer',
+    category: 'Media, PR & Advertising',
+    specialization: 'Brand Identity & Packaging Design',
+    city: 'Lahore',
+    province: 'Punjab',
+    country: 'Pakistan',
+    address: 'DHA Phase 5, Lahore, Pakistan',
+    rating: 4.92,
+    reviewCount: 31,
+    hourlyRate: 'PKR 3,200 / hr',
+    availability: 'Freelance',
+    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=1200&q=80',
+    bio: 'Creative brand strategist and designer specializing in high-converting product packaging, logo identity systems, and social media creative assets.',
+    about: 'Saima Riaz brings over 6 years of award-winning brand design experience. She has crafted brand guideline booklets, packaging boxes, vector illustrations, and digital campaigns for food brands, fashion labels, and tech startups across Pakistan and Dubai.',
+    skills: ['Adobe Illustrator', 'Photoshop', 'Indesign', 'Figma', 'Brand Identity Systems', 'Packaging Design'],
+    experienceYears: 6,
+    verified: true,
+    isFeatured: false,
+    status: 'approved',
+    phone: '+92 321 4400112',
+    email: 'saima@riazdesign.com',
+    whatsapp: '923214400112',
+    website: 'https://behance.net/saimariaz',
+    portfolio: 'https://dribbble.com/saimariaz',
+    languages: ['Urdu', 'English'],
+    servicesOffered: [
+      'Complete Brand Logo & Guidelines Package',
+      'Product Packaging Box & Label Design',
+      'Social Media Campaign Banners & Carousel Templates',
+      'Corporate Brochure & Company Profile Design'
+    ],
+    education: [
+      { degree: 'BFA Graphic Design', institution: 'National College of Arts (NCA) Lahore', year: '2018' }
+    ],
+    behance: 'https://behance.net/saimariaz',
+    dribbble: 'https://dribbble.com/saimariaz',
+    instagram: 'https://instagram.com/saimariaz.design',
+    fiverr: 'https://fiverr.com/saimariaz',
+    dynamicFields: {
+      behance: 'https://behance.net/saimariaz',
+      dribbble: 'https://dribbble.com/saimariaz',
+      designSoftware: 'Adobe Illustrator, Photoshop, InDesign, Figma, After Effects',
+      portfolio: 'https://behance.net/saimariaz'
+    },
+    reviews: [
+      { id: 'r6', userName: 'Mariam Ali', rating: 5, date: '2 weeks ago', comment: 'Saima designed the complete packaging for our organic tea brand. The aesthetics are top-class!' }
+    ]
+  },
+  {
+    id: 'pro-6',
+    username: 'professor-adnan-tutor',
+    slug: 'professor-adnan-tutor',
+    name: 'Prof. Adnan Tariq',
+    title: 'Senior Physics & Mathematics O/A Level Educator',
+    profession: 'Teacher',
+    category: 'Education & Training',
+    specialization: 'Cambridge IGCSE & A Level Physics',
+    city: 'Peshawar',
+    province: 'Khyber Pakhtunkhwa',
+    country: 'Pakistan',
+    address: 'University Town, Peshawar, Pakistan',
+    rating: 4.96,
+    reviewCount: 50,
+    hourlyRate: 'PKR 2,500 / hr',
+    availability: 'Online & Home Tuition',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80',
+    bio: 'Dedicated Cambridge educator with 15+ years experience mentoring students to secure A* grades in O-Level Physics, A-Level Mathematics, and SAT quantitative sections.',
+    about: 'Professor Adnan Tariq has coached over 2,000 students across leading private schools in Peshawar and Islamabad. Known for interactive problem-solving techniques, past-paper drills, and conceptual clarity.',
+    skills: ['O Level Physics', 'A Level Mathematics', 'Calculus', 'Past Paper Exam Drills', 'Online Coaching'],
+    experienceYears: 15,
+    verified: true,
+    isFeatured: true,
+    status: 'approved',
+    phone: '+92 301 9988776',
+    email: 'adnan.tariq@education.pk',
+    whatsapp: '923019988776',
+    languages: ['Urdu', 'English', 'Pashto'],
+    servicesOffered: [
+      'Cambridge O & A Level Online Live Classes',
+      'One-on-One Home Tuition in Peshawar',
+      'Exam Crash Course & Past Paper Revision',
+      'SAT Math Prep & Entry Test Coaching'
+    ],
+    education: [
+      { degree: 'M.Sc Applied Physics', institution: 'University of Peshawar', year: '2008' }
+    ],
+    youtube: 'https://youtube.com/@profadnandhysics',
+    dynamicFields: {
+      subjects: 'O-Level Physics (5054/0625), A-Level Physics (9702), Pure Mathematics',
+      gradeLevels: 'Class 9, 10, O Level, A Level, F.Sc Pre-Engineering',
+      teachingMode: 'Both Online Zoom & In-Person Home Coaching',
+      teachingExperience: '15 Years in Top Educational Academies'
+    },
+    reviews: [
+      { id: 'r7', userName: 'Zubair Khattak', rating: 5, date: '1 month ago', comment: 'Sir Adnan helped my son go from C grade to A* in A-Level Physics! Highly recommended teacher.' }
+    ]
   }
 ]
+
