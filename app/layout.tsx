@@ -83,6 +83,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           }}
         />
         {/* End Google Tag Manager */}
+        {/* Google Tag (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-N09JN0NJ2R" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-N09JN0NJ2R');
+            `,
+          }}
+        />
+        {/* End Google Tag (gtag.js) */}
         <meta name="msvalidate.01" content="32107703ABE97F472472231CBA07F2E5" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
