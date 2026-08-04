@@ -1,24 +1,39 @@
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
-import { CATEGORIES, MOCK_BUSINESSES } from '@/lib/data'
+import { CATEGORIES } from '@/lib/data'
+import { getAllBusinesses } from '@/lib/db-service'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
-import { Building2, MapPin, ShieldCheck, Star, ArrowRight, ArrowLeft } from 'lucide-react'
+import { ShieldCheck, Star, ArrowRight, ArrowLeft } from 'lucide-react'
 import { Metadata } from 'next'
+
+export const revalidate = 86400 // 24-hour ISR revalidation
+
+export async function generateStaticParams() {
+  return CATEGORIES.map((cat) => ({
+    slug: cat.id,
+  }))
+}
 
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const params = await props.params
   const cat = CATEGORIES.find(c => c.id === params.slug)
-  const title = cat ? `Best ${cat.name} in Pakistan | ListPak` : 'Category | ListPak'
-  const description = cat ? `Find verified ${cat.name} businesses, phone numbers, locations, and customer reviews across Pakistan.` : 'Browse businesses.'
-  return { title, description }
+  const title = cat ? `Best ${cat.name} in Pakistan: ListPak Directory` : 'Category: ListPak'
+  const description = cat ? `Find verified ${cat.name} businesses, phone numbers, locations, and customer reviews across Pakistan.` : 'Browse verified Pakistani businesses.'
+  return { 
+    title, 
+    description,
+    alternates: {
+      canonical: `https://listpak.com/category/${params.slug}`
+    }
+  }
 }
 
 export default async function CategoryDetailPage(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params
   const cat = CATEGORIES.find(c => c.id === params.slug) || CATEGORIES[0]
 
-  const businesses = MOCK_BUSINESSES.filter(
+  const allApproved = await getAllBusinesses(false)
+  const businesses = allApproved.filter(
     b => b.categoryId === cat.id || b.category.toLowerCase().includes(cat.name.toLowerCase().split(' ')[0])
   )
 
@@ -62,7 +77,7 @@ export default async function CategoryDetailPage(props: { params: Promise<{ slug
 
         {businesses.length === 0 ? (
           <div className="bg-white rounded-2xl p-12 text-center border border-slate-200 space-y-3">
-            <p className="text-slate-600 text-sm font-semibold">No businesses currently listed in this specific view category.</p>
+            <p className="text-slate-600 text-sm font-semibold">No businesses currently listed under this category.</p>
             <Link href="/add-business" className="inline-block px-4 py-2 bg-orange-500 text-white text-xs font-bold rounded-xl">
               Be the first to list your business free!
             </Link>
@@ -80,7 +95,7 @@ export default async function CategoryDetailPage(props: { params: Promise<{ slug
                           <span>{biz.name}</span>
                           {biz.verified && <ShieldCheck className="w-4 h-4 text-emerald-500" />}
                         </Link>
-                        <p className="text-xs text-slate-500">{biz.city}</p>
+                        <p className="text-xs text-slate-500">{biz.city}, Pakistan</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-1 text-amber-700 text-xs font-bold bg-amber-50 px-2 py-1 rounded-lg">
@@ -88,7 +103,7 @@ export default async function CategoryDetailPage(props: { params: Promise<{ slug
                       <span>{biz.rating}</span>
                     </div>
                   </div>
-                  <p className="text-xs text-slate-600 line-clamp-2">{biz.description}</p>
+                  <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">{biz.description}</p>
                 </div>
                 <div className="pt-3 mt-3 border-t border-slate-100 flex justify-end">
                   <Link href={`/business/${biz.slug}`} className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1">

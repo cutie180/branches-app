@@ -89,6 +89,13 @@ export interface BusinessItem {
   reviewCount: number
   verified: boolean
   isClaimed: boolean
+  isFeatured?: boolean
+  status?: 'pending' | 'approved' | 'rejected'
+  submittedAt?: string
+  approvedAt?: string
+  approvedBy?: string
+  rejectionReason?: string
+  ownerName?: string
   phone: string
   whatsapp: string
   email: string
@@ -111,7 +118,270 @@ export interface BusinessItem {
   faqs: { question: string; answer: string }[]
 }
 
+export interface ContactMessage {
+  id: string
+  name: string
+  email: string
+  phone?: string
+  subject: string
+  message: string
+  createdAt: string
+  status: 'unread' | 'read'
+}
+
 export const MOCK_BUSINESSES: BusinessItem[] = [
+  {
+    id: 'biz-bank-1',
+    slug: 'hbl-habib-bank-limited',
+    name: 'HBL (Habib Bank Limited)',
+    category: 'Finance & Banking',
+    categoryId: 'finance',
+    city: 'Karachi',
+    province: 'Sindh',
+    rating: 4.9,
+    reviewCount: 450,
+    verified: true,
+    isClaimed: true,
+    isFeatured: true,
+    status: 'approved',
+    phone: '+92 21 111 111 425',
+    whatsapp: '9221111111425',
+    email: 'info@hbl.com',
+    website: 'https://hbl.com',
+    address: 'HBL Tower, I.I. Chundrigar Road, Karachi',
+    coverImage: 'https://images.unsplash.com/photo-1541354329998-f4d9a9f9297f?auto=format&fit=crop&w=1200&q=80',
+    logo: 'https://images.unsplash.com/photo-1601597111158-2fceff292cdc?auto=format&fit=crop&w=200&q=80',
+    description: 'Habib Bank Limited is Pakistan premier commercial bank offering retail banking, corporate finance, digital mobile banking, and international trade services across nationwide branches.',
+    services: ['Digital Mobile Banking', 'Personal & Home Loans', 'Corporate Finance', 'Commercial Credit', 'Foreign Exchange'],
+    operatingHours: { 'Monday - Friday': '09:00 AM - 05:00 PM', 'Saturday': '09:00 AM - 01:30 PM' },
+    features: ['State Bank Regulated', '24/7 ATM Service', 'Digital App Solutions', 'International Remittance'],
+    reviews: [],
+    faqs: []
+  },
+  {
+    id: 'biz-bank-2',
+    slug: 'ubl-united-bank-limited',
+    name: 'UBL (United Bank Limited)',
+    category: 'Finance & Banking',
+    categoryId: 'finance',
+    city: 'Karachi',
+    province: 'Sindh',
+    rating: 4.8,
+    reviewCount: 380,
+    verified: true,
+    isClaimed: true,
+    isFeatured: true,
+    status: 'approved',
+    phone: '+92 21 111 825 888',
+    whatsapp: '9221111825888',
+    email: 'customer.service@ubl.com.pk',
+    website: 'https://ubldigital.com',
+    address: 'UBL Head Office, I.I. Chundrigar Road, Karachi',
+    coverImage: 'https://images.unsplash.com/photo-1556742049-0a67daf40954?auto=format&fit=crop&w=1200&q=80',
+    logo: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=200&q=80',
+    description: 'United Bank Limited is a flagship Pakistani financial institution leading digital payment innovations, Islamic banking solutions, and corporate investment banking.',
+    services: ['UBL Digital Mobile App', 'Ameen Islamic Banking', 'Auto & Home Finance', 'SME Business Loans'],
+    operatingHours: { 'Monday - Friday': '09:00 AM - 05:00 PM' },
+    features: ['Instant Online Transfer', 'Ameen Shariah Compliant', 'Nationwide Branches'],
+    reviews: [],
+    faqs: []
+  },
+  {
+    id: 'biz-bank-3',
+    slug: 'meezan-bank-pakistan',
+    name: 'Meezan Bank Limited',
+    category: 'Finance & Banking',
+    categoryId: 'finance',
+    city: 'Karachi',
+    province: 'Sindh',
+    rating: 4.95,
+    reviewCount: 620,
+    verified: true,
+    isClaimed: true,
+    isFeatured: true,
+    status: 'approved',
+    phone: '+92 21 111 331 331',
+    whatsapp: '9221111331331',
+    email: 'info@meezanbank.com',
+    website: 'https://meezanbank.com',
+    address: 'Meezan House, C-25 Estate Avenue, SITE, Karachi',
+    coverImage: 'https://images.unsplash.com/photo-1501167786227-4cba60f6d58f?auto=format&fit=crop&w=1200&q=80',
+    logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
+    description: 'Meezan Bank is Pakistan largest premier Islamic commercial bank operating strictly under 100 percent Riba-free Shariah principles with nationwide branches and mobile banking.',
+    services: ['Riba-Free Account', 'Islamic Car Ijarah', 'Easy Home Mortgage', 'Sukuk Investment'],
+    operatingHours: { 'Monday - Friday': '09:00 AM - 05:00 PM' },
+    features: ['100% Shariah Certified', 'Largest Islamic Branch Network', 'Award Winning Digital App'],
+    reviews: [],
+    faqs: []
+  },
+  {
+    id: 'biz-bank-4',
+    slug: 'mcb-bank-limited',
+    name: 'MCB Bank Limited',
+    category: 'Finance & Banking',
+    categoryId: 'finance',
+    city: 'Lahore',
+    province: 'Punjab',
+    rating: 4.85,
+    reviewCount: 310,
+    verified: true,
+    isClaimed: true,
+    isFeatured: true,
+    status: 'approved',
+    phone: '+92 42 111 000 622',
+    whatsapp: '9242111000622',
+    email: 'info@mcb.com.pk',
+    website: 'https://mcb.com.pk',
+    address: 'MCB Building, 15 Main Gulberg, Jail Road, Lahore',
+    coverImage: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=1200&q=80',
+    logo: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=200&q=80',
+    description: 'MCB Bank Limited is one of Pakistan leading corporate banks providing comprehensive retail banking, wealth management, trade services, and consumer credit cards.',
+    services: ['MCB Live Banking', 'Visa & Mastercard Debit', 'Commercial Trade Finance', 'Agricultural Loans'],
+    operatingHours: { 'Monday - Friday': '09:00 AM - 05:00 PM' },
+    features: ['State Bank Regulated', 'Multi-Currency Accounts', 'Priority Banking'],
+    reviews: [],
+    faqs: []
+  },
+  {
+    id: 'biz-bank-5',
+    slug: 'allied-bank-limited',
+    name: 'Allied Bank Limited (ABL)',
+    category: 'Finance & Banking',
+    categoryId: 'finance',
+    city: 'Lahore',
+    province: 'Punjab',
+    rating: 4.8,
+    reviewCount: 290,
+    verified: true,
+    isClaimed: true,
+    isFeatured: true,
+    status: 'approved',
+    phone: '+92 42 111 225 225',
+    whatsapp: '9242111225225',
+    email: 'cm@abl.com',
+    website: 'https://abl.com',
+    address: 'ABL Head Office, 3-Tipu Block, New Garden Town, Lahore',
+    coverImage: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80',
+    logo: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=200&q=80',
+    description: 'Allied Bank Limited offers premier retail, commercial, and digital financial solutions across more than 1,400 branches in Pakistan.',
+    services: ['myABL Digital App', 'Commercial Lending', 'Consumer Loans', 'Remittance Services'],
+    operatingHours: { 'Monday - Friday': '09:00 AM - 05:00 PM' },
+    features: ['Over 1400+ Branches', '24/7 myABL Support', 'Secure Payments'],
+    reviews: [],
+    faqs: []
+  },
+  {
+    id: 'biz-bank-6',
+    slug: 'bank-alfalah-limited',
+    name: 'Bank Alfalah Limited',
+    category: 'Finance & Banking',
+    categoryId: 'finance',
+    city: 'Karachi',
+    province: 'Sindh',
+    rating: 4.85,
+    reviewCount: 340,
+    verified: true,
+    isClaimed: true,
+    isFeatured: true,
+    status: 'approved',
+    phone: '+92 21 111 225 111',
+    whatsapp: '9221111225111',
+    email: 'contactus@bankalfalah.com',
+    website: 'https://bankalfalah.com',
+    address: 'BAF Centre, I.I. Chundrigar Road, Karachi',
+    coverImage: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=1200&q=80',
+    logo: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=200&q=80',
+    description: 'Bank Alfalah is a innovative commercial bank in Pakistan offering Alfa mobile wallet, credit card rewards, and corporate banking.',
+    services: ['Alfa Mobile App & Wallet', 'Alfalah Credit Cards', 'Islamic Banking', 'Merchant Gateway Solutions'],
+    operatingHours: { 'Monday - Friday': '09:00 AM - 05:00 PM' },
+    features: ['Alfa Digital Gateway', 'Instant Merchant Settlement', 'Nationwide ATMs'],
+    reviews: [],
+    faqs: []
+  },
+  {
+    id: 'biz-bank-7',
+    slug: 'askari-bank-limited',
+    name: 'Askari Bank Limited',
+    category: 'Finance & Banking',
+    categoryId: 'finance',
+    city: 'Rawalpindi',
+    province: 'Punjab',
+    rating: 4.75,
+    reviewCount: 210,
+    verified: true,
+    isClaimed: true,
+    isFeatured: true,
+    status: 'approved',
+    phone: '+92 51 111 000 787',
+    whatsapp: '9251111000787',
+    email: 'info@askaribank.com.pk',
+    website: 'https://askaribank.com.pk',
+    address: 'Askari Bank Tower, AWT Plaza, The Mall, Rawalpindi',
+    coverImage: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1200&q=80',
+    logo: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=200&q=80',
+    description: 'Askari Bank Limited provides trusted consumer banking, corporate commercial financing, and Islamic financial products nationwide.',
+    services: ['Askari Mobile App', 'Corporate Banking', 'Islamic Banking Services', 'Home & Auto Loans'],
+    operatingHours: { 'Monday - Friday': '09:00 AM - 05:00 PM' },
+    features: ['State Bank Regulated', 'Dedicated Customer Support', 'Secure E-Banking'],
+    reviews: [],
+    faqs: []
+  },
+  {
+    id: 'biz-bank-8',
+    slug: 'bank-al-habib-limited',
+    name: 'Bank AL Habib Limited',
+    category: 'Finance & Banking',
+    categoryId: 'finance',
+    city: 'Karachi',
+    province: 'Sindh',
+    rating: 4.9,
+    reviewCount: 390,
+    verified: true,
+    isClaimed: true,
+    isFeatured: true,
+    status: 'approved',
+    phone: '+92 21 111 014 014',
+    whatsapp: '9221111014014',
+    email: 'info@bankalhabib.com',
+    website: 'https://bankalhabib.com',
+    address: 'Mackinnons Building, I.I. Chundrigar Road, Karachi',
+    coverImage: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80',
+    logo: 'https://images.unsplash.com/photo-1556742049-0a67daf40954?auto=format&fit=crop&w=200&q=80',
+    description: 'Bank AL Habib Limited is known for personal customer relationship banking, commercial trade support, and reliable digital branch banking.',
+    services: ['AL Habib Digital App', 'Current & Savings Accounts', 'Trade Finance', 'Islamic Banking'],
+    operatingHours: { 'Monday - Friday': '09:00 AM - 05:00 PM' },
+    features: ['High Customer Satisfaction', '1000+ Branch Network', 'Fast Local Transfers'],
+    reviews: [],
+    faqs: []
+  },
+  {
+    id: 'biz-bank-9',
+    slug: 'faysal-bank-limited',
+    name: 'Faysal Bank Limited',
+    category: 'Finance & Banking',
+    categoryId: 'finance',
+    city: 'Karachi',
+    province: 'Sindh',
+    rating: 4.85,
+    reviewCount: 270,
+    verified: true,
+    isClaimed: true,
+    isFeatured: true,
+    status: 'approved',
+    phone: '+92 21 111 06 06 06',
+    whatsapp: '9221111060606',
+    email: 'customer-care@faysalbank.com',
+    website: 'https://faysalbank.com',
+    address: 'Faysal House, ST-02, Commercial Area, Main Shahrah-e-Faisal, Karachi',
+    coverImage: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1200&q=80',
+    logo: 'https://images.unsplash.com/photo-1601597111158-2fceff292cdc?auto=format&fit=crop&w=200&q=80',
+    description: 'Faysal Bank is a leading full-fledged Islamic commercial bank offering Shariah-compliant digital banking, wealth advisory, and auto financing.',
+    services: ['Faysal Digibank App', 'Islamic Auto & Home Finance', 'Wealth Management', 'Commercial Credit'],
+    operatingHours: { 'Monday - Friday': '09:00 AM - 05:00 PM' },
+    features: ['100% Shariah Compliant', 'Digibank Mobile App', 'Premier Cards'],
+    reviews: [],
+    faqs: []
+  },
   {
     id: 'biz-1',
     slug: 'tech-solutions-pakistan',
@@ -124,6 +394,7 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     reviewCount: 48,
     verified: true,
     isClaimed: true,
+    status: 'approved',
     phone: '+92 51 8483920',
     whatsapp: '923001234567',
     email: 'info@techsolutions.pk',
@@ -138,134 +409,7 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
       'Saturday': '10:00 AM - 02:00 PM',
       'Sunday': 'Closed'
     },
-    features: ['ISO 9001 Certified', '24/7 Dedicated Support', 'Free Initial Consultation', 'Over 150+ Delivered Projects'],
-    reviews: [
-      { id: 'r1', userName: 'Asad Ali Khan', rating: 5, date: '2 weeks ago', comment: 'Exceptional work delivered by the team! Built our web portal smoothly on deadline.' },
-      { id: 'r2', userName: 'Fatima Zafar', rating: 5, date: '1 month ago', comment: 'Very professional developers in Islamabad. Highly recommended for custom SaaS products.' }
-    ],
-    faqs: [
-      { question: 'Do you offer free project estimates?', answer: 'Yes, we provide free discovery sessions and detailed project estimates.' },
-      { question: 'What technologies do you specialize in?', answer: 'Next.js, React, Node.js, Python, PostgreSQL, AWS, and GCP.' }
-    ]
-  },
-  {
-    id: 'biz-2',
-    slug: 'green-valley-restaurant',
-    name: 'Green Valley Restaurant',
-    category: 'Restaurants & Food',
-    categoryId: 'restaurants',
-    city: 'Karachi',
-    province: 'Sindh',
-    rating: 4.8,
-    reviewCount: 124,
-    verified: true,
-    isClaimed: true,
-    phone: '+92 21 35849201',
-    whatsapp: '923219876543',
-    email: 'reservations@greenvalley.pk',
-    website: 'https://greenvalley.pk',
-    address: 'Block 4, Gulshan-e-Iqbal, Main University Road, Karachi',
-    coverImage: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80',
-    logo: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=200&q=80',
-    description: 'Premier authentic Pakistani Karahi, BBQ, and continental dining experience in Karachi. Family-friendly atmosphere with outdoor rooftop seating and private party halls.',
-    services: ['Family Dining', 'Outdoor BBQ', 'Catering & Event Services', 'Home Delivery', 'Rooftop Reservations'],
-    operatingHours: {
-      'Monday - Sunday': '12:00 PM - 01:00 AM'
-    },
-    features: ['Valet Parking Available', 'Air Conditioned Family Rooms', '100% Halal Food Certified', 'Wheelchair Accessible'],
-    reviews: [
-      { id: 'r3', userName: 'Tariq Mehmood', rating: 5, date: '3 days ago', comment: 'Best mutton karahi in Gulshan! Staff is super attentive.' }
-    ],
-    faqs: [
-      { question: 'Is advance reservation required for big families?', answer: 'Advance reservation is recommended on weekends for groups over 10.' }
-    ]
-  },
-  {
-    id: 'biz-3',
-    slug: 'al-rehman-traders-wholesalers',
-    name: 'Al-Rehman Traders & Wholesalers',
-    category: 'Retail & Shopping',
-    categoryId: 'retail',
-    city: 'Lahore',
-    province: 'Punjab',
-    rating: 4.7,
-    reviewCount: 62,
-    verified: true,
-    isClaimed: false,
-    phone: '+92 42 37654321',
-    whatsapp: '923334567890',
-    email: 'sales@alrehmantraders.com',
-    website: 'https://alrehmantraders.com',
-    address: 'Hall Road Electronics Market, Lahore',
-    coverImage: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80',
-    logo: 'https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?auto=format&fit=crop&w=200&q=80',
-    description: 'Wholesale distributor of electronic appliances, solar panels, and smart home hardware across Pakistan. Official distributor for top international electronics brands.',
-    services: ['Wholesale Electronics Distribution', 'Solar Inverter Supplies', 'Bulk Orders Delivery', 'B2B Procurement'],
-    operatingHours: {
-      'Monday - Saturday': '10:00 AM - 08:00 PM',
-      'Sunday': 'Closed'
-    },
-    features: ['Nationwide Bulk Freight', 'Genuine Warranty Guarantee', 'Official Brand Partner'],
-    reviews: [
-      { id: 'r4', userName: 'Usman Chaudhry', rating: 5, date: '1 week ago', comment: 'Genuine wholesale rates and immediate dispatch to Rawalpindi.' }
-    ],
-    faqs: [
-      { question: 'Do you deliver to KPK and Balochistan?', answer: 'Yes, we supply bulk shipments nationwide.' }
-    ]
-  },
-  {
-    id: 'biz-4',
-    slug: 'modern-builders-contractors',
-    name: 'Modern Builders & Contractors',
-    category: 'Construction & Building',
-    categoryId: 'construction',
-    city: 'Rawalpindi',
-    province: 'Punjab',
-    rating: 4.9,
-    reviewCount: 39,
-    verified: true,
-    isClaimed: true,
-    phone: '+92 51 5567890',
-    whatsapp: '923015551234',
-    email: 'info@modernbuilders.pk',
-    website: 'https://modernbuilders.pk',
-    address: 'Phase 4, Bahria Town, Rawalpindi',
-    coverImage: 'https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?auto=format&fit=crop&w=1200&q=80',
-    logo: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=200&q=80',
-    description: 'Turnkey residential and commercial construction experts in Islamabad-Rawalpindi. Architectural design, interior fitting, gray structure, and luxury finishings.',
-    services: ['Turnkey House Construction', 'Architectural Design 3D', 'Commercial Plaza Building', 'Interior Renovation'],
-    operatingHours: {
-      'Monday - Saturday': '09:00 AM - 07:00 PM'
-    },
-    features: ['Architect Council Registered', 'Fixed Rate Contracts', 'Structure Warranty 10 Years'],
-    reviews: [],
-    faqs: []
-  },
-  {
-    id: 'biz-5',
-    slug: 'city-medical-store-pharmacy',
-    name: 'City Medical Store & Pharmacy',
-    category: 'Healthcare & Medical',
-    categoryId: 'healthcare',
-    city: 'Faisalabad',
-    province: 'Punjab',
-    rating: 4.8,
-    reviewCount: 51,
-    verified: true,
-    isClaimed: true,
-    phone: '+92 41 8765432',
-    whatsapp: '923126667788',
-    email: 'help@citymedical.pk',
-    website: 'https://citymedical.pk',
-    address: 'D-Ground Commercial Area, Faisalabad',
-    coverImage: 'https://images.unsplash.com/photo-1586015555751-63bb77f4322a?auto=format&fit=crop&w=1200&q=80',
-    logo: 'https://images.unsplash.com/photo-1631549916768-4119b2e5f926?auto=format&fit=crop&w=200&q=80',
-    description: '24/7 authentic pharmacy offering temperature-controlled medicine storage, surgical supplies, and instant home medicine delivery in Faisalabad.',
-    services: ['24/7 Prescription Medicines', 'Surgical Equipment Supply', 'Home Delivery Medicine', 'Free Blood Pressure Check'],
-    operatingHours: {
-      'Monday - Sunday': '24 Hours Open'
-    },
-    features: ['Licensed Qualified Pharmacists', 'Cold-Chain Storage', 'Online Whatsapp Ordering'],
+    features: ['ISO 9001 Certified', '24/7 Dedicated Support', 'Free Initial Consultation', 'Over 150 Delivered Projects'],
     reviews: [],
     faqs: []
   }
@@ -386,6 +530,24 @@ export interface ProfessionalItem {
   skills: string[]
   experienceYears: number
   verified: boolean
+  // 18 Contact and Social Media Links
+  phone?: string
+  email?: string
+  whatsapp?: string
+  website?: string
+  portfolio?: string
+  linkedin?: string
+  github?: string
+  facebook?: string
+  twitter?: string
+  instagram?: string
+  behance?: string
+  dribbble?: string
+  youtube?: string
+  medium?: string
+  stackoverflow?: string
+  fiverr?: string
+  upwork?: string
 }
 
 export const MOCK_PROFESSIONALS: ProfessionalItem[] = [
@@ -401,7 +563,17 @@ export const MOCK_PROFESSIONALS: ProfessionalItem[] = [
     bio: 'Over 8+ years experience designing enterprise web applications, design systems, and cloud architectures for startups in US, UK, and Pakistan.',
     skills: ['Next.js', 'React', 'Tailwind CSS', 'Figma', 'TypeScript', 'System Architecture'],
     experienceYears: 8,
-    verified: true
+    verified: true,
+    phone: '+92 300 1234567',
+    email: 'hamza.shaikh@dev.pk',
+    whatsapp: '923001234567',
+    website: 'https://hamzashaikh.dev',
+    portfolio: 'https://hamzashaikh.dev/portfolio',
+    linkedin: 'https://linkedin.com/in/hamzashaikh',
+    github: 'https://github.com/hamzashaikh',
+    twitter: 'https://twitter.com/hamzashaikhdev',
+    behance: 'https://behance.net/hamzashaikh',
+    upwork: 'https://upwork.com/freelancers/~0123456789'
   },
   {
     username: 'dr-zainab-malik',
@@ -415,7 +587,14 @@ export const MOCK_PROFESSIONALS: ProfessionalItem[] = [
     bio: 'Board-certified dermatologist with 10+ years expertise in clinical skincare, laser treatments, and aesthetic medicine.',
     skills: ['Clinical Dermatology', 'Laser Therapy', 'Cosmetic Procedures', 'Medical Research'],
     experienceYears: 10,
-    verified: true
+    verified: true,
+    phone: '+92 21 35849201',
+    email: 'dr.zainab@skincare.pk',
+    whatsapp: '923219876543',
+    website: 'https://drzainabmalik.pk',
+    facebook: 'https://facebook.com/drzainabmalik',
+    instagram: 'https://instagram.com/drzainabmalik',
+    youtube: 'https://youtube.com/@drzainabmalik'
   },
   {
     username: 'shehryar-khan-ca',
@@ -429,6 +608,11 @@ export const MOCK_PROFESSIONALS: ProfessionalItem[] = [
     bio: 'Helping Pakistani SMBs and foreign entities with FBR tax filing, corporate registration (SECP), and financial auditing.',
     skills: ['FBR Tax Advisory', 'SECP Registration', 'Corporate Audit', 'Financial Modeling'],
     experienceYears: 12,
-    verified: true
+    verified: true,
+    phone: '+92 51 8483920',
+    email: 'shehryar@taxconsultant.pk',
+    whatsapp: '923008889900',
+    linkedin: 'https://linkedin.com/in/shehryarkhanfca',
+    medium: 'https://medium.com/@shehryarkhanfca'
   }
 ]

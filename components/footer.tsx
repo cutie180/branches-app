@@ -1,61 +1,74 @@
 import Link from 'next/link'
-import { Building2, ShieldCheck, MapPin, Briefcase, Sparkles, Heart } from 'lucide-react'
+import { ShieldCheck, MapPin, Briefcase, Sparkles, Phone, Mail, HelpCircle, FileText, Globe } from 'lucide-react'
+import UniversalHelpBanner from '@/components/universal-help-banner'
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0B132B] text-white pt-16 pb-12 border-t border-slate-800 font-sans">
+    <>
+      <UniversalHelpBanner />
+      <footer className="bg-[#0B132B] text-white pt-16 pb-12 border-t border-slate-800 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Top Branding Bar */}
+        {/* Top Branding & NAP Bar */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center pb-12 border-b border-slate-800/80 gap-6">
-          <div className="flex flex-col gap-2">
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 via-blue-500 to-emerald-400 flex items-center justify-center text-white font-bold text-xl shadow-lg border border-white/20">
-                <Building2 className="w-5.5 h-5.5 text-white" />
-              </div>
-              <span className="text-white font-extrabold text-2xl tracking-tight">
-                List<span className="text-blue-400">Pak</span>
-              </span>
+          <div className="flex flex-col gap-3">
+            <Link href="/" className="inline-block group">
+              <img
+                src="/logo.png"
+                alt="ListPak - Pakistan Business Hub"
+                className="h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+              />
             </Link>
             <p className="text-xs text-slate-400 max-w-md leading-relaxed">
-              Pakistan&apos;s enterprise digital business ecosystem connecting local companies, employers, professionals, and customers across all 150+ cities nationwide.
+              Pakistan's digital business ecosystem connecting local companies, employers, professionals, and customers across all 150+ cities nationwide.
             </p>
+            
+            {/* Official NAP Display */}
+            <div className="pt-2 space-y-1 text-xs text-slate-300">
+              <div className="flex items-center gap-2">
+                <MapPin className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                <span><strong>Official HQ Address:</strong> Office 303, Evacuee Trust Complex, F-5/1, Islamabad 44000, Pakistan</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span><strong>Phone Contact:</strong> +92 334 5636230</span>
+              </div>
+            </div>
           </div>
 
           <div className="flex items-center gap-4 flex-wrap">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-xs font-medium">
+            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs font-medium">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
               <span>100% Verified Businesses</span>
             </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-xs font-medium">
+            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs font-medium">
               <MapPin className="w-4 h-4 text-blue-400" />
               <span>150+ Pakistani Cities</span>
             </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-xs font-medium">
+            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs font-medium">
               <Briefcase className="w-4 h-4 text-amber-400" />
               <span>Active Job Portal</span>
             </div>
           </div>
         </div>
 
-        {/* 4 Column Links */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 py-12 border-b border-slate-800/80">
+        {/* 5 Column Link Section */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 py-12 border-b border-slate-800/80">
           
-          {/* Section 1: Top Categories */}
+          {/* Section 1: Directory & Explore */}
           <div>
             <h3 className="font-bold text-white text-sm tracking-wider uppercase mb-4 text-blue-400 flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-blue-400" />
-              <span>Popular Categories</span>
+              <span>Directory</span>
             </h3>
             <ul className="space-y-2 text-xs text-slate-300">
-              <li><Link href="/category/restaurants" className="hover:text-blue-400 transition-colors">Restaurants & Food</Link></li>
-              <li><Link href="/category/technology" className="hover:text-blue-400 transition-colors">Technology & Software</Link></li>
-              <li><Link href="/category/healthcare" className="hover:text-blue-400 transition-colors">Healthcare & Doctors</Link></li>
-              <li><Link href="/category/real-estate" className="hover:text-blue-400 transition-colors">Real Estate & Property</Link></li>
-              <li><Link href="/category/education" className="hover:text-blue-400 transition-colors">Schools & Universities</Link></li>
-              <li><Link href="/category/beauty" className="hover:text-blue-400 transition-colors">Salons & Wellness</Link></li>
-              <li><Link href="/category/automotive" className="hover:text-blue-400 transition-colors">Auto Sales & Services</Link></li>
-              <li><Link href="/categories" className="text-blue-400 font-semibold hover:underline">View All 50+ Categories &rarr;</Link></li>
+              <li><Link href="/categories" className="hover:text-blue-400 transition-colors">All Categories</Link></li>
+              <li><Link href="/cities" className="hover:text-blue-400 transition-colors">All Cities</Link></li>
+              <li><Link href="/search" className="hover:text-blue-400 transition-colors">Business Search</Link></li>
+              <li><Link href="/add-business" className="hover:text-blue-400 transition-colors">Add Business</Link></li>
+              <li><Link href="/professionals" className="hover:text-blue-400 transition-colors">Verified Professionals</Link></li>
+              <li><Link href="/jobs" className="hover:text-blue-400 transition-colors">Pakistan Jobs</Link></li>
+              <li><Link href="/post-job" className="hover:text-blue-400 transition-colors">Post Job Opening</Link></li>
             </ul>
           </div>
 
@@ -63,59 +76,85 @@ export default function Footer() {
           <div>
             <h3 className="font-bold text-white text-sm tracking-wider uppercase mb-4 text-emerald-400 flex items-center gap-2">
               <MapPin className="w-4 h-4 text-emerald-400" />
-              <span>Major Cities</span>
+              <span>Top Hubs</span>
             </h3>
             <ul className="space-y-2 text-xs text-slate-300">
-              <li><Link href="/city/karachi" className="hover:text-emerald-400 transition-colors">Karachi Business Directory</Link></li>
-              <li><Link href="/city/lahore" className="hover:text-emerald-400 transition-colors">Lahore Enterprise Directory</Link></li>
-              <li><Link href="/city/islamabad" className="hover:text-emerald-400 transition-colors">Islamabad Business Listings</Link></li>
+              <li><Link href="/city/karachi" className="hover:text-emerald-400 transition-colors">Karachi Directory</Link></li>
+              <li><Link href="/city/lahore" className="hover:text-emerald-400 transition-colors">Lahore Directory</Link></li>
+              <li><Link href="/city/islamabad" className="hover:text-emerald-400 transition-colors">Islamabad Directory</Link></li>
               <li><Link href="/city/rawalpindi" className="hover:text-emerald-400 transition-colors">Rawalpindi Directory</Link></li>
-              <li><Link href="/city/faisalabad" className="hover:text-emerald-400 transition-colors">Faisalabad Business Hub</Link></li>
-              <li><Link href="/city/multan" className="hover:text-emerald-400 transition-colors">Multan Listings</Link></li>
-              <li><Link href="/city/peshawar" className="hover:text-emerald-400 transition-colors">Peshawar Business Directory</Link></li>
-              <li><Link href="/cities" className="text-emerald-400 font-semibold hover:underline">Explore All 150+ Cities &rarr;</Link></li>
+              <li><Link href="/city/faisalabad" className="hover:text-emerald-400 transition-colors">Faisalabad Directory</Link></li>
+              <li><Link href="/city/multan" className="hover:text-emerald-400 transition-colors">Multan Directory</Link></li>
+              <li><Link href="/city/peshawar" className="hover:text-emerald-400 transition-colors">Peshawar Directory</Link></li>
             </ul>
           </div>
 
-          {/* Section 3: Ecosystem Services */}
+          {/* Section 3: Company & Trust */}
           <div>
             <h3 className="font-bold text-white text-sm tracking-wider uppercase mb-4 text-amber-400 flex items-center gap-2">
-              <Briefcase className="w-4 h-4 text-amber-400" />
-              <span>Jobs & Professionals</span>
+              <Globe className="w-4 h-4 text-amber-400" />
+              <span>Company</span>
             </h3>
             <ul className="space-y-2 text-xs text-slate-300">
-              <li><Link href="/jobs" className="hover:text-amber-400 transition-colors">Find Jobs in Pakistan</Link></li>
-              <li><Link href="/post-job" className="hover:text-amber-400 transition-colors">Post Job Opening</Link></li>
-              <li><Link href="/professionals" className="hover:text-amber-400 transition-colors">Browse Verified Professionals</Link></li>
-              <li><Link href="/add-business" className="hover:text-amber-400 transition-colors">List Your Business Free</Link></li>
-              <li><Link href="/dashboard" className="hover:text-amber-400 transition-colors">Business Owner Portal</Link></li>
-              <li><Link href="/search" className="hover:text-amber-400 transition-colors">Advanced Search Filter</Link></li>
+              <li><Link href="/about" className="hover:text-amber-400 transition-colors">About Us</Link></li>
+              <li><Link href="/contact" className="hover:text-amber-400 transition-colors">Contact Us</Link></li>
+              <li><Link href="/careers" className="hover:text-amber-400 transition-colors">Careers</Link></li>
+              <li><Link href="/advertise-with-us" className="hover:text-amber-400 transition-colors">Advertise With Us</Link></li>
+              <li><Link href="/blog" className="hover:text-amber-400 transition-colors">Pakistan Business Blog</Link></li>
+              <li><Link href="/html-sitemap" className="hover:text-amber-400 transition-colors">HTML Sitemap</Link></li>
             </ul>
           </div>
 
-          {/* Section 4: Enterprise & Legal */}
+          {/* Section 4: Support & FAQs */}
           <div>
-            <h3 className="font-bold text-white text-sm tracking-wider uppercase mb-4 text-slate-300">Company & Legal</h3>
+            <h3 className="font-bold text-white text-sm tracking-wider uppercase mb-4 text-sky-400 flex items-center gap-2">
+              <HelpCircle className="w-4 h-4 text-sky-400" />
+              <span>Help & Support</span>
+            </h3>
             <ul className="space-y-2 text-xs text-slate-300">
-              <li><Link href="/about" className="hover:text-white transition-colors">About ListPak Ecosystem</Link></li>
-              <li><Link href="/blog" className="hover:text-white transition-colors">Pakistan Business Blog</Link></li>
-              <li><Link href="/contact" className="hover:text-white transition-colors">Contact Enterprise Support</Link></li>
-              <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
-              <li><Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
-              <li><Link href="/admin" className="hover:text-white transition-colors text-slate-500">Admin Login</Link></li>
+              <li><Link href="/help-center" className="hover:text-sky-400 transition-colors">Help Center</Link></li>
+              <li><Link href="/support" className="hover:text-sky-400 transition-colors">Customer Support</Link></li>
+              <li><Link href="/faqs" className="hover:text-sky-400 transition-colors">FAQs</Link></li>
+              <li><Link href="/report-listing" className="hover:text-sky-400 transition-colors">Report a Listing</Link></li>
+              <li><Link href="/report-abuse" className="hover:text-sky-400 transition-colors">Report Abuse</Link></li>
+              <li><Link href="/accessibility" className="hover:text-sky-400 transition-colors">Accessibility Statement</Link></li>
             </ul>
           </div>
+
+          {/* Section 5: Policies & Legal */}
+          <div>
+            <h3 className="font-bold text-white text-sm tracking-wider uppercase mb-4 text-purple-400 flex items-center gap-2">
+              <FileText className="w-4 h-4 text-purple-400" />
+              <span>Legal Policies</span>
+            </h3>
+            <ul className="space-y-2 text-xs text-slate-300">
+              <li><Link href="/privacy" className="hover:text-purple-400 transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="hover:text-purple-400 transition-colors">Terms & Conditions</Link></li>
+              <li><Link href="/cookie-policy" className="hover:text-purple-400 transition-colors">Cookie Policy</Link></li>
+              <li><Link href="/disclaimer" className="hover:text-purple-400 transition-colors">Disclaimer</Link></li>
+              <li><Link href="/editorial-policy" className="hover:text-purple-400 transition-colors">Editorial Policy</Link></li>
+              <li><Link href="/community-guidelines" className="hover:text-purple-400 transition-colors">Community Guidelines</Link></li>
+              <li><Link href="/business-listing-guidelines" className="hover:text-purple-400 transition-colors">Listing Guidelines</Link></li>
+              <li><Link href="/verification-policy" className="hover:text-purple-400 transition-colors">Verification Policy</Link></li>
+              <li><Link href="/refund-policy" className="hover:text-purple-400 transition-colors">Refund Policy</Link></li>
+            </ul>
+          </div>
+
         </div>
 
         {/* Footer Bottom */}
         <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400">
           <p className="text-center md:text-left">
-            © 2026 ListPak Enterprise Ecosystem. Built with pride for Pakistani businesses, employers, & professionals.
+            © 2026 ListPak Enterprise Ecosystem. All rights reserved. Office 303, Evacuee Trust Complex, F-5/1, Islamabad 44000, Pakistan.
           </p>
-          <div className="flex items-center gap-4 text-slate-400">
+          <div className="flex items-center gap-3 text-slate-400 flex-wrap justify-center">
             <Link href="/privacy" className="hover:text-white">Privacy</Link>
             <span>•</span>
             <Link href="/terms" className="hover:text-white">Terms</Link>
+            <span>•</span>
+            <Link href="/cookie-policy" className="hover:text-white">Cookies</Link>
+            <span>•</span>
+            <Link href="/disclaimer" className="hover:text-white">Disclaimer</Link>
             <span>•</span>
             <Link href="/contact" className="hover:text-white">Contact</Link>
           </div>
@@ -123,5 +162,6 @@ export default function Footer() {
 
       </div>
     </footer>
+    </>
   )
 }

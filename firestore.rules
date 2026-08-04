@@ -1,18 +1,36 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
+    
+    // Helper function to check if user is an administrator
+    function isAdmin() {
+      return request.auth != null && 
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true);
+    }
 
-    // Allow public read and create access for businesses collection
+    // Public businesses collection
     match /businesses/{businessId} {
-      allow read: if true;
-      allow create: if true;
-      allow update, delete: if true;
+      // Public can read only approved businesses
+      allow read: if resource.data.status == 'approved' || isAdmin();
+      // Anyone can submit a new business with status: 'pending'
+      allow create: if request.resource.data.status == 'pending';
+      // Only admins can approve, reject, or modify existing businesses
+      allow update, delete: if isAdmin();
     }
 
-    // Default rule for all other collections
-    match /{document=**} {
-      allow read, write: if true;
+    // Contact messages collection
+    match /contact_messages/{messageId} {
+      // Public can submit contact messages
+      allow create: if request.resource.data.name != null && request.resource.data.email != null;
+      // Only admins can read, update, or delete contact messages
+      allow read, update, delete: if isAdmin();
     }
+
+    // Users collection
+    match /users/{userId} {
+      allow read, write: if request.auth != null && (request.auth.uid == userId || isAdmin());
+    }
+
   }
 }

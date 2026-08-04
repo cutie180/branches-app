@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, Plus, Building2, Search, Briefcase, Users, LayoutDashboard } from 'lucide-react'
+import { Menu, X, Plus, Building2, Search, Briefcase, Users, BookOpen } from 'lucide-react'
 
 const navLinks = [
   { href: '/search', label: 'Businesses', icon: Building2 },
@@ -11,6 +11,7 @@ const navLinks = [
   { href: '/professionals', label: 'Professionals', icon: Users },
   { href: '/categories', label: 'Categories' },
   { href: '/cities', label: 'Cities' },
+  { href: '/blog', label: 'Blog', icon: BookOpen },
 ]
 
 export default function Navbar() {
@@ -23,16 +24,12 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16 sm:h-20">
           
           {/* Brand Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-blue-500 to-emerald-400 flex items-center justify-center text-white font-bold text-xl shadow-lg border border-white/20 group-hover:scale-105 transition-transform duration-200">
-              <Building2 className="w-5.5 h-5.5 text-white" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-white font-extrabold text-2xl tracking-tight leading-none">
-                List<span className="text-blue-400">Pak</span>
-              </span>
-              <span className="text-[10px] text-slate-400 font-medium tracking-wider uppercase">Pakistan Business Hub</span>
-            </div>
+          <Link href="/" className="flex items-center group py-1">
+            <img
+              src="/logo.png"
+              alt="ListPak - Pakistan Business Hub"
+              className="h-10 sm:h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+            />
           </Link>
 
           {/* Desktop Navigation */}
@@ -65,19 +62,11 @@ export default function Navbar() {
           <div className="hidden sm:flex items-center gap-3">
             <Link
               href="/search"
-              className="p-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/70 transition-colors"
+              className="p-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/70 transition-colors flex items-center gap-1.5 text-sm font-medium"
               title="Search Directory"
             >
-              <Search className="w-5 h-5" />
-            </Link>
-
-            <Link
-              href="/dashboard"
-              className="p-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/70 transition-colors flex items-center gap-2 text-sm font-medium"
-              title="User Dashboard"
-            >
-              <LayoutDashboard className="w-5 h-5" />
-              <span className="hidden xl:inline">Dashboard</span>
+              <Search className="w-5 h-5 text-slate-400" />
+              <span>Search</span>
             </Link>
 
             <Link
@@ -89,29 +78,23 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Mobile hamburger */}
-          <div className="flex items-center gap-2 sm:hidden">
-            <Link
-              href="/add-business"
-              className="p-2 rounded-lg bg-orange-500 text-white text-xs font-bold"
-            >
-              + Add
-            </Link>
+          {/* Mobile Clean Sidebar Menu Toggle Only */}
+          <div className="flex items-center sm:hidden">
             <button
               id="mobile-hamburger-btn"
-              className="text-white p-2 rounded-xl hover:bg-slate-800 cursor-pointer"
-              aria-label={open ? 'Close menu' : 'Open menu'}
+              className="text-white p-2.5 rounded-xl hover:bg-slate-800 transition-colors cursor-pointer"
+              aria-label={open ? 'Close navigation sidebar' : 'Open navigation sidebar'}
               aria-expanded={open}
               aria-controls="mobile-nav-menu"
               onClick={() => setOpen(!open)}
             >
-              {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {open ? <X className="w-6.5 h-6.5" /> : <Menu className="w-6.5 h-6.5" />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Drawer / Sidebar Navigation */}
       {open && (
         <nav
           id="mobile-nav-menu"
@@ -145,15 +128,6 @@ export default function Navbar() {
           })}
           
           <div className="pt-3 border-t border-slate-800 flex flex-col gap-2">
-            <Link
-              href="/dashboard"
-              onClick={() => setOpen(false)}
-              className="text-sm font-semibold py-3 px-4 rounded-xl text-slate-300 hover:bg-slate-800 flex items-center gap-3"
-            >
-              <LayoutDashboard className="w-4 h-4 text-blue-400" />
-              <span>Owner & User Dashboard</span>
-            </Link>
-            
             <Link
               href="/post-job"
               onClick={() => setOpen(false)}

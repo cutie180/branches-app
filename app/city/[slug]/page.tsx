@@ -1,16 +1,22 @@
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
-import { MOCK_BUSINESSES, MOCK_JOBS, MOCK_PROFESSIONALS } from '@/lib/data'
+import { MOCK_JOBS, MOCK_PROFESSIONALS } from '@/lib/data'
+import { getAllBusinesses } from '@/lib/db-service'
 import Link from 'next/link'
-import { MapPin, ShieldCheck, Star, ArrowRight, ArrowLeft, Building2, Briefcase, Users } from 'lucide-react'
+import { MapPin, ShieldCheck, Star, ArrowRight, ArrowLeft, Building2, Briefcase } from 'lucide-react'
 import { Metadata } from 'next'
+
+export const revalidate = 86400 // 24-hour ISR revalidation
 
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const params = await props.params
   const cityName = params.slug.charAt(0).toUpperCase() + params.slug.slice(1)
   return {
-    title: `${cityName} Business Directory & Jobs | ListPak`,
-    description: `Explore top verified businesses, software houses, restaurants, hospitals, job openings, and professionals in ${cityName}, Pakistan.`
+    title: `${cityName} Business Directory & Jobs: ListPak`,
+    description: `Explore top verified businesses, software houses, restaurants, hospitals, job openings, and professionals in ${cityName}, Pakistan.`,
+    alternates: {
+      canonical: `https://listpak.com/city/${params.slug.toLowerCase()}`
+    }
   }
 }
 
@@ -18,16 +24,13 @@ export default async function CityDetailPage(props: { params: Promise<{ slug: st
   const params = await props.params
   const cityName = params.slug.charAt(0).toUpperCase() + params.slug.slice(1)
 
-  const cityBusinesses = MOCK_BUSINESSES.filter(
+  const allApproved = await getAllBusinesses(false)
+  const cityBusinesses = allApproved.filter(
     b => b.city.toLowerCase() === params.slug.toLowerCase()
   )
 
   const cityJobs = MOCK_JOBS.filter(
     j => j.city.toLowerCase() === params.slug.toLowerCase()
-  )
-
-  const cityPros = MOCK_PROFESSIONALS.filter(
-    p => p.city.toLowerCase() === params.slug.toLowerCase()
   )
 
   return (
@@ -59,7 +62,7 @@ export default async function CityDetailPage(props: { params: Promise<{ slug: st
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
               <Building2 className="w-5 h-5 text-blue-600" />
-              <span>Businesses in {cityName}</span>
+              <span>Businesses in {cityName} ({cityBusinesses.length})</span>
             </h2>
             <Link href={`/search?city=${encodeURIComponent(cityName)}`} className="text-xs font-bold text-blue-600 hover:underline">
               View All &rarr;
@@ -68,7 +71,7 @@ export default async function CityDetailPage(props: { params: Promise<{ slug: st
 
           {cityBusinesses.length === 0 ? (
             <div className="bg-white rounded-2xl p-8 text-center border border-slate-200">
-              <p className="text-slate-600 text-sm">No businesses listed in {cityName} yet.</p>
+              <p className="text-slate-600 text-sm">No businesses currently listed in {cityName}.</p>
               <Link href="/add-business" className="inline-block mt-3 px-4 py-2 bg-orange-500 text-white text-xs font-bold rounded-xl">
                 Add Your {cityName} Business Free
               </Link>
@@ -86,7 +89,7 @@ export default async function CityDetailPage(props: { params: Promise<{ slug: st
                       <span className="text-xs font-bold text-amber-600">★ {biz.rating}</span>
                     </div>
                     <p className="text-xs text-slate-500">{biz.category}</p>
-                    <p className="text-xs text-slate-600 line-clamp-2">{biz.description}</p>
+                    <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">{biz.description}</p>
                   </div>
                   <div className="pt-3 mt-3 border-t border-slate-100 flex justify-end">
                     <Link href={`/business/${biz.slug}`} className="text-xs font-bold text-blue-600 flex items-center gap-1">

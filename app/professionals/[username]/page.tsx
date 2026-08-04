@@ -6,7 +6,10 @@ import Footer from '@/components/footer'
 import { MOCK_PROFESSIONALS } from '@/lib/data'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Users, MapPin, ShieldCheck, Star, Mail, Phone, Award, CheckCircle2, ArrowLeft, Download, Send } from 'lucide-react'
+import { 
+  Users, MapPin, ShieldCheck, Star, Mail, Phone, Award, CheckCircle2, ArrowLeft, 
+  Globe, Linkedin, Github, Facebook, Twitter, Instagram, Youtube, MessageCircle, ExternalLink, Briefcase
+} from 'lucide-react'
 import { toast } from 'sonner'
 
 export default function ProfessionalDetailPage({ params }: { params: Promise<{ username: string }> }) {
@@ -31,6 +34,26 @@ export default function ProfessionalDetailPage({ params }: { params: Promise<{ u
     setShowContactModal(false)
     toast.success(`Message dispatched to ${pro.name}!`)
   }
+
+  // Social & Contact links configuration
+  const socialLinks = [
+    { label: 'LinkedIn', url: pro.linkedin, icon: Linkedin, color: 'text-blue-600 bg-blue-50 border-blue-200' },
+    { label: 'GitHub', url: pro.github, icon: Github, color: 'text-slate-900 bg-slate-100 border-slate-300' },
+    { label: 'Portfolio', url: pro.portfolio || pro.website, icon: Globe, color: 'text-purple-600 bg-purple-50 border-purple-200' },
+    { label: 'WhatsApp', url: pro.whatsapp ? `https://wa.me/${pro.whatsapp}` : undefined, icon: MessageCircle, color: 'text-emerald-600 bg-emerald-50 border-emerald-200' },
+    { label: 'Email', url: pro.email ? `mailto:${pro.email}` : undefined, icon: Mail, color: 'text-blue-600 bg-blue-50 border-blue-200' },
+    { label: 'Phone', url: pro.phone ? `tel:${pro.phone}` : undefined, icon: Phone, color: 'text-slate-800 bg-slate-100 border-slate-300' },
+    { label: 'Twitter / X', url: pro.twitter, icon: Twitter, color: 'text-sky-600 bg-sky-50 border-sky-200' },
+    { label: 'Instagram', url: pro.instagram, icon: Instagram, color: 'text-pink-600 bg-pink-50 border-pink-200' },
+    { label: 'Facebook', url: pro.facebook, icon: Facebook, color: 'text-blue-700 bg-blue-50 border-blue-200' },
+    { label: 'YouTube', url: pro.youtube, icon: Youtube, color: 'text-red-600 bg-red-50 border-red-200' },
+    { label: 'Upwork', url: pro.upwork, icon: Briefcase, color: 'text-emerald-700 bg-emerald-50 border-emerald-200' },
+    { label: 'Fiverr', url: pro.fiverr, icon: Briefcase, color: 'text-green-600 bg-green-50 border-green-200' },
+    { label: 'Behance', url: pro.behance, icon: Globe, color: 'text-blue-600 bg-blue-50 border-blue-200' },
+    { label: 'Dribbble', url: pro.dribbble, icon: Globe, color: 'text-pink-600 bg-pink-50 border-pink-200' },
+    { label: 'Medium', url: pro.medium, icon: Globe, color: 'text-slate-800 bg-slate-100 border-slate-300' },
+    { label: 'Stack Overflow', url: pro.stackoverflow, icon: Globe, color: 'text-orange-600 bg-orange-50 border-orange-200' },
+  ].filter(link => Boolean(link.url))
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
@@ -79,6 +102,28 @@ export default function ProfessionalDetailPage({ params }: { params: Promise<{ u
       {/* Main Body */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-8">
         
+        {/* Contact & Social Links Section */}
+        {socialLinks.length > 0 && (
+          <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+            <h2 className="text-lg font-extrabold text-slate-900">Direct Contact & Social Profiles</h2>
+            <div className="flex flex-wrap gap-3">
+              {socialLinks.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`px-4 py-2.5 rounded-xl border text-xs font-bold flex items-center gap-2 transition-all hover:scale-105 ${item.color}`}
+                >
+                  <item.icon className="w-4 h-4" />
+                  <span>{item.label}</span>
+                  <ExternalLink className="w-3 h-3 opacity-60" />
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Biography */}
         <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-3">
           <h2 className="text-lg font-extrabold text-slate-900">About & Background</h2>
@@ -169,7 +214,7 @@ export default function ProfessionalDetailPage({ params }: { params: Promise<{ u
                 <button
                   type="button"
                   onClick={() => setShowContactModal(false)}
-                  className="flex-1 py-2.5 bg-slate-100 text-slate-700 font-bold text-xs rounded-xl"
+                  className="flex-1 py-2.5 bg-slate-100 text-slate-700 font-bold text-xs rounded-xl hover:bg-slate-200"
                 >
                   Cancel
                 </button>

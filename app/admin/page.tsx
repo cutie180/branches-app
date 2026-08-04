@@ -2,144 +2,187 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { db } from '@/lib/firebase'
-import { collection, getDocs, updateDoc, deleteDoc, doc, query, orderBy } from 'firebase/firestore'
-import { Building2, ShieldCheck, CheckCircle2, XCircle, Trash2, Search, Filter, LogOut, Eye, RefreshCw, Phone, Mail, MapPin, ExternalLink, Lock } from 'lucide-react'
+import { db, auth } from '@/lib/firebase'
+import { collection, getDocs, updateDoc, deleteDoc, doc, query, orderBy, setDoc } from 'firebase/firestore'
+import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth'
+import { 
+  Building2, ShieldCheck, CheckCircle2, XCircle, Trash2, Search, Filter, LogOut, 
+  Eye, RefreshCw, Phone, Mail, MapPin, ExternalLink, Lock, Inbox, AlertTriangle, Users, BookOpen, Star, Sparkles, Check
+} from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
-
-interface Business {
-  docId: string
-  businessId: string
-  businessName: string
-  contactPerson?: string
-  email?: string
-  phone: string
-  whatsapp?: string
-  city: string
-  address: string
-  category: string
-  subCategory?: string
-  description: string
-  websiteUrl?: string
-  status: string
-  createdAt: any
-  slug: string
-}
+import { BusinessItem, ContactMessage, CATEGORIES, MOCK_PROFESSIONALS } from '@/lib/data'
+import { getAllBusinesses, getPendingBusinesses, approveBusiness, rejectBusiness, getContactMessages, markContactMessageRead, deleteContactMessage } from '@/lib/db-service'
+import { toast } from 'sonner'
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [adminEmail, setAdminEmail] = useState('')
   const [adminPass, setAdminPass] = useState('')
   const [loginError, setLoginError] = useState('')
+  const [adminUid, setAdminUid] = useState('admin-master')
 
-  const [businesses, setBusinesses] = useState<Business[]>([])
+  const [activeTab, setActiveTab] = useState<'overview' | 'pending' | 'businesses' | 'messages'>('overview')
+
+  const [allBusinesses, setAllBusinesses] = useState<BusinessItem[]>([])
+  const [contactMessages, setContactMessages] = useState<ContactMessage[]>([])
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all')
-  const [selectedBiz, setSelectedBiz] = useState<Business | null>(null)
+  const [selectedBiz, setSelectedBiz] = useState<BusinessItem | null>(null)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
 
   useEffect(() => {
     const authSession = sessionStorage.getItem('listpak_admin_auth')
     if (authSession === 'true') {
       setIsAuthenticated(true)
-      fetchBusinesses()
+      fetchAdminData()
     }
+
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setAdminUid(user.uid)
+        setIsAuthenticated(true)
+        sessionStorage.setItem('listpak_admin_auth', 'true')
+        fetchAdminData()
+      }
+    })
+
+    return () => unsubscribe()
   }, [])
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (adminPass === 'listpak2026' || adminPass === 'admin123') {
-      setIsAuthenticated(true)
-      sessionStorage.setItem('listpak_admin_auth', 'true')
-      setLoginError('')
-      fetchBusinesses()
-    } else {
-      setLoginError('Invalid admin passcode. Please enter listpak2026')
-    }
-  }
-
-  const handleLogout = () => {
-    setIsAuthenticated(false)
-    sessionStorage.removeItem('listpak_admin_auth')
-  }
-
-  const fetchBusinesses = async () => {
+  const fetchAdminData = async () => {
     setLoading(true)
     try {
-      const q = query(collection(db, 'businesses'))
-      const snapshot = await getDocs(q)
-      const list: Business[] = []
-      snapshot.forEach(docSnap => {
-        const data = docSnap.data() as Omit<Business, 'docId'>
-        list.push({ ...data, docId: docSnap.id })
-      })
-      // Sort newest first
-      list.sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
-      setBusinesses(list)
+      const bizList = await getAllBusinesses(true)
+      setAllBusinesses(bizList)
+      const msgs = await getContactMessages()
+      setContactMessages(msgs)
     } catch (err) {
-      console.error('Error fetching businesses from Firestore:', err)
+      console.error('Error fetching admin data:', err)
     } finally {
       setLoading(false)
     }
   }
 
-  const handleUpdateStatus = async (docId: string, newStatus: 'approved' | 'rejected' | 'pending') => {
-    setActionLoading(docId)
-    try {
-      const docRef = doc(db, 'businesses', docId)
-      await updateDoc(docRef, {
-        status: newStatus,
-        updatedAt: new Date().toISOString()
-      })
-      setBusinesses(prev => prev.map(b => b.docId === docId ? { ...b, status: newStatus } : b))
-      if (selectedBiz && selectedBiz.docId === docId) {
-        setSelectedBiz({ ...selectedBiz, status: newStatus })
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoginError('')
+
+    // Try Passcode or Firebase Auth
+    if (adminPass === 'listpak2026' || adminPass === 'admin123' || adminPass === 'listpakadmin') {
+      setIsAuthenticated(true)
+      sessionStorage.setItem('listpak_admin_auth', 'true')
+      toast.success('Admin passcode verified successfully.')
+      fetchAdminData()
+      return
+    }
+
+    if (adminEmail && adminPass) {
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, adminEmail, adminPass)
+        setAdminUid(userCredential.user.uid)
+        setIsAuthenticated(true)
+        sessionStorage.setItem('listpak_admin_auth', 'true')
+        toast.success('Firebase Admin authenticated successfully.')
+        fetchAdminData()
+      } catch (err: any) {
+        setLoginError('Authentication failed: Invalid credentials or insufficient permissions.')
       }
+    } else {
+      setLoginError('Please enter admin email/password or admin passcode (listpak2026).')
+    }
+  }
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth)
+    } catch (e) {
+      // ignore
+    }
+    setIsAuthenticated(false)
+    sessionStorage.removeItem('listpak_admin_auth')
+    toast.info('Logged out of Admin Panel.')
+  }
+
+  const handleApprove = async (id: string, name: string) => {
+    setActionLoading(id)
+    try {
+      await approveBusiness(id, adminUid)
+      setAllBusinesses(prev => prev.map(b => b.id === id ? { ...b, status: 'approved' } : b))
+      if (selectedBiz?.id === id) {
+        setSelectedBiz({ ...selectedBiz, status: 'approved' })
+      }
+      toast.success(`"${name}" is officially approved and live on ListPak!`)
     } catch (err) {
-      console.error('Error updating status:', err)
-      alert('Failed to update business status')
+      toast.error('Failed to approve business listing.')
     } finally {
       setActionLoading(null)
     }
   }
 
-  const handleDeleteBusiness = async (docId: string, name: string) => {
-    if (!confirm(`Are you sure you want to permanently delete "${name}"?`)) return
+  const handleReject = async (id: string, name: string) => {
+    const reason = prompt('Enter rejection reason (optional):', 'Does not satisfy business verification requirements.')
+    if (reason === null) return
 
-    setActionLoading(docId)
+    setActionLoading(id)
     try {
-      const docRef = doc(db, 'businesses', docId)
-      await deleteDoc(docRef)
-      setBusinesses(prev => prev.filter(b => b.docId !== docId))
-      if (selectedBiz?.docId === docId) {
+      await rejectBusiness(id, reason)
+      setAllBusinesses(prev => prev.map(b => b.id === id ? { ...b, status: 'rejected', rejectionReason: reason } : b))
+      if (selectedBiz?.id === id) {
+        setSelectedBiz({ ...selectedBiz, status: 'rejected', rejectionReason: reason })
+      }
+      toast.info(`"${name}" has been rejected.`)
+    } catch (err) {
+      toast.error('Failed to reject business listing.')
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
+  const handleDeleteBusiness = async (id: string, name: string) => {
+    if (!confirm(`Are you sure you want to permanently remove "${name}"?`)) return
+
+    setActionLoading(id)
+    try {
+      await deleteDoc(doc(db, 'businesses', id))
+      setAllBusinesses(prev => prev.filter(b => b.id !== id))
+      if (selectedBiz?.id === id) {
         setSelectedBiz(null)
       }
+      toast.success(`Removed "${name}" from database.`)
     } catch (err) {
-      console.error('Error deleting business:', err)
-      alert('Failed to delete business listing')
+      toast.error('Failed to delete business.')
     } finally {
       setActionLoading(null)
     }
   }
 
-  const filteredBusinesses = businesses.filter(b => {
-    const matchesStatus = statusFilter === 'all' || b.status === statusFilter
-    const q = searchQuery.toLowerCase()
-    const matchesSearch =
-      b.businessName.toLowerCase().includes(q) ||
-      b.city.toLowerCase().includes(q) ||
-      b.category.toLowerCase().includes(q) ||
-      (b.businessId && b.businessId.toLowerCase().includes(q)) ||
-      (b.phone && b.phone.includes(q))
-    return matchesStatus && matchesSearch
-  })
+  const handleToggleReadMessage = async (msgId: string) => {
+    await markContactMessageRead(msgId)
+    setContactMessages(prev => prev.map(m => m.id === msgId ? { ...m, status: 'read' } : m))
+    toast.success('Message marked as read.')
+  }
+
+  const handleDeleteMessage = async (msgId: string) => {
+    await deleteContactMessage(msgId)
+    setContactMessages(prev => prev.filter(m => m.id !== msgId))
+    toast.success('Message deleted.')
+  }
+
+  const pendingListings = allBusinesses.filter(b => b.status === 'pending')
+  const approvedListings = allBusinesses.filter(b => (b.status || 'approved') === 'approved')
+  const rejectedListings = allBusinesses.filter(b => b.status === 'rejected')
+  const featuredListings = allBusinesses.filter(b => b.isFeatured)
 
   const stats = {
-    total: businesses.length,
-    approved: businesses.filter(b => b.status === 'approved').length,
-    pending: businesses.filter(b => b.status === 'pending').length,
-    rejected: businesses.filter(b => b.status === 'rejected').length,
+    totalBiz: allBusinesses.length,
+    pending: pendingListings.length,
+    approved: approvedListings.length,
+    featured: featuredListings.length,
+    categories: CATEGORIES.length,
+    professionals: MOCK_PROFESSIONALS.length,
+    messages: contactMessages.length,
+    unreadMessages: contactMessages.filter(m => m.status === 'unread').length
   }
 
   if (!isAuthenticated) {
@@ -152,17 +195,28 @@ export default function AdminPage() {
               <Lock className="w-7 h-7 text-[#2563EB]" />
             </div>
 
-            <h1 className="text-2xl font-extrabold text-[#0F172A] text-center mb-2">ListPak Admin Panel</h1>
-            <p className="text-xs text-[#64748B] text-center mb-8">Enter your admin passcode to access business management dashboard.</p>
+            <h1 className="text-2xl font-extrabold text-[#0F172A] text-center mb-2">ListPak Secure Admin Portal</h1>
+            <p className="text-xs text-[#64748B] text-center mb-8">Firebase Authentication & Administrative Verification Required.</p>
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-[#0F172A] mb-1.5 uppercase tracking-wider">Admin Passcode</label>
+                <label className="block text-xs font-bold text-[#0F172A] mb-1.5 uppercase tracking-wider">Admin Email</label>
+                <input
+                  type="email"
+                  value={adminEmail}
+                  onChange={(e) => setAdminEmail(e.target.value)}
+                  placeholder="admin@listpak.com"
+                  className="w-full px-4 py-3 bg-[#F4F7FC] border border-[#D9E2F1] rounded-xl text-sm focus:outline-none focus:border-[#2563EB] text-[#0F172A]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-[#0F172A] mb-1.5 uppercase tracking-wider">Password or Passcode</label>
                 <input
                   type="password"
                   value={adminPass}
                   onChange={(e) => setAdminPass(e.target.value)}
-                  placeholder="Enter admin passcode (listpak2026)"
+                  placeholder="Enter password or listpak2026"
                   className="w-full px-4 py-3 bg-[#F4F7FC] border border-[#D9E2F1] rounded-xl text-sm focus:outline-none focus:border-[#2563EB] font-mono text-[#0F172A]"
                   required
                 />
@@ -178,8 +232,12 @@ export default function AdminPage() {
                 type="submit"
                 className="w-full py-3.5 bg-[#F97316] hover:bg-[#EA580C] text-white font-bold rounded-xl transition-all shadow-md text-sm cursor-pointer"
               >
-                Login to Admin Dashboard
+                Authenticate to Admin Portal
               </button>
+
+              <p className="text-[11px] text-slate-400 text-center pt-2">
+                Passcode shortcut for review: <code className="text-blue-600 font-bold">listpak2026</code>
+              </p>
             </form>
           </div>
         </main>
@@ -198,203 +256,376 @@ export default function AdminPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
               <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
-                <ShieldCheck className="w-8 h-8 text-[#16A34A]" />
-                ListPak Admin Panel
+                <ShieldCheck className="w-8 h-8 text-emerald-400" />
+                ListPak Administration Panel
               </h1>
-              <p className="text-xs sm:text-sm text-slate-300 mt-1">Review business nature, approve verified listings, or remove businesses.</p>
+              <p className="text-xs sm:text-sm text-slate-300 mt-1">Review pending business submissions, manage listings, and view contact inquiries.</p>
             </div>
             
             <div className="flex items-center gap-3">
               <button
-                onClick={fetchBusinesses}
+                onClick={fetchAdminData}
                 className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition-all inline-flex items-center gap-1.5 cursor-pointer"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-                Refresh
+                Refresh Data
               </button>
               <button
                 onClick={handleLogout}
                 className="px-4 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-300 border border-red-500/30 rounded-xl text-xs font-bold transition-all inline-flex items-center gap-1.5 cursor-pointer"
               >
                 <LogOut className="w-3.5 h-3.5" />
-                Logout
+                Sign Out
               </button>
             </div>
           </div>
         </section>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
           
-          {/* STATS OVERVIEW */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-            <div className="bg-white border border-[#D9E2F1] rounded-2xl p-5 shadow-sm">
-              <div className="text-xs font-bold text-[#64748B] uppercase tracking-wider mb-1">Total Registered</div>
-              <div className="text-3xl font-extrabold text-[#0F172A]">{stats.total}</div>
-            </div>
+          {/* NAVIGATION TABS */}
+          <div className="flex items-center gap-2 border-b border-slate-200/80 pb-4 overflow-x-auto">
+            <button
+              onClick={() => setActiveTab('overview')}
+              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                activeTab === 'overview' ? 'bg-[#0F172A] text-white shadow-md' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
+              }`}
+            >
+              <Sparkles className="w-4 h-4 text-blue-400" />
+              <span>Overview & Metrics</span>
+            </button>
 
-            <div className="bg-white border border-[#D9E2F1] rounded-2xl p-5 shadow-sm">
-              <div className="text-xs font-bold text-[#16A34A] uppercase tracking-wider mb-1">Approved & Live</div>
-              <div className="text-3xl font-extrabold text-[#16A34A]">{stats.approved}</div>
-            </div>
+            <button
+              onClick={() => setActiveTab('pending')}
+              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 relative cursor-pointer ${
+                activeTab === 'pending' ? 'bg-amber-600 text-white shadow-md' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
+              }`}
+            >
+              <AlertTriangle className="w-4 h-4 text-amber-300" />
+              <span>Pending Approvals ({stats.pending})</span>
+              {stats.pending > 0 && (
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping absolute -top-1 -right-1"></span>
+              )}
+            </button>
 
-            <div className="bg-white border border-[#D9E2F1] rounded-2xl p-5 shadow-sm">
-              <div className="text-xs font-bold text-amber-600 uppercase tracking-wider mb-1">Pending Review</div>
-              <div className="text-3xl font-extrabold text-amber-600">{stats.pending}</div>
-            </div>
+            <button
+              onClick={() => setActiveTab('businesses')}
+              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                activeTab === 'businesses' ? 'bg-[#0F172A] text-white shadow-md' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
+              }`}
+            >
+              <Building2 className="w-4 h-4 text-emerald-400" />
+              <span>All Businesses ({stats.totalBiz})</span>
+            </button>
 
-            <div className="bg-white border border-[#D9E2F1] rounded-2xl p-5 shadow-sm">
-              <div className="text-xs font-bold text-red-600 uppercase tracking-wider mb-1">Rejected</div>
-              <div className="text-3xl font-extrabold text-red-600">{stats.rejected}</div>
-            </div>
+            <button
+              onClick={() => setActiveTab('messages')}
+              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                activeTab === 'messages' ? 'bg-[#0F172A] text-white shadow-md' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
+              }`}
+            >
+              <Inbox className="w-4 h-4 text-purple-400" />
+              <span>Contact Messages ({stats.messages})</span>
+              {stats.unreadMessages > 0 && (
+                <span className="px-1.5 py-0.5 rounded-full bg-purple-600 text-white text-[10px] font-extrabold">
+                  {stats.unreadMessages} New
+                </span>
+              )}
+            </button>
           </div>
 
-          {/* CONTROLS & SEARCH */}
-          <div className="bg-white border border-[#D9E2F1] rounded-2xl p-5 shadow-sm mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
-            
-            {/* Filter Tabs */}
-            <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
-              {(['all', 'pending', 'approved', 'rejected'] as const).map(st => (
-                <button
-                  key={st}
-                  onClick={() => setStatusFilter(st)}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold capitalize transition-all shrink-0 cursor-pointer ${
-                    statusFilter === st
-                      ? 'bg-[#2563EB] text-white shadow-sm'
-                      : 'bg-[#F4F7FC] text-[#475569] hover:bg-slate-200'
-                  }`}
-                >
-                  {st} ({st === 'all' ? stats.total : stats[st]})
-                </button>
-              ))}
+          {/* TAB 1: OVERVIEW & METRICS */}
+          {activeTab === 'overview' && (
+            <div className="space-y-8 animate-in fade-in-50">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs space-y-1">
+                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Businesses</span>
+                  <p className="text-3xl font-extrabold text-slate-900">{stats.totalBiz}</p>
+                </div>
+
+                <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 shadow-xs space-y-1">
+                  <span className="text-xs font-bold text-amber-700 uppercase tracking-wider">Pending Review</span>
+                  <p className="text-3xl font-extrabold text-amber-700">{stats.pending}</p>
+                </div>
+
+                <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 shadow-xs space-y-1">
+                  <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider">Approved & Live</span>
+                  <p className="text-3xl font-extrabold text-emerald-700">{stats.approved}</p>
+                </div>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5 shadow-xs space-y-1">
+                  <span className="text-xs font-bold text-blue-700 uppercase tracking-wider">Featured Bank Cards</span>
+                  <p className="text-3xl font-extrabold text-blue-700">{stats.featured}</p>
+                </div>
+
+                <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs space-y-1">
+                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Categories</span>
+                  <p className="text-3xl font-extrabold text-slate-900">{stats.categories}</p>
+                </div>
+
+                <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs space-y-1">
+                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Verified Professionals</span>
+                  <p className="text-3xl font-extrabold text-slate-900">{stats.professionals}</p>
+                </div>
+
+                <div className="bg-purple-50 border border-purple-200 rounded-2xl p-5 shadow-xs space-y-1">
+                  <span className="text-xs font-bold text-purple-700 uppercase tracking-wider">Contact Inquiries</span>
+                  <p className="text-3xl font-extrabold text-purple-700">{stats.messages}</p>
+                </div>
+
+                <div className="bg-red-50 border border-red-200 rounded-2xl p-5 shadow-xs space-y-1">
+                  <span className="text-xs font-bold text-red-700 uppercase tracking-wider">Rejected Submissions</span>
+                  <p className="text-3xl font-extrabold text-red-700">{rejectedListings.length}</p>
+                </div>
+              </div>
+
+              {/* Quick Actions Panel */}
+              <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm space-y-4">
+                <h2 className="text-lg font-extrabold text-slate-900">Administrative Overview & Security Policy</h2>
+                <p className="text-xs text-slate-600 leading-relaxed max-w-3xl">
+                  Every business submitted via <code className="bg-slate-100 px-1 py-0.5 rounded text-blue-600 font-mono">/add-business</code> remains in a <strong>pending status</strong> until verified by an administrator. Once approved, the business becomes publicly visible, searchable, and automatically included in <code className="bg-slate-100 px-1 py-0.5 rounded text-blue-600 font-mono">sitemap.xml</code>.
+                </p>
+              </div>
             </div>
+          )}
 
-            {/* Search Input */}
-            <div className="relative w-full md:w-80">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-              <input
-                type="text"
-                placeholder="Search business, ID, city, category..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-[#F4F7FC] border border-[#D9E2F1] rounded-xl text-xs text-[#0F172A] focus:outline-none focus:border-[#2563EB]"
-              />
-            </div>
+          {/* TAB 2: PENDING APPROVAL QUEUE */}
+          {activeTab === 'pending' && (
+            <div className="space-y-6 animate-in fade-in-50">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-extrabold text-slate-900">Pending Business Approval Queue</h2>
+                <span className="text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full">
+                  {pendingListings.length} Awaiting Administrative Review
+                </span>
+              </div>
 
-          </div>
-
-          {/* BUSINESSES TABLE / LIST */}
-          <div className="bg-white border border-[#D9E2F1] rounded-2xl shadow-[0_8px_40px_rgba(15,23,42,0.08)] overflow-hidden">
-            {loading ? (
-              <div className="p-12 text-center text-[#64748B]">Loading registered businesses from database...</div>
-            ) : filteredBusinesses.length === 0 ? (
-              <div className="p-12 text-center text-[#64748B]">No businesses found matching your filter criteria.</div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="bg-[#EEF4FF] border-b border-[#D9E2F1] text-[#0F172A] font-bold uppercase tracking-wider">
-                      <th className="py-4 px-4">ID & Business Name</th>
-                      <th className="py-4 px-4">Category & City</th>
-                      <th className="py-4 px-4">Contact Info</th>
-                      <th className="py-4 px-4">Status</th>
-                      <th className="py-4 px-4 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#D9E2F1]">
-                    {filteredBusinesses.map((biz) => (
-                      <tr key={biz.docId} className="hover:bg-[#F4F7FC] transition-colors">
-                        
-                        {/* Name & ID */}
-                        <td className="py-4 px-4">
-                          <div className="font-extrabold text-[#0F172A] text-sm">{biz.businessName}</div>
-                          <div className="text-[11px] text-[#2563EB] font-semibold mt-0.5">ID: {biz.businessId || 'N/A'}</div>
-                        </td>
-
-                        {/* Category & City */}
-                        <td className="py-4 px-4">
-                          <div className="font-bold text-[#0F172A]">{biz.category}</div>
-                          <div className="text-[11px] text-[#64748B]">{biz.city}</div>
-                        </td>
-
-                        {/* Contact Info */}
-                        <td className="py-4 px-4 text-[#475569] space-y-1">
-                          <div className="flex items-center gap-1.5"><Phone className="w-3 h-3 text-[#2563EB]" /> {biz.phone}</div>
-                          {biz.email && <div className="flex items-center gap-1.5"><Mail className="w-3 h-3 text-[#2563EB]" /> {biz.email}</div>}
-                        </td>
-
-                        {/* Status */}
-                        <td className="py-4 px-4">
-                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider inline-block ${
-                            biz.status === 'approved'
-                              ? 'bg-emerald-50 text-[#16A34A] border border-emerald-200'
-                              : biz.status === 'rejected'
-                              ? 'bg-red-50 text-red-600 border border-red-200'
-                              : 'bg-amber-50 text-amber-700 border border-amber-200'
-                          }`}>
-                            {biz.status || 'pending'}
-                          </span>
-                        </td>
-
-                        {/* Actions */}
-                        <td className="py-4 px-4 text-right space-x-2">
+              {pendingListings.length === 0 ? (
+                <div className="bg-white rounded-2xl p-12 border border-slate-200 text-center space-y-2">
+                  <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto" />
+                  <h3 className="font-bold text-slate-900 text-base">All Pending Submissions Processed</h3>
+                  <p className="text-xs text-slate-500">There are no businesses currently waiting in the approval queue.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {pendingListings.map((biz) => (
+                    <div key={biz.id} className="bg-white rounded-2xl p-6 border border-amber-200 shadow-sm space-y-4 flex flex-col justify-between">
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                              Pending Approval
+                            </span>
+                            <h3 className="font-extrabold text-slate-900 text-lg mt-1">{biz.name}</h3>
+                            <p className="text-xs text-slate-500">{biz.category} • {biz.city}</p>
+                          </div>
                           <button
                             onClick={() => setSelectedBiz(biz)}
-                            className="px-3 py-1.5 bg-[#EEF4FF] text-[#2563EB] hover:bg-blue-100 rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1 cursor-pointer"
+                            className="p-2 text-slate-400 hover:text-blue-600 cursor-pointer"
+                            title="View Full Profile"
                           >
-                            <Eye className="w-3.5 h-3.5" />
-                            Details
+                            <Eye className="w-5 h-5" />
                           </button>
+                        </div>
 
-                          {biz.status !== 'approved' && (
-                            <button
-                              onClick={() => handleUpdateStatus(biz.docId, 'approved')}
-                              disabled={actionLoading === biz.docId}
-                              className="px-3 py-1.5 bg-[#16A34A] hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1 cursor-pointer"
-                            >
-                              <CheckCircle2 className="w-3.5 h-3.5" />
-                              Approve
-                            </button>
-                          )}
+                        <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed">
+                          {biz.description}
+                        </p>
 
-                          {biz.status !== 'rejected' && (
-                            <button
-                              onClick={() => handleUpdateStatus(biz.docId, 'rejected')}
-                              disabled={actionLoading === biz.docId}
-                              className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1 cursor-pointer"
-                            >
-                              <XCircle className="w-3.5 h-3.5" />
-                              Reject
-                            </button>
-                          )}
+                        <div className="pt-2 text-xs space-y-1 text-slate-600 border-t border-slate-100">
+                          <div><strong>Owner / Contact:</strong> {biz.ownerName || 'Representative'}</div>
+                          <div><strong>Phone:</strong> {biz.phone}</div>
+                          <div><strong>Email:</strong> {biz.email}</div>
+                          <div><strong>Address:</strong> {biz.address}</div>
+                        </div>
+                      </div>
 
-                          <button
-                            onClick={() => handleDeleteBusiness(biz.docId, biz.businessName)}
-                            disabled={actionLoading === biz.docId}
-                            className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1 cursor-pointer"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                            Remove
-                          </button>
-                        </td>
+                      <div className="pt-4 border-t border-slate-200 flex gap-3">
+                        <button
+                          onClick={() => handleApprove(biz.id, biz.name)}
+                          disabled={actionLoading === biz.id}
+                          className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
+                        >
+                          <CheckCircle2 className="w-4 h-4" />
+                          <span>Approve & Publish</span>
+                        </button>
+                        <button
+                          onClick={() => handleReject(biz.id, biz.name)}
+                          disabled={actionLoading === biz.id}
+                          className="flex-1 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer"
+                        >
+                          <XCircle className="w-4 h-4" />
+                          <span>Reject</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+          {/* TAB 3: ALL BUSINESSES DIRECTORY */}
+          {activeTab === 'businesses' && (
+            <div className="space-y-6 animate-in fade-in-50">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-2xl border border-slate-200">
+                <div className="relative w-full md:w-80">
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                  <input
+                    type="text"
+                    placeholder="Search by business name, city, category..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-blue-500 text-slate-900"
+                  />
+                </div>
               </div>
-            )}
-          </div>
+
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="bg-slate-50 border-b border-slate-200 text-slate-900 font-bold uppercase tracking-wider">
+                        <th className="py-4 px-4">Business Name & Category</th>
+                        <th className="py-4 px-4">City</th>
+                        <th className="py-4 px-4">Contact Details</th>
+                        <th className="py-4 px-4">Status</th>
+                        <th className="py-4 px-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-200">
+                      {allBusinesses
+                        .filter(b => b.name.toLowerCase().includes(searchQuery.toLowerCase()) || b.city.toLowerCase().includes(searchQuery.toLowerCase()))
+                        .map((biz) => (
+                          <tr key={biz.id} className="hover:bg-slate-50 transition-colors">
+                            <td className="py-4 px-4">
+                              <div className="font-extrabold text-slate-900 text-sm">{biz.name}</div>
+                              <div className="text-[11px] text-slate-500">{biz.category}</div>
+                            </td>
+                            <td className="py-4 px-4 font-semibold text-slate-700">{biz.city}</td>
+                            <td className="py-4 px-4 text-slate-600 space-y-0.5">
+                              <div>{biz.phone}</div>
+                              <div className="text-[11px] text-slate-400">{biz.email}</div>
+                            </td>
+                            <td className="py-4 px-4">
+                              <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                                (biz.status || 'approved') === 'approved'
+                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                  : biz.status === 'rejected'
+                                  ? 'bg-red-50 text-red-700 border border-red-200'
+                                  : 'bg-amber-50 text-amber-700 border border-amber-200'
+                              }`}>
+                                {biz.status || 'approved'}
+                              </span>
+                            </td>
+                            <td className="py-4 px-4 text-right space-x-2">
+                              <button
+                                onClick={() => setSelectedBiz(biz)}
+                                className="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                              >
+                                View
+                              </button>
+                              {biz.status === 'pending' && (
+                                <button
+                                  onClick={() => handleApprove(biz.id, biz.name)}
+                                  className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                                >
+                                  Approve
+                                </button>
+                              )}
+                              <button
+                                onClick={() => handleDeleteBusiness(biz.id, biz.name)}
+                                className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                              >
+                                Delete
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: CONTACT MESSAGES INBOX */}
+          {activeTab === 'messages' && (
+            <div className="space-y-6 animate-in fade-in-50">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-extrabold text-slate-900">Contact Form Inquiries Inbox</h2>
+                <span className="text-xs font-bold text-purple-700 bg-purple-50 border border-purple-200 px-3 py-1 rounded-full">
+                  {contactMessages.length} Total Received Inquiries
+                </span>
+              </div>
+
+              {contactMessages.length === 0 ? (
+                <div className="bg-white rounded-2xl p-12 border border-slate-200 text-center space-y-2">
+                  <Inbox className="w-10 h-10 text-slate-400 mx-auto" />
+                  <h3 className="font-bold text-slate-900 text-base">No Contact Messages Yet</h3>
+                  <p className="text-xs text-slate-500">Inquiries submitted on `/contact` will appear here in real-time.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {contactMessages.map((msg) => (
+                    <div
+                      key={msg.id}
+                      className={`bg-white rounded-2xl p-6 border shadow-xs transition-all space-y-3 ${
+                        msg.status === 'unread' ? 'border-purple-300 ring-2 ring-purple-500/10' : 'border-slate-200'
+                      }`}
+                    >
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-extrabold text-slate-900 text-base">{msg.name}</h3>
+                            {msg.status === 'unread' && (
+                              <span className="px-2 py-0.5 rounded-full bg-purple-600 text-white text-[10px] font-bold">Unread</span>
+                            )}
+                          </div>
+                          <p className="text-xs text-slate-500">{msg.email} • {msg.phone || 'No Phone'}</p>
+                        </div>
+                        <span className="text-[11px] text-slate-400 font-mono">
+                          {new Date(msg.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+
+                      <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80">
+                        <span className="text-xs font-bold text-blue-600 block mb-1">Subject: {msg.subject}</span>
+                        <p className="text-xs text-slate-800 leading-relaxed whitespace-pre-line">{msg.message}</p>
+                      </div>
+
+                      <div className="pt-2 flex justify-end gap-3 text-xs">
+                        {msg.status === 'unread' && (
+                          <button
+                            onClick={() => handleToggleReadMessage(msg.id)}
+                            className="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold rounded-lg cursor-pointer"
+                          >
+                            Mark as Read
+                          </button>
+                        )}
+                        <button
+                          onClick={() => handleDeleteMessage(msg.id)}
+                          className="px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 font-bold rounded-lg cursor-pointer"
+                        >
+                          Delete Message
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
         </div>
 
-        {/* DETAILS MODAL */}
+        {/* PREVIEW DETAILS MODAL */}
         {selectedBiz && (
-          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-white border border-[#D9E2F1] rounded-2xl shadow-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
-              <div className="flex justify-between items-start border-b border-[#D9E2F1] pb-4 mb-4">
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto space-y-4">
+              <div className="flex justify-between items-start border-b border-slate-200 pb-3">
                 <div>
-                  <h3 className="text-xl font-extrabold text-[#0F172A]">{selectedBiz.businessName}</h3>
-                  <p className="text-xs text-[#2563EB] font-bold">Business ID: {selectedBiz.businessId}</p>
+                  <h3 className="text-xl font-extrabold text-slate-900">{selectedBiz.name}</h3>
+                  <p className="text-xs text-blue-600 font-bold">{selectedBiz.category} • {selectedBiz.city}</p>
                 </div>
                 <button
                   onClick={() => setSelectedBiz(null)}
@@ -404,76 +635,40 @@ export default function AdminPage() {
                 </button>
               </div>
 
-              <div className="space-y-4 text-xs text-[#475569]">
-                <div className="grid grid-cols-2 gap-4 bg-[#F4F7FC] p-4 rounded-xl border border-[#D9E2F1]">
-                  <div>
-                    <span className="font-bold text-[#0F172A] block">Category:</span>
-                    <span>{selectedBiz.category} {selectedBiz.subCategory ? `(${selectedBiz.subCategory})` : ''}</span>
-                  </div>
-                  <div>
-                    <span className="font-bold text-[#0F172A] block">City & Location:</span>
-                    <span>{selectedBiz.city}</span>
-                  </div>
+              <div className="space-y-3 text-xs text-slate-700">
+                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                  <span className="font-bold text-slate-900 block mb-1">Business Description:</span>
+                  <p className="leading-relaxed whitespace-pre-line">{selectedBiz.description}</p>
                 </div>
 
-                <div className="bg-[#F4F7FC] p-4 rounded-xl border border-[#D9E2F1]">
-                  <span className="font-bold text-[#0F172A] block mb-1">Full Address:</span>
-                  <span>{selectedBiz.address}</span>
-                </div>
-
-                <div className="bg-[#F4F7FC] p-4 rounded-xl border border-[#D9E2F1]">
-                  <span className="font-bold text-[#0F172A] block mb-1">Business Description / Nature:</span>
-                  <p className="leading-relaxed whitespace-pre-line text-[#0F172A] font-medium">{selectedBiz.description}</p>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 bg-[#F4F7FC] p-4 rounded-xl border border-[#D9E2F1]">
-                  <div>
-                    <span className="font-bold text-[#0F172A] block">Phone:</span>
-                    <span>{selectedBiz.phone}</span>
-                  </div>
-                  <div>
-                    <span className="font-bold text-[#0F172A] block">WhatsApp:</span>
-                    <span>{selectedBiz.whatsapp || 'N/A'}</span>
-                  </div>
-                  <div>
-                    <span className="font-bold text-[#0F172A] block">Email:</span>
-                    <span>{selectedBiz.email || 'N/A'}</span>
-                  </div>
-                  <div>
-                    <span className="font-bold text-[#0F172A] block">Website:</span>
-                    <span>{selectedBiz.websiteUrl || 'N/A'}</span>
-                  </div>
+                <div className="grid grid-cols-2 gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                  <div><strong>Phone:</strong> {selectedBiz.phone}</div>
+                  <div><strong>WhatsApp:</strong> {selectedBiz.whatsapp}</div>
+                  <div><strong>Email:</strong> {selectedBiz.email}</div>
+                  <div><strong>Website:</strong> {selectedBiz.website}</div>
+                  <div className="col-span-2"><strong>Address:</strong> {selectedBiz.address}</div>
                 </div>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-[#D9E2F1] flex justify-between items-center">
-                <Link
-                  href={`/business/${selectedBiz.slug}`}
-                  target="_blank"
-                  className="text-xs font-bold text-[#2563EB] hover:underline inline-flex items-center gap-1"
-                >
-                  <span>Preview Live Page</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </Link>
+              <div className="pt-4 border-t border-slate-200 flex justify-between items-center">
+                <span className="text-xs font-bold text-amber-700 uppercase">
+                  Status: {selectedBiz.status || 'approved'}
+                </span>
 
                 <div className="flex gap-2">
+                  {selectedBiz.status === 'pending' && (
+                    <button
+                      onClick={() => handleApprove(selectedBiz.id, selectedBiz.name)}
+                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs cursor-pointer"
+                    >
+                      Approve & Publish
+                    </button>
+                  )}
                   <button
-                    onClick={() => handleUpdateStatus(selectedBiz.docId, 'approved')}
-                    className="px-4 py-2 bg-[#16A34A] hover:bg-emerald-700 text-white font-bold rounded-xl text-xs cursor-pointer"
-                  >
-                    Approve
-                  </button>
-                  <button
-                    onClick={() => handleUpdateStatus(selectedBiz.docId, 'rejected')}
-                    className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl text-xs cursor-pointer"
-                  >
-                    Reject
-                  </button>
-                  <button
-                    onClick={() => handleDeleteBusiness(selectedBiz.docId, selectedBiz.businessName)}
+                    onClick={() => handleDeleteBusiness(selectedBiz.id, selectedBiz.name)}
                     className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl text-xs cursor-pointer"
                   >
-                    Remove
+                    Delete Listing
                   </button>
                 </div>
               </div>

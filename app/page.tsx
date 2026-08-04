@@ -3,17 +3,18 @@ import Footer from '@/components/footer'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { Search, MapPin, Building2, Briefcase, Users, ShieldCheck, Star, ArrowRight, Sparkles, TrendingUp, CheckCircle2, Award, ChevronRight } from 'lucide-react'
-import { CATEGORIES, TOP_CITIES, MOCK_BUSINESSES, MOCK_JOBS, MOCK_PROFESSIONALS } from '@/lib/data'
+import { CATEGORIES, TOP_CITIES, MOCK_JOBS } from '@/lib/data'
+import { getAllBusinesses } from '@/lib/db-service'
 
 export const metadata: Metadata = {
-  title: "ListPak — Pakistan's #1 Digital Business & Enterprise Ecosystem",
+  title: "ListPak: Pakistan Digital Business and Enterprise Ecosystem",
   description: "Explore verified businesses, post jobs, find employees, and connect with top Pakistani professionals across Karachi, Lahore, Islamabad, and nationwide.",
   alternates: {
     canonical: 'https://listpak.com/',
   },
   openGraph: {
-    title: "ListPak — Pakistan's Digital Business Ecosystem",
-    description: "Discover verified companies, local services, active hiring jobs, and talent in Pakistan. 100% verified directory.",
+    title: "ListPak: Pakistan Digital Business Ecosystem",
+    description: "Discover verified companies, local services, active hiring jobs, and talent in Pakistan. 100 percent verified directory.",
     url: 'https://listpak.com/',
     siteName: 'ListPak',
     locale: 'en_PK',
@@ -24,11 +25,11 @@ export const metadata: Metadata = {
 const FAQS = [
   {
     question: 'What is ListPak Ecosystem?',
-    answer: 'ListPak is Pakistan\'s largest enterprise digital platform connecting verified local businesses, employers, job seekers, and professionals across all 150+ cities nationwide.'
+    answer: 'ListPak is Pakistan largest enterprise digital platform connecting verified local businesses, employers, job seekers, and professionals across all 150+ cities nationwide.'
   },
   {
     question: 'Is listing a business on ListPak free?',
-    answer: 'Yes, listing your business on ListPak is 100% free. You can add contact info, services, operating hours, and receive customer inquiries with zero monthly fees.'
+    answer: 'Yes, listing your business on ListPak is 100 percent free. You can add contact info, services, operating hours, and receive customer inquiries with zero monthly fees.'
   },
   {
     question: 'How do employers post jobs on ListPak?',
@@ -40,7 +41,10 @@ const FAQS = [
   }
 ]
 
-export default function HomePage() {
+export default async function HomePage() {
+  const allBiz = await getAllBusinesses()
+  const featured9 = allBiz.slice(0, 9)
+
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
@@ -84,7 +88,6 @@ export default function HomePage() {
         
         {/* HERO SECTION */}
         <section className="relative bg-gradient-to-b from-blue-50/70 via-slate-50 to-[#F8FAFC] text-slate-900 pt-16 pb-20 px-4 sm:px-6 lg:px-8 border-b border-slate-200/80 overflow-hidden">
-          {/* Subtle Decorative Ambient Background Spheres */}
           <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-blue-400/10 blur-3xl pointer-events-none"></div>
           <div className="absolute top-1/2 -right-24 w-96 h-96 rounded-full bg-emerald-400/10 blur-3xl pointer-events-none"></div>
           
@@ -92,7 +95,7 @@ export default function HomePage() {
             <div className="max-w-3xl mx-auto space-y-4">
               <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-100/80 text-blue-700 border border-blue-200 text-xs font-bold tracking-wide uppercase shadow-2xs">
                 <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-                <span>Pakistan&apos;s Flagship Enterprise Ecosystem</span>
+                <span>Pakistan Flagship Enterprise Ecosystem</span>
               </span>
 
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
@@ -144,11 +147,11 @@ export default function HomePage() {
               {/* Quick Keywords */}
               <div className="pt-3 px-2 flex items-center gap-2 flex-wrap text-xs text-slate-500">
                 <span className="font-bold text-slate-400">Popular:</span>
+                <Link href="/search?q=Banks" className="hover:text-blue-600 font-semibold">Banks</Link>
+                <span>•</span>
                 <Link href="/search?q=Restaurants" className="hover:text-blue-600 font-semibold">Restaurants</Link>
                 <span>•</span>
                 <Link href="/search?q=Software" className="hover:text-blue-600 font-semibold">Software Houses</Link>
-                <span>•</span>
-                <Link href="/search?q=Doctors" className="hover:text-blue-600 font-semibold">Doctors</Link>
                 <span>•</span>
                 <Link href="/search?q=Real+Estate" className="hover:text-blue-600 font-semibold">Real Estate</Link>
                 <span>•</span>
@@ -189,7 +192,7 @@ export default function HomePage() {
               </h2>
             </div>
             <Link href="/categories" className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1">
-              <span>View All 50+ Categories</span>
+              <span>View All 24 Categories</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -219,7 +222,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* FEATURED VERIFIED BUSINESSES */}
+        {/* FEATURED VERIFIED BUSINESSES SECTION (EXACTLY 9 CARDS FROM DATABASE) */}
         <section className="bg-white py-16 px-4 sm:px-6 lg:px-8 border-y border-slate-200/80">
           <div className="max-w-7xl mx-auto space-y-8">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
@@ -228,6 +231,7 @@ export default function HomePage() {
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
                   Featured Verified Companies
                 </h2>
+                <p className="text-slate-500 text-xs mt-1">Database driven featured companies and institutions across Pakistan.</p>
               </div>
               <Link href="/search" className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1">
                 <span>Explore Directory</span>
@@ -235,8 +239,8 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {MOCK_BUSINESSES.slice(0, 3).map((biz) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featured9.map((biz) => (
                 <div key={biz.id} className="bg-[#F8FAFC] rounded-2xl border border-slate-200/80 p-6 space-y-4 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group">
                   <div className="space-y-3">
                     <div className="flex items-start justify-between gap-3">
@@ -319,7 +323,7 @@ export default function HomePage() {
               Frequently Asked Questions
             </h2>
             <p className="text-slate-500 text-xs sm:text-sm">
-              Everything you need to know about Pakistan&apos;s digital business ecosystem.
+              Everything you need to know about Pakistan digital business ecosystem.
             </p>
           </div>
 

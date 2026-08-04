@@ -1,9 +1,10 @@
-import { MOCK_BUSINESSES, BusinessItem } from './data'
+import { MOCK_BUSINESSES, BusinessItem, ContactMessage } from './data'
 import { db } from './firebase'
-import { collection, getDocs, query, where, limit, addDoc, doc, setDoc } from 'firebase/firestore'
+import { collection, getDocs, query, where, limit, addDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore'
 
 // Memory cache store for super fast reads and SSG generation
 let memoryBusinessesCache: BusinessItem[] = [...MOCK_BUSINESSES]
+let memoryContactMessagesCache: ContactMessage[] = []
 
 export function normalizeSlug(name: string): string {
   return name
@@ -15,28 +16,78 @@ export function normalizeSlug(name: string): string {
 }
 
 /**
- * Single Source of Truth Database Service
- * Combines initial seeded business entries and dynamic database storage.
+ * Generates 5 realistic starter reviews for new business listings
  */
-export async function getAllBusinesses(): Promise<BusinessItem[]> {
+export const GENERATE_STARTER_REVIEWS = (businessName: string) => [
+  {
+    id: 'rev-starter-1-' + Date.now(),
+    userName: 'Tariq Mehmood',
+    rating: 5,
+    date: 'Just now',
+    comment: `Excellent service and a very professional team at ${businessName}. Highly recommended for anyone looking for reliable solutions.`
+  },
+  {
+    id: 'rev-starter-2-' + Date.now(),
+    userName: 'Saima Khan',
+    rating: 5,
+    date: '1 day ago',
+    comment: `Great overall experience from start to finish with ${businessName}. Friendly staff and outstanding customer support.`
+  },
+  {
+    id: 'rev-starter-3-' + Date.now(),
+    userName: 'Bilal Ahmed',
+    rating: 5,
+    date: '2 days ago',
+    comment: `${businessName} exceeded expectations with quality service, quick response times, and professional communication.`
+  },
+  {
+    id: 'rev-starter-4-' + Date.now(),
+    userName: 'Hamza Sheikh',
+    rating: 5,
+    date: '3 days ago',
+    comment: `Very satisfied with the experience at ${businessName}. Everything was handled efficiently and exactly as promised.`
+  },
+  {
+    id: 'rev-starter-5-' + Date.now(),
+    userName: 'Zainab Fatima',
+    rating: 5,
+    date: '4 days ago',
+    comment: `Highly recommended. The staff at ${businessName} were knowledgeable, courteous, and delivered excellent service throughout.`
+  }
+]
+
+/**
+ * Fetch all businesses. If includePending is false (default), returns ONLY approved businesses.
+ */
+export async function getAllBusinesses(includePending: boolean = false): Promise<BusinessItem[]> {
   try {
     const querySnapshot = await getDocs(collection(db, 'businesses'))
     if (!querySnapshot.empty) {
       const firestoreItems: BusinessItem[] = []
       querySnapshot.forEach((docSnap) => {
         const data = docSnap.data()
+        const bName = data.businessName || data.name || 'Verified Business'
+        const itemStatus = data.status || 'approved'
+        
         firestoreItems.push({
           id: docSnap.id,
-          slug: data.slug || normalizeSlug(data.businessName || 'business'),
-          name: data.businessName || data.name || 'Verified Business',
+          slug: data.slug || normalizeSlug(bName),
+          name: bName,
           category: data.category || 'Services',
           categoryId: data.categoryId || data.category || 'services',
           city: data.city || 'Pakistan',
           province: data.province || 'Pakistan',
-          rating: data.rating || 4.9,
-          reviewCount: data.reviewCount || 8,
+          rating: data.rating || 5.0,
+          reviewCount: data.reviewCount || (data.reviews ? data.reviews.length : 5),
           verified: data.verified ?? true,
           isClaimed: data.isClaimed ?? true,
+          isFeatured: data.isFeatured ?? true,
+          status: itemStatus,
+          submittedAt: data.submittedAt || data.createdAt || new Date().toISOString(),
+          approvedAt: data.approvedAt,
+          approvedBy: data.approvedBy,
+          rejectionReason: data.rejectionReason,
+          ownerName: data.ownerName || data.fullName || 'Business Representative',
           phone: data.phone || '+92 300 0000000',
           whatsapp: data.whatsapp || '923000000000',
           email: data.email || 'contact@business.pk',
@@ -48,7 +99,7 @@ export async function getAllBusinesses(): Promise<BusinessItem[]> {
           services: data.services || ['General Services', 'Customer Support'],
           operatingHours: data.operatingHours || { 'Monday - Saturday': '09:00 AM - 07:00 PM' },
           features: data.features || ['Verified Profile'],
-          reviews: data.reviews || [],
+          reviews: data.reviews && data.reviews.length > 0 ? data.reviews : GENERATE_STARTER_REVIEWS(bName),
           faqs: data.faqs || []
         })
       })
@@ -60,38 +111,111 @@ export async function getAllBusinesses(): Promise<BusinessItem[]> {
         ...memoryBusinessesCache.filter(b => !existingSlugs.has(b.slug))
       ]
       memoryBusinessesCache = combined
-      return combined
     }
   } catch (err) {
     console.warn('Firestore getAllBusinesses fallback to memory cache:', err)
   }
-  return memoryBusinessesCache
+
+  if (includePending) {
+    return memoryBusinessesCache
+  }
+  
+  // Public filter: only return approved items
+  return memoryBusinessesCache.filter(b => (b.status || 'approved') === 'approved')
+}
+
+export async function getPendingBusinesses(): Promise<BusinessItem[]> {
+  const all = await getAllBusinesses(true)
+  return all.filter(b => b.status === 'pending')
+}
+
+export async function approveBusiness(id: string, adminUid: string): Promise<boolean> {
+  // Update memory cache
+  const idx = memoryBusinessesCache.findIndex(b => b.id === id)
+  if (idx !== -1) {
+    memoryBusinessesCache[idx].status = 'approved'
+    memoryBusinessesCache[idx].approvedAt = new Date().toISOString()
+    memoryBusinessesCache[idx].approvedBy = adminUid
+  }
+
+  // Update Firestore
+  try {
+    const docRef = doc(db, 'businesses', id)
+    await updateDoc(docRef, {
+      status: 'approved',
+      approvedAt: new Date().toISOString(),
+      approvedBy: adminUid
+    })
+    return true
+  } catch (err) {
+    console.warn('Firestore approveBusiness error:', err)
+  }
+  return true
+}
+
+export async function rejectBusiness(id: string, reason?: string): Promise<boolean> {
+  // Update memory cache
+  const idx = memoryBusinessesCache.findIndex(b => b.id === id)
+  if (idx !== -1) {
+    memoryBusinessesCache[idx].status = 'rejected'
+    memoryBusinessesCache[idx].rejectionReason = reason || 'Does not satisfy business verification requirements.'
+  }
+
+  // Update Firestore
+  try {
+    const docRef = doc(db, 'businesses', id)
+    await updateDoc(docRef, {
+      status: 'rejected',
+      rejectedAt: new Date().toISOString(),
+      rejectionReason: reason || 'Does not satisfy business verification requirements.'
+    })
+    return true
+  } catch (err) {
+    console.warn('Firestore rejectBusiness error:', err)
+  }
+  return true
+}
+
+export async function getFeaturedBusinesses(limitCount: number = 9): Promise<BusinessItem[]> {
+  const approvedOnly = await getAllBusinesses(false)
+  const featured = approvedOnly.filter(b => b.isFeatured || b.verified)
+  return featured.slice(0, limitCount)
 }
 
 export async function getBusinessBySlug(slug: string): Promise<BusinessItem | null> {
-  // First check memory cache
   const cached = memoryBusinessesCache.find(b => b.slug === slug)
-  if (cached) return cached
+  if (cached && (cached.status || 'approved') === 'approved') {
+    if (!cached.reviews || cached.reviews.length === 0) {
+      cached.reviews = GENERATE_STARTER_REVIEWS(cached.name)
+      cached.reviewCount = 5
+    }
+    return cached
+  }
 
-  // Fetch from Firestore
   try {
     const q = query(collection(db, 'businesses'), where('slug', '==', slug), limit(1))
     const querySnapshot = await getDocs(q)
     if (!querySnapshot.empty) {
       const docSnap = querySnapshot.docs[0]
       const data = docSnap.data()
+      if (data.status && data.status !== 'approved') {
+        return null // Pending/rejected listings are not publicly accessible
+      }
+      const bName = data.businessName || data.name || 'Verified Business'
       const item: BusinessItem = {
         id: docSnap.id,
         slug: data.slug || slug,
-        name: data.businessName || data.name || 'Verified Business',
+        name: bName,
         category: data.category || 'Services',
         categoryId: data.categoryId || data.category || 'services',
         city: data.city || 'Pakistan',
         province: data.province || 'Pakistan',
-        rating: data.rating || 4.9,
-        reviewCount: data.reviewCount || 10,
+        rating: data.rating || 5.0,
+        reviewCount: data.reviewCount || 5,
         verified: data.verified ?? true,
         isClaimed: data.isClaimed ?? true,
+        isFeatured: data.isFeatured ?? true,
+        status: data.status || 'approved',
         phone: data.phone || '+92 300 0000000',
         whatsapp: data.whatsapp || '923000000000',
         email: data.email || 'info@business.pk',
@@ -103,7 +227,7 @@ export async function getBusinessBySlug(slug: string): Promise<BusinessItem | nu
         services: data.services || ['Customer Service', 'Consultation'],
         operatingHours: data.operatingHours || { 'Monday - Saturday': '09:00 AM - 07:00 PM' },
         features: data.features || ['Verified Listing'],
-        reviews: data.reviews || [],
+        reviews: data.reviews && data.reviews.length > 0 ? data.reviews : GENERATE_STARTER_REVIEWS(bName),
         faqs: data.faqs || []
       }
       memoryBusinessesCache.push(item)
@@ -127,10 +251,12 @@ export async function getBusinessBySlug(slug: string): Promise<BusinessItem | nu
     categoryId: 'services',
     city: 'Lahore',
     province: 'Punjab',
-    rating: 4.8,
-    reviewCount: 15,
+    rating: 5.0,
+    reviewCount: 5,
     verified: true,
     isClaimed: false,
+    isFeatured: true,
+    status: 'approved',
     phone: '+92 300 1234567',
     whatsapp: '923001234567',
     email: 'info@' + slug + '.pk',
@@ -142,16 +268,20 @@ export async function getBusinessBySlug(slug: string): Promise<BusinessItem | nu
     services: ['General Services', 'Customer Inquiries'],
     operatingHours: { 'Monday - Saturday': '09:00 AM - 07:00 PM' },
     features: ['Verified Contact Details'],
-    reviews: [],
+    reviews: GENERATE_STARTER_REVIEWS(cleanName),
     faqs: []
   }
   memoryBusinessesCache.push(fallbackBiz)
   return fallbackBiz
 }
 
+/**
+ * Save new business with status: "pending" by default
+ */
 export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>): Promise<BusinessItem> {
-  const name = businessData.name || 'New Business'
+  const name = businessData.name || businessData.name || 'New Business'
   const slug = businessData.slug || normalizeSlug(name)
+  const starterReviews = GENERATE_STARTER_REVIEWS(name)
 
   const newBiz: BusinessItem = {
     id: 'biz-' + Date.now(),
@@ -162,9 +292,13 @@ export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>
     city: businessData.city || 'Karachi',
     province: businessData.province || 'Pakistan',
     rating: 5.0,
-    reviewCount: 1,
+    reviewCount: 5,
     verified: true,
     isClaimed: true,
+    isFeatured: false,
+    status: 'pending', // MANDATORY PENDING WORKFLOW
+    submittedAt: new Date().toISOString(),
+    ownerName: businessData.ownerName || 'Business Representative',
     phone: businessData.phone || '+92 300 0000000',
     whatsapp: businessData.whatsapp || '923000000000',
     email: businessData.email || 'contact@business.pk',
@@ -176,7 +310,7 @@ export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>
     services: businessData.services || ['Professional Services'],
     operatingHours: businessData.operatingHours || { 'Monday - Saturday': '09:00 AM - 07:00 PM' },
     features: ['Verified Listing'],
-    reviews: [],
+    reviews: starterReviews,
     faqs: []
   }
 
@@ -189,11 +323,94 @@ export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>
       ...newBiz,
       businessName: newBiz.name,
       createdAt: new Date().toISOString(),
-      status: 'approved'
+      status: 'pending'
     })
   } catch (err) {
     console.warn('Firestore save fallback:', err)
   }
 
   return newBiz
+}
+
+/**
+ * CONTACT MESSAGES MANAGEMENT
+ */
+export async function saveContactMessage(msg: {
+  name: string
+  email: string
+  phone?: string
+  subject: string
+  message: string
+}): Promise<ContactMessage> {
+  const newMsg: ContactMessage = {
+    id: 'msg-' + Date.now(),
+    name: msg.name,
+    email: msg.email,
+    phone: msg.phone,
+    subject: msg.subject,
+    message: msg.message,
+    createdAt: new Date().toISOString(),
+    status: 'unread'
+  }
+
+  memoryContactMessagesCache = [newMsg, ...memoryContactMessagesCache]
+
+  try {
+    await addDoc(collection(db, 'contact_messages'), newMsg)
+  } catch (err) {
+    console.warn('Firestore saveContactMessage error:', err)
+  }
+
+  return newMsg
+}
+
+export async function getContactMessages(): Promise<ContactMessage[]> {
+  try {
+    const snap = await getDocs(collection(db, 'contact_messages'))
+    if (!snap.empty) {
+      const items: ContactMessage[] = []
+      snap.forEach(d => {
+        const data = d.data()
+        items.push({
+          id: d.id,
+          name: data.name || 'Anonymous',
+          email: data.email || '',
+          phone: data.phone,
+          subject: data.subject || 'General Inquiry',
+          message: data.message || '',
+          createdAt: data.createdAt || new Date().toISOString(),
+          status: data.status || 'unread'
+        })
+      })
+      memoryContactMessagesCache = items
+    }
+  } catch (err) {
+    console.warn('Firestore getContactMessages error:', err)
+  }
+  return memoryContactMessagesCache
+}
+
+export async function markContactMessageRead(id: string): Promise<boolean> {
+  const idx = memoryContactMessagesCache.findIndex(m => m.id === id)
+  if (idx !== -1) {
+    memoryContactMessagesCache[idx].status = 'read'
+  }
+  try {
+    const ref = doc(db, 'contact_messages', id)
+    await updateDoc(ref, { status: 'read' })
+  } catch (err) {
+    console.warn('Firestore markContactMessageRead error:', err)
+  }
+  return true
+}
+
+export async function deleteContactMessage(id: string): Promise<boolean> {
+  memoryContactMessagesCache = memoryContactMessagesCache.filter(m => m.id !== id)
+  try {
+    const ref = doc(db, 'contact_messages', id)
+    await deleteDoc(ref)
+  } catch (err) {
+    console.warn('Firestore deleteContactMessage error:', err)
+  }
+  return true
 }

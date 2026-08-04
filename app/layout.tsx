@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   description: "Discover, connect, and grow with Pakistan's largest digital business platform. Explore verified business listings, jobs, professional talent, and enterprise services across Karachi, Lahore, Islamabad, and nationwide.",
   metadataBase: new URL('https://listpak.com/'),
   keywords: [
+    'ListPak Pakistan',
     'Pakistan business directory',
     'free business listing Pakistan',
     'jobs in Pakistan',
@@ -44,13 +45,41 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'ListPak',
+    url: 'https://listpak.com',
+    logo: 'https://listpak.com/logo.png',
+    telephone: '+92 334 5636230',
+    email: 'info@listpak.com',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'Office 303, Evacuee Trust Complex, F-5/1',
+      addressLocality: 'Islamabad',
+      postalCode: '44000',
+      addressCountry: 'PK',
+    },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      telephone: '+92 334 5636230',
+      contactType: 'customer service',
+      areaServed: 'PK',
+      availableLanguage: ['en', 'ur'],
+    },
+  }
+
   return (
     <html lang="en">
       <head>
         <meta name="msvalidate.01" content="32107703ABE97F472472231CBA07F2E5" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
       </head>
       <body className="font-sans antialiased bg-[#F8FAFC] text-[#0F172A] pb-16 md:pb-0 min-h-screen selection:bg-blue-500 selection:text-white">
         {children}

@@ -97,7 +97,11 @@ export default function AddBusinessClient() {
       if (!formData.address.trim()) errs.address = 'Street address is required'
       if (!formData.phone.trim()) errs.phone = 'Phone number is required'
     } else if (step === 3) {
-      if (formData.description.trim().length < 30) errs.description = 'Please write at least 30 characters describing your business'
+      const wordCount = formData.description.trim() ? formData.description.trim().split(/\s+/).filter(Boolean).length : 0
+      if (wordCount < 500) {
+        const remaining = 500 - wordCount
+        errs.description = `Description must be at least 500 words for SEO indexing. Current: ${wordCount} words (${remaining} more words required).`
+      }
     }
     setErrors(errs)
     return Object.keys(errs).length === 0
@@ -132,16 +136,17 @@ export default function AddBusinessClient() {
         email: formData.email,
         website: formData.website,
         description: formData.description,
-        services: formData.services ? formData.services.split(',').map(s => s.trim()) : ['General Services']
+        services: formData.services ? formData.services.split(',').map(s => s.trim()) : ['General Services'],
+        status: 'pending'
       })
 
       setSubmittedSlug(saved.slug)
       setIsSubmitting(false)
-      toast.success('Congratulations! Your business listing is live on ListPak.')
+      toast.success('Your business submission has been received and is currently under review.')
     } catch (err) {
       console.error(err)
       setIsSubmitting(false)
-      toast.error('Failed to submit listing. Please try again.')
+      toast.error('An error occurred while saving your listing. Please try again.')
     }
   }
 
@@ -181,41 +186,31 @@ export default function AddBusinessClient() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-16">
         
         {submittedSlug ? (
-          /* SUCCESS CONFIRMATION STATE */
+          /* SUCCESS CONFIRMATION STATE (UNDER REVIEW) */
           <div className="bg-white rounded-3xl p-10 border border-slate-200/90 shadow-xl max-w-2xl mx-auto text-center space-y-6 animate-in zoom-in-95">
-            <div className="w-20 h-20 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-md">
-              <CheckCircle2 className="w-10 h-10" />
+            <div className="w-20 h-20 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mx-auto shadow-md">
+              <ShieldCheck className="w-10 h-10" />
             </div>
 
-            <div className="space-y-2">
-              <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                Verified Listing Live
+            <div className="space-y-3">
+              <span className="text-xs font-bold px-3 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                Submission Under Administrative Review
               </span>
-              <h2 className="text-2xl font-extrabold text-slate-900">Your Business is Officially Listed!</h2>
-              <p className="text-sm text-slate-600 max-w-md mx-auto">
-                <strong className="text-slate-900">{formData.businessName}</strong> is now live on ListPak. Customers across Pakistan can now find your profile and contact you directly.
+              <h2 className="text-2xl font-extrabold text-slate-900">Thank you for submitting your business.</h2>
+              <p className="text-sm text-slate-600 max-w-lg mx-auto leading-relaxed">
+                Your listing for <strong className="text-slate-900">{formData.businessName}</strong> has been received successfully and is currently under review.
+              </p>
+              <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
+                Our team will review your submission. Once it has been approved by an administrator, it will become publicly visible on ListPak and eligible for search engine indexing.
               </p>
             </div>
 
-            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-left text-xs space-y-2">
-              <span className="font-bold text-slate-700 block">Your Listing URL:</span>
-              <code className="block p-2 bg-white rounded-xl border border-slate-200 text-blue-600 font-mono text-[11px] break-all">
-                https://listpak.com/business/{submittedSlug}
-              </code>
-            </div>
-
-            <div className="flex flex-col sm:flex-row justify-center gap-3 pt-2">
+            <div className="flex justify-center gap-3 pt-2">
               <Link
-                href={`/business/${submittedSlug}`}
-                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-600/20 transition-all text-center"
+                href="/"
+                className="px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition-all text-center"
               >
-                View Public Business Profile
-              </Link>
-              <Link
-                href="/dashboard"
-                className="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-lg transition-all text-center"
-              >
-                Go to Owner Dashboard
+                Return to Homepage
               </Link>
             </div>
           </div>
@@ -395,15 +390,33 @@ export default function AddBusinessClient() {
                   <div className="space-y-4">
                     <div>
                       <div className="flex justify-between items-center mb-1.5">
-                        <label className="block text-xs font-bold text-slate-700">Detailed Description *</label>
-                        <span className="text-[11px] text-slate-400 font-semibold">{formData.description.length} chars</span>
+                        <label className="block text-xs font-bold text-slate-700">Detailed Business Description * (Minimum 500 Words Required)</label>
+                        <span className="text-[11px] text-slate-400 font-semibold">{formData.description.trim() ? formData.description.trim().split(/\s+/).filter(Boolean).length : 0} words</span>
                       </div>
+                      
+                      {/* Live Word Counter Gauge */}
+                      {(() => {
+                        const currentWords = formData.description.trim() ? formData.description.trim().split(/\s+/).filter(Boolean).length : 0
+                        const remaining = Math.max(0, 500 - currentWords)
+                        return (
+                          <div className="p-3 mb-2 rounded-2xl bg-slate-50 border border-slate-200/80 text-xs flex flex-wrap justify-between items-center gap-2 font-semibold">
+                            <span className="text-slate-700">Current Words: <strong className="text-blue-600">{currentWords}</strong></span>
+                            <span className="text-slate-700">Minimum Required: <strong>500</strong></span>
+                            <span className={currentWords >= 500 ? "text-emerald-600 font-bold flex items-center gap-1" : "text-amber-600 font-bold"}>
+                              {currentWords >= 500 ? "✓ 500 Words Requirement Met" : `${remaining} more words required`}
+                            </span>
+                          </div>
+                        )
+                      })()}
+
                       <textarea
-                        rows={5}
+                        rows={7}
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        placeholder="Describe your business history, main products, customer guarantees, and specialty services in detail..."
-                        className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        placeholder="Describe your business background, operating philosophy, product ranges, delivery terms, quality guarantees, and customer policies in detail (at least 500 words required for SEO)..."
+                        className={`w-full px-4 py-3 bg-slate-50/80 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 ${
+                          errors.description ? 'border-red-500 bg-red-50/30' : 'border-slate-200'
+                        }`}
                       />
                       {errors.description && <span className="text-[11px] font-semibold text-red-500 mt-1 block">{errors.description}</span>}
                     </div>
