@@ -14,12 +14,12 @@ export const metadata: Metadata = {
   title: "ListPak: Pakistan Digital Business and Enterprise Ecosystem",
   description: "Explore verified businesses, post jobs, find employees, and connect with top Pakistani professionals across Karachi, Lahore, Islamabad, and nationwide.",
   alternates: {
-    canonical: 'https://listpak.com/',
+    canonical: 'https://www.listpak.com/',
   },
   openGraph: {
     title: "ListPak: Pakistan Digital Business Ecosystem",
     description: "Discover verified companies, local services, active hiring jobs, and talent in Pakistan. 100 percent verified directory.",
-    url: 'https://listpak.com/',
+    url: 'https://www.listpak.com/',
     siteName: 'ListPak',
     locale: 'en_PK',
     type: 'website',
@@ -116,10 +116,10 @@ export default async function HomePage() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'ListPak',
-    url: 'https://listpak.com/',
+    url: 'https://www.listpak.com/',
     potentialAction: {
       '@type': 'SearchAction',
-      target: 'https://listpak.com/search?q={search_term_string}',
+      target: 'https://www.listpak.com/search?q={search_term_string}',
       'query-input': 'required name=search_term_string'
     },
     description: 'Pakistan digital business platform for local businesses, job listings, and verified professionals'

@@ -24,7 +24,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "ListPak — Pakistan's Digital Business & Enterprise Ecosystem",
   description: "Discover, connect, and grow with Pakistan's largest digital business platform. Explore verified business listings, jobs, professional talent, and enterprise services across Karachi, Lahore, Islamabad, and nationwide.",
-  metadataBase: new URL('https://listpak.com/'),
+  metadataBase: new URL('https://www.listpak.com'),
   keywords: [
     'ListPak Pakistan',
     'Pakistan business directory',
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "ListPak — Pakistan's Digital Business & Enterprise Ecosystem",
     description: "Discover, connect, and grow with Pakistan's largest digital business platform. Verified businesses, hiring portal, and professional talent.",
-    url: 'https://listpak.com/',
+    url: 'https://www.listpak.com/',
     siteName: 'ListPak',
     locale: 'en_PK',
     type: 'website',
@@ -65,8 +65,8 @@ export default function RootLayout({
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'ListPak',
-    url: 'https://listpak.com',
-    logo: 'https://listpak.com/logo.png',
+    url: 'https://www.listpak.com',
+    logo: 'https://www.listpak.com/logo.png',
     telephone: '+92 334 5636230',
     email: 'admin@listpak.com',
     address: {

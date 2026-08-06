@@ -17,7 +17,7 @@ description: "Contact ListPak support team for free business listing help, job p
 keywords: "contact ListPak, ListPak support, free business listing help, contact business directory Pakistan, ListPak customer service, ListPak phone number, ListPak email"
 
 // Canonical URL
-canonical: "https://listpak.com/contact"
+canonical: "https://www.listpak.com/contact"
 
 // Structured Data (ContactPage schema)
 structuredData: {
@@ -25,7 +25,7 @@ structuredData: {
   "@type": "ContactPage",
   "name": "Contact ListPak – Free Business Listing Website Pakistan",
   "description": "Get in touch with ListPak support team for free business listing assistance, job portal help, and technical support",
-  "url": "https://listpak.com/contact"
+  "url": "https://www.listpak.com/contact"
 }
 ```
 
@@ -196,15 +196,15 @@ description: "ListPak is Pakistan's leading free business listing website and fr
 keywords: "about ListPak, ListPak company, free business listing website Pakistan, ListPak story, Pakistan business directory company, free directory website founder, ListPak team"
 
 // Canonical URL
-canonical: "https://listpak.com/about-us"
+canonical: "https://www.listpak.com/about-us"
 
 // Structured Data (Organization schema)
 structuredData: {
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "ListPak",
-  "url": "https://listpak.com/",
-  "logo": "https://listpak.com/logo.png",
+  "url": "https://www.listpak.com/",
+  "logo": "https://www.listpak.com/logo.png",
   "description": "Pakistan's #1 free business listing website and free directory platform",
   "foundingDate": "2024",
   "founders": [{
@@ -465,14 +465,14 @@ description: "Read ListPak blog for free business listing tips, local SEO guides
 keywords: "ListPak blog, free business listing tips, local SEO Pakistan, business directory guide, job posting tips Pakistan, Pakistan business news, online business marketing"
 
 // Canonical URL
-canonical: "https://listpak.com/blog"
+canonical: "https://www.listpak.com/blog"
 
 // Structured Data (Blog schema)
 structuredData: {
   "@context": "https://schema.org",
   "@type": "Blog",
   "name": "ListPak Blog – Free Business Listing Tips & Pakistan Business News",
-  "url": "https://listpak.com/blog",
+  "url": "https://www.listpak.com/blog",
   "description": "Expert guides on free business listing, local SEO, job posting, and growing your business in Pakistan"
 }
 ```

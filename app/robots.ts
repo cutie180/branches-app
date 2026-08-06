@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/admin', '/admin/*', '/api/*', '/login', '/register', '/dashboard/*'],
     },
-    sitemap: 'https://listpak.com/sitemap.xml',
+    sitemap: 'https://www.listpak.com/sitemap.xml',
   }
 }

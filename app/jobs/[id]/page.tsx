@@ -96,7 +96,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
     hiringOrganization: {
       '@type': 'Organization',
       name: job.company,
-      sameAs: `https://listpak.com/companies/${job.companySlug}`,
+      sameAs: `https://www.listpak.com/companies/${job.companySlug}`,
       logo: job.companyLogo
     },
     jobLocation: {

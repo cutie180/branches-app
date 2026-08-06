@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: 'HTML Sitemap | ListPak Directory Structure',
   description: 'Complete directory index of all categories, major cities, job portals, blogs, and legal pages on ListPak.',
   alternates: {
-    canonical: 'https://listpak.com/html-sitemap',
+    canonical: 'https://www.listpak.com/html-sitemap',
   },
 }
 

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Community Guidelines | ListPak - Pakistan Business Hub',
   description: 'Standards of conduct for business owners, job seekers, employers, and consumers engaging on ListPak.',
   alternates: {
-    canonical: 'https://listpak.com/community-guidelines',
+    canonical: 'https://www.listpak.com/community-guidelines',
   },
 }
 

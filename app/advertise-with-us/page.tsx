@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Advertise With Us | ListPak Commercial & Targeted Media',
   description: 'Reach thousands of active consumers, employers, and enterprise clients across Pakistan with high-impact targeted advertising on ListPak.',
   alternates: {
-    canonical: 'https://listpak.com/advertise-with-us',
+    canonical: 'https://www.listpak.com/advertise-with-us',
   },
 }
 

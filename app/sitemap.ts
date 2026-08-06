@@ -9,7 +9,7 @@ import { FEATURED_POSTS, RECENT_POSTS } from '@/app/blog/page'
 export const revalidate = 3600 // Revalidate sitemap XML every hour
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://listpak.com'
+  const baseUrl = 'https://www.listpak.com'
   const currentDate = new Date()
   const fixedPolicyDate = new Date('2026-08-01T00:00:00.000Z')
 

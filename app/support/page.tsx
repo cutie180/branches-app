@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Customer Support | ListPak Desk',
   description: 'Connect with ListPak dedicated support desk for instant help with business listings, verified badges, and directory inquiries.',
   alternates: {
-    canonical: 'https://listpak.com/support',
+    canonical: 'https://www.listpak.com/support',
   },
 }
 

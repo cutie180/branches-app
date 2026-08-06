@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Cookie Policy | ListPak - Pakistan Business Directory',
   description: 'Understand how ListPak uses cookies and web tracking technologies to provide a secure and customized experience across our business directory.',
   alternates: {
-    canonical: 'https://listpak.com/cookie-policy',
+    canonical: 'https://www.listpak.com/cookie-policy',
   },
 }
 
@@ -25,7 +25,7 @@ export default function CookiePolicyPage() {
 
           <div className="space-y-6 text-sm text-slate-600 leading-relaxed">
             <p>
-              This Cookie Policy explains how <strong>ListPak</strong> (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) uses cookies and similar tracking technologies when you visit our website at <a href="https://listpak.com" className="text-blue-600 underline">https://listpak.com</a>.
+              This Cookie Policy explains how <strong>ListPak</strong> (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) uses cookies and similar tracking technologies when you visit our website at <a href="https://www.listpak.com" className="text-blue-600 underline">https://www.listpak.com</a>.
             </p>
 
             <h2 className="text-xl font-bold text-slate-900 pt-4">1. What Are Cookies?</h2>

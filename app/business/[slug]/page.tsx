@@ -30,13 +30,13 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
     title,
     description,
     alternates: {
-      canonical: `https://listpak.com/business/${slug}`,
+      canonical: `https://www.listpak.com/business/${slug}`,
     },
     openGraph: {
       title,
       description,
       siteName: 'ListPak',
-      url: `https://listpak.com/business/${slug}`
+      url: `https://www.listpak.com/business/${slug}`
     },
   }
 }

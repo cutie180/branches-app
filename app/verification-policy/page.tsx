@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Verification Policy | ListPak - Verified Business Directory',
   description: 'How ListPak verifies business profiles, addresses, contact details, and NTN registration credentials in Pakistan.',
   alternates: {
-    canonical: 'https://listpak.com/verification-policy',
+    canonical: 'https://www.listpak.com/verification-policy',
   },
 }
 

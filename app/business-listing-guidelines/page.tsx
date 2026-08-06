@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Business Listing Guidelines | ListPak',
   description: 'Requirements for adding your company, shop, or professional service to ListPak free business directory.',
   alternates: {
-    canonical: 'https://listpak.com/business-listing-guidelines',
+    canonical: 'https://www.listpak.com/business-listing-guidelines',
   },
 }
 

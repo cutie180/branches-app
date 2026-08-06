@@ -23,7 +23,7 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
     title, 
     description,
     alternates: {
-      canonical: `https://listpak.com/category/${params.slug}`
+      canonical: `https://www.listpak.com/category/${params.slug}`
     }
   }
 }
@@ -42,7 +42,7 @@ export default async function CategoryDetailPage(props: { params: Promise<{ slug
     '@type': 'CollectionPage',
     name: `${cat.name} Businesses in Pakistan`,
     description: cat.desc,
-    url: `https://listpak.com/category/${cat.id}`
+    url: `https://www.listpak.com/category/${cat.id}`
   }
 
   return (

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: 'Read ListPak blog for free business listing tips, local SEO guides, job posting strategies, and Pakistan business news. Expert advice for businesses in Karachi, Lahore, Islamabad.',
   keywords: 'ListPak blog, free business listing tips, local SEO Pakistan, business directory guide, job posting tips Pakistan, Pakistan business news, online business marketing',
   alternates: {
-    canonical: 'https://listpak.com/blog',
+    canonical: 'https://www.listpak.com/blog',
   },
 }
 
@@ -108,7 +108,7 @@ export default function BlogPage() {
     '@context': 'https://schema.org',
     '@type': 'Blog',
     name: 'ListPak Blog – Free Business Listing Tips & Pakistan Business News',
-    url: 'https://listpak.com/blog',
+    url: 'https://www.listpak.com/blog',
     description: 'Expert guides on free business listing, local SEO, job posting, and growing your business in Pakistan',
   }
 

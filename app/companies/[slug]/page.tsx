@@ -67,7 +67,7 @@ export default function CompanyDetailPage({ params }: { params: Promise<{ slug: 
     '@type': 'Organization',
     name: company.name,
     description: company.description,
-    url: company.website || `https://listpak.com/companies/${company.slug}`,
+    url: company.website || `https://www.listpak.com/companies/${company.slug}`,
     logo: company.logo,
     address: {
       '@type': 'PostalAddress',

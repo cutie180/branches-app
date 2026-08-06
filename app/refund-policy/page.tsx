@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Refund Policy | ListPak Commercial & Premium Services',
   description: 'Terms and conditions governing refunds for premium business verification, advertising banners, and promoted job posts.',
   alternates: {
-    canonical: 'https://listpak.com/refund-policy',
+    canonical: 'https://www.listpak.com/refund-policy',
   },
 }
 

@@ -6,12 +6,12 @@ export const metadata: Metadata = {
   description: "Join Pakistan's largest digital business platform. List your business free, reach thousands of customers across Karachi, Lahore, Islamabad, and nationwide with high Google search ranking.",
   keywords: 'list business free Pakistan, add business Pakistan directory, register business online Pakistan, free business directory Pakistan, ListPak onboarding',
   alternates: {
-    canonical: 'https://listpak.com/add-business',
+    canonical: 'https://www.listpak.com/add-business',
   },
   openGraph: {
     title: "List Your Business Free — Pakistan's Digital Ecosystem | ListPak",
     description: "Onboard your business to Pakistan's premier digital platform. 100% free listing forever with high Google search ranking.",
-    url: 'https://listpak.com/add-business',
+    url: 'https://www.listpak.com/add-business',
     siteName: 'ListPak',
     locale: 'en_PK',
     type: 'website',

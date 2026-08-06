@@ -9,7 +9,7 @@ Use this checklist immediately after deployment to accelerate indexing, improve 
   - [ ] `/add-bussiness` -> `/add-business`
   - [ ] `/category/{slug}` -> `/categories/{slug}`
   - [ ] `/businesses/{city}/{category}` -> `/locations/{city}/{category}`
-- [ ] Open `https://pakbizbranhces.online/sitemap.xml` and verify it loads.
+- [ ] Open `https://www.listpak.com/sitemap.xml` and verify it loads.
 - [ ] Submit sitemap in Google Search Console.
 - [ ] Inspect and request indexing for:
   - [ ] Home page (`/`)

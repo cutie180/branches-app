@@ -220,7 +220,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For support and questions:
 - Email: support@pakbizbranches.online
-- Website: [https://pakbizbranhces.online](https://pakbizbranhces.online)
+- Website: [https://www.listpak.com](https://www.listpak.com)
 
 ## Acknowledgments
 

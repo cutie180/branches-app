@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Report Abuse | ListPak Safety & Compliance',
   description: 'Report spam, harassment, counterfeit listings, copyright violations, or abusive behavior on ListPak.',
   alternates: {
-    canonical: 'https://listpak.com/report-abuse',
+    canonical: 'https://www.listpak.com/report-abuse',
   },
 }
 

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Careers at ListPak | Join Pakistan Digital Business Platform',
   description: 'Explore career opportunities at ListPak. Help build Pakistan largest digital business and employment ecosystem.',
   alternates: {
-    canonical: 'https://listpak.com/careers',
+    canonical: 'https://www.listpak.com/careers',
   },
 }
 

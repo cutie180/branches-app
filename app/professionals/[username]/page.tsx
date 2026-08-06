@@ -159,9 +159,9 @@ export default function ProfessionalDetailPage({ params }: { params: Promise<{ u
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://listpak.com/' },
-      { '@type': 'ListItem', position: 2, name: 'Professionals', item: 'https://listpak.com/professionals' },
-      { '@type': 'ListItem', position: 3, name: pro.name, item: `https://listpak.com/professionals/${pro.username}` }
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.listpak.com/' },
+      { '@type': 'ListItem', position: 2, name: 'Professionals', item: 'https://www.listpak.com/professionals' },
+      { '@type': 'ListItem', position: 3, name: pro.name, item: `https://www.listpak.com/professionals/${pro.username}` }
     ]
   }
 

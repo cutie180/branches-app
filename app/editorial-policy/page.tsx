@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Editorial Policy | ListPak - Pakistan Business Directory',
   description: 'Our standards for publishing, reviewing, and fact-checking business listings, blogs, and market insights on ListPak.',
   alternates: {
-    canonical: 'https://listpak.com/editorial-policy',
+    canonical: 'https://www.listpak.com/editorial-policy',
   },
 }
 

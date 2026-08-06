@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${cleanTitle} | ListPak Business Blog`,
     description: `Read ${cleanTitle} on ListPak Blog. Expert guide on free business listing, local SEO, and Pakistan business growth.`,
     alternates: {
-      canonical: `https://listpak.com/blog/${slug}`,
+      canonical: `https://www.listpak.com/blog/${slug}`,
     },
   }
 }
@@ -39,10 +39,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     publisher: {
       '@type': 'Organization',
       name: 'ListPak',
-      logo: 'https://listpak.com/logo.png',
+      logo: 'https://www.listpak.com/logo.png',
     },
     datePublished: '2026-08-01',
-    mainEntityOfPage: `https://listpak.com/blog/${slug}`,
+    mainEntityOfPage: `https://www.listpak.com/blog/${slug}`,
   }
 
   return (

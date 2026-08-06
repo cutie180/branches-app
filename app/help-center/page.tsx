@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Help Center | ListPak Support Knowledgebase',
   description: 'Search guidebooks, step-by-step tutorials, and documentation for business owners, job seekers, and recruiters on ListPak.',
   alternates: {
-    canonical: 'https://listpak.com/help-center',
+    canonical: 'https://www.listpak.com/help-center',
   },
 }
 

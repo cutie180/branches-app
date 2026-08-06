@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Disclaimer | ListPak - Pakistan Business Ecosystem',
   description: 'Legal disclaimer for ListPak business directory listings, professional talent profiles, job postings, and third-party content accuracy.',
   alternates: {
-    canonical: 'https://listpak.com/disclaimer',
+    canonical: 'https://www.listpak.com/disclaimer',
   },
 }
 
@@ -25,7 +25,7 @@ export default function DisclaimerPage() {
 
           <div className="space-y-6 text-sm text-slate-600 leading-relaxed">
             <p>
-              The information provided by <strong>ListPak</strong> (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) on <a href="https://listpak.com" className="text-blue-600 underline">https://listpak.com</a> is for general informational and commercial directory purposes only.
+              The information provided by <strong>ListPak</strong> (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) on <a href="https://www.listpak.com" className="text-blue-600 underline">https://www.listpak.com</a> is for general informational and commercial directory purposes only.
             </p>
 
             <h2 className="text-xl font-bold text-slate-900 pt-4">1. Information Accuracy</h2>

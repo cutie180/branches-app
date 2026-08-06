@@ -15,7 +15,7 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
     title: `${cityName} Business Directory & Jobs: ListPak`,
     description: `Explore top verified businesses, software houses, restaurants, hospitals, job openings, and professionals in ${cityName}, Pakistan.`,
     alternates: {
-      canonical: `https://listpak.com/city/${params.slug.toLowerCase()}`
+      canonical: `https://www.listpak.com/city/${params.slug.toLowerCase()}`
     }
   }
 }

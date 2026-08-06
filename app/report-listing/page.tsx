@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Report a Listing | ListPak Business Directory Integrity',
   description: 'Report inaccurate, closed, copyright infringing, or fraudulent business listings on ListPak for rapid admin review.',
   alternates: {
-    canonical: 'https://listpak.com/report-listing',
+    canonical: 'https://www.listpak.com/report-listing',
   },
 }
 

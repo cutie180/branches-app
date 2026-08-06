@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: 'Frequently Asked Questions (FAQs) | ListPak',
   description: 'Find answers to common questions about listing your business, verifying NTN credentials, posting jobs, and searching companies on ListPak.',
   alternates: {
-    canonical: 'https://listpak.com/faqs',
+    canonical: 'https://www.listpak.com/faqs',
   },
 }
 
