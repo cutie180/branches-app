@@ -106,9 +106,9 @@ export default function AddBusinessClient() {
       if (!formData.phone.trim()) errs.phone = 'Phone number is required'
     } else if (step === 3) {
       const wordCount = formData.description.trim() ? formData.description.trim().split(/\s+/).filter(Boolean).length : 0
-      if (wordCount < 500) {
-        const remaining = 500 - wordCount
-        errs.description = `Description must be at least 500 words for SEO indexing. Current: ${wordCount} words (${remaining} more words required).`
+      if (wordCount < 250) {
+        const remaining = 250 - wordCount
+        errs.description = `Description must be at least 250 words for SEO indexing. Current: ${wordCount} words (${remaining} more words required).`
       }
     }
     setErrors(errs)
@@ -494,20 +494,20 @@ export default function AddBusinessClient() {
                   <div className="space-y-4">
                     <div>
                       <div className="flex justify-between items-center mb-1.5">
-                        <label className="block text-xs font-bold text-slate-700">Detailed Business Description * (Minimum 500 Words Required)</label>
+                        <label className="block text-xs font-bold text-slate-700">Detailed Business Description * (Minimum 250 Words Required)</label>
                         <span className="text-[11px] text-slate-400 font-semibold">{formData.description.trim() ? formData.description.trim().split(/\s+/).filter(Boolean).length : 0} words</span>
                       </div>
                       
                       {/* Live Word Counter Gauge */}
                       {(() => {
                         const currentWords = formData.description.trim() ? formData.description.trim().split(/\s+/).filter(Boolean).length : 0
-                        const remaining = Math.max(0, 500 - currentWords)
+                        const remaining = Math.max(0, 250 - currentWords)
                         return (
                           <div className="p-3 mb-2 rounded-2xl bg-slate-50 border border-slate-200/80 text-xs flex flex-wrap justify-between items-center gap-2 font-semibold">
                             <span className="text-slate-700">Current Words: <strong className="text-blue-600">{currentWords}</strong></span>
-                            <span className="text-slate-700">Minimum Required: <strong>500</strong></span>
-                            <span className={currentWords >= 500 ? "text-emerald-600 font-bold flex items-center gap-1" : "text-amber-600 font-bold"}>
-                              {currentWords >= 500 ? "✓ 500 Words Requirement Met" : `${remaining} more words required`}
+                            <span className="text-slate-700">Minimum Required: <strong>250</strong></span>
+                            <span className={currentWords >= 250 ? "text-emerald-600 font-bold flex items-center gap-1" : "text-amber-600 font-bold"}>
+                              {currentWords >= 250 ? "✓ 250 Words Requirement Met" : `${remaining} more words required`}
                             </span>
                           </div>
                         )
@@ -517,7 +517,7 @@ export default function AddBusinessClient() {
                         rows={7}
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        placeholder="Describe your business background, operating philosophy, product ranges, delivery terms, quality guarantees, and customer policies in detail (at least 500 words required for SEO)..."
+                        placeholder="Describe your business background, operating philosophy, product ranges, delivery terms, quality guarantees, and customer policies in detail (at least 250 words required for SEO)..."
                         className={`w-full px-4 py-3 bg-slate-50/80 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 ${
                           errors.description ? 'border-red-500 bg-red-50/30' : 'border-slate-200'
                         }`}
