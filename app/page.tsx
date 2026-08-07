@@ -2,6 +2,7 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { 
   Search, MapPin, Building2, Briefcase, Users, ShieldCheck, Star, ArrowRight, 
   Sparkles, TrendingUp, CheckCircle2, Award, ChevronRight, HelpCircle, Phone, 
@@ -9,6 +10,8 @@ import {
 } from 'lucide-react'
 import { CATEGORIES, TOP_CITIES, MOCK_JOBS, MOCK_PROFESSIONALS } from '@/lib/data'
 import { getAllBusinesses } from '@/lib/db-service'
+
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: "ListPak: Pakistan Digital Business and Enterprise Ecosystem",
@@ -156,19 +159,16 @@ export default async function HomePage() {
       <main id="main-content">
         
         {/* 2. HERO SECTION */}
-        <section className="relative bg-gradient-to-b from-blue-50/70 via-slate-50 to-[#F8FAFC] text-slate-900 pt-16 pb-20 px-4 sm:px-6 lg:px-8 border-b border-slate-200/80 overflow-hidden">
-          <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-blue-400/10 blur-3xl pointer-events-none"></div>
-          <div className="absolute top-1/2 -right-24 w-96 h-96 rounded-full bg-emerald-400/10 blur-3xl pointer-events-none"></div>
-          
-          <div className="max-w-7xl mx-auto relative z-10 space-y-8 text-center">
+        <section className="bg-slate-50 text-slate-900 pt-16 pb-20 px-4 sm:px-6 lg:px-8 border-b border-slate-200/80">
+          <div className="max-w-7xl mx-auto space-y-8 text-center">
             <div className="max-w-3xl mx-auto space-y-4">
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-100/80 text-blue-700 border border-blue-200 text-xs font-bold tracking-wide uppercase shadow-2xs">
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-100/80 text-blue-700 border border-blue-200 text-xs font-bold tracking-wide uppercase">
                 <Sparkles className="w-3.5 h-3.5 text-blue-600" />
                 <span>Pakistan Flagship Enterprise Ecosystem</span>
               </span>
 
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
-                Discover Businesses, Jobs & Professionals in <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-blue-700 to-emerald-600">Pakistan</span>
+                Discover Businesses, Jobs & Professionals in <span className="text-blue-700">Pakistan</span>
               </h1>
 
               <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-medium">
@@ -181,7 +181,9 @@ export default async function HomePage() {
               <form action="/search" method="GET" className="grid grid-cols-1 md:grid-cols-12 gap-3">
                 <div className="md:col-span-6 flex items-center gap-3 px-4 py-3 bg-slate-50/80 rounded-2xl border border-slate-200/80">
                   <Search className="w-5 h-5 text-slate-400 shrink-0" />
+                  <label htmlFor="hero-search-q" className="sr-only">Search business or job title</label>
                   <input
+                    id="hero-search-q"
                     type="text"
                     name="q"
                     placeholder="Search business, software, restaurant, or job title..."
@@ -191,7 +193,9 @@ export default async function HomePage() {
 
                 <div className="md:col-span-4 flex items-center gap-3 px-4 py-3 bg-slate-50/80 rounded-2xl border border-slate-200/80">
                   <MapPin className="w-5 h-5 text-slate-400 shrink-0" />
+                  <label htmlFor="hero-city-select" className="sr-only">Select City</label>
                   <select
+                    id="hero-city-select"
                     name="city"
                     className="w-full bg-transparent text-slate-900 text-sm focus:outline-none cursor-pointer"
                   >
@@ -205,6 +209,7 @@ export default async function HomePage() {
                 <div className="md:col-span-2">
                   <button
                     type="submit"
+                    aria-label="Search ListPak Directory"
                     className="w-full h-full py-3.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold text-sm rounded-2xl shadow-lg shadow-blue-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <Search className="w-4 h-4" />
@@ -347,7 +352,7 @@ export default async function HomePage() {
                   <div className="space-y-3">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-center gap-3">
-                        <img src={biz.logo} alt={biz.name} className="w-14 h-14 rounded-2xl object-cover border border-slate-200 bg-white" />
+                        <Image src={biz.logo} alt={biz.name} width={56} height={56} loading="lazy" sizes="56px" className="w-14 h-14 rounded-2xl object-cover border border-slate-200 bg-white" />
                         <div>
                           <Link href={`/business/${biz.slug}`} className="font-extrabold text-slate-900 text-base group-hover:text-blue-600 transition-colors flex items-center gap-1.5">
                             <span>{biz.name}</span>
@@ -405,7 +410,7 @@ export default async function HomePage() {
             {recentlyAddedBusinesses.map((biz) => (
               <div key={biz.id} className="bg-white rounded-2xl border border-slate-200 p-5 space-y-3 shadow-xs hover:border-blue-500 transition-colors">
                 <div className="flex items-center gap-3">
-                  <img src={biz.logo} alt={biz.name} className="w-12 h-12 rounded-xl object-cover border border-slate-200" />
+                  <Image src={biz.logo} alt={biz.name} width={48} height={48} loading="lazy" sizes="48px" className="w-12 h-12 rounded-xl object-cover border border-slate-200" />
                   <div>
                     <Link href={`/business/${biz.slug}`} className="font-bold text-slate-900 text-sm hover:text-blue-600">
                       {biz.name}
@@ -446,7 +451,7 @@ export default async function HomePage() {
                 <div key={job.id} className="bg-slate-800/90 rounded-2xl p-6 border border-slate-700 space-y-4 shadow-lg">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <img src={job.companyLogo} alt={job.company} className="w-12 h-12 rounded-xl object-cover border border-slate-700 bg-white" />
+                      <Image src={job.companyLogo} alt={job.company} width={48} height={48} loading="lazy" sizes="48px" className="w-12 h-12 rounded-xl object-cover border border-slate-700 bg-white" />
                       <div>
                         <h3 className="font-bold text-white text-base">{job.title}</h3>
                         <p className="text-xs text-slate-400">{job.company} • {job.city}</p>
@@ -490,7 +495,7 @@ export default async function HomePage() {
                 <div className="space-y-3">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <img src={job.companyLogo} alt={job.company} className="w-12 h-12 rounded-xl object-cover border border-slate-200" />
+                      <Image src={job.companyLogo} alt={job.company} width={48} height={48} loading="lazy" sizes="48px" className="w-12 h-12 rounded-xl object-cover border border-slate-200" />
                       <div>
                         <h3 className="font-bold text-slate-900 text-base">{job.title}</h3>
                         <p className="text-xs text-slate-500 font-medium">{job.company}</p>
@@ -651,7 +656,7 @@ export default async function HomePage() {
                   <Quote className="w-8 h-8 text-amber-500 opacity-60" />
                   <p className="text-xs text-slate-600 italic leading-relaxed">&quot;{item.quote}&quot;</p>
                   <div className="flex items-center gap-3 pt-2 border-t border-slate-200/80">
-                    <img src={item.avatar} alt={item.name} className="w-10 h-10 rounded-full object-cover" />
+                    <Image src={item.avatar} alt={item.name} width={40} height={40} loading="lazy" sizes="40px" className="w-10 h-10 rounded-full object-cover" />
                     <div>
                       <h4 className="font-bold text-slate-900 text-xs">{item.name}</h4>
                       <p className="text-[11px] text-slate-500">{item.role} • {item.city}</p>
@@ -752,13 +757,15 @@ export default async function HomePage() {
               Get weekly local SEO strategies, hiring guides, and market updates delivered directly to your inbox.
             </p>
             <form action="#" className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+              <label htmlFor="newsletter-email-input" className="sr-only">Email address</label>
               <input
+                id="newsletter-email-input"
                 type="email"
                 placeholder="Enter your email address"
                 required
                 className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
               />
-              <button type="submit" className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition-colors shrink-0">
+              <button type="submit" aria-label="Subscribe to Newsletter" className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition-colors shrink-0">
                 Subscribe Free
               </button>
             </form>

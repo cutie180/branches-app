@@ -6,10 +6,6 @@ export default function UniversalHelpBanner() {
     <section className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 border-t border-slate-800 text-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
-          {/* Subtle Ambient Background Lighting */}
-          <div className="absolute -top-24 -left-24 w-60 h-60 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-24 -right-24 w-60 h-60 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-
           <div className="flex items-start sm:items-center gap-5 relative z-10">
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-xl shrink-0 border border-white/10">
               <LifeBuoy className="w-7 h-7 text-white" />

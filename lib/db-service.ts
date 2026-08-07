@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { MOCK_BUSINESSES, BusinessItem, ContactMessage } from './data'
 import { db } from './firebase'
 import { collection, getDocs, query, where, limit, addDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore'
@@ -59,7 +60,7 @@ export const GENERATE_STARTER_REVIEWS = (businessName: string) => [
 /**
  * Fetch all businesses. If includePending is false (default), returns ONLY approved businesses.
  */
-export async function getAllBusinesses(includePending: boolean = false): Promise<BusinessItem[]> {
+export const getAllBusinesses = cache(async function getAllBusinesses(includePending: boolean = false): Promise<BusinessItem[]> {
   try {
     const querySnapshot = await getDocs(collection(db, 'businesses'))
     if (!querySnapshot.empty) {
@@ -122,7 +123,7 @@ export async function getAllBusinesses(includePending: boolean = false): Promise
   
   // Public filter: only return approved items
   return memoryBusinessesCache.filter(b => (b.status || 'approved') === 'approved')
-}
+})
 
 export async function getPendingBusinesses(): Promise<BusinessItem[]> {
   const all = await getAllBusinesses(true)

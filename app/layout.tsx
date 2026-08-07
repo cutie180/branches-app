@@ -1,24 +1,21 @@
 import type { Metadata } from 'next'
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { Analytics } from "@vercel/analytics/next"
-import { Toaster } from 'sonner'
 import Script from 'next/script'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
-import BottomNav from '@/components/bottom-nav'
+import ClientProviders from '@/components/client-providers'
 
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-inter',
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['400', '600', '700'],
 })
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-plus-jakarta',
-  weight: ['400', '500', '600', '700', '800'],
+  weight: ['600', '700'],
 })
 
 export const metadata: Metadata = {
@@ -89,6 +86,9 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${plusJakarta.variable}`}>
       <head>
         <meta name="msvalidate.01" content="32107703ABE97F472472231CBA07F2E5" />
+        <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://firebasestorage.googleapis.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
@@ -108,7 +108,7 @@ export default function RootLayout({
         {/* Deferred Non-Blocking Scripts via Next/Script */}
         <Script
           id="gtm-script"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -119,12 +119,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         />
         <Script
           id="gtag-js"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           src="https://www.googletagmanager.com/gtag/js?id=G-N09JN0NJ2R"
         />
         <Script
           id="gtag-init"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
@@ -136,10 +136,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         />
 
         {children}
-        <BottomNav />
-        <Toaster position="top-right" richColors />
-        <SpeedInsights />
-        <Analytics />
+        <ClientProviders />
       </body>
     </html>
   )

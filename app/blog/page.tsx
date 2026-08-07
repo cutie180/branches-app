@@ -15,6 +15,15 @@ export const metadata: Metadata = {
 
 export const FEATURED_POSTS = [
   {
+    slug: 'top-business-directory-websites-pakistan',
+    title: 'Top Business Directory Websites in Pakistan: The Complete Guide to Finding Trusted Local Businesses (2026)',
+    excerpt: 'Discover the best business directory websites in Pakistan to find trusted local businesses, improve your local SEO, reach more customers, and boost online visibility.',
+    category: 'Directory Guide 2026',
+    date: 'August 7, 2026',
+    readTime: '10 min read',
+    icon: Sparkles
+  },
+  {
     slug: 'how-to-list-business-free-listpak-guide',
     title: 'How to List Your Business Free on ListPak – Complete Step-by-Step Guide 2026',
     excerpt: 'Learn exactly how to create your free business listing on ListPak in 5 minutes. This comprehensive guide covers everything from account creation to optimization tips for maximum visibility on Google.',
@@ -31,15 +40,6 @@ export const FEATURED_POSTS = [
     date: 'July 28, 2026',
     readTime: '12 min read',
     icon: TrendingUp
-  },
-  {
-    slug: 'free-job-posting-pakistan-hire-employees',
-    title: 'Free Job Posting in Pakistan – How to Hire Employees Without Spending Money',
-    excerpt: 'Complete guide to posting jobs free on ListPak job portal. Learn how to write compelling job descriptions, attract qualified candidates, and hire employees in Pakistan, Dubai, Germany.',
-    category: 'Free Job Portal Guide',
-    date: 'July 25, 2026',
-    readTime: '10 min read',
-    icon: Briefcase
   }
 ]
 

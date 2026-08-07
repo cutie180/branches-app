@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Menu, X, Plus, Building2, Search, Briefcase, Users, BookOpen } from 'lucide-react'
 
@@ -19,15 +20,18 @@ export default function Navbar() {
   const pathname = usePathname()
 
   return (
-    <header className="sticky top-0 z-50 bg-[#0F172A]/95 backdrop-blur-md border-b border-slate-800/80 shadow-lg">
+    <header className="sticky top-0 z-50 bg-[#0F172A] border-b border-slate-800/80 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           
           {/* Brand Logo */}
-          <Link href="/" className="flex items-center group py-1">
-            <img
+          <Link href="/" aria-label="ListPak Home Page" className="flex items-center group py-1">
+            <Image
               src="/logo.png"
-              alt="ListPak - Pakistan Business Hub"
+              alt="ListPak - Pakistan Business Directory"
+              width={160}
+              height={48}
+              priority
               className="h-10 sm:h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
             />
           </Link>

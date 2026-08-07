@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { ShieldCheck, MapPin, Briefcase, Sparkles, Phone, Mail, HelpCircle, FileText, Globe } from 'lucide-react'
 import UniversalHelpBanner from '@/components/universal-help-banner'
 
@@ -12,10 +13,13 @@ export default function Footer() {
         {/* Top Branding & NAP Bar */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center pb-12 border-b border-slate-800/80 gap-6">
           <div className="flex flex-col gap-3">
-            <Link href="/" className="inline-block group">
-              <img
+            <Link href="/" aria-label="ListPak Home Page" className="inline-block group">
+              <Image
                 src="/logo.png"
-                alt="ListPak - Pakistan Business Hub"
+                alt="ListPak - Pakistan Business Directory"
+                width={160}
+                height={48}
+                loading="lazy"
                 className="h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
               />
             </Link>

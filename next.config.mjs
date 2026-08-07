@@ -2,6 +2,7 @@
 const nextConfig = {
   trailingSlash: true,
   compress: true,
+  reactStrictMode: true,
 
   experimental: {
     optimizePackageImports: [
@@ -32,7 +33,9 @@ const nextConfig = {
 
   images: {
     formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 86400,
+    minimumCacheTTL: 31536000,
+    deviceSizes: [640, 750, 828, 1080, 1200],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     remotePatterns: [
       {
         protocol: 'https',
@@ -50,7 +53,6 @@ const nextConfig = {
   },
 
   async headers() {
-    // Only apply static cache-control in production to avoid breaking Turbopack dev HMR
     if (process.env.NODE_ENV !== 'production') {
       return []
     }
@@ -60,7 +62,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=86400, stale-while-revalidate=604800',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },
@@ -74,6 +76,10 @@ const nextConfig = {
           {
             key: 'X-Frame-Options',
             value: 'SAMEORIGIN',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
           },
         ],
       },
