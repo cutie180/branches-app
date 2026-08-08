@@ -3,6 +3,7 @@ import Footer from '@/components/footer'
 import { MOCK_JOBS, MOCK_PROFESSIONALS } from '@/lib/data'
 import { getAllBusinesses } from '@/lib/db-service'
 import Link from 'next/link'
+import Image from 'next/image'
 import { MapPin, ShieldCheck, Star, ArrowRight, ArrowLeft, Building2, Briefcase } from 'lucide-react'
 import { Metadata } from 'next'
 
@@ -81,14 +82,19 @@ export default async function CityDetailPage(props: { params: Promise<{ slug: st
               {cityBusinesses.map((biz) => (
                 <div key={biz.id} className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs flex flex-col justify-between">
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-bold text-slate-900 text-base flex items-center gap-1.5">
-                        <span>{biz.name}</span>
-                        {biz.verified && <ShieldCheck className="w-4 h-4 text-emerald-500" />}
-                      </h3>
-                      <span className="text-xs font-bold text-amber-600">★ {biz.rating}</span>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <Image src={biz.logo} alt={biz.name} width={48} height={48} loading="lazy" sizes="48px" className="w-12 h-12 rounded-xl object-cover border border-slate-100 shrink-0" />
+                        <div>
+                          <h3 className="font-bold text-slate-900 text-base flex items-center gap-1.5">
+                            <span>{biz.name}</span>
+                            {biz.verified && <ShieldCheck className="w-4 h-4 text-emerald-500" />}
+                          </h3>
+                          <p className="text-xs text-slate-500">{biz.category}</p>
+                        </div>
+                      </div>
+                      <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-lg shrink-0">★ {biz.rating}</span>
                     </div>
-                    <p className="text-xs text-slate-500">{biz.category}</p>
                     <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">{biz.description}</p>
                   </div>
                   <div className="pt-3 mt-3 border-t border-slate-100 flex justify-end">

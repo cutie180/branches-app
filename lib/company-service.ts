@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { MOCK_COMPANIES, CompanyItem } from './data'
 import { db } from './firebase'
 import { collection, getDocs, query, where, limit, addDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore'
@@ -5,7 +6,7 @@ import { normalizeSlug } from './db-service'
 
 let memoryCompaniesCache: CompanyItem[] = [...MOCK_COMPANIES]
 
-export async function getAllCompanies(includePending: boolean = false): Promise<CompanyItem[]> {
+export const getAllCompanies = cache(async function getAllCompanies(includePending: boolean = false): Promise<CompanyItem[]> {
   try {
     const snap = await getDocs(collection(db, 'companies'))
     if (!snap.empty) {
@@ -80,9 +81,9 @@ export async function getAllCompanies(includePending: boolean = false): Promise<
   }
 
   return memoryCompaniesCache.filter(c => (c.status || 'approved') === 'approved')
-}
+})
 
-export async function getCompanyBySlug(slug: string): Promise<CompanyItem | null> {
+export const getCompanyBySlug = cache(async function getCompanyBySlug(slug: string): Promise<CompanyItem | null> {
   const normalized = slug.toLowerCase().trim()
   const cached = memoryCompaniesCache.find(c => c.slug.toLowerCase() === normalized || c.id === normalized)
   if (cached && (cached.status || 'approved') === 'approved') {
@@ -104,7 +105,7 @@ export async function getCompanyBySlug(slug: string): Promise<CompanyItem | null
   }
 
   return cached || memoryCompaniesCache[0] || null
-}
+})
 
 export async function saveCompanyToDatabase(compData: Partial<CompanyItem>): Promise<CompanyItem> {
   const name = compData.name || 'New Hiring Company'

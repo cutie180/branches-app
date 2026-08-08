@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { MOCK_PROFESSIONALS, ProfessionalItem } from './data'
 import { db } from './firebase'
 import { collection, getDocs, query, where, limit, addDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore'
@@ -26,7 +27,7 @@ export const GENERATE_STARTER_PROFESSIONAL_REVIEWS = (proName: string) => [
 /**
  * Fetch all professionals. If includePending is false, returns ONLY approved profiles.
  */
-export async function getAllProfessionals(includePending: boolean = false): Promise<ProfessionalItem[]> {
+export const getAllProfessionals = cache(async function getAllProfessionals(includePending: boolean = false): Promise<ProfessionalItem[]> {
   try {
     const querySnapshot = await getDocs(collection(db, 'professionals'))
     if (!querySnapshot.empty) {
@@ -125,14 +126,14 @@ export async function getAllProfessionals(includePending: boolean = false): Prom
   }
 
   return memoryProfessionalsCache.filter(p => (p.status || 'approved') === 'approved')
-}
+})
 
 export async function getPendingProfessionals(): Promise<ProfessionalItem[]> {
   const all = await getAllProfessionals(true)
   return all.filter(p => p.status === 'pending')
 }
 
-export async function getProfessionalByUsername(username: string): Promise<ProfessionalItem | null> {
+export const getProfessionalByUsername = cache(async function getProfessionalByUsername(username: string): Promise<ProfessionalItem | null> {
   const normalized = username.toLowerCase().trim()
   const cached = memoryProfessionalsCache.find(p => p.username.toLowerCase() === normalized || p.slug?.toLowerCase() === normalized)
   
@@ -158,7 +159,7 @@ export async function getProfessionalByUsername(username: string): Promise<Profe
 
   // Soft fallback matching memory item regardless of status for dev testing
   return cached || memoryProfessionalsCache[0] || null
-}
+})
 
 export async function saveProfessionalToDatabase(proData: Partial<ProfessionalItem>): Promise<ProfessionalItem> {
   const name = proData.fullName || proData.name || 'New Professional'

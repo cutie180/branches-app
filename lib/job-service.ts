@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { MOCK_JOBS, JobItem, ProfessionalItem } from './data'
 import { getAllProfessionals } from './professional-service'
 import { db } from './firebase'
@@ -6,7 +7,7 @@ import { normalizeSlug } from './db-service'
 
 let memoryJobsCache: JobItem[] = [...MOCK_JOBS]
 
-export async function getAllJobs(includePending: boolean = false): Promise<JobItem[]> {
+export const getAllJobs = cache(async function getAllJobs(includePending: boolean = false): Promise<JobItem[]> {
   try {
     const snap = await getDocs(collection(db, 'jobs'))
     if (!snap.empty) {
@@ -73,9 +74,9 @@ export async function getAllJobs(includePending: boolean = false): Promise<JobIt
   }
 
   return memoryJobsCache.filter(j => (j.status || 'approved') === 'approved')
-}
+})
 
-export async function getJobBySlug(idOrSlug: string): Promise<JobItem | null> {
+export const getJobBySlug = cache(async function getJobBySlug(idOrSlug: string): Promise<JobItem | null> {
   const normalized = idOrSlug.toLowerCase().trim()
   const cached = memoryJobsCache.find(j => j.id === idOrSlug || j.slug?.toLowerCase() === normalized)
   if (cached && (cached.status || 'approved') === 'approved') {
@@ -97,7 +98,7 @@ export async function getJobBySlug(idOrSlug: string): Promise<JobItem | null> {
   }
 
   return cached || memoryJobsCache[0] || null
-}
+})
 
 export async function saveJobToDatabase(jobData: Partial<JobItem>): Promise<JobItem> {
   const title = jobData.title || 'New Job Opportunity'

@@ -3,6 +3,7 @@ import Footer from '@/components/footer'
 import { CATEGORIES } from '@/lib/data'
 import { getAllBusinesses } from '@/lib/db-service'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ShieldCheck, Star, ArrowRight, ArrowLeft } from 'lucide-react'
 import { Metadata } from 'next'
 
@@ -89,7 +90,7 @@ export default async function CategoryDetailPage(props: { params: Promise<{ slug
                 <div className="space-y-3">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <img src={biz.logo} alt={biz.name} className="w-12 h-12 rounded-xl object-cover border border-slate-100" />
+                      <Image src={biz.logo} alt={biz.name} width={48} height={48} loading="lazy" sizes="48px" className="w-12 h-12 rounded-xl object-cover border border-slate-100" />
                       <div>
                         <Link href={`/business/${biz.slug}`} className="font-bold text-slate-900 text-base hover:text-blue-600 flex items-center gap-1.5">
                           <span>{biz.name}</span>

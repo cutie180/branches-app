@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { 
   Building2, Briefcase, MapPin, Phone, Mail, Globe, ShieldCheck, CheckCircle2, 
-  Sparkles, ArrowRight, ArrowLeft, Star, Linkedin, Plus, Trash2, UserCheck, Check
+  Sparkles, ArrowRight, ArrowLeft, Star, Linkedin, Plus, Trash2, UserCheck, Check, Upload
 } from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
@@ -469,6 +469,42 @@ export default function AddCompanyClient() {
                       placeholder="https://linkedin.com/company/yourcompany"
                       className="w-full px-4 py-2.5 bg-white border border-blue-300 rounded-xl text-xs"
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Company Logo Image (Optional)</label>
+                    <label className="border-2 border-dashed border-slate-200 rounded-xl p-4 text-center cursor-pointer hover:bg-slate-50 transition-colors block">
+                      {formData.logo && !formData.logo.startsWith('http') ? (
+                        <div className="flex items-center justify-center gap-3">
+                          <img src={formData.logo} alt="Company logo preview" className="w-14 h-14 rounded-xl object-cover border border-slate-200" />
+                          <div className="text-left">
+                            <span className="text-xs font-bold text-emerald-600 block">✓ Custom Logo Uploaded</span>
+                            <span className="text-[10px] text-slate-500 block">Click box to change logo image</span>
+                          </div>
+                        </div>
+                      ) : (
+                        <div>
+                          <Upload className="w-5 h-5 text-slate-400 mx-auto mb-1" />
+                          <span className="text-xs text-slate-600 font-medium block">Click to upload company logo</span>
+                          <span className="text-[10px] text-slate-400 block mt-0.5">Supports PNG, JPG, WEBP</span>
+                        </div>
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0]
+                          if (file) {
+                            const reader = new FileReader()
+                            reader.onloadend = () => {
+                              setFormData(p => ({ ...p, logo: reader.result as string }))
+                            }
+                            reader.readAsDataURL(file)
+                          }
+                        }}
+                      />
+                    </label>
                   </div>
 
                   <div>

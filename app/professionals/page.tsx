@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { ProfessionalItem } from '@/lib/data'
@@ -229,9 +230,13 @@ export default function ProfessionalsPage() {
                 <div className="space-y-4">
                   {/* Top Profile Header */}
                   <div className="flex items-start gap-4">
-                    <img
+                    <Image
                       src={pro.avatar}
                       alt={pro.name}
+                      width={64}
+                      height={64}
+                      loading="lazy"
+                      sizes="64px"
                       className="w-16 h-16 rounded-2xl object-cover border border-slate-100 shadow-xs shrink-0"
                     />
                     <div className="space-y-1 min-w-0 flex-1">

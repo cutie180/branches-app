@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
+import Image from 'next/image'
 import SearchFilters from '@/components/search/search-filters'
 import { MOCK_BUSINESSES, MOCK_JOBS, MOCK_PROFESSIONALS, ProfessionalItem } from '@/lib/data'
 import { getAllProfessionals } from '@/lib/professional-service'
@@ -274,7 +275,7 @@ function SearchContent() {
                       <div className="space-y-3">
                         <div className="flex items-start justify-between gap-3">
                           <div className="flex items-center gap-3">
-                            <img src={biz.logo} alt={biz.name} className="w-12 h-12 rounded-xl object-cover border border-slate-100" />
+                            <Image src={biz.logo} alt={biz.name} width={48} height={48} loading="lazy" sizes="48px" className="w-12 h-12 rounded-xl object-cover border border-slate-100" />
                             <div>
                               <Link href={`/business/${biz.slug}`} className="font-bold text-slate-900 text-base group-hover:text-blue-600 transition-colors flex items-center gap-1.5">
                                 <span>{biz.name}</span>
@@ -388,7 +389,7 @@ function SearchContent() {
                     <div key={pro.username} className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs hover:shadow-md transition-all space-y-4 flex flex-col justify-between">
                       <div className="space-y-3">
                         <div className="flex items-center gap-3">
-                          <img src={pro.avatar} alt={pro.name} className="w-14 h-14 rounded-2xl object-cover border border-slate-100" />
+                          <Image src={pro.avatar} alt={pro.name} width={56} height={56} loading="lazy" sizes="56px" className="w-14 h-14 rounded-2xl object-cover border border-slate-100" />
                           <div>
                             <Link href={`/professionals/${pro.username}`} className="font-bold text-slate-900 text-base hover:text-blue-600 transition-colors flex items-center gap-1.5">
                               <span>{pro.name}</span>

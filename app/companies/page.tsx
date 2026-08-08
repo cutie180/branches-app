@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { CompanyItem } from '@/lib/data'
@@ -142,7 +143,7 @@ export default function CompaniesPage() {
               <div key={comp.slug} className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xs hover:shadow-xl transition-all space-y-4 flex flex-col justify-between group">
                 <div className="space-y-4">
                   <div className="flex items-start gap-4">
-                    <img src={comp.logo} alt={comp.name} className="w-14 h-14 rounded-2xl object-cover border border-slate-100 shadow-xs shrink-0" />
+                    <Image src={comp.logo} alt={comp.name} width={56} height={56} loading="lazy" sizes="56px" className="w-14 h-14 rounded-2xl object-cover border border-slate-100 shadow-xs shrink-0" />
                     <div className="space-y-1 min-w-0 flex-1">
                       <div className="flex items-center gap-1.5">
                         <Link href={`/companies/${comp.slug}`} className="font-extrabold text-slate-900 text-base group-hover:text-blue-600 transition-colors truncate">

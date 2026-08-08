@@ -54,6 +54,7 @@ export default function AddBusinessClient() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submittedSlug, setSubmittedSlug] = useState<string | null>(null)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const [logoPreview, setLogoPreview] = useState<string | null>(null)
 
   // Searchable City Selector state
   const [citySearchQuery, setCitySearchQuery] = useState('')
@@ -535,6 +536,42 @@ export default function AddBusinessClient() {
                         className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       />
                     </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1.5">Business Logo / Featured Photo (Optional)</label>
+                      <label className="border-2 border-dashed border-slate-200 rounded-2xl p-4 text-center cursor-pointer hover:bg-slate-50 transition-colors block">
+                        {logoPreview ? (
+                          <div className="flex items-center justify-center gap-4">
+                            <img src={logoPreview} alt="Logo preview" className="w-16 h-16 rounded-2xl object-cover border border-slate-200 shadow-xs" />
+                            <div className="text-left">
+                              <span className="text-xs font-bold text-emerald-600 block">✓ Logo / Photo Uploaded</span>
+                              <span className="text-[11px] text-slate-500 block">Click box to upload a different image</span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div>
+                            <Upload className="w-6 h-6 text-slate-400 mx-auto mb-1" />
+                            <span className="text-xs text-slate-600 font-medium block">Click to upload business logo or storefront photo</span>
+                            <span className="text-[10px] text-slate-400 block mt-0.5">Supports JPG, PNG, WEBP (Max 5MB)</span>
+                          </div>
+                        )}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0]
+                            if (file) {
+                              const reader = new FileReader()
+                              reader.onloadend = () => {
+                                setLogoPreview(reader.result as string)
+                              }
+                              reader.readAsDataURL(file)
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
                   </div>
                 </div>
               )}
@@ -622,9 +659,13 @@ export default function AddBusinessClient() {
                 {/* Simulated Business Card */}
                 <div className="bg-[#F8FAFC] rounded-2xl p-4 border border-slate-200/80 space-y-3">
                   <div className="flex items-start gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-bold text-lg flex items-center justify-center shrink-0">
-                      {formData.businessName ? formData.businessName.charAt(0).toUpperCase() : 'B'}
-                    </div>
+                    {logoPreview ? (
+                      <img src={logoPreview} alt="Logo" className="w-12 h-12 rounded-xl object-cover border border-slate-200 shrink-0" />
+                    ) : (
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-bold text-lg flex items-center justify-center shrink-0">
+                        {formData.businessName ? formData.businessName.charAt(0).toUpperCase() : 'B'}
+                      </div>
+                    )}
                     <div className="space-y-0.5 min-w-0">
                       <h4 className="font-extrabold text-slate-900 text-sm truncate">
                         {formData.businessName || 'Your Business Name'}

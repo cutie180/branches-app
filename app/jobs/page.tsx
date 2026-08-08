@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { JobItem } from '@/lib/data'
@@ -142,7 +143,7 @@ export default function JobsPage() {
               <div key={job.id} className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xs hover:shadow-xl transition-all space-y-4 flex flex-col justify-between group">
                 <div className="space-y-4">
                   <div className="flex items-start gap-4">
-                    <img src={job.companyLogo} alt={job.company} className="w-12 h-12 rounded-2xl object-cover border border-slate-100 shadow-xs shrink-0" />
+                    <Image src={job.companyLogo} alt={job.company} width={48} height={48} loading="lazy" sizes="48px" className="w-12 h-12 rounded-2xl object-cover border border-slate-100 shadow-xs shrink-0" />
                     <div className="space-y-1 min-w-0 flex-1">
                       <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 uppercase tracking-wider">
                         {job.type}

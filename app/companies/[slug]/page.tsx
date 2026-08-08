@@ -1,67 +1,71 @@
-'use client'
-
-import { use, useState, useEffect } from 'react'
-import Navbar from '@/components/navbar'
-import Footer from '@/components/footer'
-import { CompanyItem, JobItem } from '@/lib/data'
-import { getCompanyBySlug, getAllCompanies } from '@/lib/company-service'
-import { getAllJobs } from '@/lib/job-service'
+import React from 'react'
+import { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import Navbar from '@/components/navbar'
+import Footer from '@/components/footer'
+import { getCompanyBySlug, getAllCompanies } from '@/lib/company-service'
+import { getAllJobs } from '@/lib/job-service'
 import { 
   Building2, MapPin, ShieldCheck, Star, Mail, Phone, Award, ArrowLeft, 
-  Globe, Linkedin, Facebook, Twitter, Instagram, Youtube, Github, ExternalLink, 
-  Briefcase, Calendar, Users, Check, MessageCircle, HelpCircle
+  Linkedin, ExternalLink, Briefcase
 } from 'lucide-react'
 
-export default function CompanyDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  const resolvedParams = use(params)
-  const slug = resolvedParams.slug
+export const revalidate = 86400
 
-  const [company, setCompany] = useState<CompanyItem | null>(null)
-  const [activeJobs, setActiveJobs] = useState<JobItem[]>([])
-  const [similarCompanies, setSimilarCompanies] = useState<CompanyItem[]>([])
-  const [loading, setLoading] = useState(true)
+export async function generateStaticParams() {
+  const companies = await getAllCompanies()
+  return companies.map((c) => ({
+    slug: c.slug,
+  }))
+}
 
-  useEffect(() => {
-    async function loadData() {
-      setLoading(true)
-      try {
-        const comp = await getCompanyBySlug(slug)
-        if (comp) {
-          setCompany(comp)
-          const allJ = await getAllJobs(false)
-          setActiveJobs(allJ.filter(j => j.companySlug === comp.slug || j.company.toLowerCase() === comp.name.toLowerCase()))
+export async function generateMetadata(props: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const params = await props.params
+  const slug = params.slug
+  const company = await getCompanyBySlug(slug)
 
-          const allC = await getAllCompanies(false)
-          setSimilarCompanies(allC.filter(c => c.slug !== comp.slug).slice(0, 3))
-        }
-      } catch (err) {
-        console.error('Error fetching company details:', err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    loadData()
-  }, [slug])
+  const name = company ? company.name : slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+  const title = `${name} - Verified Employer & Company Directory | ListPak`
+  const description = company ? company.description : `Explore verified company profile, active job openings, and recruitment contacts for ${name} on ListPak.`
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
-        <Navbar />
-        <div className="flex-1 flex items-center justify-center py-20 text-slate-400 text-sm">
-          Loading company profile...
-        </div>
-        <Footer />
-      </div>
-    )
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `https://www.listpak.com/companies/${slug}`,
+    },
+    openGraph: {
+      title,
+      description,
+      siteName: 'ListPak',
+      url: `https://www.listpak.com/companies/${slug}`,
+      locale: 'en_PK',
+      type: 'website',
+      images: company?.logo ? [{ url: company.logo, alt: name }] : undefined,
+    },
   }
+}
+
+export default async function CompanyDetailPage(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params
+  const slug = params.slug
+
+  const company = await getCompanyBySlug(slug)
 
   if (!company) {
     return notFound()
   }
 
-  // Construct Organization Schema for SEO
+  const allJobs = await getAllJobs(false)
+  const activeJobs = allJobs.filter(
+    j => j.companySlug === company.slug || j.company.toLowerCase() === company.name.toLowerCase()
+  )
+
+  const allCompanies = await getAllCompanies(false)
+  const similarCompanies = allCompanies.filter(c => c.slug !== company.slug).slice(0, 3)
+
   const jsonLdOrg = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -99,11 +103,17 @@ export default function CompanyDetailPage({ params }: { params: Promise<{ slug: 
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
             <div className="flex items-center gap-5">
-              <img
-                src={company.logo}
-                alt={company.name}
-                className="w-20 h-20 rounded-3xl object-cover border-4 border-white/20 shadow-2xl bg-white shrink-0"
-              />
+              <div className="relative w-20 h-20 rounded-3xl overflow-hidden border-4 border-white/20 shadow-2xl bg-white shrink-0">
+                <Image
+                  src={company.logo}
+                  alt={company.name}
+                  width={80}
+                  height={80}
+                  priority
+                  sizes="80px"
+                  className="w-full h-full object-cover"
+                />
+              </div>
               <div className="space-y-1">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h1 className="text-2xl sm:text-3xl font-extrabold text-white">{company.name}</h1>
@@ -222,7 +232,7 @@ export default function CompanyDetailPage({ params }: { params: Promise<{ slug: 
                   className="p-4 bg-white rounded-2xl border border-slate-200 hover:border-blue-300 transition-all hover:shadow-md group space-y-2 block"
                 >
                   <div className="flex items-center gap-3">
-                    <img src={sim.logo} alt={sim.name} className="w-10 h-10 rounded-xl object-cover" />
+                    <Image src={sim.logo} alt={sim.name} width={40} height={40} loading="lazy" sizes="40px" className="w-10 h-10 rounded-xl object-cover" />
                     <div>
                       <p className="font-bold text-xs text-slate-900 group-hover:text-blue-600">{sim.name}</p>
                       <p className="text-[11px] text-slate-500 truncate">{sim.industry}</p>

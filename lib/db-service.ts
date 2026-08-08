@@ -183,7 +183,7 @@ export async function getFeaturedBusinesses(limitCount: number = 9): Promise<Bus
   return featured.slice(0, limitCount)
 }
 
-export async function getBusinessBySlug(slug: string): Promise<BusinessItem | null> {
+export const getBusinessBySlug = cache(async function getBusinessBySlug(slug: string): Promise<BusinessItem | null> {
   const cached = memoryBusinessesCache.find(b => b.slug === slug)
   if (cached && (cached.status || 'approved') === 'approved') {
     if (!cached.reviews || cached.reviews.length === 0) {
@@ -274,7 +274,7 @@ export async function getBusinessBySlug(slug: string): Promise<BusinessItem | nu
   }
   memoryBusinessesCache.push(fallbackBiz)
   return fallbackBiz
-}
+})
 
 /**
  * Save new business with status: "pending" by default

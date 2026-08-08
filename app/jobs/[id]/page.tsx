@@ -1,84 +1,68 @@
-'use client'
-
-import { use, useState, useEffect } from 'react'
-import Navbar from '@/components/navbar'
-import Footer from '@/components/footer'
-import { JobItem, ProfessionalItem } from '@/lib/data'
-import { getJobBySlug, getMatchingCandidatesForJob } from '@/lib/job-service'
+import React from 'react'
+import { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import Navbar from '@/components/navbar'
+import Footer from '@/components/footer'
+import { getJobBySlug, getAllJobs, getMatchingCandidatesForJob } from '@/lib/job-service'
 import { 
   Briefcase, MapPin, Building2, Calendar, CheckCircle2, ExternalLink, Mail, 
   ArrowLeft, ShieldCheck, Globe, Info, Users, Sparkles, UserCheck, Check
 } from 'lucide-react'
-import { toast } from 'sonner'
+import JobInteractiveApply from './job-interactive-apply'
 
-export default function JobDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = use(params)
-  const idOrSlug = resolvedParams.id
+export const revalidate = 86400
 
-  const [job, setJob] = useState<JobItem | null>(null)
-  const [matchingCandidates, setMatchingCandidates] = useState<Array<{ candidate: ProfessionalItem; matchScore: number; matchReasons: string[] }>>([])
-  const [loading, setLoading] = useState(true)
+export async function generateStaticParams() {
+  const jobs = await getAllJobs()
+  return jobs.map((j) => ({
+    id: j.slug || j.id,
+  }))
+}
 
-  // Direct Apply Modal state
-  const [showApplyModal, setShowApplyModal] = useState(false)
-  const [applicantName, setApplicantName] = useState('')
-  const [applicantEmail, setApplicantEmail] = useState('')
-  const [applicantPhone, setApplicantPhone] = useState('')
-  const [coverNote, setCoverNote] = useState('')
+export async function generateMetadata(props: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const params = await props.params
+  const idOrSlug = params.id
+  const job = await getJobBySlug(idOrSlug)
 
-  useEffect(() => {
-    async function loadData() {
-      setLoading(true)
-      try {
-        const j = await getJobBySlug(idOrSlug)
-        if (j) {
-          setJob(j)
-          const matches = await getMatchingCandidatesForJob(j)
-          setMatchingCandidates(matches.slice(0, 4))
-        }
-      } catch (err) {
-        console.error('Error loading job detail:', err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    loadData()
-  }, [idOrSlug])
+  const jobTitle = job ? job.title : 'job openings'
+  const jobCity = job ? job.city : 'Pakistan'
+  const title = job ? `${job.title} at ${job.company} (${job.city}) | ListPak Jobs` : 'Job Vacancy | ListPak Pakistan'
+  const description = job ? job.description : `Apply for ${jobTitle} in ${jobCity} on ListPak hiring portal.`
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
-        <Navbar />
-        <div className="flex-1 flex items-center justify-center py-20 text-slate-400 text-sm">
-          Loading job opening...
-        </div>
-        <Footer />
-      </div>
-    )
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `https://www.listpak.com/jobs/${idOrSlug}`,
+    },
+    openGraph: {
+      title,
+      description,
+      siteName: 'ListPak',
+      url: `https://www.listpak.com/jobs/${idOrSlug}`,
+      locale: 'en_PK',
+      type: 'website',
+      images: job?.companyLogo ? [{ url: job.companyLogo, alt: job.company }] : undefined,
+    },
   }
+}
+
+export default async function JobDetailPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params
+  const idOrSlug = params.id
+
+  const job = await getJobBySlug(idOrSlug)
 
   if (!job) {
     return notFound()
   }
 
-  const handleApplySubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!applicantName || !applicantEmail) {
-      toast.error('Please enter name and email.')
-      return
-    }
-    setShowApplyModal(false)
-    setApplicantName('')
-    setApplicantEmail('')
-    setApplicantPhone('')
-    setCoverNote('')
-    toast.success(`Application submitted to ${job.company} HR team!`)
-  }
+  const matchingCandidatesRaw = await getMatchingCandidatesForJob(job)
+  const matchingCandidates = matchingCandidatesRaw.slice(0, 4)
 
   const websiteUrl = job.applicationWebsite || job.applicationUrl || `https://${job.companySlug}.pk/careers`
-  const mailtoUrl = job.applicationEmail ? `mailto:${job.applicationEmail}?subject=Application for ${encodeURIComponent(job.title)}` : ''
 
   const jobSchema = {
     '@context': 'https://schema.org',
@@ -128,7 +112,17 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pt-2">
             <div className="flex items-start gap-4">
-              <img src={job.companyLogo} alt={job.company} className="w-16 h-16 rounded-2xl object-cover border border-slate-700 shadow-md bg-white shrink-0" />
+              <div className="relative w-16 h-16 rounded-2xl overflow-hidden border border-slate-700 shadow-md bg-white shrink-0">
+                <Image
+                  src={job.companyLogo}
+                  alt={job.company}
+                  width={64}
+                  height={64}
+                  priority
+                  sizes="64px"
+                  className="w-full h-full object-cover"
+                />
+              </div>
               <div className="space-y-1">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
@@ -150,13 +144,10 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
             {/* Application CTA */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
-              <button
-                onClick={() => setShowApplyModal(true)}
-                className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <CheckCircle2 className="w-4 h-4" />
-                <span>Apply on ListPak</span>
-              </button>
+              <JobInteractiveApply
+                jobTitle={job.title}
+                companyName={job.company}
+              />
 
               {websiteUrl && (
                 <a
@@ -197,7 +188,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
           </div>
         </div>
 
-        {/* Candidate Matching Suggestions (Integrated with Professional / Job Seeker Category) */}
+        {/* Candidate Matching Suggestions */}
         {matchingCandidates.length > 0 && (
           <div className="bg-gradient-to-br from-blue-50/70 to-indigo-50/70 rounded-3xl p-6 border border-blue-200/80 shadow-xs space-y-4">
             <div className="flex items-center justify-between">
@@ -211,7 +202,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {matchingCandidates.map(({ candidate, matchScore, matchReasons }) => (
                 <div key={candidate.username} className="p-4 bg-white rounded-2xl border border-blue-100 flex items-start gap-3 shadow-xs">
-                  <img src={candidate.avatar} alt={candidate.name} className="w-12 h-12 rounded-xl object-cover border border-slate-200 shrink-0" />
+                  <Image src={candidate.avatar} alt={candidate.name} width={48} height={48} loading="lazy" sizes="48px" className="w-12 h-12 rounded-xl object-cover border border-slate-200 shrink-0" />
                   <div className="min-w-0 flex-1 space-y-1">
                     <div className="flex justify-between items-start">
                       <Link href={`/professionals/${candidate.username}`} className="font-bold text-xs text-slate-900 hover:text-blue-600 truncate">
@@ -280,82 +271,6 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
         </div>
 
       </main>
-
-      {/* Application Modal */}
-      {showApplyModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl animate-in zoom-in-95">
-            <div className="flex justify-between items-center pb-3 border-b border-slate-100">
-              <h3 className="font-extrabold text-slate-900 text-base">Apply for {job.title}</h3>
-              <button onClick={() => setShowApplyModal(false)} className="text-slate-400 hover:text-slate-600 cursor-pointer text-lg">✕</button>
-            </div>
-
-            <form onSubmit={handleApplySubmit} className="space-y-3">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Your Full Name *</label>
-                <input
-                  type="text"
-                  required
-                  value={applicantName}
-                  onChange={(e) => setApplicantName(e.target.value)}
-                  placeholder="e.g. Hamza Shaikh"
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Your Email Address *</label>
-                <input
-                  type="email"
-                  required
-                  value={applicantEmail}
-                  onChange={(e) => setApplicantEmail(e.target.value)}
-                  placeholder="name@domain.com"
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Phone Number</label>
-                <input
-                  type="tel"
-                  value={applicantPhone}
-                  onChange={(e) => setApplicantPhone(e.target.value)}
-                  placeholder="+92 300 1234567"
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Cover Note / Intro</label>
-                <textarea
-                  rows={3}
-                  value={coverNote}
-                  onChange={(e) => setCoverNote(e.target.value)}
-                  placeholder="Brief message for the HR hiring manager..."
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs"
-                />
-              </div>
-
-              <div className="pt-2 flex gap-3">
-                <button
-                  type="button"
-                  onClick={() => setShowApplyModal(false)}
-                  className="flex-1 py-2.5 bg-slate-100 text-slate-700 font-bold text-xs rounded-xl hover:bg-slate-200"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md"
-                >
-                  Submit Application
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
 
       <Footer />
     </div>

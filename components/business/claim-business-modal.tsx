@@ -16,6 +16,7 @@ export default function ClaimBusinessModal({ businessName, isOpen, onClose }: Cl
   const [cnic, setCnic] = useState('')
   const [phone, setPhone] = useState('')
   const [proofFile, setProofFile] = useState<File | null>(null)
+  const [proofPreview, setProofPreview] = useState<string | null>(null)
 
   if (!isOpen) return null
 
@@ -103,17 +104,45 @@ export default function ClaimBusinessModal({ businessName, isOpen, onClose }: Cl
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">Proof Document (Visiting Card / Utility Bill / Tax Certificate)</label>
-                <div className="border-2 border-dashed border-slate-200 rounded-xl p-4 text-center cursor-pointer hover:bg-slate-50 transition-colors">
-                  <Upload className="w-6 h-6 text-slate-400 mx-auto mb-1" />
-                  <span className="text-xs text-slate-600 font-medium block">
-                    {proofFile ? proofFile.name : 'Click to upload proof of ownership'}
-                  </span>
+                <label className="border-2 border-dashed border-slate-200 rounded-xl p-4 text-center cursor-pointer hover:bg-slate-50 transition-colors block relative">
+                  {proofPreview ? (
+                    <div className="space-y-2">
+                      <img src={proofPreview} alt="Proof preview" className="max-h-36 mx-auto rounded-lg object-contain border border-slate-200 shadow-xs" />
+                      <span className="text-xs text-emerald-700 font-bold block">✓ {proofFile?.name} uploaded</span>
+                      <span className="text-[10px] text-slate-400 block">(Click box to choose a different image)</span>
+                    </div>
+                  ) : proofFile ? (
+                    <div className="space-y-1 py-1">
+                      <FileText className="w-8 h-8 text-emerald-600 mx-auto" />
+                      <span className="text-xs text-emerald-700 font-bold block">{proofFile.name}</span>
+                      <span className="text-[10px] text-slate-400 block">(Click box to change document)</span>
+                    </div>
+                  ) : (
+                    <div>
+                      <Upload className="w-6 h-6 text-slate-400 mx-auto mb-1" />
+                      <span className="text-xs text-slate-600 font-medium block">
+                        Click to select & upload proof of ownership image or PDF
+                      </span>
+                      <span className="text-[10px] text-slate-400 block mt-0.5">Supports PNG, JPG, WEBP, PDF</span>
+                    </div>
+                  )}
                   <input
                     type="file"
+                    accept="image/*,.pdf"
                     className="hidden"
-                    onChange={(e) => e.target.files?.[0] && setProofFile(e.target.files[0])}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (file) {
+                        setProofFile(file)
+                        if (file.type.startsWith('image/')) {
+                          setProofPreview(URL.createObjectURL(file))
+                        } else {
+                          setProofPreview(null)
+                        }
+                      }
+                    }}
                   />
-                </div>
+                </label>
               </div>
             </div>
 
