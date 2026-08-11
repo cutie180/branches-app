@@ -3,17 +3,23 @@ import Link from 'next/link'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { CATEGORIES, TOP_CITIES } from '@/lib/data'
-import { MapPin, Sparkles, FileText, Briefcase, Building2 } from 'lucide-react'
+import { getAllBusinesses } from '@/lib/db-service'
+import { MapPin, Sparkles, FileText, Briefcase, Building2, Store } from 'lucide-react'
+
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'HTML Sitemap | ListPak Directory Structure',
-  description: 'Complete directory index of all categories, major cities, job portals, blogs, and legal pages on ListPak.',
+  description: 'Complete directory index of all verified business listings, industry categories, major cities, job portals, blogs, and legal pages on ListPak.',
   alternates: {
     canonical: 'https://www.listpak.com/html-sitemap',
   },
 }
 
-export default function HTMLSitemapPage() {
+export default async function HTMLSitemapPage() {
+  const businesses = await getAllBusinesses(false)
+  const approvedBusinesses = businesses.filter(b => (b.status || 'approved') === 'approved')
+
   return (
     <>
       <Navbar />
@@ -24,7 +30,7 @@ export default function HTMLSitemapPage() {
               ListPak Complete Website HTML Sitemap
             </h1>
             <p className="text-sm text-slate-500 mt-2">
-              Browse the hierarchical index of all public sections, industry categories, city business hubs, and support policies.
+              Browse the hierarchical index of all public sections, verified business listings, industry categories, city business hubs, and support policies.
             </p>
           </div>
 
@@ -48,6 +54,23 @@ export default function HTMLSitemapPage() {
               <Link href="/blog" className="p-2.5 bg-slate-50 rounded-xl hover:text-blue-600 border border-slate-100">Business Blog</Link>
               <Link href="/login" className="p-2.5 bg-slate-50 rounded-xl hover:text-blue-600 border border-slate-100">Login</Link>
               <Link href="/register" className="p-2.5 bg-slate-50 rounded-xl hover:text-blue-600 border border-slate-100">Register Account</Link>
+            </div>
+          </div>
+
+          {/* Verified Business Listings Index */}
+          <div>
+            <h2 className="text-xl font-bold text-slate-900 border-b border-slate-200 pb-2 mb-4 flex items-center gap-2">
+              <Store className="w-5 h-5 text-blue-600" />
+              <span>Verified Business Listings Index ({approvedBusinesses.length})</span>
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 text-xs text-slate-600">
+              {approvedBusinesses.map((biz) => (
+                <Link key={biz.id || biz.slug} href={`/business/${biz.slug}`} className="hover:text-blue-600 hover:underline flex items-center gap-1.5 p-1.5 bg-slate-50/50 rounded-lg border border-slate-100">
+                  <span className="text-blue-500 font-bold">•</span>
+                  <span className="font-semibold text-slate-800 truncate">{biz.name}</span>
+                  <span className="text-slate-400 text-[10px]">({biz.city})</span>
+                </Link>
+              ))}
             </div>
           </div>
 
