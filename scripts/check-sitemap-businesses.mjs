@@ -1,0 +1,40 @@
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCR9gjxmjYsO_kmHOp_qX4tfoPyJU5tQmg",
+  authDomain: "branches-app-7669d.firebaseapp.com",
+  projectId: "branches-app-7669d",
+  storageBucket: "branches-app-7669d.firebasestorage.app",
+  messagingSenderId: "507847972478",
+  appId: "1:507847972478:web:b9d8c79d50a85a253cea2f"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function inspectSitemapBusinesses() {
+  try {
+    const snap = await getDocs(collection(db, "businesses"));
+    console.log("Total Businesses in Firestore:", snap.size);
+    const approvedList = [];
+    snap.forEach(docSnap => {
+      const data = docSnap.data();
+      const status = data.status || 'approved';
+      const name = data.name || data.businessName;
+      const slug = data.slug;
+      console.log(`[${status.toUpperCase()}] ID: ${docSnap.id} | Slug: ${slug} | Name: ${name}`);
+      if (status === 'approved') {
+        approvedList.push({ id: docSnap.id, slug, name, ...data });
+      }
+    });
+
+    console.log("\nTotal Approved Businesses in Firestore:", approvedList.length);
+    process.exit(0);
+  } catch (err) {
+    console.error("Error inspecting businesses:", err);
+    process.exit(1);
+  }
+}
+
+inspectSitemapBusinesses();

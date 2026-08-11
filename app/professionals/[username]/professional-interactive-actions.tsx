@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { Mail, Star, HelpCircle } from 'lucide-react'
 import { toast } from 'sonner'
 
-interface ReviewItem {
+export interface ReviewItem {
   id: string
   userName: string
   rating: number
@@ -12,37 +12,20 @@ interface ReviewItem {
   comment: string
 }
 
-interface FaqItem {
+export interface FaqItem {
   question: string
   answer: string
 }
 
-interface ProfessionalInteractiveActionsProps {
+interface ProfessionalHeroActionsProps {
   proName: string
-  initialReviews: ReviewItem[]
-  faqs?: FaqItem[]
 }
 
-export default function ProfessionalInteractiveActions({
-  proName,
-  initialReviews,
-  faqs = [],
-}: ProfessionalInteractiveActionsProps) {
-  // Inquiry Modal State
+export function ProfessionalHeroActions({ proName }: ProfessionalHeroActionsProps) {
   const [showContactModal, setShowContactModal] = useState(false)
   const [senderName, setSenderName] = useState('')
   const [senderEmail, setSenderEmail] = useState('')
   const [message, setMessage] = useState('')
-
-  // Review Submission Modal
-  const [showReviewModal, setShowReviewModal] = useState(false)
-  const [reviewerName, setReviewerName] = useState('')
-  const [reviewerRating, setReviewerRating] = useState(5)
-  const [reviewerComment, setReviewerComment] = useState('')
-  const [reviews, setReviews] = useState<ReviewItem[]>(initialReviews)
-
-  // FAQ Accordion Toggle
-  const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -57,26 +40,6 @@ export default function ProfessionalInteractiveActions({
     toast.success(`Message dispatched directly to ${proName}!`)
   }
 
-  const handleReviewSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!reviewerName || !reviewerComment) {
-      toast.error('Please complete all review fields.')
-      return
-    }
-    const newRev: ReviewItem = {
-      id: 'rev-' + Date.now(),
-      userName: reviewerName,
-      rating: reviewerRating,
-      date: 'Just now',
-      comment: reviewerComment,
-    }
-    setReviews([newRev, ...reviews])
-    setShowReviewModal(false)
-    setReviewerName('')
-    setReviewerComment('')
-    toast.success('Thank you! Your review has been recorded.')
-  }
-
   return (
     <>
       {/* Contact Button Island trigger */}
@@ -87,72 +50,6 @@ export default function ProfessionalInteractiveActions({
         <Mail className="w-4 h-4" />
         <span>Contact Professional</span>
       </button>
-
-      {/* Interactive Reviews Section */}
-      <div id="professional-reviews-section" className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-6 mt-8">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h2 className="text-lg font-extrabold text-slate-900">Ratings & Client Reviews</h2>
-            <p className="text-xs text-slate-500">Feedback from clients and colleagues on ListPak.</p>
-          </div>
-
-          <button
-            onClick={() => setShowReviewModal(true)}
-            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition-colors shrink-0 cursor-pointer"
-          >
-            Write a Review
-          </button>
-        </div>
-
-        <div className="space-y-4">
-          {reviews && reviews.length > 0 ? (
-            reviews.map((rev) => (
-              <div key={rev.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
-                <div className="flex justify-between items-center text-xs">
-                  <span className="font-extrabold text-slate-900">{rev.userName}</span>
-                  <span className="text-slate-400">{rev.date}</span>
-                </div>
-                <div className="flex items-center gap-1 text-amber-400">
-                  {Array.from({ length: rev.rating }).map((_, i) => (
-                    <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
-                  ))}
-                </div>
-                <p className="text-xs text-slate-700 leading-relaxed">{rev.comment}</p>
-              </div>
-            ))
-          ) : (
-            <p className="text-xs text-slate-500 italic">No reviews submitted yet.</p>
-          )}
-        </div>
-      </div>
-
-      {/* FAQs Accordion */}
-      {faqs && faqs.length > 0 && (
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4 mt-8">
-          <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
-            <HelpCircle className="w-5 h-5 text-blue-600" />
-            <span>Frequently Asked Questions</span>
-          </h2>
-          <div className="space-y-3">
-            {faqs.map((faq, idx) => (
-              <div key={idx} className="border border-slate-200 rounded-2xl overflow-hidden">
-                <button
-                  onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full p-4 text-left font-bold text-xs text-slate-900 flex justify-between items-center bg-slate-50 hover:bg-slate-100 transition-colors"
-                >
-                  <span>{faq.question}</span>
-                  <span>{openFaq === idx ? '−' : '+'}</span>
-                </button>
-                {openFaq === idx && (
-                  <div className="p-4 bg-white text-xs text-slate-600 leading-relaxed border-t border-slate-100">
-                    {faq.answer}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Contact Inquiry Modal */}
       {showContactModal && (
@@ -219,6 +116,81 @@ export default function ProfessionalInteractiveActions({
           </div>
         </div>
       )}
+    </>
+  )
+}
+
+interface ProfessionalReviewsSectionProps {
+  proName: string
+  initialReviews: ReviewItem[]
+}
+
+export function ProfessionalReviewsSection({ proName, initialReviews }: ProfessionalReviewsSectionProps) {
+  const [showReviewModal, setShowReviewModal] = useState(false)
+  const [reviewerName, setReviewerName] = useState('')
+  const [reviewerRating, setReviewerRating] = useState(5)
+  const [reviewerComment, setReviewerComment] = useState('')
+  const [reviews, setReviews] = useState<ReviewItem[]>(initialReviews)
+
+  const handleReviewSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!reviewerName || !reviewerComment) {
+      toast.error('Please complete all review fields.')
+      return
+    }
+    const newRev: ReviewItem = {
+      id: 'rev-' + Date.now(),
+      userName: reviewerName,
+      rating: reviewerRating,
+      date: 'Just now',
+      comment: reviewerComment,
+    }
+    setReviews([newRev, ...reviews])
+    setShowReviewModal(false)
+    setReviewerName('')
+    setReviewerComment('')
+    toast.success('Thank you! Your review has been recorded.')
+  }
+
+  return (
+    <>
+      {/* Interactive Reviews Section */}
+      <div id="professional-reviews-section" className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-lg font-extrabold text-slate-900">Ratings & Client Reviews</h2>
+            <p className="text-xs text-slate-500">Feedback from clients and colleagues on ListPak.</p>
+          </div>
+
+          <button
+            onClick={() => setShowReviewModal(true)}
+            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition-colors shrink-0 cursor-pointer"
+          >
+            Write a Review
+          </button>
+        </div>
+
+        <div className="space-y-4">
+          {reviews && reviews.length > 0 ? (
+            reviews.map((rev) => (
+              <div key={rev.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
+                <div className="flex justify-between items-center text-xs">
+                  <span className="font-extrabold text-slate-900">{rev.userName}</span>
+                  <span className="text-slate-400">{rev.date}</span>
+                </div>
+                <div className="flex items-center gap-1 text-amber-400">
+                  {Array.from({ length: rev.rating }).map((_, i) => (
+                    <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
+                  ))}
+                </div>
+                <p className="text-xs text-slate-700 leading-relaxed">{rev.comment}</p>
+              </div>
+            ))
+          ) : (
+            <p className="text-xs text-slate-500 italic">No reviews submitted yet.</p>
+          )}
+        </div>
+      </div>
 
       {/* Review Submission Modal */}
       {showReviewModal && (
@@ -249,20 +221,22 @@ export default function ProfessionalInteractiveActions({
                   onChange={(e) => setReviewerRating(Number(e.target.value))}
                   className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs font-bold text-amber-600"
                 >
-                  <option value={5}>★★★★★ (5/5) Excellent</option>
-                  <option value={4}>★★★★☆ (4/5) Very Good</option>
-                  <option value={3}>★★★☆☆ (3/5) Average</option>
+                  <option value={5}>5 Stars - Excellent</option>
+                  <option value={4}>4 Stars - Good</option>
+                  <option value={3}>3 Stars - Average</option>
+                  <option value={2}>2 Stars - Below Average</option>
+                  <option value={1}>1 Star - Poor</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Your Review Feedback *</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Your Review *</label>
                 <textarea
                   rows={4}
                   required
                   value={reviewerComment}
                   onChange={(e) => setReviewerComment(e.target.value)}
-                  placeholder="Share details of your experience with this professional..."
+                  placeholder="Share your experience working with this professional..."
                   className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -277,7 +251,7 @@ export default function ProfessionalInteractiveActions({
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md"
+                  className="flex-1 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-md"
                 >
                   Submit Review
                 </button>
@@ -288,4 +262,41 @@ export default function ProfessionalInteractiveActions({
       )}
     </>
   )
+}
+
+export function ProfessionalFaqsSection({ faqs }: { faqs: FaqItem[] }) {
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
+
+  if (!faqs || faqs.length === 0) return null
+
+  return (
+    <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4">
+      <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+        <HelpCircle className="w-5 h-5 text-blue-600" />
+        <span>Frequently Asked Questions</span>
+      </h2>
+      <div className="space-y-3">
+        {faqs.map((faq, idx) => (
+          <div key={idx} className="border border-slate-200 rounded-2xl overflow-hidden">
+            <button
+              onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+              className="w-full p-4 text-left font-bold text-xs text-slate-900 flex justify-between items-center bg-slate-50 hover:bg-slate-100 transition-colors"
+            >
+              <span>{faq.question}</span>
+              <span>{openFaq === idx ? '−' : '+'}</span>
+            </button>
+            {openFaq === idx && (
+              <div className="p-4 bg-white text-xs text-slate-600 leading-relaxed border-t border-slate-100">
+                {faq.answer}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export default function ProfessionalInteractiveActions(props: ProfessionalHeroActionsProps) {
+  return <ProfessionalHeroActions {...props} />
 }

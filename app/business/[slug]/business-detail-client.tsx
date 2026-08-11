@@ -166,162 +166,164 @@ export default function BusinessDetailClient({ slug }: { slug: string }) {
       </section>
 
       {/* Main Profile Body */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-8">
         
-        <div className="lg:col-span-2 space-y-8">
-          
-          {/* About Section */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-            <h2 className="text-xl font-extrabold text-slate-900">About {biz.name}</h2>
-            <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">{biz.description}</p>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-8">
+            
+            {/* About Section */}
+            <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+              <h2 className="text-xl font-extrabold text-slate-900">About {biz.name}</h2>
+              <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">{biz.description}</p>
 
-            {biz.services && biz.services.length > 0 && (
-              <div className="pt-4 border-t border-slate-100 space-y-3">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Products & Services Offered</h3>
-                <div className="flex flex-wrap gap-2">
-                  {biz.services.map((service) => (
-                    <span key={service} className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-100 text-slate-800">
-                      ✓ {service}
-                    </span>
-                  ))}
+              {biz.services && biz.services.length > 0 && (
+                <div className="pt-4 border-t border-slate-100 space-y-3">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Products & Services Offered</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {biz.services.map((service) => (
+                      <span key={service} className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-100 text-slate-800">
+                        ✓ {service}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
+
+            {/* Interactive Map */}
+            <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+              <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-blue-600" />
+                <span>Location Map</span>
+              </h2>
+              <iframe
+                src={mapSrc}
+                width="100%"
+                height="280"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                className="w-full rounded-xl border border-slate-200"
+              />
+            </div>
+
           </div>
 
-          {/* Interactive Reviews Section */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b border-slate-100 gap-4">
-              <div>
-                <h2 className="text-xl font-extrabold text-slate-900">Database Customer Reviews</h2>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="text-2xl font-extrabold text-slate-900">{biz.rating}</span>
-                  <div className="flex text-amber-400">
-                    {[1, 2, 3, 4, 5].map(s => <Star key={s} className="w-4 h-4 fill-current" />)}
-                  </div>
-                  <span className="text-xs text-slate-500 font-medium">({sortedReviews.length} total reviews)</span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2 w-full sm:w-auto">
-                <div className="flex items-center gap-1.5 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs">
-                  <ArrowUpDown className="w-3.5 h-3.5 text-slate-500" />
-                  <select
-                    value={sortOrder}
-                    onChange={(e) => setSortOrder(e.target.value as any)}
-                    className="bg-transparent font-bold text-slate-700 focus:outline-none cursor-pointer"
-                  >
-                    <option value="newest">Newest Reviews</option>
-                    <option value="highest">Highest Rated</option>
-                    <option value="lowest">Lowest Rated</option>
-                  </select>
-                </div>
-
-                <button
-                  onClick={() => setShowReviewModal(true)}
-                  className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-colors inline-flex items-center gap-1.5 cursor-pointer shrink-0"
+          {/* Sidebar Info */}
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+              <h3 className="font-bold text-slate-900 text-sm uppercase tracking-wider">Direct Actions</h3>
+              
+              <div className="space-y-2.5">
+                <a
+                  href={`tel:${biz.phone}`}
+                  className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition-colors flex items-center justify-center gap-2"
                 >
-                  <MessageSquare className="w-4 h-4" />
-                  <span>Write Review</span>
-                </button>
+                  <Phone className="w-4 h-4" />
+                  <span>Call {biz.phone}</span>
+                </a>
+
+                {biz.whatsapp && (
+                  <a
+                    href={`https://wa.me/${biz.whatsapp}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md transition-colors flex items-center justify-center gap-2"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>WhatsApp Inquiry</span>
+                  </a>
+                )}
+
+                {biz.email && (
+                  <a
+                    href={`mailto:${biz.email}`}
+                    className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-md transition-colors flex items-center justify-center gap-2"
+                  >
+                    <Mail className="w-4 h-4" />
+                    <span>Send Email</span>
+                  </a>
+                )}
               </div>
             </div>
 
-            {sortedReviews.length === 0 ? (
-              <p className="text-xs text-slate-500 italic text-center py-4">No reviews written yet. Be the first to review {biz.name}!</p>
-            ) : (
-              <div className="space-y-4">
-                {sortedReviews.map((rev) => (
-                  <div key={rev.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="font-extrabold text-slate-900 text-xs flex items-center gap-1.5">
-                        <span>{rev.userName}</span>
-                        <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">Verified Reviewer</span>
-                      </span>
-                      <div className="flex text-amber-400 text-xs">
-                        {[...Array(rev.rating)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-current" />)}
-                      </div>
-                    </div>
-                    <p className="text-xs text-slate-700 leading-relaxed">{rev.comment}</p>
-                    <span className="text-[10px] text-slate-400 block font-medium">{rev.date}</span>
+            {/* Operating Hours */}
+            <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-3">
+              <h3 className="font-bold text-slate-900 text-sm uppercase tracking-wider flex items-center gap-2">
+                <Clock className="w-4 h-4 text-blue-600" />
+                <span>Operating Hours</span>
+              </h3>
+              <div className="space-y-2 text-xs">
+                {Object.entries(biz.operatingHours || {}).map(([day, hours]) => (
+                  <div key={day} className="flex justify-between py-1.5 border-b border-slate-100">
+                    <span className="text-slate-500 font-medium">{day}</span>
+                    <span className="font-bold text-slate-900">{hours}</span>
                   </div>
                 ))}
               </div>
-            )}
+            </div>
           </div>
-
-          {/* Interactive Map */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-            <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-blue-600" />
-              <span>Location Map</span>
-            </h2>
-            <iframe
-              src={mapSrc}
-              width="100%"
-              height="280"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              className="w-full rounded-xl border border-slate-200"
-            />
-          </div>
-
         </div>
 
-        {/* Sidebar Info */}
-        <div className="space-y-6">
-          <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-            <h3 className="font-bold text-slate-900 text-sm uppercase tracking-wider">Direct Actions</h3>
-            
-            <div className="space-y-2.5">
-              <a
-                href={`tel:${biz.phone}`}
-                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition-colors flex items-center justify-center gap-2"
+        {/* Interactive Reviews Section */}
+        <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b border-slate-100 gap-4">
+            <div>
+              <h2 className="text-xl font-extrabold text-slate-900">Database Customer Reviews</h2>
+              <div className="flex items-center gap-2 mt-1">
+                <span className="text-2xl font-extrabold text-slate-900">{biz.rating}</span>
+                <div className="flex text-amber-400">
+                  {[1, 2, 3, 4, 5].map(s => <Star key={s} className="w-4 h-4 fill-current" />)}
+                </div>
+                <span className="text-xs text-slate-500 font-medium">({sortedReviews.length} total reviews)</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <div className="flex items-center gap-1.5 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                <ArrowUpDown className="w-3.5 h-3.5 text-slate-500" />
+                <select
+                  value={sortOrder}
+                  onChange={(e) => setSortOrder(e.target.value as any)}
+                  className="bg-transparent font-bold text-slate-700 focus:outline-none cursor-pointer"
+                >
+                  <option value="newest">Newest Reviews</option>
+                  <option value="highest">Highest Rated</option>
+                  <option value="lowest">Lowest Rated</option>
+                </select>
+              </div>
+
+              <button
+                onClick={() => setShowReviewModal(true)}
+                className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-colors inline-flex items-center gap-1.5 cursor-pointer shrink-0"
               >
-                <Phone className="w-4 h-4" />
-                <span>Call {biz.phone}</span>
-              </a>
-
-              {biz.whatsapp && (
-                <a
-                  href={`https://wa.me/${biz.whatsapp}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md transition-colors flex items-center justify-center gap-2"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  <span>WhatsApp Inquiry</span>
-                </a>
-              )}
-
-              {biz.email && (
-                <a
-                  href={`mailto:${biz.email}`}
-                  className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-md transition-colors flex items-center justify-center gap-2"
-                >
-                  <Mail className="w-4 h-4" />
-                  <span>Send Email</span>
-                </a>
-              )}
+                <MessageSquare className="w-4 h-4" />
+                <span>Write Review</span>
+              </button>
             </div>
           </div>
 
-          {/* Operating Hours */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-3">
-            <h3 className="font-bold text-slate-900 text-sm uppercase tracking-wider flex items-center gap-2">
-              <Clock className="w-4 h-4 text-blue-600" />
-              <span>Operating Hours</span>
-            </h3>
-            <div className="space-y-2 text-xs">
-              {Object.entries(biz.operatingHours || {}).map(([day, hours]) => (
-                <div key={day} className="flex justify-between py-1.5 border-b border-slate-100">
-                  <span className="text-slate-500 font-medium">{day}</span>
-                  <span className="font-bold text-slate-900">{hours}</span>
+          {sortedReviews.length === 0 ? (
+            <p className="text-xs text-slate-500 italic text-center py-4">No reviews written yet. Be the first to review {biz.name}!</p>
+          ) : (
+            <div className="space-y-4">
+              {sortedReviews.map((rev) => (
+                <div key={rev.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="font-extrabold text-slate-900 text-xs flex items-center gap-1.5">
+                      <span>{rev.userName}</span>
+                      <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">Verified Reviewer</span>
+                    </span>
+                    <div className="flex text-amber-400 text-xs">
+                      {[...Array(rev.rating)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-current" />)}
+                    </div>
+                  </div>
+                  <p className="text-xs text-slate-700 leading-relaxed">{rev.comment}</p>
+                  <span className="text-[10px] text-slate-400 block font-medium">{rev.date}</span>
                 </div>
               ))}
             </div>
-          </div>
+          )}
         </div>
 
       </main>

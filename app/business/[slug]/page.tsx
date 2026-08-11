@@ -8,7 +8,7 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { getAllBusinesses, getBusinessBySlug, GENERATE_STARTER_REVIEWS } from '@/lib/db-service'
 import LazyMap from '@/components/business/lazy-map'
-import BusinessInteractiveActions from './business-interactive-actions'
+import { BusinessHeroActions, BusinessReviewsSection } from './business-interactive-actions'
 
 // Enable Incremental Static Regeneration (ISR) with 24h revalidation
 export const revalidate = 86400
@@ -191,100 +191,109 @@ export default async function BusinessPage(props: { params: Promise<{ slug: stri
             </div>
 
             {/* Quick Actions Client Island */}
-            <BusinessInteractiveActions
+            <BusinessHeroActions
               businessName={biz.name}
               isClaimed={!!biz.isClaimed}
-              initialReviews={reviewsList}
-              initialRating={biz.rating || 5.0}
-              initialReviewCount={biz.reviewCount || reviewsList.length}
             />
           </div>
         </div>
       </section>
 
       {/* Main Profile Body */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-8">
         
-        <div className="lg:col-span-2 space-y-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          {/* About Section */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-            <h2 className="text-xl font-extrabold text-slate-900">About {biz.name}</h2>
-            <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">{biz.description}</p>
-
-            {biz.services && biz.services.length > 0 && (
-              <div className="pt-4 border-t border-slate-100 space-y-3">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Products & Services Offered</h3>
-                <div className="flex flex-wrap gap-2">
-                  {biz.services.map((service) => (
-                    <span key={service} className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-100 text-slate-800">
-                      ✓ {service}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Deferred / Lazy Map */}
-          <LazyMap address={biz.address} city={biz.city} name={biz.name} />
-
-        </div>
-
-        {/* Sidebar Info */}
-        <div className="space-y-6">
-          <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-            <h3 className="font-bold text-slate-900 text-sm uppercase tracking-wider">Direct Actions</h3>
+          <div className="lg:col-span-2 space-y-8">
             
-            <div className="space-y-2.5">
-              <a
-                href={`tel:${biz.phone}`}
-                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition-colors flex items-center justify-center gap-2"
-              >
-                <Phone className="w-4 h-4" />
-                <span>Call {biz.phone}</span>
-              </a>
+            {/* About Section */}
+            <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+              <h2 className="text-xl font-extrabold text-slate-900">About {biz.name}</h2>
+              <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">{biz.description}</p>
 
-              {biz.whatsapp && (
-                <a
-                  href={`https://wa.me/${biz.whatsapp}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md transition-colors flex items-center justify-center gap-2"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  <span>WhatsApp Inquiry</span>
-                </a>
-              )}
-
-              {biz.email && (
-                <a
-                  href={`mailto:${biz.email}`}
-                  className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-md transition-colors flex items-center justify-center gap-2"
-                >
-                  <Mail className="w-4 h-4" />
-                  <span>Send Email</span>
-                </a>
-              )}
-            </div>
-          </div>
-
-          {/* Operating Hours */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-3">
-            <h3 className="font-bold text-slate-900 text-sm uppercase tracking-wider flex items-center gap-2">
-              <Clock className="w-4 h-4 text-blue-600" />
-              <span>Operating Hours</span>
-            </h3>
-            <div className="space-y-2 text-xs">
-              {Object.entries(biz.operatingHours || {}).map(([day, hours]) => (
-                <div key={day} className="flex justify-between py-1.5 border-b border-slate-100">
-                  <span className="text-slate-500 font-medium">{day}</span>
-                  <span className="font-bold text-slate-900">{hours}</span>
+              {biz.services && biz.services.length > 0 && (
+                <div className="pt-4 border-t border-slate-100 space-y-3">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Products & Services Offered</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {biz.services.map((service) => (
+                      <span key={service} className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-100 text-slate-800">
+                        ✓ {service}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              ))}
+              )}
+            </div>
+
+            {/* Deferred / Lazy Map */}
+            <LazyMap address={biz.address} city={biz.city} name={biz.name} />
+
+          </div>
+
+          {/* Sidebar Info */}
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+              <h3 className="font-bold text-slate-900 text-sm uppercase tracking-wider">Direct Actions</h3>
+              
+              <div className="space-y-2.5">
+                <a
+                  href={`tel:${biz.phone}`}
+                  className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition-colors flex items-center justify-center gap-2"
+                >
+                  <Phone className="w-4 h-4" />
+                  <span>Call {biz.phone}</span>
+                </a>
+
+                {biz.whatsapp && (
+                  <a
+                    href={`https://wa.me/${biz.whatsapp}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md transition-colors flex items-center justify-center gap-2"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>WhatsApp Inquiry</span>
+                  </a>
+                )}
+
+                {biz.email && (
+                  <a
+                    href={`mailto:${biz.email}`}
+                    className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-md transition-colors flex items-center justify-center gap-2"
+                  >
+                    <Mail className="w-4 h-4" />
+                    <span>Send Email</span>
+                  </a>
+                )}
+              </div>
+            </div>
+
+            {/* Operating Hours */}
+            <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-3">
+              <h3 className="font-bold text-slate-900 text-sm uppercase tracking-wider flex items-center gap-2">
+                <Clock className="w-4 h-4 text-blue-600" />
+                <span>Operating Hours</span>
+              </h3>
+              <div className="space-y-2 text-xs">
+                {Object.entries(biz.operatingHours || {}).map(([day, hours]) => (
+                  <div key={day} className="flex justify-between py-1.5 border-b border-slate-100">
+                    <span className="text-slate-500 font-medium">{day}</span>
+                    <span className="font-bold text-slate-900">{hours}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
+
         </div>
+
+        {/* Database Customer Reviews - Placed after all business page details and right before Footer / ListPak 24/7 Support Desk */}
+        <BusinessReviewsSection
+          businessName={biz.name}
+          initialReviews={reviewsList}
+          initialRating={biz.rating || 5.0}
+          initialReviewCount={biz.reviewCount || reviewsList.length}
+        />
 
       </main>
 

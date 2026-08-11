@@ -6,7 +6,7 @@ import ClaimBusinessModal from '@/components/business/claim-business-modal'
 import ReviewModal from '@/components/business/review-modal'
 import { toast } from 'sonner'
 
-interface ReviewItem {
+export interface ReviewItem {
   id: string
   userName: string
   rating: number
@@ -14,28 +14,14 @@ interface ReviewItem {
   comment: string
 }
 
-interface BusinessInteractiveActionsProps {
+interface BusinessHeroActionsProps {
   businessName: string
   isClaimed: boolean
-  initialReviews: ReviewItem[]
-  initialRating: number
-  initialReviewCount: number
 }
 
-export default function BusinessInteractiveActions({
-  businessName,
-  isClaimed,
-  initialReviews,
-  initialRating,
-  initialReviewCount,
-}: BusinessInteractiveActionsProps) {
+export function BusinessHeroActions({ businessName, isClaimed }: BusinessHeroActionsProps) {
   const [showClaimModal, setShowClaimModal] = useState(false)
-  const [showReviewModal, setShowReviewModal] = useState(false)
   const [isBookmarked, setIsBookmarked] = useState(false)
-  const [sortOrder, setSortOrder] = useState<'newest' | 'highest' | 'lowest'>('newest')
-  const [reviews, setReviews] = useState<ReviewItem[]>(initialReviews)
-  const [rating, setRating] = useState(initialRating)
-  const [reviewCount, setReviewCount] = useState(initialReviewCount)
 
   const handleShare = () => {
     if (typeof window !== 'undefined' && navigator.clipboard) {
@@ -48,22 +34,6 @@ export default function BusinessInteractiveActions({
     setIsBookmarked(!isBookmarked)
     toast.success(isBookmarked ? 'Removed from saved bookmarks' : 'Added to saved bookmarks!')
   }
-
-  const handleAddReview = (newReview: { userName: string; rating: number; date: string; comment: string }) => {
-    const updatedReviews = [{ id: 'rev-' + Date.now(), ...newReview }, ...reviews]
-    const totalStars = updatedReviews.reduce((sum, r) => sum + r.rating, 0)
-    const avgRating = Number((totalStars / updatedReviews.length).toFixed(1))
-
-    setReviews(updatedReviews)
-    setRating(avgRating)
-    setReviewCount(updatedReviews.length)
-  }
-
-  const sortedReviews = [...reviews].sort((a, b) => {
-    if (sortOrder === 'highest') return b.rating - a.rating
-    if (sortOrder === 'lowest') return a.rating - b.rating
-    return 0
-  })
 
   return (
     <>
@@ -100,8 +70,55 @@ export default function BusinessInteractiveActions({
         )}
       </div>
 
+      {/* Claim Business Modal */}
+      <ClaimBusinessModal
+        businessName={businessName}
+        isOpen={showClaimModal}
+        onClose={() => setShowClaimModal(false)}
+      />
+    </>
+  )
+}
+
+interface BusinessReviewsSectionProps {
+  businessName: string
+  initialReviews: ReviewItem[]
+  initialRating: number
+  initialReviewCount: number
+}
+
+export function BusinessReviewsSection({
+  businessName,
+  initialReviews,
+  initialRating,
+  initialReviewCount,
+}: BusinessReviewsSectionProps) {
+  const [showReviewModal, setShowReviewModal] = useState(false)
+  const [sortOrder, setSortOrder] = useState<'newest' | 'highest' | 'lowest'>('newest')
+  const [reviews, setReviews] = useState<ReviewItem[]>(initialReviews)
+  const [rating, setRating] = useState(initialRating)
+  const [reviewCount, setReviewCount] = useState(initialReviewCount)
+
+  const handleAddReview = (newReview: { userName: string; rating: number; date: string; comment: string }) => {
+    const updatedReviews = [{ id: 'rev-' + Date.now(), ...newReview }, ...reviews]
+    const totalStars = updatedReviews.reduce((sum, r) => sum + r.rating, 0)
+    const avgRating = Number((totalStars / updatedReviews.length).toFixed(1))
+
+    setReviews(updatedReviews)
+    setRating(avgRating)
+    setReviewCount(updatedReviews.length)
+  }
+
+  const sortedReviews = [...reviews].sort((a, b) => {
+    if (sortOrder === 'highest') return b.rating - a.rating
+    if (sortOrder === 'lowest') return a.rating - b.rating
+    return 0
+  })
+
+  return (
+    <>
       {/* Reviews Interactive Controls & List */}
-      <div id="reviews-interactive-section" className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-6 mt-8">
+      <div id="reviews-interactive-section" className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-6 w-full">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b border-slate-100 gap-4">
           <div>
             <h2 className="text-xl font-extrabold text-slate-900">Database Customer Reviews</h2>
@@ -170,13 +187,6 @@ export default function BusinessInteractiveActions({
         )}
       </div>
 
-      {/* Claim Business Modal */}
-      <ClaimBusinessModal
-        businessName={businessName}
-        isOpen={showClaimModal}
-        onClose={() => setShowClaimModal(false)}
-      />
-
       {/* Review Modal */}
       <ReviewModal
         businessName={businessName}
@@ -187,3 +197,8 @@ export default function BusinessInteractiveActions({
     </>
   )
 }
+
+export default function BusinessInteractiveActions(props: BusinessHeroActionsProps) {
+  return <BusinessHeroActions {...props} />
+}
+

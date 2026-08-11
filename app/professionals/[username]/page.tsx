@@ -11,7 +11,7 @@ import {
   Globe, Linkedin, Github, Facebook, Twitter, Instagram, Youtube, MessageCircle, ExternalLink, 
   Briefcase, Calendar, GraduationCap, Building2, Check, Sparkles
 } from 'lucide-react'
-import ProfessionalInteractiveActions from './professional-interactive-actions'
+import { ProfessionalHeroActions, ProfessionalReviewsSection, ProfessionalFaqsSection } from './professional-interactive-actions'
 
 export const revalidate = 86400
 
@@ -188,11 +188,7 @@ export default async function ProfessionalDetailPage(props: { params: Promise<{ 
                 </a>
               )}
 
-              <ProfessionalInteractiveActions
-                proName={pro.name}
-                initialReviews={reviewsList}
-                faqs={pro.faqs}
-              />
+              <ProfessionalHeroActions proName={pro.name} />
             </div>
           </div>
 
@@ -318,6 +314,12 @@ export default async function ProfessionalDetailPage(props: { params: Promise<{ 
             </div>
           </div>
         )}
+
+        {/* Client Reviews Section */}
+        <ProfessionalReviewsSection proName={pro.name} initialReviews={reviewsList} />
+
+        {/* FAQs Section */}
+        <ProfessionalFaqsSection faqs={pro.faqs || []} />
 
       </main>
 
