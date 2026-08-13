@@ -654,11 +654,21 @@ export default function AdminPage() {
                               </span>
                             </td>
                             <td className="py-4 px-4 text-right space-x-2">
+                              <Link
+                                href={`/business/${biz.slug}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white rounded-lg text-xs font-bold transition-colors cursor-pointer border border-blue-200"
+                                title="Open Live Business Page"
+                              >
+                                <Eye className="w-3.5 h-3.5" />
+                                <span>Live</span>
+                              </Link>
                               <button
                                 onClick={() => setSelectedBiz(biz)}
                                 className="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg text-xs font-bold transition-colors cursor-pointer"
                               >
-                                View
+                                Details
                               </button>
                               {biz.status === 'pending' && (
                                 <button
@@ -1024,6 +1034,15 @@ export default function AdminPage() {
                 </span>
 
                 <div className="flex gap-2">
+                  <Link
+                    href={`/business/${selectedBiz.slug}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs transition-colors cursor-pointer shadow-sm"
+                  >
+                    <Eye className="w-4 h-4" />
+                    <span>View Live Page</span>
+                  </Link>
                   {selectedBiz.status === 'pending' && (
                     <button
                       onClick={() => handleApprove(selectedBiz.id, selectedBiz.name)}
