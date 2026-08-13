@@ -209,6 +209,29 @@ export default function AddProfessionalClient() {
     }
     if (step === 3) {
       if (formData.skills.length === 0) errs.skills = 'Add at least 1 core skill'
+
+      const currentYear = new Date().getFullYear()
+      const minYear = 1950
+      const maxGraduationYear = currentYear + 6
+      const maxCertYear = currentYear + 5
+
+      formData.education.forEach((edu, idx) => {
+        if (edu.year.trim()) {
+          const yrNum = parseInt(edu.year, 10)
+          if (isNaN(yrNum) || yrNum < minYear || yrNum > maxGraduationYear) {
+            errs[`eduYear_${idx}`] = `Year must be between ${minYear} and ${maxGraduationYear}`
+          }
+        }
+      })
+
+      formData.certifications.forEach((cert, idx) => {
+        if (cert.year.trim()) {
+          const yrNum = parseInt(cert.year, 10)
+          if (isNaN(yrNum) || yrNum < minYear || yrNum > maxCertYear) {
+            errs[`certYear_${idx}`] = `Year must be between ${minYear} and ${maxCertYear}`
+          }
+        }
+      })
     }
     if (step === 4) {
       if (!formData.city) errs.city = 'City is required'
@@ -808,22 +831,36 @@ export default function AddProfessionalClient() {
                           }}
                           className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs"
                         />
-                        <div className="flex gap-2">
-                          <input
-                            type="text"
-                            placeholder="Graduation Year"
-                            value={edu.year}
-                            onChange={(e) => {
-                              const newEdu = [...formData.education]
-                              newEdu[i].year = e.target.value
-                              setFormData(p => ({ ...p, education: newEdu }))
-                            }}
-                            className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs"
-                          />
-                          {formData.education.length > 1 && (
-                            <button type="button" onClick={() => removeEdu(i)} className="text-red-500 hover:text-red-700 px-1">
-                              <Trash2 className="w-4 h-4" />
-                            </button>
+                        <div className="flex flex-col">
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              maxLength={4}
+                              placeholder="Graduation Year (e.g. 2024)"
+                              value={edu.year}
+                              onChange={(e) => {
+                                const cleanVal = e.target.value.replace(/\D/g, '').slice(0, 4)
+                                const newEdu = [...formData.education]
+                                newEdu[i].year = cleanVal
+                                setFormData(p => ({ ...p, education: newEdu }))
+                                if (errors[`eduYear_${i}`]) {
+                                  setErrors(prev => {
+                                    const copy = { ...prev }
+                                    delete copy[`eduYear_${i}`]
+                                    return copy
+                                  })
+                                }
+                              }}
+                              className={`w-full px-3 py-1.5 bg-white border ${errors[`eduYear_${i}`] ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'} rounded-lg text-xs`}
+                            />
+                            {formData.education.length > 1 && (
+                              <button type="button" onClick={() => removeEdu(i)} className="text-red-500 hover:text-red-700 px-1">
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            )}
+                          </div>
+                          {errors[`eduYear_${i}`] && (
+                            <p className="text-red-500 text-[10px] font-semibold mt-1">{errors[`eduYear_${i}`]}</p>
                           )}
                         </div>
                       </div>
@@ -863,22 +900,36 @@ export default function AddProfessionalClient() {
                           }}
                           className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs"
                         />
-                        <div className="flex gap-2">
-                          <input
-                            type="text"
-                            placeholder="Year"
-                            value={cert.year}
-                            onChange={(e) => {
-                              const newCert = [...formData.certifications]
-                              newCert[i].year = e.target.value
-                              setFormData(p => ({ ...p, certifications: newCert }))
-                            }}
-                            className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs"
-                          />
-                          {formData.certifications.length > 1 && (
-                            <button type="button" onClick={() => removeCert(i)} className="text-red-500 hover:text-red-700 px-1">
-                              <Trash2 className="w-4 h-4" />
-                            </button>
+                        <div className="flex flex-col">
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              maxLength={4}
+                              placeholder="Year (e.g. 2024)"
+                              value={cert.year}
+                              onChange={(e) => {
+                                const cleanVal = e.target.value.replace(/\D/g, '').slice(0, 4)
+                                const newCert = [...formData.certifications]
+                                newCert[i].year = cleanVal
+                                setFormData(p => ({ ...p, certifications: newCert }))
+                                if (errors[`certYear_${i}`]) {
+                                  setErrors(prev => {
+                                    const copy = { ...prev }
+                                    delete copy[`certYear_${i}`]
+                                    return copy
+                                  })
+                                }
+                              }}
+                              className={`w-full px-3 py-1.5 bg-white border ${errors[`certYear_${i}`] ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'} rounded-lg text-xs`}
+                            />
+                            {formData.certifications.length > 1 && (
+                              <button type="button" onClick={() => removeCert(i)} className="text-red-500 hover:text-red-700 px-1">
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            )}
+                          </div>
+                          {errors[`certYear_${i}`] && (
+                            <p className="text-red-500 text-[10px] font-semibold mt-1">{errors[`certYear_${i}`]}</p>
                           )}
                         </div>
                       </div>

@@ -624,14 +624,20 @@ export default function AdminPage() {
                     </thead>
                     <tbody className="divide-y divide-slate-200">
                       {allBusinesses
-                        .filter(b => b.name.toLowerCase().includes(searchQuery.toLowerCase()) || b.city.toLowerCase().includes(searchQuery.toLowerCase()))
+                        .filter(b => 
+                          b.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          b.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          (b.cities && b.cities.some(c => c.toLowerCase().includes(searchQuery.toLowerCase())))
+                        )
                         .map((biz) => (
                           <tr key={biz.id} className="hover:bg-slate-50 transition-colors">
                             <td className="py-4 px-4">
                               <div className="font-extrabold text-slate-900 text-sm">{biz.name}</div>
                               <div className="text-[11px] text-slate-500">{biz.category}</div>
                             </td>
-                            <td className="py-4 px-4 font-semibold text-slate-700">{biz.city}</td>
+                            <td className="py-4 px-4 font-semibold text-slate-700">
+                              {biz.cities && biz.cities.length > 1 ? `${biz.city} (+${biz.cities.length - 1} branches)` : biz.city}
+                            </td>
                             <td className="py-4 px-4 text-slate-600 space-y-0.5">
                               <div>{biz.phone}</div>
                               <div className="text-[11px] text-slate-400">{biz.email}</div>
@@ -938,7 +944,9 @@ export default function AdminPage() {
                             {job.status || 'approved'}
                           </span>
                         </div>
-                        <p className="text-xs font-bold text-blue-600">{job.company} • 📍 {job.city}</p>
+                        <p className="text-xs font-bold text-blue-600">
+                          {job.company} • 📍 {job.cities && job.cities.length > 1 ? job.cities.join(', ') : job.city}
+                        </p>
                         <p className="text-[11px] text-slate-500">{job.type} • {job.salary}</p>
                       </div>
 

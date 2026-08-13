@@ -25,6 +25,7 @@ export const getAllJobs = cache(async function getAllJobs(includePending: boolea
           companySlug: data.companySlug || normalizeSlug(data.company || 'hiring-company'),
           companyLogo: data.companyLogo || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
           city: data.city || 'Pakistan',
+          cities: data.cities && data.cities.length > 0 ? data.cities : (data.city ? [data.city] : ['Pakistan']),
           province: data.province || 'Pakistan',
           country: data.country || 'Pakistan',
           category: data.category || 'Technology & IT',
@@ -103,7 +104,17 @@ export const getJobBySlug = cache(async function getJobBySlug(idOrSlug: string):
 export async function saveJobToDatabase(jobData: Partial<JobItem>): Promise<JobItem> {
   const title = jobData.title || 'New Job Opportunity'
   const company = jobData.company || 'Hiring Employer'
-  const slug = normalizeSlug(`${title} ${jobData.city || 'Pakistan'}`) + '-' + Math.floor(Math.random() * 1000)
+  
+  const rawCities = (jobData.cities && jobData.cities.length > 0)
+    ? jobData.cities
+    : [jobData.city || 'Karachi']
+  const cities = Array.from(new Set(rawCities))
+  
+  const citySummary = cities.length === 1
+    ? cities[0]
+    : (cities.length <= 3 ? cities.join(', ') : `${cities.slice(0, 2).join(', ')} (+${cities.length - 2} cities)`)
+
+  const slug = normalizeSlug(`${title} ${cities[0] || 'Pakistan'}`) + '-' + Math.floor(Math.random() * 1000)
 
   const newJob: JobItem = {
     id: 'job-' + Date.now(),
@@ -112,7 +123,8 @@ export async function saveJobToDatabase(jobData: Partial<JobItem>): Promise<JobI
     company,
     companySlug: jobData.companySlug || normalizeSlug(company),
     companyLogo: jobData.companyLogo || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
-    city: jobData.city || 'Karachi',
+    city: citySummary,
+    cities: cities,
     province: jobData.province || 'Sindh',
     country: jobData.country || 'Pakistan',
     category: jobData.category || 'Technology & IT',
@@ -196,7 +208,9 @@ export async function getMatchingCandidatesForJob(job: JobItem): Promise<Array<{
 
   const jobSkills = (job.skills || []).map(s => s.toLowerCase().trim())
   const jobTitle = (job.title || '').toLowerCase()
-  const jobCity = (job.city || '').toLowerCase()
+  const jobCities = (job.cities && job.cities.length > 0) 
+    ? job.cities.map(c => c.toLowerCase()) 
+    : [(job.city || '').toLowerCase()]
 
   allCandidates.forEach(cand => {
     let score = 50 // Base score
@@ -216,7 +230,9 @@ export async function getMatchingCandidatesForJob(job: JobItem): Promise<Array<{
     }
 
     // 3. Location Match (+15 score)
-    if (cand.city.toLowerCase() === jobCity || job.type.toLowerCase().includes('remote')) {
+    const candCityLower = cand.city.toLowerCase()
+    const isLocationMatch = jobCities.some(jc => jc.includes(candCityLower) || candCityLower.includes(jc))
+    if (isLocationMatch || job.type.toLowerCase().includes('remote')) {
       score += 15
       reasons.push(job.type.toLowerCase().includes('remote') ? 'Open for remote role' : `Located in ${cand.city}`)
     }

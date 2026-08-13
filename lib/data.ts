@@ -79,6 +79,16 @@ export const CATEGORIES = [
   { id: 'pets', name: 'Pets & Veterinary Clinics', icon: 'pets', count: 980, color: '#d97706', desc: 'Vet doctors, pet shops, animal food, and grooming salons' },
 ]
 
+export interface BusinessLocation {
+  id?: string
+  city: string
+  address: string
+  isPrimary?: boolean
+  phone?: string
+  lat?: number
+  lng?: number
+}
+
 export interface BusinessItem {
   id: string
   slug: string
@@ -86,6 +96,7 @@ export interface BusinessItem {
   category: string
   categoryId: string
   city: string
+  cities?: string[]
   province: string
   rating: number
   reviewCount: number
@@ -103,6 +114,7 @@ export interface BusinessItem {
   email: string
   website: string
   address: string
+  locations?: BusinessLocation[]
   coverImage: string
   logo: string
   description: string
@@ -1046,6 +1058,7 @@ export interface JobItem {
   companySlug: string
   companyLogo: string
   city: string
+  cities?: string[]
   province?: string
   country?: string
   category: string

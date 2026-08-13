@@ -50,7 +50,11 @@ function SearchContent() {
         biz.description.toLowerCase().includes(query.toLowerCase()) ||
         biz.category.toLowerCase().includes(query.toLowerCase())
       
-      const matchesCity = !selectedCity || biz.city.toLowerCase() === selectedCity.toLowerCase()
+      const matchesCity = !selectedCity || 
+        biz.city.toLowerCase() === selectedCity.toLowerCase() ||
+        (biz.cities && biz.cities.some(c => c.toLowerCase() === selectedCity.toLowerCase())) ||
+        (biz.locations && biz.locations.some(l => l.city.toLowerCase() === selectedCity.toLowerCase()))
+
       const matchesCategory = !selectedCategory || biz.category.toLowerCase().includes(selectedCategory.toLowerCase())
       const matchesVerified = !onlyVerified || biz.verified
       const matchesRating = biz.rating >= minRating
@@ -67,7 +71,9 @@ function SearchContent() {
         job.company.toLowerCase().includes(query.toLowerCase()) ||
         job.description.toLowerCase().includes(query.toLowerCase())
 
-      const matchesCity = !selectedCity || job.city.toLowerCase() === selectedCity.toLowerCase()
+      const matchesCity = !selectedCity || 
+        job.city.toLowerCase().includes(selectedCity.toLowerCase()) || 
+        (job.cities && job.cities.some(c => c.toLowerCase() === selectedCity.toLowerCase()))
       const matchesCategory = !selectedCategory || job.category.toLowerCase().includes(selectedCategory.toLowerCase())
 
       return matchesQuery && matchesCity && matchesCategory
@@ -300,7 +306,10 @@ function SearchContent() {
                         
                         <div className="flex items-center gap-2 text-xs text-slate-500">
                           <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                          <span>{biz.address || biz.city}</span>
+                          <span>
+                            {biz.address || biz.city}
+                            {biz.locations && biz.locations.length > 1 ? ` (+${biz.locations.length - 1} branches)` : (biz.cities && biz.cities.length > 1 ? ` (+${biz.cities.length - 1} branches)` : '')}
+                          </span>
                         </div>
                       </div>
 

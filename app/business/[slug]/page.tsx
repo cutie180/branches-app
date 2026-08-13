@@ -64,6 +64,11 @@ export default async function BusinessPage(props: { params: Promise<{ slug: stri
   // Ensure starter reviews if reviews empty
   const reviewsList = biz.reviews && biz.reviews.length > 0 ? biz.reviews : GENERATE_STARTER_REVIEWS(biz.name)
 
+  // Ensure multi-location support
+  const locationsList = biz.locations && biz.locations.length > 0
+    ? biz.locations
+    : [{ city: biz.city, address: biz.address, isPrimary: true }]
+
   const localBusinessSchema = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
@@ -81,6 +86,17 @@ export default async function BusinessPage(props: { params: Promise<{ slug: stri
       addressRegion: biz.province || 'Pakistan',
       addressCountry: 'PK',
     },
+    department: locationsList.map(loc => ({
+      '@type': 'LocalBusiness',
+      name: `${biz.name} - ${loc.city}`,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: loc.address,
+        addressLocality: loc.city,
+        addressRegion: 'Pakistan',
+        addressCountry: 'PK'
+      }
+    })),
     aggregateRating: {
       '@type': 'AggregateRating',
       ratingValue: biz.rating || 5.0,
@@ -180,6 +196,7 @@ export default async function BusinessPage(props: { params: Promise<{ slug: stri
                   <span className="flex items-center gap-1">
                     <MapPin className="w-3.5 h-3.5 text-slate-400" />
                     {biz.address || biz.city}
+                    {locationsList.length > 1 && ` (+${locationsList.length - 1} branches)`}
                   </span>
                   <span>•</span>
                   <span className="font-bold text-amber-400 flex items-center gap-1">
@@ -223,6 +240,60 @@ export default async function BusinessPage(props: { params: Promise<{ slug: stri
                   </div>
                 </div>
               )}
+            </div>
+
+            {/* Locations & Branches Card List */}
+            <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+              <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                  <MapPin className="w-5 h-5 text-blue-600" />
+                  <span>Physical Locations & Branches ({locationsList.length})</span>
+                </h3>
+                <span className="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
+                  {Array.from(new Set(locationsList.map(l => l.city))).join(', ')}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                {locationsList.map((loc, idx) => (
+                  <div 
+                    key={idx}
+                    className={`p-4 rounded-xl border space-y-2 transition-all ${
+                      loc.isPrimary 
+                        ? 'bg-blue-50/50 border-blue-200 shadow-xs' 
+                        : 'bg-slate-50 border-slate-200'
+                    }`}
+                  >
+                    <div className="flex justify-between items-start gap-2">
+                      <span className="text-xs font-extrabold text-slate-900 flex items-center gap-1.5">
+                        <span className="w-5 h-5 rounded-full bg-blue-600 text-white text-[10px] flex items-center justify-center font-bold">
+                          {idx + 1}
+                        </span>
+                        {loc.city} Branch
+                      </span>
+                      {loc.isPrimary && (
+                        <span className="px-2 py-0.5 rounded-md bg-blue-600 text-white text-[10px] font-bold">
+                          Primary
+                        </span>
+                      )}
+                    </div>
+
+                    <p className="text-xs text-slate-600 leading-relaxed font-medium">
+                      {loc.address || 'Street address available on inquiry.'}
+                    </p>
+
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((loc.address || '') + ', ' + loc.city)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-[11px] font-extrabold text-blue-600 hover:text-blue-800 transition-colors pt-1"
+                    >
+                      <span>View on Google Maps</span>
+                      <span>→</span>
+                    </a>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Deferred / Lazy Map */}

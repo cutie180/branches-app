@@ -70,13 +70,22 @@ export const getAllBusinesses = cache(async function getAllBusinesses(includePen
         const bName = data.businessName || data.name || 'Verified Business'
         const itemStatus = data.status || 'approved'
         
+        const docLocations = data.locations && data.locations.length > 0
+          ? data.locations
+          : [{ city: data.city || 'Pakistan', address: data.address || 'Commercial Center, Pakistan', isPrimary: true }]
+        const docCities = data.cities && data.cities.length > 0
+          ? data.cities
+          : Array.from(new Set(docLocations.map((l: { city: string }) => l.city)))
+        const primaryLoc = docLocations.find((l: { isPrimary?: boolean }) => l.isPrimary) || docLocations[0]
+
         firestoreItems.push({
           id: docSnap.id,
           slug: data.slug || normalizeSlug(bName),
           name: bName,
           category: data.category || 'Services',
           categoryId: data.categoryId || data.category || 'services',
-          city: data.city || 'Pakistan',
+          city: primaryLoc.city || data.city || 'Pakistan',
+          cities: docCities,
           province: data.province || 'Pakistan',
           rating: data.rating || 5.0,
           reviewCount: data.reviewCount || (data.reviews ? data.reviews.length : 5),
@@ -93,7 +102,8 @@ export const getAllBusinesses = cache(async function getAllBusinesses(includePen
           whatsapp: data.whatsapp || '923000000000',
           email: data.email || 'contact@business.pk',
           website: data.website || data.websiteUrl || 'https://www.listpak.com',
-          address: data.address || 'Commercial Center, Pakistan',
+          address: primaryLoc.address || data.address || 'Commercial Center, Pakistan',
+          locations: docLocations,
           coverImage: data.coverImage || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
           logo: data.logo || data.logoUrl || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
           description: data.description || 'Verified business listing on ListPak.',
@@ -203,13 +213,22 @@ export const getBusinessBySlug = cache(async function getBusinessBySlug(slug: st
         return null // Pending/rejected listings are not publicly accessible
       }
       const bName = data.businessName || data.name || 'Verified Business'
+      const docLocations = data.locations && data.locations.length > 0
+        ? data.locations
+        : [{ city: data.city || 'Pakistan', address: data.address || 'Commercial Center, Pakistan', isPrimary: true }]
+      const docCities = data.cities && data.cities.length > 0
+        ? data.cities
+        : Array.from(new Set(docLocations.map((l: { city: string }) => l.city)))
+      const primaryLoc = docLocations.find((l: { isPrimary?: boolean }) => l.isPrimary) || docLocations[0]
+
       const item: BusinessItem = {
         id: docSnap.id,
         slug: data.slug || slug,
         name: bName,
         category: data.category || 'Services',
         categoryId: data.categoryId || data.category || 'services',
-        city: data.city || 'Pakistan',
+        city: primaryLoc.city || data.city || 'Pakistan',
+        cities: docCities,
         province: data.province || 'Pakistan',
         rating: data.rating || 5.0,
         reviewCount: data.reviewCount || 5,
@@ -221,7 +240,8 @@ export const getBusinessBySlug = cache(async function getBusinessBySlug(slug: st
         whatsapp: data.whatsapp || '923000000000',
         email: data.email || 'info@business.pk',
         website: data.website || data.websiteUrl || 'https://www.listpak.com',
-        address: data.address || 'Commercial Center, Pakistan',
+        address: primaryLoc.address || data.address || 'Commercial Center, Pakistan',
+        locations: docLocations,
         coverImage: data.coverImage || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
         logo: data.logo || data.logoUrl || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
         description: data.description || 'Verified local business listing on ListPak.',
@@ -251,6 +271,8 @@ export const getBusinessBySlug = cache(async function getBusinessBySlug(slug: st
     category: 'Commercial Services',
     categoryId: 'services',
     city: 'Lahore',
+    cities: ['Lahore'],
+    locations: [{ city: 'Lahore', address: 'Commercial Hub, Lahore', isPrimary: true }],
     province: 'Punjab',
     rating: 5.0,
     reviewCount: 5,
@@ -284,13 +306,24 @@ export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>
   const slug = businessData.slug || normalizeSlug(name)
   const starterReviews = GENERATE_STARTER_REVIEWS(name)
 
+  const inputLocations = businessData.locations && businessData.locations.length > 0
+    ? businessData.locations
+    : [{ city: businessData.city || 'Karachi', address: businessData.address || 'Pakistan', isPrimary: true }]
+
+  const primaryLoc = inputLocations.find(l => l.isPrimary) || inputLocations[0]
+  const summaryCity = primaryLoc.city || businessData.city || 'Karachi'
+  const summaryAddress = primaryLoc.address || businessData.address || 'Pakistan'
+  const allCities = Array.from(new Set(inputLocations.map(l => l.city)))
+
   const newBiz: BusinessItem = {
     id: 'biz-' + Date.now(),
     slug,
     name,
     category: businessData.category || 'Services',
     categoryId: businessData.categoryId || 'services',
-    city: businessData.city || 'Karachi',
+    city: summaryCity,
+    cities: allCities,
+    locations: inputLocations,
     province: businessData.province || 'Pakistan',
     rating: 5.0,
     reviewCount: 5,
@@ -304,7 +337,7 @@ export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>
     whatsapp: businessData.whatsapp || '923000000000',
     email: businessData.email || 'contact@business.pk',
     website: businessData.website || 'https://www.listpak.com',
-    address: businessData.address || 'Pakistan',
+    address: summaryAddress,
     coverImage: businessData.coverImage || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
     logo: businessData.logo || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
     description: businessData.description || 'Newly registered business on ListPak.',

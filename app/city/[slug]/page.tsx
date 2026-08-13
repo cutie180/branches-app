@@ -27,7 +27,10 @@ export default async function CityDetailPage(props: { params: Promise<{ slug: st
 
   const allApproved = await getAllBusinesses(false)
   const cityBusinesses = allApproved.filter(
-    b => b.city.toLowerCase() === params.slug.toLowerCase()
+    b => 
+      b.city.toLowerCase() === params.slug.toLowerCase() ||
+      (b.cities && b.cities.some(c => c.toLowerCase() === params.slug.toLowerCase())) ||
+      (b.locations && b.locations.some(l => l.city.toLowerCase() === params.slug.toLowerCase()))
   )
 
   const cityJobs = MOCK_JOBS.filter(

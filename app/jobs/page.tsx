@@ -39,7 +39,9 @@ export default function JobsPage() {
       (job.skills || []).some(s => s.toLowerCase().includes(query.toLowerCase()))
     
     const matchesType = !selectedType || job.type === selectedType
-    const matchesCity = !selectedCity || job.city.toLowerCase() === selectedCity.toLowerCase()
+    const matchesCity = !selectedCity || 
+      job.city.toLowerCase().includes(selectedCity.toLowerCase()) || 
+      (job.cities && job.cities.some(c => c.toLowerCase() === selectedCity.toLowerCase()))
 
     return matchesQuery && matchesType && matchesCity
   })
@@ -99,6 +101,12 @@ export default function JobsPage() {
                 <option value="Karachi">Karachi</option>
                 <option value="Lahore">Lahore</option>
                 <option value="Rawalpindi">Rawalpindi</option>
+                <option value="Peshawar">Peshawar</option>
+                <option value="Quetta">Quetta</option>
+                <option value="Faisalabad">Faisalabad</option>
+                <option value="Multan">Multan</option>
+                <option value="Sialkot">Sialkot</option>
+                <option value="Hyderabad">Hyderabad</option>
               </select>
             </div>
 
@@ -168,7 +176,11 @@ export default function JobsPage() {
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-slate-400 font-medium">Location</span>
-                      <span className="font-semibold text-slate-800">📍 {job.city}</span>
+                      <span className="font-semibold text-slate-800 truncate max-w-[200px]" title={job.cities ? job.cities.join(', ') : job.city}>
+                        📍 {job.cities && job.cities.length > 1
+                          ? (job.cities.length <= 2 ? job.cities.join(', ') : `${job.cities.slice(0, 2).join(', ')} (+${job.cities.length - 2} cities)`)
+                          : job.city}
+                      </span>
                     </div>
                   </div>
                 </div>

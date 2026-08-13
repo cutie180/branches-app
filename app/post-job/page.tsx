@@ -17,7 +17,8 @@ export default function PostJobPage() {
   // Form State
   const [title, setTitle] = useState('')
   const [company, setCompany] = useState('')
-  const [city, setCity] = useState('Karachi')
+  const [selectedCities, setSelectedCities] = useState<string[]>(['Karachi'])
+  const [citySelectInput, setCitySelectInput] = useState('')
   const [category, setCategory] = useState('Technology & IT')
   const [type, setType] = useState('Full-time')
   const [salary, setSalary] = useState('PKR 150,000 - 250,000 / month')
@@ -25,6 +26,42 @@ export default function PostJobPage() {
   const [vacancies, setVacancies] = useState('1')
   const [description, setDescription] = useState('')
   
+  // Popular cities quick list
+  const POPULAR_CITIES = ['Karachi', 'Lahore', 'Islamabad', 'Rawalpindi', 'Peshawar', 'Quetta', 'Faisalabad', 'Multan', 'Sialkot', 'Hyderabad']
+
+  const toggleCity = (cityName: string) => {
+    if (selectedCities.includes(cityName)) {
+      if (selectedCities.length > 1) {
+        setSelectedCities(prev => prev.filter(c => c !== cityName))
+      } else {
+        toast.info('At least one city must be selected.')
+      }
+    } else {
+      setSelectedCities(prev => [...prev, cityName])
+    }
+  }
+
+  const addCity = (cityName: string) => {
+    if (cityName && !selectedCities.includes(cityName)) {
+      setSelectedCities(prev => [...prev, cityName])
+      setCitySelectInput('')
+    }
+  }
+
+  const removeCity = (cityName: string) => {
+    if (selectedCities.length > 1) {
+      setSelectedCities(prev => prev.filter(c => c !== cityName))
+    } else {
+      toast.info('At least one city must be selected.')
+    }
+  }
+
+  const selectAllMajorHubs = () => {
+    const hubs = ['Karachi', 'Lahore', 'Islamabad', 'Rawalpindi']
+    setSelectedCities(prev => Array.from(new Set([...prev, ...hubs])))
+    toast.success('Major Pakistan tech hubs added!')
+  }
+
   // Skills input
   const [skillInput, setSkillInput] = useState('')
   const [skills, setSkills] = useState<string[]>(['TypeScript', 'React'])
@@ -77,6 +114,11 @@ export default function PostJobPage() {
       return
     }
 
+    if (selectedCities.length === 0) {
+      toast.error('Please select at least one city for this job posting.')
+      return
+    }
+
     const cleanWeb = applicationWebsite.trim()
     const cleanMail = applicationEmail.trim()
 
@@ -89,10 +131,12 @@ export default function PostJobPage() {
 
     setIsSubmitting(true)
     try {
+      const primaryCity = selectedCities[0]
       const createdJob = await saveJobToDatabase({
         title,
         company,
-        city,
+        city: primaryCity,
+        cities: selectedCities,
         category,
         type,
         employmentType: type,
@@ -146,20 +190,30 @@ export default function PostJobPage() {
             <p className="text-sm text-slate-600 max-w-md mx-auto">
               Your job posting for <strong className="text-slate-900">{title}</strong> at {company} is now live on ListPak Jobs.
             </p>
-            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-left text-xs space-y-1.5">
-              <span className="font-bold text-slate-700 block">Candidate Application Channel:</span>
-              {applicationWebsite && (
-                <div className="text-slate-600">
-                  <span>Website: </span>
-                  <a href={applicationWebsite} target="_blank" className="text-blue-600 font-bold underline">{applicationWebsite}</a>
+            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-left text-xs space-y-2">
+              <div>
+                <span className="font-bold text-slate-700 block mb-1">Offered Job Locations / Branch Cities:</span>
+                <div className="flex flex-wrap gap-1.5">
+                  {selectedCities.map(c => (
+                    <span key={c} className="px-2.5 py-0.5 bg-blue-100 text-blue-800 rounded-full font-bold text-[11px]">📍 {c}</span>
+                  ))}
                 </div>
-              )}
-              {applicationEmail && (
-                <div className="text-slate-600">
-                  <span>Email: </span>
-                  <span className="font-bold text-slate-900">{applicationEmail}</span>
-                </div>
-              )}
+              </div>
+              <div className="pt-1 border-t border-slate-200/80">
+                <span className="font-bold text-slate-700 block">Candidate Application Channel:</span>
+                {applicationWebsite && (
+                  <div className="text-slate-600">
+                    <span>Website: </span>
+                    <a href={applicationWebsite} target="_blank" className="text-blue-600 font-bold underline">{applicationWebsite}</a>
+                  </div>
+                )}
+                {applicationEmail && (
+                  <div className="text-slate-600">
+                    <span>Email: </span>
+                    <span className="font-bold text-slate-900">{applicationEmail}</span>
+                  </div>
+                )}
+              </div>
             </div>
             <div className="pt-4 flex flex-col sm:flex-row gap-3 justify-center">
               <Link
@@ -208,20 +262,92 @@ export default function PostJobPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">City *</label>
-                  <select
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
+              {/* Job Locations / Multiple Cities Selection */}
+              <div className="p-4 bg-blue-50/50 rounded-2xl border border-blue-100 space-y-3">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                  <div>
+                    <label className="block text-xs font-extrabold text-slate-900 flex items-center gap-1.5">
+                      <MapPin className="w-4 h-4 text-blue-600" />
+                      <span>Job Locations / Branch Cities *</span>
+                    </label>
+                    <p className="text-[11px] text-slate-500">
+                      Select one or multiple cities if your company has multiple branches offering this vacancy.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={selectAllMajorHubs}
+                    className="px-3 py-1 bg-blue-600/10 hover:bg-blue-600/20 text-blue-700 text-[11px] font-bold rounded-lg transition-colors border border-blue-200/60 shrink-0"
                   >
-                    {CITIES.map(c => (
+                    + Select Major Tech Hubs
+                  </button>
+                </div>
+
+                {/* Selected Cities Badges */}
+                <div className="flex flex-wrap gap-2 pt-1">
+                  {selectedCities.map(c => (
+                    <span key={c} className="px-3 py-1.5 bg-blue-600 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs">
+                      <span>📍 {c}</span>
+                      <button
+                        type="button"
+                        onClick={() => removeCity(c)}
+                        className="hover:text-red-200 font-bold ml-1"
+                        title={`Remove ${c}`}
+                      >
+                        ✕
+                      </button>
+                    </span>
+                  ))}
+                  {selectedCities.length > 1 && (
+                    <span className="px-2.5 py-1 rounded-xl bg-emerald-100 text-emerald-800 text-xs font-extrabold border border-emerald-200 flex items-center gap-1">
+                      <Sparkles className="w-3 h-3 text-emerald-600" />
+                      <span>Multiple Cities ({selectedCities.length})</span>
+                    </span>
+                  )}
+                </div>
+
+                {/* Popular Cities Toggle Chips */}
+                <div className="pt-2">
+                  <span className="text-[11px] font-bold text-slate-600 block mb-1.5">Quick Add Popular Cities:</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {POPULAR_CITIES.map(c => {
+                      const isSelected = selectedCities.includes(c)
+                      return (
+                        <button
+                          key={c}
+                          type="button"
+                          onClick={() => toggleCity(c)}
+                          className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
+                            isSelected
+                              ? 'bg-blue-600 text-white font-bold border border-blue-600 shadow-xs'
+                              : 'bg-white text-slate-700 border border-slate-200 hover:border-blue-300 hover:bg-blue-50/50'
+                          }`}
+                        >
+                          {isSelected ? '✓ ' : '+ '}{c}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                {/* Dropdown to pick any Pakistani City */}
+                <div className="pt-2 flex gap-2">
+                  <select
+                    value={citySelectInput}
+                    onChange={(e) => {
+                      addCity(e.target.value)
+                    }}
+                    className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 text-slate-800"
+                  >
+                    <option value="">-- Add another city in Pakistan --</option>
+                    {CITIES.filter(c => !selectedCities.includes(c)).map(c => (
                       <option key={c} value={c}>{c}</option>
                     ))}
                   </select>
                 </div>
+              </div>
 
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">Employment Type</label>
                   <select

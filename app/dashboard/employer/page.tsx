@@ -130,7 +130,9 @@ export default function EmployerDashboardPage() {
                         {job.status || 'approved'}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-500">📍 {job.city} • {job.type} • {job.salary}</p>
+                    <p className="text-xs text-slate-500">
+                      📍 {job.cities && job.cities.length > 1 ? job.cities.join(', ') : job.city} • {job.type} • {job.salary}
+                    </p>
                   </div>
 
                   <div className="flex items-center gap-2">

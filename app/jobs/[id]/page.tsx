@@ -64,6 +64,24 @@ export default async function JobDetailPage(props: { params: Promise<{ id: strin
 
   const websiteUrl = job.applicationWebsite || job.applicationUrl || `https://${job.companySlug}.pk/careers`
 
+  const jobLocations = (job.cities && job.cities.length > 0)
+    ? job.cities.map(c => ({
+        '@type': 'Place',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: c,
+          addressCountry: 'PK'
+        }
+      }))
+    : {
+        '@type': 'Place',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: job.city,
+          addressCountry: 'PK'
+        }
+      }
+
   const jobSchema = {
     '@context': 'https://schema.org',
     '@type': 'JobPosting',
@@ -83,14 +101,7 @@ export default async function JobDetailPage(props: { params: Promise<{ id: strin
       sameAs: `https://www.listpak.com/companies/${job.companySlug}`,
       logo: job.companyLogo
     },
-    jobLocation: {
-      '@type': 'Place',
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: job.city,
-        addressCountry: 'PK'
-      }
-    }
+    jobLocation: jobLocations
   }
 
   return (
@@ -128,6 +139,11 @@ export default async function JobDetailPage(props: { params: Promise<{ id: strin
                   <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                     {job.type}
                   </span>
+                  {job.cities && job.cities.length > 1 && (
+                    <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                      {job.cities.length} Branch Cities
+                    </span>
+                  )}
                   <span className="text-xs text-slate-400">Posted {job.postedDate}</span>
                 </div>
                 <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">{job.title}</h1>
@@ -137,7 +153,10 @@ export default async function JobDetailPage(props: { params: Promise<{ id: strin
                     <span>{job.company}</span>
                   </Link>
                   <span>•</span>
-                  <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-slate-400" />{job.city}</span>
+                  <span className="flex items-center gap-1">
+                    <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                    {job.cities && job.cities.length > 1 ? job.cities.join(', ') : job.city}
+                  </span>
                 </div>
               </div>
             </div>
@@ -168,6 +187,23 @@ export default async function JobDetailPage(props: { params: Promise<{ id: strin
       {/* Main Content */}
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-8">
         
+        {/* Branch Cities Highlight if multiple */}
+        {job.cities && job.cities.length > 1 && (
+          <div className="bg-blue-50/70 rounded-3xl p-5 border border-blue-200/80 shadow-2xs space-y-2">
+            <span className="text-xs font-extrabold text-slate-900 flex items-center gap-1.5">
+              <MapPin className="w-4 h-4 text-blue-600" />
+              <span>Multi-Branch Opening: Available Across {job.cities.length} Cities in Pakistan</span>
+            </span>
+            <div className="flex flex-wrap gap-2 pt-1">
+              {job.cities.map(c => (
+                <span key={c} className="px-3 py-1 bg-white text-blue-900 rounded-xl text-xs font-bold border border-blue-200 shadow-2xs">
+                  📍 {c}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Job Overview Bar */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-white rounded-3xl p-6 border border-slate-200 shadow-xs text-xs">
           <div>
@@ -179,7 +215,7 @@ export default async function JobDetailPage(props: { params: Promise<{ id: strin
             <p className="font-extrabold text-slate-900 text-sm mt-0.5">{job.experience}</p>
           </div>
           <div>
-            <span className="text-slate-400 font-medium">Job Location</span>
+            <span className="text-slate-400 font-medium">Location</span>
             <p className="font-extrabold text-slate-900 text-sm mt-0.5">{job.city}</p>
           </div>
           <div>

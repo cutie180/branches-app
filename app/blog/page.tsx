@@ -15,6 +15,60 @@ export const metadata: Metadata = {
 
 export const FEATURED_POSTS = [
   {
+    slug: 'restaurants-in-karachi',
+    title: 'Restaurants in Karachi 2026: Food, Cuisines, Areas & Dining Guide',
+    excerpt: 'Explore restaurants in Karachi by cuisine, area, budget and occasion, including Pakistani food, BBQ, cafés, family dining, fast food and fine dining.',
+    category: 'Karachi Local Food Guide',
+    date: 'August 13, 2026',
+    readTime: '16 min read',
+    icon: Sparkles
+  },
+  {
+    slug: 'restaurants-in-pakistan',
+    title: 'Restaurants in Pakistan 2026: Food, Cuisines & Places to Eat',
+    excerpt: 'Explore restaurants in Pakistan by city, cuisine, budget and occasion. Learn how to find family restaurants, fine dining, affordable food and local places to eat.',
+    category: 'Restaurants & Food Pillar',
+    date: 'August 13, 2026',
+    readTime: '16 min read',
+    icon: Sparkles
+  },
+  {
+    slug: 'best-universities-computer-science-pakistan',
+    title: 'Best Universities for Computer Science, IT & Software Engineering in Pakistan',
+    excerpt: 'Compare universities for Computer Science, IT and Software Engineering in Pakistan. Learn what to check for programs, accreditation, admissions, fees, facilities and careers.',
+    category: 'CS & Tech Education',
+    date: 'August 13, 2026',
+    readTime: '16 min read',
+    icon: Sparkles
+  },
+  {
+    slug: 'universities-in-pakistan',
+    title: 'Universities in Pakistan 2026: Programs, Admissions & Cities',
+    excerpt: 'Explore universities in Pakistan, including public and private universities, popular degree programs, major university cities, admissions and how to choose the right institution.',
+    category: 'Education Pillar Guide',
+    date: 'August 13, 2026',
+    readTime: '15 min read',
+    icon: BookOpen
+  },
+  {
+    slug: 'it-jobs-in-pakistan',
+    title: 'IT Jobs in Pakistan 2026: Fresh Graduate, Software & Remote Opportunities',
+    excerpt: 'Explore IT jobs in Pakistan for fresh graduates and experienced professionals, including software, web, AI, cybersecurity, digital marketing, internships and remote opportunities.',
+    category: 'IT & Tech Cluster Guide',
+    date: 'August 13, 2026',
+    readTime: '14 min read',
+    icon: Sparkles
+  },
+  {
+    slug: 'jobs-in-pakistan',
+    title: 'Jobs in Pakistan 2026: Government, Private, Online & Career Opportunities',
+    excerpt: 'Find jobs in Pakistan in 2026, including government, private, IT, teaching, banking, healthcare, remote, part-time and graduate opportunities. Learn how to find and apply for jobs.',
+    category: 'Evergreen Pillar Guide',
+    date: 'August 13, 2026',
+    readTime: '12 min read',
+    icon: Briefcase
+  },
+  {
     slug: 'top-business-directory-websites-pakistan',
     title: 'Top Business Directory Websites in Pakistan: The Complete Guide to Finding Trusted Local Businesses (2026)',
     excerpt: 'Discover the best business directory websites in Pakistan to find trusted local businesses, improve your local SEO, reach more customers, and boost online visibility.',

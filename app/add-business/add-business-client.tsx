@@ -48,6 +48,14 @@ const FAQS = [
   }
 ]
 
+export interface FormLocation {
+  city: string
+  address: string
+  isPrimary: boolean
+  citySearchQuery?: string
+  isCityDropdownOpen?: boolean
+}
+
 export default function AddBusinessClient() {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(1)
@@ -56,21 +64,14 @@ export default function AddBusinessClient() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [logoPreview, setLogoPreview] = useState<string | null>(null)
 
-  // Searchable City Selector state
-  const [citySearchQuery, setCitySearchQuery] = useState('')
-  const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false)
-
-  const filteredCities = CITIES.filter(city =>
-    city.toLowerCase().includes(citySearchQuery.toLowerCase().trim())
-  )
-
   // Form State
   const [formData, setFormData] = useState({
     businessName: '',
     category: '',
     subcategory: '',
-    city: '',
-    address: '',
+    locations: [
+      { city: '', address: '', isPrimary: true, citySearchQuery: '', isCityDropdownOpen: false }
+    ] as FormLocation[],
     phone: '',
     whatsapp: '',
     email: '',
@@ -83,17 +84,122 @@ export default function AddBusinessClient() {
   // Errors State
   const [errors, setErrors] = useState<Record<string, string>>({})
 
+  // Multi-Location Handlers
+  const handleAddLocation = () => {
+    setFormData(prev => ({
+      ...prev,
+      locations: [
+        ...prev.locations,
+        { city: '', address: '', isPrimary: prev.locations.length === 0, citySearchQuery: '', isCityDropdownOpen: false }
+      ]
+    }))
+  }
+
+  const handleRemoveLocation = (index: number) => {
+    if (formData.locations.length <= 1) return
+    setFormData(prev => {
+      const updated = prev.locations.filter((_, i) => i !== index)
+      if (!updated.some(l => l.isPrimary) && updated.length > 0) {
+        updated[0].isPrimary = true
+      }
+      return { ...prev, locations: updated }
+    })
+  }
+
+  const handleSetPrimaryLocation = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      locations: prev.locations.map((loc, i) => ({
+        ...loc,
+        isPrimary: i === index
+      }))
+    }))
+  }
+
+  const handleLocationCitySelect = (index: number, city: string) => {
+    setFormData(prev => {
+      const updated = [...prev.locations]
+      updated[index] = {
+        ...updated[index],
+        city,
+        isCityDropdownOpen: false,
+        citySearchQuery: ''
+      }
+      return { ...prev, locations: updated }
+    })
+    setErrors(prev => {
+      const newErrs = { ...prev }
+      delete newErrs[`location_${index}_city`]
+      return newErrs
+    })
+  }
+
+  const handleLocationAddressChange = (index: number, address: string) => {
+    setFormData(prev => {
+      const updated = [...prev.locations]
+      updated[index] = {
+        ...updated[index],
+        address
+      }
+      return { ...prev, locations: updated }
+    })
+    setErrors(prev => {
+      const newErrs = { ...prev }
+      delete newErrs[`location_${index}_address`]
+      return newErrs
+    })
+  }
+
+  const toggleLocationCityDropdown = (index: number) => {
+    setFormData(prev => {
+      const updated = [...prev.locations]
+      updated[index] = {
+        ...updated[index],
+        isCityDropdownOpen: !updated[index].isCityDropdownOpen
+      }
+      return { ...prev, locations: updated }
+    })
+  }
+
+  const handleLocationCitySearch = (index: number, query: string) => {
+    setFormData(prev => {
+      const updated = [...prev.locations]
+      updated[index] = {
+        ...updated[index],
+        citySearchQuery: query
+      }
+      return { ...prev, locations: updated }
+    })
+  }
+
+  const handleAddressKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      const loc = formData.locations[index]
+      if (loc && loc.address.trim() && loc.city) {
+        handleAddLocation()
+        setTimeout(() => {
+          const nextCityBtn = document.getElementById(`city-dropdown-btn-${index + 1}`)
+          if (nextCityBtn) {
+            nextCityBtn.focus()
+          }
+        }, 50)
+      } else {
+        toast.error('Please select a city and complete the physical address for Location ' + (index + 1) + ' before adding another.')
+      }
+    }
+  }
+
   // Calculate completion percentage
   const calculateProgress = () => {
     let filled = 0
     if (formData.businessName) filled++
     if (formData.category) filled++
-    if (formData.city) filled++
+    if (formData.locations.some(l => l.city && l.address)) filled++
     if (formData.phone) filled++
     if (formData.whatsapp) filled++
-    if (formData.address) filled++
     if (formData.description.length >= 50) filled++
-    return Math.min(100, Math.round((filled / 7) * 100))
+    return Math.min(100, Math.round((filled / 6) * 100))
   }
 
   const validateStep = (step: number) => {
@@ -102,8 +208,29 @@ export default function AddBusinessClient() {
       if (!formData.businessName.trim()) errs.businessName = 'Business name is required'
       if (!formData.category) errs.category = 'Select a category'
     } else if (step === 2) {
-      if (!formData.city) errs.city = 'Select a city'
-      if (!formData.address.trim()) errs.address = 'Street address is required'
+      if (formData.locations.length === 0) {
+        errs.locations = 'At least one location is required'
+      } else {
+        formData.locations.forEach((loc, idx) => {
+          if (!loc.city) {
+            errs[`location_${idx}_city`] = 'City selection is required'
+          }
+          if (!loc.address.trim()) {
+            errs[`location_${idx}_address`] = 'Physical address is required'
+          }
+
+          // Duplicate location detection
+          const currentKey = `${loc.city.toLowerCase()}|${loc.address.trim().toLowerCase()}`
+          const isDuplicate = formData.locations.some((otherLoc, otherIdx) => {
+            if (otherIdx === idx) return false
+            const otherKey = `${otherLoc.city.toLowerCase()}|${otherLoc.address.trim().toLowerCase()}`
+            return currentKey === otherKey && loc.city && loc.address.trim()
+          })
+          if (isDuplicate) {
+            errs[`location_${idx}_address`] = 'This location (city & address) has already been added.'
+          }
+        })
+      }
       if (!formData.phone.trim()) errs.phone = 'Phone number is required'
     } else if (step === 3) {
       const wordCount = formData.description.trim() ? formData.description.trim().split(/\s+/).filter(Boolean).length : 0
@@ -134,12 +261,20 @@ export default function AddBusinessClient() {
 
     setIsSubmitting(true)
     try {
+      const primaryLoc = formData.locations.find(l => l.isPrimary) || formData.locations[0] || { city: 'Karachi', address: 'Pakistan' }
+
       const saved = await saveBusinessToDatabase({
         name: formData.businessName,
         category: formData.category,
         categoryId: formData.category.toLowerCase().split(' ')[0],
-        city: formData.city,
-        address: formData.address,
+        city: primaryLoc.city || 'Karachi',
+        address: primaryLoc.address || 'Pakistan',
+        locations: formData.locations.map(l => ({
+          city: l.city,
+          address: l.address,
+          isPrimary: l.isPrimary
+        })),
+        cities: Array.from(new Set(formData.locations.map(l => l.city))),
         phone: formData.phone,
         whatsapp: formData.whatsapp || formData.phone.replace(/[^0-9]/g, ''),
         email: formData.email,
@@ -355,85 +490,178 @@ export default function AddBusinessClient() {
               {currentStep === 2 && (
                 <div className="space-y-6 animate-in fade-in-50">
                   <div>
-                    <h2 className="text-xl font-extrabold text-slate-900">Step 2: Location & Contact Channels</h2>
-                    <p className="text-xs text-slate-500 mt-1">Specify your physical address and customer contact numbers.</p>
+                    <h2 className="text-xl font-extrabold text-slate-900">Step 2: Business Locations & Contact Channels</h2>
+                    <p className="text-xs text-slate-500 mt-1">
+                      Add all physical branches, campuses, or store locations across cities. The first location is set as your Primary location.
+                    </p>
                   </div>
 
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="relative">
-                        <label className="block text-xs font-bold text-slate-700 mb-1.5 flex justify-between items-center">
-                          <span>City Location * ({CITIES.length} Pakistani Cities)</span>
-                          {formData.city && (
-                            <span className="text-[11px] font-semibold text-emerald-600">
-                              ✓ {formData.city}
-                            </span>
-                          )}
-                        </label>
-                        
-                        <div className="relative">
-                          <button
-                            type="button"
-                            onClick={() => setIsCityDropdownOpen(!isCityDropdownOpen)}
-                            className={`w-full px-4 py-3 bg-slate-50/80 border rounded-2xl text-sm flex items-center justify-between text-left focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition ${
-                              errors.city ? 'border-red-500 bg-red-50/30' : 'border-slate-200 hover:border-slate-300'
-                            }`}
-                          >
-                            <span className={formData.city ? 'font-semibold text-slate-900' : 'text-slate-400'}>
-                              {formData.city ? formData.city : `-- Search or Select City (${CITIES.length} Cities) --`}
-                            </span>
-                            <ChevronDown className={`w-4 h-4 text-slate-400 flex-shrink-0 ml-2 transition-transform duration-200 ${isCityDropdownOpen ? 'rotate-180' : ''}`} />
-                          </button>
+                  {/* REPEATABLE LOCATIONS SECTION */}
+                  <div className="space-y-6">
+                    <div className="flex justify-between items-center border-b border-slate-100 pb-2">
+                      <span className="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                        <MapPin className="w-4 h-4 text-blue-600" />
+                        Business Locations ({formData.locations.length} {formData.locations.length === 1 ? 'Location' : 'Locations'})
+                      </span>
+                      <span className="text-[11px] font-medium text-slate-500">
+                        Press <strong>Enter</strong> in address to add another location
+                      </span>
+                    </div>
 
-                          {isCityDropdownOpen && (
-                            <div className="absolute z-50 mt-2 w-full bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden animate-in fade-in-50 duration-150">
-                              <div className="p-2.5 border-b border-slate-100 bg-slate-50/80 sticky top-0">
-                                <input
-                                  type="text"
-                                  value={citySearchQuery}
-                                  onChange={(e) => setCitySearchQuery(e.target.value)}
-                                  placeholder="Search city... (e.g. Swat, Karachi, Mirpur, Multan, Quetta)"
-                                  className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                                  autoFocus
-                                />
-                              </div>
+                    {formData.locations.map((loc, index) => {
+                      const filteredCities = CITIES.filter(c =>
+                        c.toLowerCase().includes((loc.citySearchQuery || '').toLowerCase().trim())
+                      )
 
-                              <div className="max-h-60 overflow-y-auto divide-y divide-slate-50 p-1">
-                                {filteredCities.length > 0 ? (
-                                  filteredCities.map((city) => (
-                                    <button
-                                      key={city}
-                                      type="button"
-                                      onClick={() => {
-                                        setFormData({ ...formData, city })
-                                        setErrors({ ...errors, city: '' })
-                                        setIsCityDropdownOpen(false)
-                                        setCitySearchQuery('')
-                                      }}
-                                      className={`w-full px-3 py-2 text-left text-xs rounded-xl flex items-center justify-between transition ${
-                                        formData.city === city
-                                          ? 'bg-blue-50 text-blue-700 font-bold'
-                                          : 'text-slate-700 hover:bg-slate-50'
-                                      }`}
-                                    >
-                                      <span>{city}</span>
-                                      {formData.city === city && <Check className="w-3.5 h-3.5 text-blue-600" />}
-                                    </button>
-                                  ))
-                                ) : (
-                                  <div className="p-4 text-center text-xs text-slate-400">
-                                    No matching city found for "{citySearchQuery}"
+                      return (
+                        <div 
+                          key={index}
+                          className={`p-5 rounded-2xl border transition-all space-y-4 ${
+                            loc.isPrimary 
+                              ? 'bg-blue-50/40 border-blue-200 shadow-xs' 
+                              : 'bg-slate-50/60 border-slate-200'
+                          }`}
+                        >
+                          <div className="flex flex-wrap justify-between items-center gap-2 pb-2 border-b border-slate-200/60">
+                            <div className="flex items-center gap-2">
+                              <span className="w-6 h-6 rounded-full bg-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center">
+                                {index + 1}
+                              </span>
+                              <h4 className="text-sm font-extrabold text-slate-900">
+                                Location {index + 1}
+                              </h4>
+                              {loc.isPrimary ? (
+                                <span className="px-2.5 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-bold shadow-xs">
+                                  Primary Location
+                                </span>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={() => handleSetPrimaryLocation(index)}
+                                  className="text-[11px] text-blue-600 hover:text-blue-800 font-bold underline cursor-pointer"
+                                >
+                                  Set as Primary
+                                </button>
+                              )}
+                            </div>
+
+                            {formData.locations.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveLocation(index)}
+                                className="text-xs font-semibold text-red-500 hover:text-red-700 transition-colors cursor-pointer"
+                              >
+                                Remove Location
+                              </button>
+                            )}
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {/* City Selector for Location Block */}
+                            <div className="relative">
+                              <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                                City *
+                              </label>
+                              <div className="relative">
+                                <button
+                                  type="button"
+                                  id={`city-dropdown-btn-${index}`}
+                                  onClick={() => toggleLocationCityDropdown(index)}
+                                  className={`w-full px-4 py-3 bg-white border rounded-2xl text-sm flex items-center justify-between text-left focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition ${
+                                    errors[`location_${index}_city`] ? 'border-red-500 bg-red-50/30' : 'border-slate-200 hover:border-slate-300'
+                                  }`}
+                                >
+                                  <span className={loc.city ? 'font-semibold text-slate-900' : 'text-slate-400'}>
+                                    {loc.city ? loc.city : `-- Select City (${CITIES.length} Cities) --`}
+                                  </span>
+                                  <ChevronDown className={`w-4 h-4 text-slate-400 flex-shrink-0 ml-2 transition-transform duration-200 ${loc.isCityDropdownOpen ? 'rotate-180' : ''}`} />
+                                </button>
+
+                                {loc.isCityDropdownOpen && (
+                                  <div className="absolute z-50 mt-2 w-full bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden animate-in fade-in-50 duration-150">
+                                    <div className="p-2.5 border-b border-slate-100 bg-slate-50/80 sticky top-0">
+                                      <input
+                                        type="text"
+                                        value={loc.citySearchQuery || ''}
+                                        onChange={(e) => handleLocationCitySearch(index, e.target.value)}
+                                        placeholder="Search city..."
+                                        className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                                        autoFocus
+                                      />
+                                    </div>
+
+                                    <div className="max-h-56 overflow-y-auto divide-y divide-slate-50 p-1">
+                                      {filteredCities.length > 0 ? (
+                                        filteredCities.map((city) => (
+                                          <button
+                                            key={city}
+                                            type="button"
+                                            onClick={() => handleLocationCitySelect(index, city)}
+                                            className={`w-full px-3 py-2 text-left text-xs rounded-xl flex items-center justify-between transition ${
+                                              loc.city === city
+                                                ? 'bg-blue-50 text-blue-700 font-bold'
+                                                : 'text-slate-700 hover:bg-slate-50'
+                                            }`}
+                                          >
+                                            <span>{city}</span>
+                                            {loc.city === city && <Check className="w-3.5 h-3.5 text-blue-600" />}
+                                          </button>
+                                        ))
+                                      ) : (
+                                        <div className="p-4 text-center text-xs text-slate-400">
+                                          No matching city found
+                                        </div>
+                                      )}
+                                    </div>
                                   </div>
                                 )}
                               </div>
+                              {errors[`location_${index}_city`] && (
+                                <span className="text-[11px] font-semibold text-red-500 mt-1 block">{errors[`location_${index}_city`]}</span>
+                              )}
                             </div>
-                          )}
-                        </div>
-                        {errors.city && <span className="text-[11px] font-semibold text-red-500 mt-1 block">{errors.city}</span>}
-                      </div>
 
+                            {/* Physical Address Input */}
+                            <div>
+                              <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                                Physical Address *
+                              </label>
+                              <input
+                                type="text"
+                                value={loc.address}
+                                onChange={(e) => handleLocationAddressChange(index, e.target.value)}
+                                onKeyDown={(e) => handleAddressKeyDown(e, index)}
+                                placeholder="Plot / Shop / Building number, Street, Area"
+                                className={`w-full px-4 py-3 bg-white border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 ${
+                                  errors[`location_${index}_address`] ? 'border-red-500 bg-red-50/30' : 'border-slate-200'
+                                }`}
+                              />
+                              {errors[`location_${index}_address`] && (
+                                <span className="text-[11px] font-semibold text-red-500 mt-1 block">{errors[`location_${index}_address`]}</span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })}
+
+                    {/* ADD ANOTHER LOCATION BUTTON */}
+                    <button
+                      type="button"
+                      onClick={handleAddLocation}
+                      className="w-full py-3.5 px-4 bg-slate-50 hover:bg-blue-50 border-2 border-dashed border-slate-300 hover:border-blue-400 text-blue-700 font-extrabold text-xs rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                    >
+                      <Sparkles className="w-4 h-4 text-blue-600" />
+                      <span>+ Add Another Location / Branch</span>
+                    </button>
+                  </div>
+
+                  {/* CONTACT CHANNELS */}
+                  <div className="pt-4 border-t border-slate-100 space-y-4">
+                    <h3 className="text-sm font-extrabold text-slate-900">Contact Channels</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1.5">Primary Mobile / Landline *</label>
+                        <label className="block text-xs font-bold text-slate-700 mb-1.5">Primary Mobile / Phone *</label>
                         <input
                           type="tel"
                           value={formData.phone}
@@ -443,21 +671,7 @@ export default function AddBusinessClient() {
                         />
                         {errors.phone && <span className="text-[11px] font-semibold text-red-500 mt-1 block">{errors.phone}</span>}
                       </div>
-                    </div>
 
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1.5">Physical Street Address *</label>
-                      <input
-                        type="text"
-                        value={formData.address}
-                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                        placeholder="Plot / Shop number, Commercial Market, Area"
-                        className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                      />
-                      {errors.address && <span className="text-[11px] font-semibold text-red-500 mt-1 block">{errors.address}</span>}
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs font-bold text-slate-700 mb-1.5">WhatsApp Inquiry Number</label>
                         <input
@@ -465,6 +679,19 @@ export default function AddBusinessClient() {
                           value={formData.whatsapp}
                           onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
                           placeholder="923001234567"
+                          className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1.5">Official Email Address</label>
+                        <input
+                          type="email"
+                          value={formData.email}
+                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          placeholder="contact@business.pk"
                           className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                         />
                       </div>
@@ -590,8 +817,19 @@ export default function AddBusinessClient() {
                       <span className="font-extrabold text-slate-900">{formData.businessName || 'Not set'}</span>
                     </div>
                     <div className="flex justify-between border-b border-slate-200/60 pb-2">
-                      <span className="font-bold text-slate-500">Category & City:</span>
-                      <span className="font-semibold text-slate-800">{formData.category} in {formData.city}</span>
+                      <span className="font-bold text-slate-500">Category & Locations:</span>
+                      <span className="font-semibold text-slate-800 text-right">
+                        {formData.category || 'General'} in {formData.locations[0]?.city || 'Pakistan'}
+                        {formData.locations.length > 1 && ` (+${formData.locations.length - 1} more)`}
+                      </span>
+                    </div>
+                    <div className="border-b border-slate-200/60 pb-2 space-y-1">
+                      <span className="font-bold text-slate-500 block">Registered Branches ({formData.locations.length}):</span>
+                      {formData.locations.map((l, i) => (
+                        <p key={i} className="text-slate-700 font-medium text-[11px]">
+                          • <strong>{l.city || 'City'}:</strong> {l.address || 'Address'} {l.isPrimary && '(Primary)'}
+                        </p>
+                      ))}
                     </div>
                     <div className="flex justify-between border-b border-slate-200/60 pb-2">
                       <span className="font-bold text-slate-500">Phone & WhatsApp:</span>
@@ -683,7 +921,11 @@ export default function AddBusinessClient() {
                   </p>
 
                   <div className="pt-2 border-t border-slate-200/60 flex justify-between items-center text-[11px] text-slate-500">
-                    <span className="flex items-center gap-1"><MapPin className="w-3 h-3 text-slate-400" />{formData.city}</span>
+                    <span className="flex items-center gap-1">
+                      <MapPin className="w-3 h-3 text-slate-400" />
+                      {formData.locations[0]?.city || 'Pakistan'}
+                      {formData.locations.length > 1 && ` (+${formData.locations.length - 1} branches)`}
+                    </span>
                     <span className="font-bold text-blue-600">{formData.phone || '+92 300 0000000'}</span>
                   </div>
                 </div>
