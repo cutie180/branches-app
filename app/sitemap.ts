@@ -5,6 +5,7 @@ import { getAllProfessionals } from '@/lib/professional-service'
 import { getAllCompanies } from '@/lib/company-service'
 import { getAllJobs } from '@/lib/job-service'
 import { FEATURED_POSTS, RECENT_POSTS } from '@/app/blog/page'
+import { BLOG_POSTS } from '@/lib/blog-data'
 
 export const revalidate = 3600 // Revalidate sitemap XML every hour
 
@@ -151,7 +152,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   // 9. Blog Post Pages (Priority: 0.8, Frequency: weekly)
-  const allBlogPosts = [...FEATURED_POSTS, ...RECENT_POSTS]
+  const rawPostsList = [...Object.values(BLOG_POSTS), ...FEATURED_POSTS, ...RECENT_POSTS]
+  const blogPostsBySlug = new Map<string, { slug: string; date: string }>()
+  for (const post of rawPostsList) {
+    if (post && post.slug && !blogPostsBySlug.has(post.slug)) {
+      blogPostsBySlug.set(post.slug, post)
+    }
+  }
+  const allBlogPosts = Array.from(blogPostsBySlug.values())
   const blogRoutes = allBlogPosts.map((post) => {
     const parsedDate = new Date(post.date)
     return {
