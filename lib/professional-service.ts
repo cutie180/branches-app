@@ -389,18 +389,20 @@ export async function rejectProfessional(id: string, reason?: string): Promise<b
 /**
  * Directly mark a professional as Verified (giving green check and unlocking edit access)
  */
-export async function verifyProfessional(id: string, adminUid: string): Promise<boolean> {
-  const idx = memoryProfessionalsCache.findIndex(p => p.id === id || p.username === id)
+export async function verifyProfessional(idOrUsername: string, adminUid: string): Promise<boolean> {
+  const pro = memoryProfessionalsCache.find(p => p.id === idOrUsername || p.username === idOrUsername)
   const now = new Date().toISOString()
-  if (idx !== -1) {
-    memoryProfessionalsCache[idx].verified = true
-    memoryProfessionalsCache[idx].verificationStatus = 'VERIFIED'
-    memoryProfessionalsCache[idx].verifiedAt = now
-    memoryProfessionalsCache[idx].verifiedBy = adminUid
+  if (pro) {
+    pro.verified = true
+    pro.verificationStatus = 'VERIFIED'
+    pro.verifiedAt = now
+    pro.verifiedBy = adminUid
   }
 
+  const docId = pro?.id || idOrUsername
+
   try {
-    const docRef = doc(db, 'professionals', id)
+    const docRef = doc(db, 'professionals', docId)
     await updateDoc(docRef, {
       verified: true,
       verificationStatus: 'VERIFIED',
@@ -416,15 +418,17 @@ export async function verifyProfessional(id: string, adminUid: string): Promise<
 /**
  * Remove verification from a professional (reverting to unverified status and locking editing)
  */
-export async function unverifyProfessional(id: string, adminUid: string): Promise<boolean> {
-  const idx = memoryProfessionalsCache.findIndex(p => p.id === id || p.username === id)
-  if (idx !== -1) {
-    memoryProfessionalsCache[idx].verified = false
-    memoryProfessionalsCache[idx].verificationStatus = 'UNVERIFIED'
+export async function unverifyProfessional(idOrUsername: string, adminUid: string): Promise<boolean> {
+  const pro = memoryProfessionalsCache.find(p => p.id === idOrUsername || p.username === idOrUsername)
+  if (pro) {
+    pro.verified = false
+    pro.verificationStatus = 'UNVERIFIED'
   }
 
+  const docId = pro?.id || idOrUsername
+
   try {
-    const docRef = doc(db, 'professionals', id)
+    const docRef = doc(db, 'professionals', docId)
     await updateDoc(docRef, {
       verified: false,
       verificationStatus: 'UNVERIFIED'
@@ -495,8 +499,9 @@ export async function submitVerificationRequest(
 
   try {
     await setDoc(doc(db, 'professional_verifications', reqId), newRequest)
-    if (pro?.id) {
-      const docRef = doc(db, 'professionals', pro.id)
+    const proDocId = pro?.id || idOrUsername
+    if (proDocId) {
+      const docRef = doc(db, 'professionals', proDocId)
       await updateDoc(docRef, {
         verificationRequestStatus: 'PENDING',
         verificationPaymentDetails: paymentDetails
@@ -539,8 +544,10 @@ export async function approveVerificationRequest(requestId: string, adminUid: st
       reviewedBy: adminUid
     })
 
-    if (req?.professionalProfileId) {
-      const proRef = doc(db, 'professionals', req.professionalProfileId)
+    const pro = memoryProfessionalsCache.find(p => p.id === req?.professionalProfileId || p.username === req?.username)
+    const proDocId = pro?.id || req?.professionalProfileId || req?.username
+    if (proDocId) {
+      const proRef = doc(db, 'professionals', proDocId)
       await updateDoc(proRef, {
         verified: true,
         verificationStatus: 'VERIFIED',
