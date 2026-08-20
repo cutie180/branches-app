@@ -137,12 +137,22 @@ export const getAllProfessionals = cache(async function getAllProfessionals(incl
         })
       })
 
-      // Merge avoiding duplicate usernames
+      // Merge avoiding duplicate usernames and sort newest registrations first
       const existingUsernames = new Set(firestoreItems.map(p => p.username))
       const combined = [
         ...firestoreItems,
         ...memoryProfessionalsCache.filter(p => !existingUsernames.has(p.username))
-      ]
+      ].sort((a, b) => {
+        // 1. Pending reviews top priority
+        const aPending = (a.status === 'pending' || a.profileStatus === 'PENDING') ? 1 : 0
+        const bPending = (b.status === 'pending' || b.profileStatus === 'PENDING') ? 1 : 0
+        if (bPending !== aPending) return bPending - aPending
+
+        // 2. Newest registered profiles top
+        const bTime = new Date(b.submittedAt || 0).getTime() || (b.id ? parseInt(b.id.replace(/\D/g, '')) || 0 : 0)
+        const aTime = new Date(a.submittedAt || 0).getTime() || (a.id ? parseInt(a.id.replace(/\D/g, '')) || 0 : 0)
+        return bTime - aTime
+      })
       memoryProfessionalsCache = combined
     }
   } catch (err) {
