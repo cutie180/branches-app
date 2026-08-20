@@ -66,7 +66,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/report-abuse'
   ].map((route) => ({
     url: `${baseUrl}${route}`,
-    lastModified: fixedPolicyDate,
+    lastModified: currentDate,
     changeFrequency: 'yearly' as const,
     priority: 0.3,
   }))
@@ -96,16 +96,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   const approvedBusinesses = rawBusinesses.filter(b => (b.status || 'approved') === 'approved')
-  const businessRoutes = approvedBusinesses.map((biz) => {
-    let modDate = currentDate
-    if (biz.approvedAt) modDate = new Date(biz.approvedAt)
-    return {
-      url: `${baseUrl}/business/${biz.slug}`,
-      lastModified: isNaN(modDate.getTime()) ? currentDate : modDate,
-      changeFrequency: 'weekly' as const,
-      priority: 0.9,
-    }
-  })
+  const businessRoutes = approvedBusinesses.map((biz) => ({
+    url: `${baseUrl}/business/${biz.slug}`,
+    lastModified: currentDate,
+    changeFrequency: 'weekly' as const,
+    priority: 0.9,
+  }))
 
   // 7. Dynamic Job Openings
   let rawJobs: JobItem[] = []
@@ -151,7 +147,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.9,
   }))
 
-  // 9. Blog Post Pages (Priority: 0.8, Frequency: weekly)
+  // 10. Blog Post Pages (Priority: 0.8, Frequency: weekly)
   const rawPostsList = [...Object.values(BLOG_POSTS), ...FEATURED_POSTS, ...RECENT_POSTS]
   const blogPostsBySlug = new Map<string, { slug: string; date: string }>()
   for (const post of rawPostsList) {
@@ -160,15 +156,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
   const allBlogPosts = Array.from(blogPostsBySlug.values())
-  const blogRoutes = allBlogPosts.map((post) => {
-    const parsedDate = new Date(post.date)
-    return {
-      url: `${baseUrl}/blog/${post.slug}`,
-      lastModified: isNaN(parsedDate.getTime()) ? currentDate : parsedDate,
-      changeFrequency: 'weekly' as const,
-      priority: 0.8,
-    }
-  })
+  const blogRoutes = allBlogPosts.map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: currentDate,
+    changeFrequency: 'weekly' as const,
+    priority: 0.8,
+  }))
 
   // Combine all routes
   const allRoutes = [
