@@ -779,7 +779,9 @@ export default function AddBusinessClient() {
                           <div>
                             <Upload className="w-6 h-6 text-slate-400 mx-auto mb-1" />
                             <span className="text-xs text-slate-600 font-medium block">Click to upload business logo or storefront photo</span>
-                            <span className="text-[10px] text-slate-400 block mt-0.5">Supports JPG, PNG, WEBP (Max 5MB)</span>
+                            <span className="text-[10px] text-slate-400 block mt-0.5">
+                              Supports JPG, PNG, WEBP • <a href="https://mb2kb.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline font-bold" onClick={(e) => e.stopPropagation()}>Reduce image size at MB2KB.com ↗</a>
+                            </span>
                           </div>
                         )}
                         <input

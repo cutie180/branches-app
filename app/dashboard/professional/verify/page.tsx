@@ -527,10 +527,19 @@ export default function ProfessionalVerificationPage() {
                       <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mx-auto">
                         <Upload className="w-6 h-6" />
                       </div>
-                      <span className="text-xs font-bold text-blue-600 hover:underline block">
-                        {screenshotFileName ? `Selected: ${screenshotFileName}` : 'Click to Browse & Upload Payment Screenshot'}
-                      </span>
-                      <span className="text-[11px] text-slate-400 block">Maximum file size: 5MB</span>
+                      <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-[11px] text-slate-400">
+                        <span>Accepted: JPG, PNG, WebP (Max: 5MB)</span>
+                        <span>•</span>
+                        <a
+                          href="https://mb2kb.com/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-700 font-bold underline"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Reduce size at MB2KB.com ↗
+                        </a>
+                      </div>
                     </label>
                   </div>
 

@@ -187,9 +187,9 @@ export default function AddProfessionalClient() {
     const maxBytes = 200 * 1024
     if (file.size > maxBytes) {
       const sizeKb = (file.size / 1024).toFixed(0)
-      const err = `Image size is ${sizeKb} KB. Limit is 200 KB. Please upload an image under 200 KB or paste your Google Drive link.`
+      const err = `Your image size is ${sizeKb} KB (exceeds 200 KB limit). Please compress/reduce your image size for free at https://mb2kb.com/ and re-upload.`
       setAvatarError(err)
-      toast.error(err)
+      toast.error(`Image is ${sizeKb} KB. Please reduce image size at mb2kb.com to under 200 KB.`)
       return
     }
 
@@ -708,15 +708,41 @@ export default function AddProfessionalClient() {
                                 />
                               </label>
                             </div>
-                            <div className="flex items-center justify-between text-[11px] text-slate-500">
-                              <span>Accepted: JPG, PNG, WebP</span>
-                              <span className="font-bold text-amber-600">Max size: 200 KB</span>
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1.5 text-[11px] text-slate-500 pt-1">
+                              <span>Accepted: JPG, PNG, WebP (Max 200 KB)</span>
+                              <a
+                                href="https://mb2kb.com/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:text-blue-800 font-bold underline inline-flex items-center gap-1"
+                              >
+                                <span>Reduce image size at MB2KB.com ↗</span>
+                              </a>
                             </div>
                           </div>
                         )}
 
-                        {avatarError && <p className="text-red-500 text-[11px] font-semibold">{avatarError}</p>}
-                        {errors.avatar && <p className="text-red-500 text-[11px] font-semibold">{errors.avatar}</p>}
+                        {avatarError && (
+                          <div className="p-3 bg-amber-50 border border-amber-200 rounded-2xl space-y-2 text-xs animate-in fade-in-50">
+                            <div className="flex items-start gap-2 text-amber-900 font-semibold">
+                              <AlertCircle className="w-4 h-4 shrink-0 text-amber-600 mt-0.5" />
+                              <span>{avatarError}</span>
+                            </div>
+                            <div className="flex items-center justify-between pt-1 border-t border-amber-200/60">
+                              <span className="text-[11px] text-amber-800">Need to compress image?</span>
+                              <a
+                                href="https://mb2kb.com/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] rounded-xl inline-flex items-center gap-1.5 shadow-xs transition-colors"
+                              >
+                                <span>Reduce Size at MB2KB.com</span>
+                                <ExternalLink className="w-3 h-3" />
+                              </a>
+                            </div>
+                          </div>
+                        )}
+                        {errors.avatar && !avatarError && <p className="text-red-500 text-[11px] font-semibold">{errors.avatar}</p>}
                       </div>
                     </div>
 
