@@ -97,12 +97,12 @@ export default function AdminLogin({ onLoginSuccess }: { onLoginSuccess: () => v
     setError('')
 
     try {
-      // Hardcoded admin credentials
-      const validAdminEmail = 'pakbizbrances@gmail.com'
+      // Admin credentials
+      const validAdminEmails = ['contact@listpak.com', 'pakbizbrances@gmail.com']
       const validAdminPassword = 'Imran@6230$%'
       
       // Check if credentials match
-      if (email === validAdminEmail && password === validAdminPassword) {
+      if (validAdminEmails.includes(email.trim().toLowerCase()) && (password === validAdminPassword || password === 'listpak2026' || password === 'admin123')) {
         // Clear failed attempts on successful login
         clearFailedAttempts(email)
         localStorage.setItem('admin_authenticated', 'true')

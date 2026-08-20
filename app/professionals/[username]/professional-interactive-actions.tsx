@@ -1,8 +1,10 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Mail, Star, HelpCircle } from 'lucide-react'
+import { Mail, Star, HelpCircle, MessageCircle, CheckCircle2, Send, Phone } from 'lucide-react'
 import { toast } from 'sonner'
+import { db } from '@/lib/firebase'
+import { doc, setDoc } from 'firebase/firestore'
 
 export interface ReviewItem {
   id: string
@@ -19,25 +21,63 @@ export interface FaqItem {
 
 interface ProfessionalHeroActionsProps {
   proName: string
+  proUsername?: string
 }
 
-export function ProfessionalHeroActions({ proName }: ProfessionalHeroActionsProps) {
+export function ProfessionalHeroActions({ proName, proUsername }: ProfessionalHeroActionsProps) {
   const [showContactModal, setShowContactModal] = useState(false)
   const [senderName, setSenderName] = useState('')
   const [senderEmail, setSenderEmail] = useState('')
+  const [senderWhatsApp, setSenderWhatsApp] = useState('')
   const [message, setMessage] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleContactSubmit = (e: React.FormEvent) => {
+  const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!senderName || !senderEmail || !message) {
-      toast.error('Please enter all required fields.')
+    if (!senderName.trim() || !senderEmail.trim() || !senderWhatsApp.trim() || !message.trim()) {
+      toast.error('Please enter all required fields including your WhatsApp number.')
       return
     }
-    setShowContactModal(false)
-    setSenderName('')
-    setSenderEmail('')
-    setMessage('')
-    toast.success(`Message dispatched directly to ${proName}!`)
+
+    setIsSubmitting(true)
+    const inquiryPayload = {
+      id: 'inq-' + Date.now(),
+      proUsername: proUsername || 'professional',
+      proName: proName || 'Professional Specialist',
+      senderName: senderName.trim(),
+      senderEmail: senderEmail.trim(),
+      senderWhatsApp: senderWhatsApp.trim(),
+      message: message.trim(),
+      createdAt: new Date().toISOString(),
+      status: 'new'
+    }
+
+    try {
+      // 1. Direct Firestore write
+      try {
+        await setDoc(doc(db, 'professional_inquiries', inquiryPayload.id), inquiryPayload)
+      } catch (firestoreErr) {
+        console.warn('Direct Firestore save failed, fallback to API:', firestoreErr)
+      }
+
+      // 2. Server API sync
+      const res = await fetch('/api/professionals/inquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(inquiryPayload)
+      })
+
+      toast.success(`Inquiry sent to ${proName}! They will reply to you on WhatsApp.`)
+      setShowContactModal(false)
+      setSenderName('')
+      setSenderEmail('')
+      setSenderWhatsApp('')
+      setMessage('')
+    } catch (err) {
+      toast.error('Failed to send message. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -54,10 +94,13 @@ export function ProfessionalHeroActions({ proName }: ProfessionalHeroActionsProp
       {/* Contact Inquiry Modal */}
       {showContactModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl animate-in zoom-in-95 font-sans">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl animate-in zoom-in-95 font-sans border border-slate-200">
             <div className="flex justify-between items-center pb-3 border-b border-slate-100">
-              <h3 className="font-extrabold text-slate-900 text-base">Send Inquiry to {proName}</h3>
-              <button onClick={() => setShowContactModal(false)} className="text-slate-400 hover:text-slate-600 cursor-pointer text-lg">✕</button>
+              <div>
+                <h3 className="font-extrabold text-slate-900 text-base">Send Inquiry to {proName}</h3>
+                <p className="text-[11px] text-slate-500">Get a direct project estimate or hire {proName}</p>
+              </div>
+              <button onClick={() => setShowContactModal(false)} className="p-1 rounded-lg text-slate-400 hover:text-slate-600 cursor-pointer text-lg">✕</button>
             </div>
 
             <form onSubmit={handleContactSubmit} className="space-y-3">
@@ -69,7 +112,7 @@ export function ProfessionalHeroActions({ proName }: ProfessionalHeroActionsProp
                   value={senderName}
                   onChange={(e) => setSenderName(e.target.value)}
                   placeholder="e.g. Tariq Mehmood"
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -81,19 +124,40 @@ export function ProfessionalHeroActions({ proName }: ProfessionalHeroActionsProp
                   value={senderEmail}
                   onChange={(e) => setSenderEmail(e.target.value)}
                   placeholder="name@company.com"
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
                 />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-bold text-slate-700">Your WhatsApp Number *</label>
+                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-md">Instant Reply</span>
+                </div>
+                <div className="relative">
+                  <input
+                    type="tel"
+                    required
+                    value={senderWhatsApp}
+                    onChange={(e) => setSenderWhatsApp(e.target.value)}
+                    placeholder="e.g. 0300 1234567 or +92 300 1234567"
+                    className="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 font-mono font-semibold"
+                  />
+                  <MessageCircle className="w-4 h-4 text-[#25D366] absolute left-3 top-3" />
+                </div>
+                <span className="text-[10px] text-slate-500 mt-1 block">
+                  The professional will reply to you on WhatsApp instantly.
+                </span>
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">Project Inquiry Message *</label>
                 <textarea
-                  rows={4}
+                  rows={3}
                   required
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Describe your project scope or consulting requirements..."
-                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
+                  placeholder="Describe your project scope, timeline, or requirements..."
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -101,15 +165,17 @@ export function ProfessionalHeroActions({ proName }: ProfessionalHeroActionsProp
                 <button
                   type="button"
                   onClick={() => setShowContactModal(false)}
-                  className="flex-1 py-2.5 bg-slate-100 text-slate-700 font-bold text-xs rounded-xl hover:bg-slate-200"
+                  className="flex-1 py-2.5 bg-slate-100 text-slate-700 font-bold text-xs rounded-xl hover:bg-slate-200 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md"
+                  disabled={isSubmitting}
+                  className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
                 >
-                  Send Message
+                  <Send className="w-3.5 h-3.5" />
+                  <span>{isSubmitting ? 'Sending...' : 'Send Message'}</span>
                 </button>
               </div>
             </form>

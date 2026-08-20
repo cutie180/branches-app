@@ -118,77 +118,95 @@ export default async function ProfessionalDetailPage(props: { params: Promise<{ 
         dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLdPerson, jsonLdProfilePage, jsonLdBreadcrumb]) }}
       />
 
-      {/* Cover Header Banner */}
-      <section className="relative bg-gradient-to-r from-[#0F172A] via-[#1E293B] to-[#0F172A] text-white pt-8 pb-16 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
+      {/* Cover Header Banner (Clean Light / White Theme) */}
+      <section className="relative bg-white pt-8 pb-12 px-4 sm:px-6 lg:px-8 border-b border-slate-200/90 shadow-xs">
         <div className="max-w-4xl mx-auto space-y-6">
           
           <div className="flex items-center justify-between">
-            <Link href="/professionals" className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors">
+            <Link href="/professionals" className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 font-semibold transition-colors">
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to Professionals Network</span>
             </Link>
 
-            <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">
+            <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs">
               {pro.availability || 'Open to Work'}
             </span>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-            <div className="flex items-center gap-5">
-              <div className="relative w-24 h-24 rounded-3xl overflow-hidden border-4 border-white/20 shadow-2xl shrink-0">
+          <div className="flex flex-col lg:flex-row items-center lg:items-center justify-between gap-6">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4 sm:gap-5 w-full lg:w-auto">
+              <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-3xl overflow-hidden border-2 border-slate-200 shadow-md ring-4 ring-slate-50 shrink-0">
                 <Image
                   src={pro.avatar}
                   alt={pro.name}
-                  width={96}
-                  height={96}
+                  width={112}
+                  height={112}
                   priority
-                  sizes="96px"
+                  sizes="112px"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="space-y-1">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h1 className="text-2xl sm:text-3xl font-extrabold text-white">{pro.name}</h1>
-                  {pro.verified && (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold border border-emerald-500/30">
-                      <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                      <span>Verified Profile</span>
+              <div className="space-y-2">
+                <div className="flex items-center justify-center sm:justify-start gap-2.5 flex-wrap">
+                  <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">{pro.name}</h1>
+                  {pro.verified || pro.verificationStatus === 'VERIFIED' ? (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-extrabold border border-emerald-200 shadow-2xs">
+                      <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                      <span>✓ Verified Professional</span>
+                    </span>
+                  ) : (
+                    <span
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-red-700 text-xs font-bold border border-red-200 shadow-2xs"
+                      title="This profile has not completed ListPak verification."
+                    >
+                      <span className="text-red-600 font-extrabold">✕</span>
+                      <span>Not Verified</span>
                     </span>
                   )}
                 </div>
 
-                <p className="text-sm font-semibold text-blue-400">{pro.title}</p>
+                <p className="text-sm font-bold text-blue-600">{pro.title}</p>
                 
-                <div className="flex flex-wrap items-center gap-3 text-xs text-slate-300 pt-1">
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3 text-xs text-slate-600 pt-0.5">
                   <span className="flex items-center gap-1">
                     <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                    {pro.city}, {pro.province || 'Pakistan'}
+                    <span className="font-medium">{pro.city}, {pro.province || 'Pakistan'}</span>
                   </span>
-                  <span>•</span>
-                  <span className="font-bold text-amber-400 flex items-center gap-1">
+                  <span className="text-slate-300">•</span>
+                  <span className="font-bold text-slate-800 flex items-center gap-1">
                     <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                    {pro.rating} ({pro.reviewCount || reviewsList.length} reviews)
+                    <span>{pro.rating} ({pro.reviewCount || reviewsList.length} reviews)</span>
                   </span>
-                  <span>•</span>
-                  <span className="text-emerald-400 font-semibold">{pro.experienceYears}+ Years Exp</span>
+                  <span className="text-slate-300">•</span>
+                  <span className="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60">
+                    {pro.experienceYears}+ Years Exp
+                  </span>
+                  {pro.gender && (
+                    <>
+                      <span className="text-slate-300">•</span>
+                      <span className="text-slate-700 font-semibold bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+                        {pro.gender}
+                      </span>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
               {pro.linkedin && (
                 <a
                   href={pro.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full sm:w-auto px-5 py-3 bg-[#0A66C2] hover:bg-[#004182] text-white text-xs font-extrabold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0"
+                  className="w-full sm:w-auto px-5 py-3.5 bg-[#0A66C2] hover:bg-[#004182] text-white text-xs font-extrabold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0"
                 >
                   <Linkedin className="w-4 h-4 fill-white" />
                   <span>Connect on LinkedIn</span>
                 </a>
               )}
 
-              <ProfessionalHeroActions proName={pro.name} />
+              <ProfessionalHeroActions proName={pro.name} proUsername={pro.username} />
             </div>
           </div>
 

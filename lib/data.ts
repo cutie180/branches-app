@@ -995,6 +995,12 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
   }
 ]
 
+export interface ProfessionalCustomSocialLink {
+  platform?: string
+  name?: string
+  url: string
+}
+
 export interface CompanyItem {
   id: string
   slug: string
@@ -1271,13 +1277,39 @@ export interface ProfessionalCertification {
   year: string
 }
 
-export interface ProfessionalCustomSocialLink {
-  name: string
-  url: string
+export interface ProfessionalVerificationPaymentDetails {
+  amount: number
+  transactionRef?: string
+  paymentMethod?: string
+  paymentScreenshot?: string
+  submittedAt?: string
+  reviewedAt?: string
+  reviewedBy?: string
+  notes?: string
+}
+
+export interface ProfessionalVerificationRequest {
+  id: string
+  professionalProfileId: string
+  username: string
+  proName: string
+  profession: string
+  city: string
+  avatar?: string
+  amount: number
+  paymentMethod: string
+  paymentReference: string
+  paymentScreenshot: string
+  status: 'PENDING' | 'APPROVED' | 'REJECTED'
+  submittedAt: string
+  reviewedAt?: string
+  reviewedBy?: string
+  rejectionReason?: string
 }
 
 export interface ProfessionalItem {
   id?: string
+  userId?: string
   username: string
   slug?: string
   name: string
@@ -1295,6 +1327,7 @@ export interface ProfessionalItem {
   reviewCount?: number
   hourlyRate: string
   availability?: string
+  gender?: string
   avatar: string
   coverImage?: string
   bio: string
@@ -1303,10 +1336,19 @@ export interface ProfessionalItem {
   experienceYears: number
   verified: boolean
   isFeatured?: boolean
-  status?: 'pending' | 'approved' | 'rejected'
+  
+  // Decoupled Status System
+  status?: 'pending' | 'approved' | 'rejected' | 'draft'
+  profileStatus?: 'PENDING' | 'APPROVED' | 'REJECTED' | 'DRAFT'
+  verificationStatus?: 'UNVERIFIED' | 'VERIFIED'
+  verificationRequestStatus?: 'NOT_REQUESTED' | 'PENDING' | 'APPROVED' | 'REJECTED'
+  verificationPaymentDetails?: ProfessionalVerificationPaymentDetails
+  
   submittedAt?: string
   approvedAt?: string
   approvedBy?: string
+  verifiedAt?: string
+  verifiedBy?: string
   rejectionReason?: string
 
   // Contact Info
@@ -1712,6 +1754,115 @@ export const MOCK_PROFESSIONALS: ProfessionalItem[] = [
     reviews: [
       { id: 'r7', userName: 'Zubair Khattak', rating: 5, date: '1 month ago', comment: 'Sir Adnan helped my son go from C grade to A* in A-Level Physics! Highly recommended teacher.' }
     ]
+  },
+  {
+    id: 'pro-unverified-1',
+    username: 'bilal-ahmed-dev',
+    slug: 'bilal-ahmed-dev',
+    name: 'Bilal Ahmed',
+    title: 'Junior React & Node.js Developer',
+    profession: 'Software Developer',
+    category: 'Technology & IT',
+    specialization: 'Frontend & API Development',
+    city: 'Faisalabad',
+    province: 'Punjab',
+    country: 'Pakistan',
+    address: 'D Ground, Faisalabad, Pakistan',
+    rating: 4.8,
+    reviewCount: 4,
+    hourlyRate: 'PKR 1,800 / hr',
+    availability: 'Available for Freelance',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
+    bio: 'Self-motivated frontend engineer with 2 years practical experience building modern responsive dashboards in React, JavaScript, and Tailwind CSS.',
+    about: 'Bilal is an energetic frontend engineer from Faisalabad focused on crafting responsive, fast, and accessible user interfaces. Approved by ListPak moderators.',
+    skills: ['React', 'JavaScript', 'HTML5 & CSS3', 'Tailwind CSS', 'Git & GitHub', 'REST APIs'],
+    experienceYears: 2,
+    verified: false,
+    isFeatured: false,
+    status: 'approved',
+    profileStatus: 'APPROVED',
+    verificationStatus: 'UNVERIFIED',
+    verificationRequestStatus: 'NOT_REQUESTED',
+    submittedAt: '2026-08-10T10:00:00.000Z',
+    approvedAt: '2026-08-11T12:30:00.000Z',
+    approvedBy: 'admin-master',
+    phone: '+92 345 7766554',
+    email: 'bilal.ahmed@faisalabaddev.pk',
+    whatsapp: '923457766554',
+    github: 'https://github.com/bilalahmed-dev',
+    portfolio: 'https://bilal-dev.vercel.app',
+    languages: ['Urdu', 'English', 'Punjabi'],
+    education: [
+      { degree: 'BS Information Technology', institution: 'University of Agriculture Faisalabad', year: '2024' }
+    ]
+  },
+  {
+    id: 'pro-pending-1',
+    username: 'dr-imran-ashraf',
+    slug: 'dr-imran-ashraf',
+    name: 'Dr. Imran Ashraf',
+    title: 'Consultant Orthopedic Surgeon',
+    profession: 'Doctor',
+    category: 'Healthcare & Medical',
+    specialization: 'Joint Replacement & Trauma Surgery',
+    city: 'Multan',
+    province: 'Punjab',
+    country: 'Pakistan',
+    address: 'Nishtar Road, Multan, Pakistan',
+    rating: 5.0,
+    reviewCount: 2,
+    hourlyRate: 'PKR 2,000 / consult',
+    availability: 'Evening Clinic 5 PM - 9 PM',
+    avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=300&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1200&q=80',
+    bio: 'Orthopedic specialist with 9 years clinical experience in fracture management, arthroscopy, sports injuries, and joint restoration.',
+    about: 'Dr. Imran Ashraf has handled thousands of orthopedic trauma and elective joint reconstructive procedures across Nishtar Hospital Multan.',
+    skills: ['Orthopedic Surgery', 'Joint Replacement', 'Trauma Management', 'Arthroscopic Surgery', 'Bone Health'],
+    experienceYears: 9,
+    verified: false,
+    isFeatured: false,
+    status: 'pending',
+    profileStatus: 'PENDING',
+    verificationStatus: 'UNVERIFIED',
+    verificationRequestStatus: 'NOT_REQUESTED',
+    submittedAt: '2026-08-18T14:20:00.000Z',
+    phone: '+92 300 8877665',
+    email: 'dr.imran.ashraf@orthomultan.pk',
+    whatsapp: '923008877665',
+    languages: ['Urdu', 'English', 'Saraiki'],
+    education: [
+      { degree: 'MBBS, FCPS Orthopedics', institution: 'Nishtar Medical University Multan', year: '2016' }
+    ]
   }
 ]
 
+export const MOCK_VERIFICATION_REQUESTS: ProfessionalVerificationRequest[] = [
+  {
+    id: 'ver-req-1',
+    professionalProfileId: 'pro-unverified-1',
+    username: 'bilal-ahmed-dev',
+    proName: 'Bilal Ahmed',
+    profession: 'Software Developer',
+    city: 'Faisalabad',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+    amount: 50,
+    paymentMethod: 'EasyPaisa (Mashreq Pay)',
+    paymentReference: 'EP-9823746192',
+    paymentScreenshot: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80',
+    status: 'PENDING',
+    submittedAt: '2026-08-19T09:15:00.000Z'
+  }
+]
+
+export interface ProfessionalInquiry {
+  id: string
+  proUsername: string
+  proName: string
+  senderName: string
+  senderEmail: string
+  senderWhatsApp: string
+  message: string
+  createdAt: string
+  status?: 'new' | 'replied' | 'archived'
+}

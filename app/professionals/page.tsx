@@ -9,7 +9,8 @@ import { getAllProfessionals } from '@/lib/professional-service'
 import Link from 'next/link'
 import { 
   Users, MapPin, Search, ShieldCheck, Star, ArrowRight, Award, CheckCircle2, 
-  Linkedin, Briefcase, Filter, Sparkles, UserPlus, Globe, Check
+  Linkedin, Briefcase, Filter, Sparkles, UserPlus, Globe, Check,
+  LayoutDashboard, LogIn, UserCheck
 } from 'lucide-react'
 
 const QUICK_PROFESSIONS = [
@@ -27,16 +28,24 @@ const QUICK_PROFESSIONS = [
 export default function ProfessionalsPage() {
   const [professionals, setProfessionals] = useState<ProfessionalItem[]>([])
   const [loading, setLoading] = useState(true)
+  const [userSession, setUserSession] = useState<{ name?: string; email?: string; username?: string; hasProfile?: boolean } | null>(null)
 
   // Search & Filters
   const [query, setQuery] = useState('')
   const [selectedCity, setSelectedCity] = useState('')
   const [selectedProfession, setSelectedProfession] = useState('All Professions')
   const [selectedAvailability, setSelectedAvailability] = useState('')
-  const [onlyVerified, setOnlyVerified] = useState(false)
+  const [verificationFilter, setVerificationFilter] = useState<'all' | 'verified' | 'unverified'>('all')
   const [sortBy, setSortBy] = useState<'rating' | 'experience' | 'name'>('rating')
 
   useEffect(() => {
+    try {
+      const sess = sessionStorage.getItem('listpak_user_session')
+      if (sess) {
+        setUserSession(JSON.parse(sess))
+      }
+    } catch (e) {}
+
     async function loadData() {
       setLoading(true)
       try {
@@ -65,7 +74,8 @@ export default function ProfessionalsPage() {
     const matchesCity = !selectedCity || pro.city.toLowerCase() === selectedCity.toLowerCase()
     const matchesProfession = selectedProfession === 'All Professions' || pro.profession.toLowerCase() === selectedProfession.toLowerCase()
     const matchesAvailability = !selectedAvailability || (pro.availability && pro.availability.toLowerCase().includes(selectedAvailability.toLowerCase()))
-    const matchesVerified = !onlyVerified || pro.verified
+    const isV = pro.verified === true || pro.verificationStatus === 'VERIFIED'
+    const matchesVerified = verificationFilter === 'all' || (verificationFilter === 'verified' ? isV : !isV)
 
     return matchesQuery && matchesCity && matchesProfession && matchesAvailability && matchesVerified
   }).sort((a, b) => {
@@ -95,13 +105,36 @@ export default function ProfessionalsPage() {
               </p>
             </div>
 
-            <Link
-              href="/add-professional"
-              className="px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-lg shadow-blue-600/20 transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer"
-            >
-              <UserPlus className="w-4 h-4" />
-              <span>Create Professional Profile</span>
-            </Link>
+            {/* User Action CTA: Dashboard or Registration */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 shrink-0">
+              {userSession ? (
+                <Link
+                  href="/dashboard/professional"
+                  className="px-5 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-extrabold rounded-xl shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer hover:scale-105"
+                >
+                  <LayoutDashboard className="w-4 h-4" />
+                  <span>Go to Professional Dashboard</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              ) : (
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                  <Link
+                    href="/register/professional"
+                    className="px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-lg shadow-blue-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer hover:scale-105"
+                  >
+                    <UserPlus className="w-4 h-4" />
+                    <span>Create Professional Profile</span>
+                  </Link>
+                  <Link
+                    href="/login?role=professional"
+                    className="px-4 py-3 bg-slate-800/90 hover:bg-slate-800 text-slate-200 hover:text-white text-xs font-bold rounded-xl border border-slate-700 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <LogIn className="w-4 h-4 text-blue-400" />
+                    <span>Dashboard Login</span>
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Search & Filter Controls */}
@@ -175,21 +208,40 @@ export default function ProfessionalsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200">
           <div>
             <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
-              Verified Professional Talent ({filtered.length})
+              Pakistani Professionals Directory ({filtered.length})
             </h2>
-            <p className="text-xs text-slate-500">Public profiles indexed and discoverable across Pakistan.</p>
+            <p className="text-xs text-slate-500">Approved professional profiles indexed across Pakistan.</p>
           </div>
 
-          <div className="flex items-center gap-4 text-xs">
-            <label className="flex items-center gap-1.5 cursor-pointer font-bold text-slate-700">
-              <input
-                type="checkbox"
-                checked={onlyVerified}
-                onChange={(e) => setOnlyVerified(e.target.checked)}
-                className="rounded text-blue-600 focus:ring-blue-500"
-              />
-              <span>Verified Only</span>
-            </label>
+          <div className="flex flex-wrap items-center gap-3 text-xs">
+            {/* 3-way Verification Filter */}
+            <div className="flex items-center p-1 bg-slate-100 rounded-xl font-bold">
+              <button
+                onClick={() => setVerificationFilter('all')}
+                className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+                  verificationFilter === 'all' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600'
+                }`}
+              >
+                All
+              </button>
+              <button
+                onClick={() => setVerificationFilter('verified')}
+                className={`px-3 py-1 rounded-lg transition-all cursor-pointer flex items-center gap-1 ${
+                  verificationFilter === 'verified' ? 'bg-emerald-600 text-white shadow-xs' : 'text-emerald-700'
+                }`}
+              >
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Verified (✓)</span>
+              </button>
+              <button
+                onClick={() => setVerificationFilter('unverified')}
+                className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+                  verificationFilter === 'unverified' ? 'bg-slate-800 text-white shadow-xs' : 'text-slate-600'
+                }`}
+              >
+                Unverified (✕)
+              </button>
+            </div>
 
             <select
               value={sortBy}
@@ -214,7 +266,7 @@ export default function ProfessionalsPage() {
             <h3 className="text-lg font-bold text-slate-800">No professionals found matching your filters</h3>
             <p className="text-xs text-slate-500 max-w-sm mx-auto">Try clearing search terms or selected city to view all profiles.</p>
             <button
-              onClick={() => { setQuery(''); setSelectedCity(''); setSelectedProfession('All Professions'); setOnlyVerified(false) }}
+              onClick={() => { setQuery(''); setSelectedCity(''); setSelectedProfession('All Professions'); setVerificationFilter('all') }}
               className="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold"
             >
               Reset Filters
@@ -222,104 +274,130 @@ export default function ProfessionalsPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filtered.map((pro) => (
-              <div
-                key={pro.username}
-                className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between group space-y-4"
-              >
-                <div className="space-y-4">
-                  {/* Top Profile Header */}
-                  <div className="flex items-start gap-4">
-                    <Image
-                      src={pro.avatar}
-                      alt={pro.name}
-                      width={64}
-                      height={64}
-                      loading="lazy"
-                      sizes="64px"
-                      className="w-16 h-16 rounded-2xl object-cover border border-slate-100 shadow-xs shrink-0"
-                    />
-                    <div className="space-y-1 min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <Link
-                          href={`/professionals/${pro.username}`}
-                          className="font-extrabold text-slate-900 text-base group-hover:text-blue-600 transition-colors truncate"
-                        >
-                          {pro.name}
-                        </Link>
-                        {pro.verified && (
-                          <span title="Verified Professional">
-                            <ShieldCheck className="w-4.5 h-4.5 text-emerald-500 shrink-0" />
-                          </span>
-                        )}
-                      </div>
+            {filtered.map((pro) => {
+              const isVer = pro.verified === true || pro.verificationStatus === 'VERIFIED'
+              return (
+                <div
+                  key={pro.username}
+                  className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between group space-y-4"
+                >
+                  <div className="space-y-4">
+                    {/* Top Profile Header */}
+                    <div className="flex items-start gap-4">
+                      <Image
+                        src={pro.avatar}
+                        alt={pro.name}
+                        width={64}
+                        height={64}
+                        loading="lazy"
+                        sizes="64px"
+                        className="w-16 h-16 rounded-2xl object-cover border border-slate-100 shadow-xs shrink-0"
+                      />
+                      <div className="space-y-1 min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <Link
+                            href={`/professionals/${pro.username}`}
+                            className="font-extrabold text-slate-900 text-base group-hover:text-blue-600 transition-colors truncate"
+                          >
+                            {pro.name}
+                          </Link>
+                          {isVer ? (
+                            <span title="Verified Professional">
+                              <ShieldCheck className="w-4.5 h-4.5 text-emerald-500 shrink-0" />
+                            </span>
+                          ) : (
+                            <span
+                              title="Not Verified"
+                              className="text-[10px] text-slate-400 font-bold px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200"
+                            >
+                              ✕ Not Verified
+                            </span>
+                          )}
+                        </div>
 
-                      <p className="text-xs font-bold text-blue-600 line-clamp-1">{pro.title}</p>
-                      
-                      <div className="flex items-center gap-2 text-[11px] text-slate-500 pt-0.5">
-                        <span className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-slate-400" />
-                          {pro.city}
-                        </span>
-                        <span>•</span>
-                        <span className="font-extrabold text-amber-500 flex items-center gap-0.5">
-                          <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                          {pro.rating}
-                        </span>
-                        <span>•</span>
-                        <span className="text-slate-600 font-semibold">{pro.experienceYears}y Exp</span>
+                        <p className="text-xs font-bold text-blue-600 line-clamp-1">{pro.title}</p>
+                        
+                        <div className="flex items-center gap-2 text-[11px] text-slate-500 pt-0.5">
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-3 h-3 text-slate-400" />
+                            {pro.city}
+                          </span>
+                          <span>•</span>
+                          <span className="font-extrabold text-amber-500 flex items-center gap-0.5">
+                            <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                            {pro.rating}
+                          </span>
+                          <span>•</span>
+                          <span className="text-slate-600 font-semibold">{pro.experienceYears}y Exp</span>
+                        </div>
                       </div>
+                    </div>
+
+                    {/* Short Bio */}
+                    <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed">
+                      {pro.bio}
+                    </p>
+
+                    {/* Skills Badges */}
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {pro.skills.slice(0, 4).map((skill) => (
+                        <span key={skill} className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700">
+                          {skill}
+                        </span>
+                      ))}
+                      {pro.skills.length > 4 && (
+                        <span className="text-[10px] text-slate-400 font-bold">+{pro.skills.length - 4} more</span>
+                      )}
                     </div>
                   </div>
 
-                  {/* Short Bio */}
-                  <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed">
-                    {pro.bio}
-                  </p>
+                  {/* Card Footer with LinkedIn & CTA */}
+                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      {pro.linkedin && (
+                        <a
+                          href={pro.linkedin}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="View LinkedIn Profile"
+                          className="p-2 rounded-xl bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-600 hover:text-white transition-all"
+                        >
+                          <Linkedin className="w-3.5 h-3.5" />
+                        </a>
+                      )}
+                      <span className="text-xs font-extrabold text-slate-900">{pro.hourlyRate}</span>
+                    </div>
 
-                  {/* Skills Badges */}
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    {pro.skills.slice(0, 4).map((skill) => (
-                      <span key={skill} className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700">
-                        {skill}
-                      </span>
-                    ))}
-                    {pro.skills.length > 4 && (
-                      <span className="text-[10px] text-slate-400 font-bold">+{pro.skills.length - 4} more</span>
-                    )}
+                    <Link
+                      href={`/professionals/${pro.username}`}
+                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-all inline-flex items-center gap-1 shadow-xs"
+                    >
+                      <span>View Profile</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
                   </div>
                 </div>
-
-                {/* Card Footer with LinkedIn & CTA */}
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    {pro.linkedin && (
-                      <a
-                        href={pro.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title="View LinkedIn Profile"
-                        className="p-2 rounded-xl bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-600 hover:text-white transition-all"
-                      >
-                        <Linkedin className="w-3.5 h-3.5" />
-                      </a>
-                    )}
-                    <span className="text-xs font-extrabold text-slate-900">{pro.hourlyRate}</span>
-                  </div>
-
-                  <Link
-                    href={`/professionals/${pro.username}`}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-all inline-flex items-center gap-1 shadow-xs"
-                  >
-                    <span>View Profile</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </main>
+
+      {/* Registered User Floating Quick Dashboard Access Bar */}
+      {userSession && (
+        <div className="fixed bottom-6 right-6 z-50 animate-in slide-in-from-bottom-5 duration-300">
+          <Link
+            href="/dashboard/professional"
+            className="px-4 py-3 bg-slate-900/95 backdrop-blur-md hover:bg-slate-800 text-white text-xs font-extrabold rounded-2xl shadow-2xl border border-blue-500/40 flex items-center gap-2.5 transition-all hover:scale-105 group"
+          >
+            <div className="w-6 h-6 rounded-lg bg-blue-600 flex items-center justify-center text-white shrink-0 group-hover:scale-110 transition-transform">
+              <LayoutDashboard className="w-3.5 h-3.5" />
+            </div>
+            <span>My Dashboard</span>
+            <ArrowRight className="w-3.5 h-3.5 text-blue-400 group-hover:translate-x-0.5 transition-transform" />
+          </Link>
+        </div>
+      )}
 
       <Footer />
     </div>

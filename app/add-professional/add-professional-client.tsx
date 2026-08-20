@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { 
@@ -13,7 +13,7 @@ import {
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { CITIES, CATEGORIES } from '@/lib/data'
-import { saveProfessionalToDatabase } from '@/lib/professional-service'
+import { saveProfessionalToDatabase, generateProfessionalSlug } from '@/lib/professional-service'
 import { toast } from 'sonner'
 
 // Professions list
@@ -82,10 +82,16 @@ export default function AddProfessionalClient() {
   const [customSocialName, setCustomSocialName] = useState('')
   const [customSocialUrl, setCustomSocialUrl] = useState('')
 
+  // Avatar & Photo state
+  const [avatarMode, setAvatarMode] = useState<'link' | 'upload'>('link')
+  const [avatarLink, setAvatarLink] = useState('')
+  const [avatarError, setAvatarError] = useState('')
+
   // Form State
   const [formData, setFormData] = useState({
     fullName: '',
     title: '',
+    gender: 'Male',
     profession: 'Software Developer',
     category: 'Professional / Job Seeker',
     specialization: '',
@@ -118,7 +124,7 @@ export default function AddProfessionalClient() {
     website: '',
     portfolio: '',
     resumeUrl: '',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+    avatar: '',
     coverImage: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1200&q=80',
 
     // Social Links (Highlighted LinkedIn + 16 platforms)
@@ -144,6 +150,83 @@ export default function AddProfessionalClient() {
     // Dynamic fields depending on profession
     dynamicFields: {} as Record<string, string>
   })
+
+  // Avatar Link & Upload Handlers
+  const handleAvatarLinkChange = (rawUrl: string) => {
+    setAvatarLink(rawUrl)
+    setAvatarError('')
+    if (!rawUrl.trim()) {
+      setFormData(prev => ({ ...prev, avatar: '' }))
+      return
+    }
+    // Auto convert Google Drive links to direct view URL
+    const driveMatch = rawUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || rawUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/)
+    if (driveMatch && driveMatch[1]) {
+      const directUrl = `https://lh3.googleusercontent.com/d/${driveMatch[1]}`
+      setFormData(prev => ({ ...prev, avatar: directUrl }))
+      toast.success('Google Drive image link converted.')
+    } else {
+      setFormData(prev => ({ ...prev, avatar: rawUrl.trim() }))
+    }
+  }
+
+  const handleAvatarFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setAvatarError('')
+
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+    if (!validTypes.includes(file.type)) {
+      const err = 'Please select a valid image format (JPG, PNG, or WebP).'
+      setAvatarError(err)
+      toast.error(err)
+      return
+    }
+
+    // Strict 200 KB limit
+    const maxBytes = 200 * 1024
+    if (file.size > maxBytes) {
+      const sizeKb = (file.size / 1024).toFixed(0)
+      const err = `Image size is ${sizeKb} KB. Limit is 200 KB. Please upload an image under 200 KB or paste your Google Drive link.`
+      setAvatarError(err)
+      toast.error(err)
+      return
+    }
+
+    const reader = new FileReader()
+    reader.onload = () => {
+      const result = reader.result as string
+      setFormData(prev => ({ ...prev, avatar: result }))
+      toast.success('Photo uploaded successfully.')
+    }
+    reader.readAsDataURL(file)
+  }
+
+  // Prefill from session or URL params
+  useEffect(() => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search)
+      const nameParam = urlParams.get('name')
+      const emailParam = urlParams.get('email')
+
+      let sessionName = ''
+      let sessionEmail = ''
+      const savedSession = sessionStorage.getItem('listpak_user_session')
+      if (savedSession) {
+        const parsed = JSON.parse(savedSession)
+        sessionName = parsed.name || ''
+        sessionEmail = parsed.email || ''
+      }
+
+      setFormData(prev => ({
+        ...prev,
+        fullName: nameParam || sessionName || prev.fullName,
+        email: emailParam || sessionEmail || prev.email
+      }))
+    } catch (e) {
+      // ignore
+    }
+  }, [])
 
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -202,6 +285,11 @@ export default function AddProfessionalClient() {
     if (step === 1) {
       if (!formData.fullName.trim()) errs.fullName = 'Full Name is required'
       if (!formData.title.trim()) errs.title = 'Professional Title is required'
+      if (!formData.gender) errs.gender = 'Please select your gender (Male / Female)'
+      if (!formData.avatar || !formData.avatar.trim()) {
+        errs.avatar = 'Profile photo is required. Please upload an image under 200 KB or paste your Google Drive link.'
+        toast.error('Profile photo is required to continue.')
+      }
       if (!formData.profession.trim()) errs.profession = 'Please select or type your profession'
       if (!formData.shortBio.trim() || formData.shortBio.length < 20) {
         errs.shortBio = 'Short bio must be at least 20 characters'
@@ -256,8 +344,15 @@ export default function AddProfessionalClient() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!validateStep(4)) {
-      toast.error('Please complete all required fields.')
+    
+    // Strict guard: Profile can ONLY be submitted when user is on Step 5 and explicitly clicks submit
+    if (currentStep !== 5) {
+      handleNextStep()
+      return
+    }
+
+    if (!validateStep(1) || !validateStep(3) || !validateStep(4)) {
+      toast.error('Please make sure all required fields in earlier steps are completed.')
       return
     }
 
@@ -265,10 +360,29 @@ export default function AddProfessionalClient() {
     try {
       const createdPro = await saveProfessionalToDatabase({
         ...formData,
-        experienceYears: Number(formData.experienceYears) || 0
+        experienceYears: Number(formData.experienceYears) || 0,
+        status: 'pending',
+        profileStatus: 'PENDING',
+        verified: false,
+        verificationStatus: 'UNVERIFIED',
+        verificationRequestStatus: 'NOT_REQUESTED'
       })
       setSubmittedUsername(createdPro.username)
-      toast.success('Professional Profile submitted successfully!')
+      
+      // Update session
+      try {
+        const savedSession = sessionStorage.getItem('listpak_user_session')
+        const parsed = savedSession ? JSON.parse(savedSession) : {}
+        sessionStorage.setItem('listpak_user_session', JSON.stringify({
+          ...parsed,
+          name: formData.fullName,
+          email: formData.email,
+          hasProfile: true,
+          username: createdPro.username
+        }))
+      } catch (e) {}
+
+      toast.success('Your professional profile has been submitted successfully.')
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (err) {
       toast.error('Failed to submit profile. Please try again.')
@@ -290,7 +404,7 @@ export default function AddProfessionalClient() {
               <span>Personal Professional Profile</span>
             </span>
             <div className="text-xs text-slate-400 font-medium">
-              Free • Indexable on Google • Green Verified Badge
+              Free • Indexable on Google • Green Verified Badge Available
             </div>
           </div>
           
@@ -315,46 +429,54 @@ export default function AddProfessionalClient() {
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full">
         {submittedUsername ? (
           /* Confirmation State */
-          <div className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-xl text-center space-y-6 animate-in zoom-in-95">
+          <div className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-xl text-center space-y-6 animate-in zoom-in-95 max-w-2xl mx-auto">
             <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-3xl flex items-center justify-center mx-auto shadow-inner">
               <CheckCircle2 className="w-10 h-10" />
             </div>
             
-            <div className="space-y-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <span>Profile Under Compliance Review</span>
+            <div className="space-y-3">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-700 text-xs font-bold border border-amber-200">
+                <ShieldCheck className="w-4 h-4 text-amber-600" />
+                <span>Pending Admin Approval</span>
               </span>
               <h2 className="text-2xl font-extrabold text-slate-900">
-                Congratulations, {formData.fullName}!
+                Your professional profile has been submitted successfully.
               </h2>
-              <p className="text-slate-600 text-sm max-w-md mx-auto leading-relaxed">
-                Your professional profile as <strong className="text-slate-900">{formData.title}</strong> has been submitted. Our compliance team will review and publish your SEO profile within 24 hours.
+              <p className="text-slate-600 text-sm max-w-lg mx-auto leading-relaxed">
+                Your profile has been saved and sent to our admin team for review. Our team will review and approve your profile as soon as possible.
               </p>
             </div>
 
             <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-xs space-y-2 text-left max-w-md mx-auto">
               <div className="flex justify-between text-slate-600">
+                <span>Submitted For:</span>
+                <span className="font-bold text-slate-900">{formData.fullName} ({formData.title})</span>
+              </div>
+              <div className="flex justify-between text-slate-600">
                 <span>Profile Slug:</span>
                 <span className="font-mono text-slate-900 font-bold">/professionals/{submittedUsername}</span>
               </div>
               <div className="flex justify-between text-slate-600">
-                <span>Status:</span>
-                <span className="text-amber-600 font-extrabold">Pending Admin Approval</span>
+                <span>Profile Status:</span>
+                <span className="text-amber-600 font-extrabold">PENDING APPROVAL</span>
+              </div>
+              <div className="flex justify-between text-slate-600">
+                <span>Verification Status:</span>
+                <span className="text-slate-500 font-bold">UNVERIFIED</span>
               </div>
             </div>
 
             <div className="pt-4 flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href={`/professionals/${submittedUsername}`}
-                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2"
+                href="/dashboard/professional"
+                className="px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>Preview Your Profile Page</span>
+                <span>Go to Dashboard</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/professionals"
-                className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl transition-colors"
+                className="px-6 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl transition-colors cursor-pointer"
               >
                 Explore Professionals Network
               </Link>
@@ -389,7 +511,19 @@ export default function AddProfessionalClient() {
               ))}
             </div>
 
-            <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-md space-y-6">
+            <form 
+              onSubmit={handleSubmit} 
+              onKeyDown={(e) => {
+                // Prevent accidental submission on Enter key in inputs
+                if (e.key === 'Enter' && (e.target as HTMLElement).tagName === 'INPUT') {
+                  e.preventDefault()
+                  if (currentStep < 5) {
+                    handleNextStep()
+                  }
+                }
+              }}
+              className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-md space-y-6"
+            >
               
               {/* STEP 1: BASIC INFO */}
               {currentStep === 1 && (
@@ -407,7 +541,7 @@ export default function AddProfessionalClient() {
                         required
                         value={formData.fullName}
                         onChange={(e) => setFormData(p => ({ ...p, fullName: e.target.value }))}
-                        placeholder="e.g. Muhammad Ali Khan"
+                        placeholder="e.g. Muhammad Ali"
                         className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
                       />
                       {errors.fullName && <p className="text-red-500 text-[11px] mt-1">{errors.fullName}</p>}
@@ -420,10 +554,178 @@ export default function AddProfessionalClient() {
                         required
                         value={formData.title}
                         onChange={(e) => setFormData(p => ({ ...p, title: e.target.value }))}
-                        placeholder="e.g. Senior Next.js Developer, Consultant Doctor, Electrician"
+                        placeholder="e.g. Frontend Developer, Consultant Dermatologist, Electrician"
                         className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
                       />
                       {errors.title && <p className="text-red-500 text-[11px] mt-1">{errors.title}</p>}
+                    </div>
+                  </div>
+
+                  {/* GENDER & EXPERIENCE */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Gender Selection */}
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">Gender *</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {[
+                          { val: 'Male', label: 'Male 👨' },
+                          { val: 'Female', label: 'Female 👩' }
+                        ].map(g => (
+                          <button
+                            key={g.val}
+                            type="button"
+                            onClick={() => setFormData(p => ({ ...p, gender: g.val }))}
+                            className={`py-2.5 px-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                              formData.gender === g.val
+                                ? 'bg-blue-50 border-blue-500 text-blue-700 ring-2 ring-blue-500/20 shadow-xs'
+                                : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                            }`}
+                          >
+                            <span>{g.label}</span>
+                            {formData.gender === g.val && <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />}
+                          </button>
+                        ))}
+                      </div>
+                      {errors.gender && <p className="text-red-500 text-[11px] mt-1">{errors.gender}</p>}
+                    </div>
+
+                    {/* Years of Experience */}
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">Years of Experience</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="50"
+                        value={formData.experienceYears}
+                        onChange={(e) => setFormData(p => ({ ...p, experienceYears: e.target.value }))}
+                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+
+                  {/* MANDATORY PROFESSIONAL PROFILE PICTURE SECTION */}
+                  <div className="p-4 sm:p-5 bg-slate-50/90 rounded-2xl border border-slate-200 space-y-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <label className="text-xs font-extrabold text-slate-900">
+                            Professional Profile Picture *
+                          </label>
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                            Mandatory for Hiring
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-500 mt-0.5">
+                          Upload a clear headshot or paste your Google Drive photo link.
+                        </p>
+                      </div>
+
+                      {/* Mode toggle */}
+                      <div className="flex bg-slate-200/80 p-1 rounded-xl text-xs font-bold shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => setAvatarMode('link')}
+                          className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+                            avatarMode === 'link' ? 'bg-white text-blue-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                          }`}
+                        >
+                          🔗 Google Drive / Link (Recommended)
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setAvatarMode('upload')}
+                          className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+                            avatarMode === 'upload' ? 'bg-white text-blue-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                          }`}
+                        >
+                          📁 Upload (&lt; 200 KB)
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row items-center gap-4">
+                      {/* Live Preview Box */}
+                      <div className="relative shrink-0 text-center">
+                        {formData.avatar ? (
+                          <div className="relative group">
+                            <img
+                              src={formData.avatar}
+                              alt="Profile Preview"
+                              className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-2 border-emerald-500 shadow-md ring-2 ring-emerald-500/20"
+                              onError={() => {
+                                setAvatarError('Could not load image from link. Please check permissions or upload an image file.')
+                              }}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setFormData(p => ({ ...p, avatar: '' }))
+                                setAvatarLink('')
+                              }}
+                              className="absolute -top-1.5 -right-1.5 p-1 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-md text-xs cursor-pointer"
+                              title="Remove Photo"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-slate-200/80 border-2 border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400">
+                            <User className="w-8 h-8" />
+                            <span className="text-[10px] mt-1 font-bold text-slate-500">No Photo</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Input Control Area */}
+                      <div className="flex-1 w-full space-y-2 text-xs">
+                        {avatarMode === 'link' ? (
+                          <div className="space-y-1.5">
+                            <input
+                              type="url"
+                              value={avatarLink}
+                              onChange={(e) => handleAvatarLinkChange(e.target.value)}
+                              placeholder="Paste Google Drive link or direct Image URL (e.g. https://drive.google.com/file/d/...)"
+                              className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
+                            />
+                            <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
+                              <Sparkles className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                              <span>
+                                <strong>Recommended:</strong> Google Drive link (make sure file sharing is set to <em>&quot;Anyone with the link can view&quot;</em>).
+                              </span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="space-y-1.5">
+                            <div className="flex items-center gap-2">
+                              <label className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-white border border-dashed border-slate-300 hover:border-blue-500 rounded-xl cursor-pointer transition-colors text-slate-600 hover:text-blue-600 font-semibold text-xs shadow-2xs">
+                                <Upload className="w-4 h-4" />
+                                <span>Choose Image File (Strictly Max 200 KB)</span>
+                                <input
+                                  type="file"
+                                  accept="image/jpeg,image/png,image/jpg,image/webp"
+                                  onChange={handleAvatarFileUpload}
+                                  className="hidden"
+                                />
+                              </label>
+                            </div>
+                            <div className="flex items-center justify-between text-[11px] text-slate-500">
+                              <span>Accepted: JPG, PNG, WebP</span>
+                              <span className="font-bold text-amber-600">Max size: 200 KB</span>
+                            </div>
+                          </div>
+                        )}
+
+                        {avatarError && <p className="text-red-500 text-[11px] font-semibold">{avatarError}</p>}
+                        {errors.avatar && <p className="text-red-500 text-[11px] font-semibold">{errors.avatar}</p>}
+                      </div>
+                    </div>
+
+                    {/* HR Recruiter Tip Banner */}
+                    <div className="p-2.5 rounded-xl bg-blue-50/70 border border-blue-200/60 flex items-start gap-2 text-[11px] text-slate-600">
+                      <Award className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                      <span>
+                        <strong>HR &amp; Client Hiring Tip:</strong> Profiles with clear, well-lit professional headshots receive <strong>4x more interview calls &amp; project inquiries</strong> from companies across Pakistan.
+                      </span>
                     </div>
                   </div>
 
@@ -453,19 +755,7 @@ export default function AddProfessionalClient() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Years of Experience</label>
-                      <input
-                        type="number"
-                        min="0"
-                        max="50"
-                        value={formData.experienceYears}
-                        onChange={(e) => setFormData(p => ({ ...p, experienceYears: e.target.value }))}
-                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-bold text-slate-700 mb-1">Current Company (Optional)</label>
                       <input
@@ -1070,33 +1360,54 @@ export default function AddProfessionalClient() {
                 </div>
               )}
 
-              {/* STEP 5: SOCIAL PROFILES & SUBMISSION */}
+              {/* STEP 5: SOCIAL PROFILES & SUBMISSION (ALL 100% OPTIONAL) */}
               {currentStep === 5 && (
                 <div className="space-y-6 animate-in fade-in-50">
                   <div>
-                    <h2 className="text-xl font-extrabold text-slate-900">Social Media & Public Networks</h2>
-                    <p className="text-xs text-slate-500 mt-1">LinkedIn is highlighted as the primary professional link.</p>
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-xl font-extrabold text-slate-900">Social Media &amp; Public Links</h2>
+                      <span className="text-[10px] font-extrabold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full border border-slate-200 uppercase">
+                        100% Optional
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-500 mt-1">
+                      All links below are completely optional. You can provide any links you have, or leave them blank and click Submit.
+                    </p>
                   </div>
 
-                  {/* LinkedIn Highlight Box */}
-                  <div className="p-4 bg-blue-50 rounded-2xl border border-blue-200 space-y-2">
-                    <label className="flex items-center gap-2 text-xs font-extrabold text-blue-900">
-                      <Linkedin className="w-4 h-4 text-blue-600 fill-blue-600" />
-                      <span>LinkedIn Profile URL (Highest Priority) *</span>
+                  {/* Optional Notice Banner */}
+                  <div className="p-3.5 bg-blue-50/70 border border-blue-200/80 rounded-2xl flex items-center gap-2.5 text-xs text-blue-900">
+                    <Sparkles className="w-4 h-4 text-blue-600 shrink-0" />
+                    <span>
+                      <strong>No links? No problem!</strong> You can leave all fields blank and click <strong>&quot;Submit Profile for Verification&quot;</strong> below.
+                    </span>
+                  </div>
+
+                  {/* LinkedIn Box (Optional) */}
+                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
+                    <label className="flex items-center justify-between text-xs font-bold text-slate-800">
+                      <div className="flex items-center gap-2">
+                        <Linkedin className="w-4 h-4 text-[#0A66C2] fill-[#0A66C2]" />
+                        <span>LinkedIn Profile URL</span>
+                      </div>
+                      <span className="text-[10px] font-semibold text-slate-400">Optional</span>
                     </label>
                     <input
                       type="url"
                       value={formData.linkedin}
                       onChange={(e) => setFormData(p => ({ ...p, linkedin: e.target.value }))}
                       placeholder="https://linkedin.com/in/yourusername"
-                      className="w-full px-4 py-2.5 bg-white border border-blue-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 font-medium"
+                      className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 font-medium"
                     />
                   </div>
 
-                  {/* Other Social Networks Grid */}
+                  {/* Other Social Networks Grid (Optional) */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <div>
-                      <label className="block font-bold text-slate-700 mb-1">GitHub</label>
+                      <label className="flex justify-between items-center font-bold text-slate-700 mb-1">
+                        <span>GitHub</span>
+                        <span className="text-[10px] font-normal text-slate-400">Optional</span>
+                      </label>
                       <input
                         type="url"
                         value={formData.github}
@@ -1107,7 +1418,10 @@ export default function AddProfessionalClient() {
                     </div>
 
                     <div>
-                      <label className="block font-bold text-slate-700 mb-1">Upwork</label>
+                      <label className="flex justify-between items-center font-bold text-slate-700 mb-1">
+                        <span>Upwork Profile</span>
+                        <span className="text-[10px] font-normal text-slate-400">Optional</span>
+                      </label>
                       <input
                         type="url"
                         value={formData.upwork}
@@ -1118,7 +1432,10 @@ export default function AddProfessionalClient() {
                     </div>
 
                     <div>
-                      <label className="block font-bold text-slate-700 mb-1">Fiverr</label>
+                      <label className="flex justify-between items-center font-bold text-slate-700 mb-1">
+                        <span>Fiverr Profile</span>
+                        <span className="text-[10px] font-normal text-slate-400">Optional</span>
+                      </label>
                       <input
                         type="url"
                         value={formData.fiverr}
@@ -1129,7 +1446,10 @@ export default function AddProfessionalClient() {
                     </div>
 
                     <div>
-                      <label className="block font-bold text-slate-700 mb-1">Behance</label>
+                      <label className="flex justify-between items-center font-bold text-slate-700 mb-1">
+                        <span>Behance / Dribbble</span>
+                        <span className="text-[10px] font-normal text-slate-400">Optional</span>
+                      </label>
                       <input
                         type="url"
                         value={formData.behance}
@@ -1140,7 +1460,10 @@ export default function AddProfessionalClient() {
                     </div>
 
                     <div>
-                      <label className="block font-bold text-slate-700 mb-1">Twitter / X</label>
+                      <label className="flex justify-between items-center font-bold text-slate-700 mb-1">
+                        <span>Twitter / X</span>
+                        <span className="text-[10px] font-normal text-slate-400">Optional</span>
+                      </label>
                       <input
                         type="url"
                         value={formData.twitter}
@@ -1151,7 +1474,10 @@ export default function AddProfessionalClient() {
                     </div>
 
                     <div>
-                      <label className="block font-bold text-slate-700 mb-1">YouTube Channel</label>
+                      <label className="flex justify-between items-center font-bold text-slate-700 mb-1">
+                        <span>YouTube Channel</span>
+                        <span className="text-[10px] font-normal text-slate-400">Optional</span>
+                      </label>
                       <input
                         type="url"
                         value={formData.youtube}
