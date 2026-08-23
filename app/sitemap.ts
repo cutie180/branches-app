@@ -148,7 +148,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   // 10. Blog Post Pages (Priority: 0.8, Frequency: weekly)
-  const rawPostsList = [...Object.values(BLOG_POSTS), ...FEATURED_POSTS, ...RECENT_POSTS]
+  const rawPostsList = Object.values(BLOG_POSTS)
   const blogPostsBySlug = new Map<string, { slug: string; date: string }>()
   for (const post of rawPostsList) {
     if (post && post.slug && !blogPostsBySlug.has(post.slug)) {

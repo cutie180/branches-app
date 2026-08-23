@@ -2,6 +2,9 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { Metadata } from 'next'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import { BreadcrumbSchema } from '@/components/seo/breadcrumb-schema'
+import ArticleContent from '@/components/blog/article-content'
 import { 
   ArrowLeft, Clock, Calendar, Sparkles, CheckCircle2, Building2, User, 
   HelpCircle, ArrowRight, ShieldCheck, MapPin, Globe, Briefcase, Search, Star
@@ -19,6 +22,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const post = BLOG_POSTS[slug]
   const cleanTitle = post ? post.metaTitle : slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
   const description = post ? post.metaDescription : `Read ${cleanTitle} on ListPak Blog.`
+  const publishedDate = post?.date ? new Date(post.date).toISOString() : undefined
+  const modifiedDate = post?.dateModified ? new Date(post.dateModified).toISOString() : publishedDate
 
   return {
     title: `${cleanTitle} | ListPak Business Directory`,
@@ -27,6 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     alternates: {
       canonical: `https://www.listpak.com/blog/${slug}`,
     },
+    authors: post?.authorName ? [{ name: post.authorName, url: post.authorUrl }] : [{ name: 'ListPak Editorial Team', url: 'https://www.listpak.com/about' }],
     openGraph: {
       title: `${cleanTitle} | ListPak`,
       description,
@@ -34,6 +40,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       siteName: 'ListPak',
       locale: 'en_PK',
       type: 'article',
+      publishedTime: publishedDate,
+      modifiedTime: modifiedDate,
+      images: post?.image ? [{ url: post.image }] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${cleanTitle} | ListPak`,
+      description,
+      images: post?.image ? [post.image] : undefined,
     },
   }
 }
@@ -41,11 +56,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const post = BLOG_POSTS[slug]
+  if (!post) notFound()
 
-  const title = post ? post.title : slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
-  const publishDate = post ? post.date : 'August 7, 2026'
-  const readTime = post ? post.readTime : '8 min read'
-  const category = post ? post.category : 'Business Guide'
+  const title = post.title
+  const publishDate = post.date
+  const readTime = post.readTime
+  const category = post.category
+  const publishedDate = new Date(post.date).toISOString()
+  const modifiedDate = post.dateModified ? new Date(post.dateModified).toISOString() : publishedDate
 
   const blogPostingSchema = {
     '@context': 'https://schema.org',
@@ -53,16 +71,20 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     headline: title,
     description: post ? post.metaDescription : `Guide on ${title}`,
     author: {
-      '@type': 'Organization',
-      name: 'ListPak Editorial Team',
+      '@type': post.authorName ? 'Person' : 'Organization',
+      name: post.authorName || 'ListPak Editorial Team',
+      url: post.authorUrl || 'https://www.listpak.com/about',
     },
     publisher: {
       '@type': 'Organization',
       name: 'ListPak',
       logo: 'https://www.listpak.com/logo.png',
     },
-    datePublished: '2026-08-07',
-    mainEntityOfPage: `https://www.listpak.com/blog/${slug}`,
+    datePublished: publishedDate,
+    dateModified: modifiedDate,
+    image: post.image ? [post.image] : ['https://www.listpak.com/logo.png'],
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `https://www.listpak.com/blog/${slug}` },
+    inLanguage: 'en-PK',
   }
 
   const faqSchema = post && post.faqs ? {
@@ -81,6 +103,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   return (
     <>
       <Navbar />
+      <BreadcrumbSchema pathname={`/blog/${slug}`} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }}
@@ -93,6 +116,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       )}
 
       <main className="bg-[#F8FAFC] text-[#0F172A] font-sans pb-16">
+        <nav aria-label="Breadcrumb" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 text-xs text-slate-500">
+          <Link href="/" className="hover:text-blue-700 underline">Home</Link>
+          <span className="mx-2">/</span>
+          <Link href="/blog" className="hover:text-blue-700 underline">Blog</Link>
+          <span className="mx-2">/</span>
+          <span>{category}</span>
+        </nav>
         
         {/* HERO SECTION */}
         <section className="bg-white border-b border-[#E2E8F0] py-12 sm:py-16">
@@ -124,7 +154,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <article className="bg-white border border-[#E2E8F0] rounded-3xl p-6 sm:p-12 shadow-sm space-y-8 text-slate-700 leading-relaxed text-base sm:text-lg">
               
-              {slug === 'restaurants-in-karachi' ? (
+              {post.content ? (
+                <ArticleContent content={post.content} />
+              ) : (slug === 'restaurants-in-karachi' ? (
                 <>
                   {/* Article Intro */}
                   <p className="text-lg font-medium text-slate-800 leading-relaxed bg-gradient-to-r from-amber-50 to-orange-50/50 p-6 rounded-2xl border border-amber-100/80 shadow-xs">
@@ -1553,6 +1585,23 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     </Link>
                   </div>
                 </>
+              ))}
+
+              {post.relatedSlugs && post.relatedSlugs.length > 0 && (
+                <section className="pt-8 border-t border-slate-200 space-y-4">
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-[#0F172A]">Related ListPak guides</h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {post.relatedSlugs.map((relatedSlug) => {
+                      const relatedPost = BLOG_POSTS[relatedSlug]
+                      if (!relatedPost) return null
+                      return (
+                        <Link key={relatedSlug} href={`/blog/${relatedSlug}`} className="p-4 rounded-xl bg-blue-50 border border-blue-100 text-blue-800 font-bold hover:bg-blue-100">
+                          {relatedPost.title}
+                        </Link>
+                      )
+                    })}
+                  </div>
+                </section>
               )}
 
             </article>

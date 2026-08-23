@@ -1,3 +1,6 @@
+import type { BlogContentDocument } from '@/components/blog/article-content'
+import { NEW_BLOG_CONTENT } from '@/lib/blog-content'
+
 export interface BlogPost {
   slug: string
   title: string
@@ -6,9 +9,15 @@ export interface BlogPost {
   focusKeyword: string
   category: string
   date: string
+  dateModified?: string
   readTime: string
   excerpt: string
+  authorName?: string
+  authorUrl?: string
+  image?: string
   faqs?: { question: string; answer: string }[]
+  content?: BlogContentDocument
+  relatedSlugs?: string[]
 }
 
 export const BLOG_POSTS: Record<string, BlogPost> = {
@@ -319,5 +328,149 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
     date: 'July 25, 2026',
     readTime: '10 min read',
     excerpt: 'Complete guide to posting jobs free on ListPak job portal. Learn how to write compelling job descriptions, attract qualified candidates, and hire employees in Pakistan.',
+  },
+  'best-software-houses-pakistan-2026': {
+    slug: 'best-software-houses-pakistan-2026',
+    title: 'Best Software Houses in Pakistan 2026: How to Compare IT Companies',
+    metaTitle: 'Best Software Houses in Pakistan 2026: Compare IT Companies',
+    metaDescription: 'Compare software houses and IT companies in Pakistan by services, city, technology, industries, careers, and evidence instead of relying on generic rankings.',
+    focusKeyword: 'Best Software Houses in Pakistan',
+    category: 'Companies & Technology',
+    date: 'August 23, 2026',
+    dateModified: 'August 23, 2026',
+    readTime: '12 min read',
+    excerpt: 'A practical guide to comparing Pakistani software houses by capabilities, cities, industries, careers, and trustworthy evidence.',
+    authorName: 'ListPak Editorial Team',
+    authorUrl: 'https://www.listpak.com/about',
+    content: NEW_BLOG_CONTENT['best-software-houses-pakistan-2026'],
+    relatedSlugs: ['it-jobs-in-pakistan', 'jobs-in-pakistan', 'universities-in-pakistan']
+  },
+  'how-to-find-jobs-in-pakistan-2026': {
+    slug: 'how-to-find-jobs-in-pakistan-2026',
+    title: 'How to Find Jobs in Pakistan in 2026: A Practical Search Guide',
+    metaTitle: 'How to Find Jobs in Pakistan in 2026: Practical Search Guide',
+    metaDescription: 'Learn how to find and verify government, private, remote, internship, and city-based jobs in Pakistan with a practical application system.',
+    focusKeyword: 'How to Find Jobs in Pakistan',
+    category: 'Jobs & Careers',
+    date: 'August 23, 2026',
+    dateModified: 'August 23, 2026',
+    readTime: '12 min read',
+    excerpt: 'A practical Pakistan job-search guide covering role keywords, cities, reputable sources, applications, verification, and follow-up.',
+    authorName: 'ListPak Editorial Team',
+    authorUrl: 'https://www.listpak.com/about',
+    content: NEW_BLOG_CONTENT['how-to-find-jobs-in-pakistan-2026'],
+    relatedSlugs: ['jobs-in-pakistan', 'it-jobs-in-pakistan', 'best-software-houses-pakistan-2026']
+  },
+  'remote-jobs-pakistan-fresh-graduates': {
+    slug: 'remote-jobs-pakistan-fresh-graduates',
+    title: 'Remote Jobs in Pakistan for Fresh Graduates: Skills, Search & Safety Guide',
+    metaTitle: 'Remote Jobs in Pakistan for Fresh Graduates: Search & Safety Guide',
+    metaDescription: 'Find and evaluate remote jobs in Pakistan for fresh graduates across technology, support, marketing, administration, tutoring, design, and virtual assistance.',
+    focusKeyword: 'Remote Jobs in Pakistan for Fresh Graduates',
+    category: 'Remote Work & Careers',
+    date: 'August 23, 2026',
+    dateModified: 'August 23, 2026',
+    readTime: '12 min read',
+    excerpt: 'Learn how fresh graduates in Pakistan can find legitimate remote roles, build proof of skill, and avoid work-from-home scams.',
+    authorName: 'ListPak Editorial Team',
+    authorUrl: 'https://www.listpak.com/about',
+    content: NEW_BLOG_CONTENT['remote-jobs-pakistan-fresh-graduates'],
+    relatedSlugs: ['jobs-in-pakistan', 'it-jobs-in-pakistan', 'how-to-find-jobs-in-pakistan-2026']
+  },
+  'accountant-jobs-pakistan-city-guide': {
+    slug: 'accountant-jobs-pakistan-city-guide',
+    title: 'Accountant Jobs in Pakistan: City, Skills & Application Guide',
+    metaTitle: 'Accountant Jobs in Pakistan: City, Skills & Application Guide',
+    metaDescription: 'Explore accountant and finance job searches in Karachi, Lahore, Islamabad, and Rawalpindi, including role types, skills, verification, and application tips.',
+    focusKeyword: 'Accountant Jobs in Pakistan',
+    category: 'Finance Careers',
+    date: 'August 23, 2026',
+    dateModified: 'August 23, 2026',
+    readTime: '10 min read',
+    excerpt: 'A city-and-skill guide for accountant, finance, audit, tax, payroll, and bookkeeping job seekers in Pakistan.',
+    authorName: 'ListPak Editorial Team',
+    authorUrl: 'https://www.listpak.com/about',
+    content: NEW_BLOG_CONTENT['accountant-jobs-pakistan-city-guide'],
+    relatedSlugs: ['jobs-in-pakistan', 'universities-in-pakistan']
+  },
+  'local-services-pakistan-by-city': {
+    slug: 'local-services-pakistan-by-city',
+    title: 'Local Services in Pakistan by City: How to Find Trusted Providers',
+    metaTitle: 'Local Services in Pakistan by City: Find Trusted Providers',
+    metaDescription: 'Learn how to find plumbers, electricians, clinics, tutors, mechanics, agencies, and other local services in Pakistan by city, category, and area.',
+    focusKeyword: 'Local Services in Pakistan',
+    category: 'Local Business Discovery',
+    date: 'August 23, 2026',
+    dateModified: 'August 23, 2026',
+    readTime: '10 min read',
+    excerpt: 'A practical guide to finding and comparing local services in Pakistan by city, category, service area, and trustworthy listing information.',
+    authorName: 'ListPak Editorial Team',
+    authorUrl: 'https://www.listpak.com/about',
+    content: NEW_BLOG_CONTENT['local-services-pakistan-by-city'],
+    relatedSlugs: ['restaurants-in-pakistan', 'top-business-directory-websites-pakistan', 'local-seo-pakistan-businesses-google-ranking']
+  },
+  'how-to-find-trusted-professionals-pakistan': {
+    slug: 'how-to-find-trusted-professionals-pakistan',
+    title: 'How to Find Trusted Professionals in Pakistan: Verification Guide',
+    metaTitle: 'How to Find Trusted Professionals in Pakistan: Verification Guide',
+    metaDescription: 'Learn how to compare Pakistani doctors, lawyers, accountants, developers, tutors, designers, and service professionals using profiles, evidence, and verification.',
+    focusKeyword: 'Find Professionals in Pakistan',
+    category: 'Professional Discovery',
+    date: 'August 23, 2026',
+    dateModified: 'August 23, 2026',
+    readTime: '10 min read',
+    excerpt: 'A verification-first guide to finding Pakistani professionals by specialization, city, service, credentials, and public evidence.',
+    authorName: 'ListPak Editorial Team',
+    authorUrl: 'https://www.listpak.com/about',
+    content: NEW_BLOG_CONTENT['how-to-find-trusted-professionals-pakistan'],
+    relatedSlugs: ['professionals', 'local-services-pakistan-by-city', 'jobs-in-pakistan']
+  },
+  'best-startups-pakistan-2026': {
+    slug: 'best-startups-pakistan-2026',
+    title: 'Best Startups in Pakistan 2026: Sectors, Signals & How to Research Them',
+    metaTitle: 'Best Startups in Pakistan 2026: Sectors & Research Guide',
+    metaDescription: 'Explore Pakistan startup sectors and learn how to research companies, products, founders, jobs, funding claims, and current operating signals responsibly.',
+    focusKeyword: 'Best Startups in Pakistan',
+    category: 'Entrepreneurship & Startups',
+    date: 'August 23, 2026',
+    dateModified: 'August 23, 2026',
+    readTime: '11 min read',
+    excerpt: 'A source-led guide to researching Pakistani startups across fintech, SaaS, logistics, health, education, e-commerce, and agriculture.',
+    authorName: 'ListPak Editorial Team',
+    authorUrl: 'https://www.listpak.com/about',
+    content: NEW_BLOG_CONTENT['best-startups-pakistan-2026'],
+    relatedSlugs: ['best-software-houses-pakistan-2026', 'jobs-in-pakistan', 'it-jobs-in-pakistan']
+  },
+  'businesses-in-lahore-by-category': {
+    slug: 'businesses-in-lahore-by-category',
+    title: 'Businesses in Lahore by Category: A Practical City Discovery Guide',
+    metaTitle: 'Businesses in Lahore by Category: City Discovery Guide',
+    metaDescription: 'Find and compare businesses in Lahore by category, neighborhood, service, address, hours, contact details, and trustworthy listing information.',
+    focusKeyword: 'Businesses in Lahore',
+    category: 'Lahore Business Guide',
+    date: 'August 23, 2026',
+    dateModified: 'August 23, 2026',
+    readTime: '10 min read',
+    excerpt: 'A city-focused guide to discovering Lahore restaurants, software companies, schools, hospitals, agencies, retailers, and local service providers.',
+    authorName: 'ListPak Editorial Team',
+    authorUrl: 'https://www.listpak.com/about',
+    content: NEW_BLOG_CONTENT['businesses-in-lahore-by-category'],
+    relatedSlugs: ['restaurants-in-karachi', 'top-business-directory-websites-pakistan', 'local-services-pakistan-by-city']
+  },
+  'digital-marketing-jobs-lahore-guide': {
+    slug: 'digital-marketing-jobs-lahore-guide',
+    title: 'Digital Marketing Jobs in Lahore: Skills, Roles & Portfolio Guide',
+    metaTitle: 'Digital Marketing Jobs in Lahore: Skills & Portfolio Guide',
+    metaDescription: 'Explore digital marketing jobs in Lahore, including SEO, content, paid media, social media, e-commerce, email, design, and growth roles.',
+    focusKeyword: 'Digital Marketing Jobs in Lahore',
+    category: 'Digital Marketing Careers',
+    date: 'August 23, 2026',
+    dateModified: 'August 23, 2026',
+    readTime: '10 min read',
+    excerpt: 'A practical Lahore job guide for SEO, social media, content, paid media, e-commerce, email, design, and growth candidates.',
+    authorName: 'ListPak Editorial Team',
+    authorUrl: 'https://www.listpak.com/about',
+    content: NEW_BLOG_CONTENT['digital-marketing-jobs-lahore-guide'],
+    relatedSlugs: ['it-jobs-in-pakistan', 'jobs-in-pakistan', 'businesses-in-lahore-by-category']
   }
 }
