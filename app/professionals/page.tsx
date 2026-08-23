@@ -68,8 +68,8 @@ export default function ProfessionalsPage() {
       pro.title.toLowerCase().includes(q) ||
       pro.profession.toLowerCase().includes(q) ||
       (pro.specialization && pro.specialization.toLowerCase().includes(q)) ||
-      pro.skills.some(s => s.toLowerCase().includes(q)) ||
-      (pro.education && pro.education.some(e => e.degree.toLowerCase().includes(q) || e.institution.toLowerCase().includes(q)))
+      pro.skills.some((s: string) => s.toLowerCase().includes(q)) ||
+      (Array.isArray(pro.education) ? pro.education.some((e: any) => (e.degree?.toLowerCase().includes(q) || e.institution?.toLowerCase().includes(q))) : (typeof pro.education === 'string' && pro.education.toLowerCase().includes(q)))
 
     const matchesCity = !selectedCity || pro.city.toLowerCase() === selectedCity.toLowerCase()
     const matchesProfession = selectedProfession === 'All Professions' || pro.profession.toLowerCase() === selectedProfession.toLowerCase()

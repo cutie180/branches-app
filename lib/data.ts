@@ -143,6 +143,250 @@ export interface ContactMessage {
   status: 'unread' | 'read'
 }
 
+export interface CompanyItem {
+  id: string
+  slug: string
+  name: string
+  category: string
+  industry?: string
+  companySize?: string
+  employeeCount?: string
+  establishedYear?: string
+  registrationNumber?: string
+  companyType?: string
+  headquarters?: string
+  branchLocations?: string[]
+  careersUrl?: string
+  googleMapUrl?: string
+  hrName?: string
+  hrDesignation?: string
+  hrEmail?: string
+  companyEmail?: string
+  country?: string
+  linkedin?: string
+  facebook?: string
+  instagram?: string
+  twitter?: string
+  youtube?: string
+  github?: string
+  customSocialLinks?: { platform: string; url: string }[]
+  approvedBy?: string
+  rejectionReason?: string
+  activeJobsCount?: number
+  city: string
+  cities?: string[]
+  province: string
+  rating: number
+  reviewCount: number
+  verified: boolean
+  isClaimed: boolean
+  isFeatured?: boolean
+  status?: 'pending' | 'approved' | 'rejected'
+  submittedAt?: string
+  approvedAt?: string
+  phone: string
+  whatsapp: string
+  email: string
+  website: string
+  address: string
+  coverImage: string
+  logo: string
+  description: string
+  services: string[]
+  operatingHours: { [key: string]: string }
+  features: string[]
+  reviews: { id: string; userName: string; rating: number; date: string; comment: string; avatar?: string }[]
+  faqs: { question: string; answer: string }[]
+}
+
+export interface JobItem {
+  id: string
+  slug?: string
+  title: string
+  company: string
+  companyId?: string
+  companySlug?: string
+  companyLogo: string
+  city: string
+  cities?: string[]
+  province?: string
+  country?: string
+  department?: string
+  employmentType?: string
+  type: string
+  category: string
+  salary: string
+  experience: string
+  education?: string
+  ageRequirement?: string
+  deadline?: string
+  joiningDate?: string
+  workingHours?: string
+  shiftType?: string
+  benefits?: string[]
+  vacancies?: number
+  genderPreference?: string
+  description: string
+  responsibilities?: string[]
+  requirements?: string[]
+  preferredQualifications?: string[]
+  skills: string[]
+  postedAt?: string
+  postedDate?: string
+  expiresAt?: string
+  status?: 'pending' | 'approved' | 'rejected'
+  isFeatured?: boolean
+  verified?: boolean
+  applicationMethod?: string
+  applicationUrl?: string
+  applicationEmail?: string
+  applicationWhatsapp?: string
+  applicationWebsite?: string
+}
+
+export interface ProfessionalVerificationPaymentDetails {
+  method?: string
+  paymentMethod?: string
+  referenceNumber?: string
+  transactionRef?: string
+  amount: number
+  screenshotUrl?: string
+  paymentScreenshot?: string
+  paymentDate?: string
+  bankAccountName?: string
+  verifiedAt?: string
+  verifiedBy?: string
+  adminNotes?: string
+}
+
+export interface ProfessionalVerificationRequest {
+  id: string
+  professionalProfileId: string
+  username: string
+  proName: string
+  profession: string
+  city: string
+  avatar: string
+  amount: number
+  paymentMethod: string
+  paymentReference: string
+  paymentScreenshot?: string
+  status: 'PENDING' | 'APPROVED' | 'REJECTED'
+  submittedAt: string
+  approvedAt?: string
+  reviewedAt?: string
+  rejectionReason?: string
+  reviewedBy?: string
+}
+
+export interface ProfessionalInquiry {
+  id: string
+  proUsername: string
+  proName: string
+  senderName: string
+  senderEmail: string
+  senderWhatsApp: string
+  message: string
+  createdAt: string
+  status?: 'new' | 'replied' | 'archived'
+}
+
+export interface ProfessionalItem {
+  id: string
+  userId?: string
+  username: string
+  slug?: string
+  name: string
+  fullName?: string
+  title: string
+  profession: string
+  category: string
+  specialization?: string
+  city: string
+  province?: string
+  country?: string
+  address?: string
+  googleMapUrl?: string
+  rating: number
+  reviewCount: number
+  hourlyRate: string
+  availability: string
+  gender?: string
+  avatar: string
+  coverImage: string
+  bio: string
+  about?: string
+  description?: string
+  skills: string[]
+  experienceYears: number
+  verified: boolean
+  isFeatured?: boolean
+  status: 'pending' | 'approved' | 'rejected'
+  profileStatus?: 'PENDING' | 'APPROVED' | 'REJECTED'
+  verificationStatus?: 'UNVERIFIED' | 'PENDING' | 'VERIFIED' | 'REJECTED'
+  verificationRequestStatus?: 'NOT_REQUESTED' | 'PENDING' | 'APPROVED' | 'REJECTED'
+  verificationPaymentDetails?: ProfessionalVerificationPaymentDetails
+  submittedAt?: string
+  approvedAt?: string
+  approvedBy?: string
+  verifiedAt?: string
+  verifiedBy?: string
+  rejectionReason?: string
+  phone?: string
+  whatsapp?: string
+  email?: string
+  website?: string
+  portfolio?: string
+  linkedin?: string
+  github?: string
+  twitter?: string
+  facebook?: string
+  instagram?: string
+  youtube?: string
+  behance?: string
+  dribbble?: string
+  stackoverflow?: string
+  medium?: string
+  fiverr?: string
+  upwork?: string
+  freelancer?: string
+  kaggle?: string
+  researchgate?: string
+  orcid?: string
+  googleScholar?: string
+  resumeUrl?: string
+  education?: string | any[]
+  certifications?: string[]
+  previousExperience?: string | any[]
+  customSocialLinks?: { platform: string; url: string }[]
+  dynamicFields?: Record<string, any>
+  servicesOffered?: string[]
+  experienceList?: {
+    id: string
+    role: string
+    company: string
+    period: string
+    description?: string
+  }[]
+  educationList?: {
+    id: string
+    degree: string
+    institution: string
+    year: string
+  }[]
+  currentCompany?: string
+  languages?: string[]
+  reviews?: {
+    id: string
+    userName: string
+    rating: number
+    date: string
+    comment: string
+    avatar?: string
+  }[]
+  faqs?: { question: string; answer: string }[]
+}
+
 export const MOCK_BUSINESSES: BusinessItem[] = [
   {
     "id": "1hhe5gCFlU8VU4RsROWN",
@@ -151,6 +395,9 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "category": "retail",
     "categoryId": "services",
     "city": "Multan",
+    "cities": [
+      "Multan"
+    ],
     "province": "Pakistan",
     "rating": 5,
     "reviewCount": 5,
@@ -163,9 +410,10 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "email": "artisan@multanbluepottery.pk",
     "website": "https://www.listpak.com",
     "address": "Gulgasht Colony Commercial Area",
+    "locations": [],
     "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
     "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
-    "description": "Multan Blue Pottery Emporium showcases traditional Multani blue clay pottery, handmade vases, decorative tiles, plates, and mugs. Each piece is hand-painted by local master artisans using generational techniques.",
+    "description": "Multan Blue Pottery Emporium is Pakistan's premier heritage center for authentic handcrafted Kashigari and traditional Multani blue clay ceramics. Located in the heart of Multan, Punjab, our emporium brings together generations of master artisans who specialize in turning locally sourced alluvial clay into exquisite glazed pottery, handcrafted floral vases, ornamental wall plates, handmade tiles, and bespoke dinnerware sets.\n\nEach item in our catalog undergoes an intricate artisan process: hand-molding on traditional potter's wheels, meticulous sun-drying, hand-painting with cobalt oxide blues and turquoise pigments, and high-temperature kiln firing. This authentic artisan craft produces the world-renowned vibrant Multani blue luster that is chip-resistant, heat-tolerant, and timeless.\n\n### Our Core Product Range & Services\n- Handcrafted Multani Blue Pottery Vases, Urns, and Ornamental Planters\n- Decorative Architectural Blue Tiles for Mosques, Heritage Villas & Interior Projects\n- Traditional Hand-Painted Ceramic Dinner Sets, Tea Mugs & Serving Platters\n- Customized Corporate Souvenirs, Cultural Gifts & International Export Packaging\n- Safe Domestic Courier Delivery Across Karachi, Lahore, Islamabad, and Nationwide\n\n### Why Choose Multan Blue Pottery Emporium\n- 100% Guaranteed Handmade Artisan Ceramics by Master Craftsmen\n- Generational Kashigari Artistry with Non-Toxic, Food-Safe Glazes\n- Secure Wooden Crate Packaging for Zero-Breakage Nationwide Shipping\n- Competitive Wholesale Pricing for Decor Retailers and Global Exporters\n\n### Verified Customer Service & Contact Information\nMultan Blue Pottery Emporium provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Multan and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Multan Blue Pottery Emporium remains one of the most reliable and recommended service providers in the retail sector.",
     "services": [
       "Professional Services"
     ],
@@ -179,12 +427,109 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "faqs": []
   },
   {
+    "id": "3KuZTzmjFj6E3BGLA1oz",
+    "slug": "technoinn",
+    "name": "Technoinn",
+    "category": "Technology & IT",
+    "categoryId": "technology",
+    "city": "Lahore",
+    "cities": [
+      "Lahore"
+    ],
+    "province": "Pakistan",
+    "rating": 5,
+    "reviewCount": 5,
+    "verified": true,
+    "isClaimed": true,
+    "isFeatured": false,
+    "status": "approved",
+    "phone": "+923214859210",
+    "whatsapp": "923214859210",
+    "email": "mail@technoinn.net",
+    "website": "https://technoinn.net/",
+    "address": "Center Point Plaza, Ground Floor, G33, Gulberg III, Lahore 54660 Pakistan.",
+    "locations": [
+      {
+        "address": "Center Point Plaza, Ground Floor, G33, Gulberg III, Lahore 54660 Pakistan.",
+        "city": "Lahore",
+        "isPrimary": true
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Techno-Inn Pakistan’s No.1 Security & Safety Solution Provider\nTechno Inn provides complete security & safety solutions including Access Control Systems, Road Blockers, Boom Barriers, Tyre Killer, Full Height Turnstile, Flap Barriers, CCTV Systems, Baggage X-ray Machines, Walk Through Gates, Hand Scanners, Fire Exit Doors, Dock Leveler, and Automatic Rolling Shutters.Techno Inn established in 2012 in Lahore, Pakistan based security equipments manufacturing company dedicated and committed to provide state of art security and solutions to its valuable clients.Techno Inn has been ranked in the market at the top most level due to its trouble free & above all economical solutions backed by rount the clock after sales servivece because the management of Techno Inn has a moto and belive on serving its clients rather than just selling.\nFounded in 2012, TECHNO-INN is a dynamic and innovative company dedicated to providing cutting-edge security solution. Techno Inn provides complete security & safety solutions including Access Control Systems, Road Blockers, Boom Barriers, Tyre Killer, Full Height Turnstile, Flap Barriers, CCTV Systems, Baggage X-ray Machines, Walk Through Gates, Hand Scanners, Fire Exit Doors, Dock Leveler, and Automatic Rolling Shutters.Techno-Inn is the trusted name in security and automation systems across Pakistan — where precision engineering meets lasting protection.Why Chooses Techno-Inn for Security & Safety Techno-Inn Pakistan’s No.1 Security & Safety Solution Provider\nTechno Inn provides complete security & safety solutions including Access Control Systems, Road Blockers, Boom Barriers, Tyre Killer, Full Height Turnstile, Flap Barriers, CCTV Systems, Baggage X-ray Machines, Walk Through Gates, Hand Scanners, Fire Exit Doors, Dock Leveler, and Automatic Rolling Shutters.\n",
+    "services": [
+      "CCTV Surveillance Systems",
+      "Access Control Systems",
+      "Boom Barriers",
+      "Road Blockers",
+      "Tyre Killers",
+      "Turnstiles",
+      "Walk-Through Gates",
+      "X-Ray Baggage Scanners",
+      "Fire Exit Doors",
+      "Automatic Gates",
+      "Security Automation Systems",
+      "Parking Management Systems",
+      "Entrance Security Solutions",
+      "Perimeter Security Solutions",
+      "Security System Installation & Maintenance."
+    ],
+    "operatingHours": {
+      "Monday - Saturday": "09:00 AM - 07:00 PM"
+    },
+    "features": [
+      "Verified Listing"
+    ],
+    "reviews": [
+      {
+        "userName": "Tariq Mehmood",
+        "comment": "Excellent service and a very professional team at Technoinn. Highly recommended for anyone looking for reliable solutions.",
+        "rating": 5,
+        "date": "Just now",
+        "id": "rev-starter-1-1787044548678"
+      },
+      {
+        "id": "rev-starter-2-1787044548678",
+        "userName": "Saima Khan",
+        "rating": 5,
+        "comment": "Great overall experience from start to finish with Technoinn. Friendly staff and outstanding customer support.",
+        "date": "1 day ago"
+      },
+      {
+        "userName": "Bilal Ahmed",
+        "comment": "Technoinn exceeded expectations with quality service, quick response times, and professional communication.",
+        "id": "rev-starter-3-1787044548678",
+        "rating": 5,
+        "date": "2 days ago"
+      },
+      {
+        "date": "3 days ago",
+        "id": "rev-starter-4-1787044548678",
+        "comment": "Very satisfied with the experience at Technoinn. Everything was handled efficiently and exactly as promised.",
+        "userName": "Hamza Sheikh",
+        "rating": 5
+      },
+      {
+        "comment": "Highly recommended. The staff at Technoinn were knowledgeable, courteous, and delivered excellent service throughout.",
+        "id": "rev-starter-5-1787044548678",
+        "userName": "Zainab Fatima",
+        "rating": 5,
+        "date": "4 days ago"
+      }
+    ],
+    "faqs": []
+  },
+  {
     "id": "3SaUCo0SbDEPju2i2cQT",
     "slug": "quetta-dry-fruits-wholesale-quetta",
     "name": "Quetta Dry Fruits Wholesale",
     "category": "logistics",
     "categoryId": "services",
     "city": "Quetta",
+    "cities": [
+      "Quetta"
+    ],
     "province": "Pakistan",
     "rating": 5,
     "reviewCount": 5,
@@ -197,9 +542,10 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "email": "wholesale@quettadryfruits.pk",
     "website": "https://www.listpak.com",
     "address": "Jinnah Road near Cantt",
+    "locations": [],
     "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
     "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
-    "description": "Quetta Dry Fruits Wholesale brings you the finest selection of premium almonds, walnuts, pistachios, figs, and pine nuts direct from Balochistan orchards. Fresh, organic, and vacuum packed for longevity.",
+    "description": "Quetta Dry Fruits Wholesale is Balochistan's leading distributor and bulk supplier of 100% natural, premium-grade dry fruits, nuts, and organic mountain edibles. Headquartered on Jinnah Road, Quetta, we source directly from organic orchards across Quetta Valley, Ziarat, Mastung, Kalat, and the Pak-Afghan border highlands to provide unadulterated freshness at unbeatable wholesale rates.\n\nWe supply top-tier varieties of roasted and raw almonds (Kaghzi Badam), Balochistan walnuts (Akhrot), natural sun-dried figs (Injeer), premium salted pistachios (Pista), rare pine nuts (Chilgoza), organic dried apricots (Khubani), and green Kishmish to retailers, corporate clients, and households across Pakistan.\n\n### Product Portfolio & Offerings\n- Premium Chilgoza (Pine Nuts) in shell and kernel form\n- Kaghzi Badam (Thin-shelled Almonds) & Giri with high natural oil content\n- Fresh Ziarat and Swat Walnuts in Shell & Grade-A Shelled Halves\n- Organic Sun-Dried Injeer (Figs) and Premium Kandahari Pomegranate Seeds (Anardana)\n- Customized Dry Fruit Gift Boxes for Weddings, Eid Festivals, and Corporate Gifting\n\n### Quality Assurance & Nationwide Supply\n- 100% Organic, Sulfur-Free, and Naturally Sun-Dried Produce\n- Modern Nitrogen-Flushed Vacuum Packaging for Extended Shelf Life & Aroma Retention\n- Fast Bulk B2B Wholesale Shipping to Karachi, Lahore, Rawalpindi, Faisalabad, and Peshawar\n- Direct Orchard Sourcing Guaranteeing Wholesale Price Advantages Over Market Retailers\n\n### Verified Customer Service & Contact Information\nQuetta Dry Fruits Wholesale provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Quetta and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Quetta Dry Fruits Wholesale remains one of the most reliable and recommended service providers in the logistics sector.",
     "services": [
       "Professional Services"
     ],
@@ -219,6 +565,9 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "category": "Construction & Building",
     "categoryId": "construction",
     "city": "Lahore",
+    "cities": [
+      "Lahore"
+    ],
     "province": "Pakistan",
     "rating": 5,
     "reviewCount": 5,
@@ -231,6 +580,7 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "email": "contact@business.pk",
     "website": "https://alzaban.com/",
     "address": "Plot No. 3, Block No. 11, Sector B1, Township, Lahore, Pakistan",
+    "locations": [],
     "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
     "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
     "description": "AL ZABAN HARDWARE STOREis an e-commerce platform and retail enterprise headquartered in Lahore, Pakistan. Operating with the foundational slogan \"Your one-stop shop for quality products,\" the store serves as a comprehensive marketplace for specialized hardware, architectural fittings, power tools, pest control remedies, and general home improvement solutions. The website caters to a wide spectrum of customers, including professional contractors, interior designers, woodworkers, and general homeowners seeking reliable hardware components. The digital store interface is designed for user convenience, incorporating structured navigation menus, direct communication channels, high-resolution product listings, customer feedback, and built-in virtual support tools.\n\n---\n\n**Contact Information & Location Details**\n\nThe platform maintains transparent operational channels, giving customers multiple direct methods to reach out for order placement, inquiries, or physical visits:\n\n* **Official Business Name:** [AL ZABAN HARDWARE STORE](https://alzaban.com/)\n* **Physical Address:** [Plot No. 3, Block No. 11, Sector B1, Township, Lahore, Pakistan](https://alzaban.com/)\n* **Landline Phone:** 042 35110830\n* **WhatsApp Business Line:** [03351108300](https://alzaban.com/)\n* **Official Email Address:** [info@alzaban.com](https://alzaban.com/)\n\n---\n\n**Product Categories & Sub-Categories Breakdown**\n\nThe platform organizes its large selection of goods across several distinct primary departments and specialized sub-categories:\n\n* **Kitchen Accessories:** Features specialized utility items, including flexible kitchen hood pipes, double stainless steel sink bowls, pull-out wire baskets, double corner racks, and cutlery organizers like knife and fork holders.\n* **Door Accessories:** Includes security mechanisms and essential entryway hardware, such as traditional round knob locks, handle door locks, rim door gate locks, and electronic security rim locks.\n* **Hardware:** Encompasses core construction fasteners and heavy-duty locking mechanisms, including drywall screws, countersink drill bits, and main door locks.\n* **Power Tools:** Provides machinery and heavy-duty electric equipment ranging from industrial automatic edge banding machines to portable cordless air blowers.\n* **Furniture Accessories:** Offers specialized fittings for cabinetry and furniture construction, such as heavy-duty anti-rust stainless steel sofa legs and cabinet/drawer locks.\n* **Medicines (Pest Control):** Offers structural protection treatments, such as specialized termite control remedies.\n* **Additional Primary Categories:** Includes Bathroom Accessories, Home Improvements, and Hand Tools.\n\n---\n\n**Featured Products Highlight**\n\nThe homepage features a range of products suited for various budgets and applications:\n\n* **Industrial Machinery:** The automatic edge banding machine stands out as a premium industrial offering priced at Rs 2,100,000.00 with a full 5.0-star rating.\n* **Security & Door Locks:** Premium electronic items include the [Yale Electric Rim Lock](https://alzaban.com/) listed at Rs 19,900.00 and the EZZEA Electric Rim Lock at Rs 5,200.00. Standard mechanical options include the [MAIN DOOR LOCK 9995 MAE](https://alzaban.com/) at Rs 6,450.00, the [HANDLE DOOR LOCK 173GP](https://alzaban.com/) at Rs 2,990.00, the WELKA Gate Lock at Rs 2,400.00, and the stainless steel Round Lock #87891 at Rs 1,700.00.\n* **Kitchen Fixtures:** Key listings include the extra-wide [Stainless Steel Kitchen Sink Bowl Double](https://alzaban.com/) priced at Rs 10,500.00, Pull-Out Kitchen Baskets at Rs 6,150.00, Double Corner Racks at Rs 2,990.00, Wellmax Knife & Fork Holders at Rs 1,900.00, and 4-inch Kitchen Hood Aluminum Flexible Pipes at Rs 850.00.\n* **Tools, Fasteners & Furniture Fittings:** Practical day-to-day hardware includes the Cordless Blower at Rs 9,800.00, Cyber Lock Drawer Locks at Rs 760.00, Front Line TC Termite Killer at Rs 400.00, Countersink Drill Bits at Rs 250.00, heavy-duty stainless steel Sofa Legs at Rs 130.00, and standard Drywall Screws at Rs 90.00.\n\n---\n\n**E-Commerce Features, Guarantees & Platform Layout**\n\n* **Customer Care Policies:** The store offers free delivery nationwide on all orders valued above Rs 5,000. Additionally, customer purchases are safeguarded through a standard 7-day return policy and a 100% protected secure checkout system.\n* **Interactive Shopping Tools:** Visitors can interact with a direct AI Assistant widget located on the page to ask product questions or quickly initiate inquiries via an integrated WhatsApp chat button.\n",
@@ -246,11 +596,11 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     ],
     "reviews": [
       {
+        "rating": 5,
         "id": "rev-starter-1-1786075940076",
         "comment": "Excellent service and a very professional team at AL ZABAN HARDWARE STORE. Highly recommended for anyone looking for reliable solutions.",
         "userName": "Tariq Mehmood",
-        "date": "Just now",
-        "rating": 5
+        "date": "Just now"
       },
       {
         "rating": 5,
@@ -260,25 +610,25 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
         "date": "1 day ago"
       },
       {
-        "userName": "Bilal Ahmed",
+        "comment": "AL ZABAN HARDWARE STORE exceeded expectations with quality service, quick response times, and professional communication.",
         "rating": 5,
         "date": "2 days ago",
-        "id": "rev-starter-3-1786075940076",
-        "comment": "AL ZABAN HARDWARE STORE exceeded expectations with quality service, quick response times, and professional communication."
+        "userName": "Bilal Ahmed",
+        "id": "rev-starter-3-1786075940076"
       },
       {
+        "date": "3 days ago",
+        "rating": 5,
         "id": "rev-starter-4-1786075940076",
         "comment": "Very satisfied with the experience at AL ZABAN HARDWARE STORE. Everything was handled efficiently and exactly as promised.",
-        "userName": "Hamza Sheikh",
-        "rating": 5,
-        "date": "3 days ago"
+        "userName": "Hamza Sheikh"
       },
       {
-        "date": "4 days ago",
+        "userName": "Zainab Fatima",
         "comment": "Highly recommended. The staff at AL ZABAN HARDWARE STORE were knowledgeable, courteous, and delivered excellent service throughout.",
-        "id": "rev-starter-5-1786075940076",
+        "date": "4 days ago",
         "rating": 5,
-        "userName": "Zainab Fatima"
+        "id": "rev-starter-5-1786075940076"
       }
     ],
     "faqs": []
@@ -290,6 +640,9 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "category": "restaurants",
     "categoryId": "services",
     "city": "Karachi",
+    "cities": [
+      "Karachi"
+    ],
     "province": "Pakistan",
     "rating": 5,
     "reviewCount": 5,
@@ -302,9 +655,10 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "email": "contact@karachibiryani.pk",
     "website": "https://www.karachibiryani.pk",
     "address": "Block 2, Saddar Commercial Area",
+    "locations": [],
     "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
     "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
-    "description": "Welcome to Karachi Biryani House. We serve the most authentic and traditional Karachi biryani, beef pullao, and hot chicken tikka in town. All ingredients are freshly sourced and prepared using original recipes.",
+    "description": "Karachi Biryani House is Karachi's iconic culinary destination for authentic dum-cooked Karachi beef biryani, spicy chicken biryani, tender mutton pulao, and traditional Pakistani charcoal barbecue. Established with a passion for preserving Karachi's legendary spice heritage, we serve thousands of food enthusiasts daily with steaming platters of fragrant basmati rice infused with secret family spice blends, golden potatoes, and succulent meats.\n\nEvery degh at Karachi Biryani House is prepared using age-old slow dum-cooking techniques over natural wood fires. We select exclusively aged extra-long grain basmati rice, farm-fresh halal meats, pure spices, and signature whole dried plums (aaloo bukhara) to achieve the unbeatable aroma and balance that defines genuine Karachi street gastronomy.\n\n### Menu Highlights & Specialties\n- Signature Special Karachi Chicken Dum Biryani with Spiced Potatoes\n- Authentic Karachi Beef Biryani & Royal Mutton Pulao\n- Seekh Kababs, Chicken Malai Boti, and Bihari Tikka Barbecue\n- Fresh Mint Raita, Traditional Salad & Shahi Kheer / Gulab Jamun Desserts\n- Large Degh Catering for Weddings, Corporate Dawat, and Family Events\n\n### Dine-In, Takeaway & Home Delivery\n- Spacious Air-Conditioned Family Dining Hall with Attentive Service\n- Ultra-Fast Takeaway Counter and Spill-Proof Thermal Parcel Packaging\n- Swift Foodpanda & Direct Helpline Home Delivery Across Karachi\n- Stringent Kitchen Hygiene and 100% Fresh Halal Ingredients Guaranteed Daily\n\n### Verified Customer Service & Contact Information\nKarachi Biryani House provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Karachi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Karachi Biryani House remains one of the most reliable and recommended service providers in the restaurants sector.",
     "services": [
       "Professional Services"
     ],
@@ -318,12 +672,178 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "faqs": []
   },
   {
+    "id": "LNQxiRONd9sJ4ZHk3gUa",
+    "slug": "allure-beauty",
+    "name": "Allure Beauty",
+    "category": "Beauty & Wellness",
+    "categoryId": "beauty",
+    "city": "Karachi",
+    "cities": [
+      "Karachi"
+    ],
+    "province": "Pakistan",
+    "rating": 5,
+    "reviewCount": 5,
+    "verified": true,
+    "isClaimed": true,
+    "isFeatured": false,
+    "status": "approved",
+    "phone": "+923000725776",
+    "whatsapp": "923000725776",
+    "email": "yousufkhanzerotwo1@gmail.com",
+    "website": "http://allurebeauty.pk/",
+    "address": "Plot 03, Tipu Sultan Road, Karachi Memon Co-operative Housing Society, Karachi Memon Society, Karachi, Sindh, Pakistan",
+    "locations": [
+      {
+        "city": "Karachi",
+        "isPrimary": true,
+        "address": "Plot 03, Tipu Sultan Road, Karachi Memon Co-operative Housing Society, Karachi Memon Society, Karachi, Sindh, Pakistan"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Allure Beauty is an online beauty and fragrance store based in Karachi, serving customers across Pakistan with authentic makeup, skincare, and perfumes from both international names and top Pakistani makeup brands. We started this store because finding genuine beauty products locally was harder than it should be. Too many sellers online were passing off duplicates as originals, and customers had no real way to check. So we built a store where every product, whether it's a well-known Pakistani makeup brand or an international label, goes through the same verification before it ever gets listed.\n\nOur range covers pretty much everything you'd need for a full routine: foundations, concealers, lipsticks, eyeshadow palettes, blushes, and setting sprays, alongside skincare and fragrances. We carry a strong lineup of Pakistani makeup brands that have built a real following for working well in local weather and skin tones, sitting right next to the international brands people already trust. That mix matters. Some days you want a high-coverage foundation made for Karachi's humidity, other days you're after a specific shade range or finish that a global brand does best. You shouldn't have to shop two different places for that.\n\nEvery order ships with the same promise: what you see is what you get. No swapped packaging, no expired stock, no guessing. We deliver across Pakistan, offer cash on delivery in most cities, and our team is genuinely reachable if you need help picking a shade or product before you buy, not just after something goes wrong.\n\nWhether you're restocking your everyday routine or trying a Pakistani makeup brand for the first time, Allure Beauty is built to make that simple, honest, and fast.",
+    "services": [
+      "cosmetics",
+      "skin care products",
+      "makeup products",
+      "fragrances"
+    ],
+    "operatingHours": {
+      "Monday - Saturday": "09:00 AM - 07:00 PM"
+    },
+    "features": [
+      "Verified Listing"
+    ],
+    "reviews": [
+      {
+        "comment": "Excellent service and a very professional team at Allure Beauty. Highly recommended for anyone looking for reliable solutions.",
+        "date": "Just now",
+        "userName": "Tariq Mehmood",
+        "id": "rev-starter-1-1787296363799",
+        "rating": 5
+      },
+      {
+        "rating": 5,
+        "id": "rev-starter-2-1787296363799",
+        "date": "1 day ago",
+        "comment": "Great overall experience from start to finish with Allure Beauty. Friendly staff and outstanding customer support.",
+        "userName": "Saima Khan"
+      },
+      {
+        "rating": 5,
+        "comment": "Allure Beauty exceeded expectations with quality service, quick response times, and professional communication.",
+        "userName": "Bilal Ahmed",
+        "date": "2 days ago",
+        "id": "rev-starter-3-1787296363799"
+      },
+      {
+        "rating": 5,
+        "id": "rev-starter-4-1787296363799",
+        "userName": "Hamza Sheikh",
+        "comment": "Very satisfied with the experience at Allure Beauty. Everything was handled efficiently and exactly as promised.",
+        "date": "3 days ago"
+      },
+      {
+        "comment": "Highly recommended. The staff at Allure Beauty were knowledgeable, courteous, and delivered excellent service throughout.",
+        "rating": 5,
+        "userName": "Zainab Fatima",
+        "id": "rev-starter-5-1787296363799",
+        "date": "4 days ago"
+      }
+    ],
+    "faqs": []
+  },
+  {
+    "id": "MGlptW5j7ypYf0euBWRo",
+    "slug": "zynex-vision",
+    "name": "Zynex Vision",
+    "category": "Technology & IT",
+    "categoryId": "technology",
+    "city": "Karachi",
+    "cities": [
+      "Karachi"
+    ],
+    "province": "Pakistan",
+    "rating": 5,
+    "reviewCount": 5,
+    "verified": true,
+    "isClaimed": true,
+    "isFeatured": false,
+    "status": "approved",
+    "phone": "92 315 2248645",
+    "whatsapp": "923152248645",
+    "email": "info@zynexvisions.com",
+    "website": "https://zynexvisions.com/",
+    "address": "LS 7, Federal B Area Block 13 Gulberg Town, Karachi",
+    "locations": [
+      {
+        "address": "LS 7, Federal B Area Block 13 Gulberg Town, Karachi",
+        "city": "Karachi",
+        "isPrimary": true
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Zynex Vision is a creative digital agency focused on helping businesses build powerful brands and establish a strong presence in the digital world. We combine creativity, technology, and strategic thinking to deliver innovative solutions that support business growth and long-term success.\n\nOur services include website design and development, UI/UX design, branding, e-commerce solutions, mobile app development, search engine optimization, and other digital services. We create modern, responsive, and user-friendly digital experiences that are designed to connect businesses with their target audiences.\n\nAt Zynex Vision, we understand that every business is different. That is why we take a personalized approach to every project, learning about our clients, their goals, audiences, and challenges before developing the right solution. Our goal is to transform ideas into engaging digital experiences that build credibility, improve customer engagement, and generate meaningful results.\n\nWhether you are launching a new business, refreshing your brand, building an online store, improving your website, or looking to increase your visibility through SEO, our team is ready to help. We focus on quality, innovation, usability, and performance in everything we create.\n\nWe believe a successful digital presence is more than just attractive design. It should communicate your brand clearly, provide an excellent user experience, and contribute to your business objectives. With this philosophy, Zynex Vision works as a growth-focused digital partner for businesses looking to stand out in a competitive online market.\n\nOur mission is simple: to turn your vision into a memorable digital presence that inspires trust, connects with customers, and creates opportunities for sustainable growth.",
+    "services": [
+      "General Services"
+    ],
+    "operatingHours": {
+      "Monday - Saturday": "09:00 AM - 07:00 PM"
+    },
+    "features": [
+      "Verified Listing"
+    ],
+    "reviews": [
+      {
+        "id": "rev-starter-1-1787077071387",
+        "rating": 5,
+        "comment": "Excellent service and a very professional team at Zynex Vision. Highly recommended for anyone looking for reliable solutions.",
+        "userName": "Tariq Mehmood",
+        "date": "Just now"
+      },
+      {
+        "comment": "Great overall experience from start to finish with Zynex Vision. Friendly staff and outstanding customer support.",
+        "userName": "Saima Khan",
+        "date": "1 day ago",
+        "rating": 5,
+        "id": "rev-starter-2-1787077071387"
+      },
+      {
+        "rating": 5,
+        "id": "rev-starter-3-1787077071387",
+        "date": "2 days ago",
+        "comment": "Zynex Vision exceeded expectations with quality service, quick response times, and professional communication.",
+        "userName": "Bilal Ahmed"
+      },
+      {
+        "date": "3 days ago",
+        "userName": "Hamza Sheikh",
+        "rating": 5,
+        "comment": "Very satisfied with the experience at Zynex Vision. Everything was handled efficiently and exactly as promised.",
+        "id": "rev-starter-4-1787077071387"
+      },
+      {
+        "id": "rev-starter-5-1787077071387",
+        "userName": "Zainab Fatima",
+        "rating": 5,
+        "comment": "Highly recommended. The staff at Zynex Vision were knowledgeable, courteous, and delivered excellent service throughout.",
+        "date": "4 days ago"
+      }
+    ],
+    "faqs": []
+  },
+  {
     "id": "Qzf825oSlQIghNdLIKrh",
     "slug": "hyderabad-premium-sweets-hyderabad",
     "name": "Hyderabad Premium Sweets",
     "category": "restaurants",
     "categoryId": "services",
     "city": "Hyderabad",
+    "cities": [
+      "Hyderabad"
+    ],
     "province": "Pakistan",
     "rating": 5,
     "reviewCount": 5,
@@ -336,9 +856,10 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "email": "rabri@hyderabadsweets.pk",
     "website": "https://www.listpak.com",
     "address": "Latifabad Block 2",
+    "locations": [],
     "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
     "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
-    "description": "Hyderabad Premium Sweets is famous for authentic Hyderabadi Rabri, Sohan Halwa, and traditional Pakistani desserts. Prepared with pure milk and high-quality ingredients since 1985.",
+    "description": "Hyderabad Premium Sweets is Sindh's celebrated confectionery powerhouse, famous for creating the most authentic, rich, and mouthwatering Hyderabadi Bombay Halwa, Special Rabri, Kaju Katli, and traditional Pakistani mithai. Rooted in the rich cultural culinary traditions of Hyderabad, Sindh, our sweet shop has been delighting families and festive occasions for decades with artisanal confections crafted from pure dairy milk, desi ghee, and premium dry fruits.\n\nOur master halwais prepare daily fresh batches of iconic Hyderabadi Rabri—thick, slow-simmered caramelized clotted cream infused with saffron and crushed pistachios—alongside crispy hot Jalebis, soft Gulab Jamuns, delicate Cham Cham, and royal Almond Barfi.\n\n### Confectionery Catalog & Sweets Menu\n- Authentic Hyderabad Special Rabri & Malai Cream Bowls\n- Traditional Chewy Bombay Halwa & Habshi Halwa Cooked in Pure Desi Ghee\n- Pistachio & Saffron Barfi, Motichoor Ladoo, and Besan Ke Ladoo\n- Fresh Rasmalai, Rasgulla, and Kalakand Dairy Delicacies\n- Custom Designed Wedding Mithai Boxes and Corporate Ramadan / Eid Baskets\n\n### Customer Promise & Distribution\n- 100% Pure Buffalo Milk and Certified Desi Ghee Without Artificial Preservatives\n- Temperature-Controlled Protective Packaging for Safe Nationwide Courier Delivery\n- Trusted by Thousands of Customers for Weddings, Engagements, and Religious Celebrations\n- Convenient Online Ordering and Express Delivery Across Hyderabad and Karachi\n\n### Verified Customer Service & Contact Information\nHyderabad Premium Sweets provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Hyderabad and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Hyderabad Premium Sweets remains one of the most reliable and recommended service providers in the restaurants sector.",
     "services": [
       "Professional Services"
     ],
@@ -358,6 +879,9 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "category": "retail",
     "categoryId": "services",
     "city": "Sialkot",
+    "cities": [
+      "Sialkot"
+    ],
     "province": "Pakistan",
     "rating": 5,
     "reviewCount": 5,
@@ -370,9 +894,10 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "email": "export@sialkotsports.pk",
     "website": "https://www.sialkotsports.pk",
     "address": "Small Industrial Estate",
+    "locations": [],
     "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
     "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
-    "description": "Sialkot Sports Goods MFG is an industry-leading manufacturer of footballs, cricket bats, sports apparel, boxing gloves, and protective gear. Exporting high-grade sports gear globally for over 20 years.",
+    "description": "Sialkot Sports Goods MFG is an internationally acclaimed sports equipment manufacturer and export corporation located in the global sports manufacturing hub of Sialkot, Pakistan. Backed by cutting-edge industrial technology and generational craftsmanship, we produce FIFA-grade soccer balls, international-spec cricket bats, boxing gloves, martial arts uniforms, and performance activewear exported to top brands across Europe, the Americas, and Australasia.\n\nOur factory utilizes precision thermo-bonding machinery, automated leather die-cutting, high-tensile stitching, and rigorous computerized ball bounce and flight testing laboratories to ensure every finished item complies with world federation standards.\n\n### Core Manufacturing Lines\n- FIFA-Standard Thermo-Bonded & Hand-Stitched Soccer Balls & Futsal Balls\n- Professional English Willow & Kashmir Willow Cricket Bats, Pads, and Helmets\n- Genuine Leather Boxing Gloves, MMA Shin Guards, and Punching Bags\n- Sublimated Football Kits, Cricket Team Jerseys, and Compression Gym Apparel\n- Custom Private-Label OEM & ODM Contract Manufacturing for International Brands\n\n### Why Partner With Us\n- ISO 9001, CE, and Sedex Ethical Manufacturing Certified Facility\n- Rapid Sample Prototyping and Custom Logo Sublimation Capabilities\n- High-Volume Production Capacity with On-Time Global Container Freight Dispatch\n- Competitive Factory-Direct Export Pricing for Wholesalers, Leagues, and Sports Academies\n\n### Verified Customer Service & Contact Information\nSialkot Sports Goods MFG provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Sialkot and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Sialkot Sports Goods MFG remains one of the most reliable and recommended service providers in the retail sector.",
     "services": [
       "Professional Services"
     ],
@@ -392,6 +917,9 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "category": "Solar & Renewable Energy",
     "categoryId": "solar",
     "city": "Lahore",
+    "cities": [
+      "Lahore"
+    ],
     "province": "Pakistan",
     "rating": 5,
     "reviewCount": 5,
@@ -404,6 +932,7 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "email": "contact@business.pk",
     "website": "https://www.sngpl.com.pk/",
     "address": "Gas House, 21-Kashmir Road, P.O. Box No. 56, Lahore 54000, Pakistan",
+    "locations": [],
     "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
     "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
     "description": "**Sui Northern Gas Pipelines Limited (SNGPL) – Online Bill Checking Portal**\n\nSui Northern Gas Pipelines Limited (SNGPL) is the largest integrated gas company in North-Central Pakistan, serving millions of residential, commercial, and industrial consumers across Punjab, Khyber Pakhtunkhwa (KPK), and Azad Jammu & Kashmir (AJK). The official SNGPL web portal provides a dedicated, consumer-centric digital platform designed to streamline utility management, eliminate the dependency on physical mail delivery, and allow instant access to monthly billing information from any device.\n\n**Primary Purpose & Utility**\nThe portal's core feature is the duplicate bill inquiry service, which allows consumers to check, view, and download their monthly gas utility statements online. To access an e-bill, users simply enter their unique **14-digit Account ID** (also referred to as the Consumer ID/Number), which is permanently printed on the upper section of any previous hard-copy gas bill. Once entered, the system instantly fetches the latest billing cycle data without requiring user registration or portal authentication.\n\n**Key Features & Capabilities**\n\n* **Instant Bill View & Print:** Users can view detailed billing summaries, including current charges, arrears, meter reading dates, gas consumption units (HM³), and the final due date. The portal allows downloading or printing official duplicate bills in PDF format for physical record-keeping or offline payment.\n* **Payment Facilitation:** While the portal provides the generated bill, it seamlessly integrates with digital banking ecosystems. Users can utilize their 14-digit ID to pay directly through internet banking apps, ATM networks, and popular mobile financial services such as JazzCash, Easypaisa, and 1Link portals.\n* **Consumer Complaint & Tracking Services:** Beyond billing, the platform includes dedicated modules for logging service complaints, tracking new gas connection applications, checking meter replacement statuses, and viewing seasonal billing tariffs and load-shedding schedules.\n* **Safety & Regulatory Information:** The website serves as an official communication hub for gas conservation awareness, billing calculator tools, safety guidelines regarding gas leaks, and official corporate announcements from the management.",
@@ -418,39 +947,39 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     ],
     "reviews": [
       {
+        "rating": 5,
+        "date": "Just now",
         "userName": "Tariq Mehmood",
         "comment": "Excellent service and a very professional team at SNGPL online bill check 14 digit. Highly recommended for anyone looking for reliable solutions.",
-        "rating": 5,
-        "id": "rev-starter-1-1786081359550",
-        "date": "Just now"
+        "id": "rev-starter-1-1786081359550"
       },
       {
+        "date": "1 day ago",
+        "rating": 5,
         "id": "rev-starter-2-1786081359550",
-        "userName": "Saima Khan",
         "comment": "Great overall experience from start to finish with SNGPL online bill check 14 digit. Friendly staff and outstanding customer support.",
-        "rating": 5,
-        "date": "1 day ago"
+        "userName": "Saima Khan"
       },
       {
-        "userName": "Bilal Ahmed",
-        "rating": 5,
-        "comment": "SNGPL online bill check 14 digit exceeded expectations with quality service, quick response times, and professional communication.",
         "date": "2 days ago",
-        "id": "rev-starter-3-1786081359550"
+        "userName": "Bilal Ahmed",
+        "comment": "SNGPL online bill check 14 digit exceeded expectations with quality service, quick response times, and professional communication.",
+        "id": "rev-starter-3-1786081359550",
+        "rating": 5
       },
       {
-        "id": "rev-starter-4-1786081359550",
-        "date": "3 days ago",
+        "rating": 5,
         "comment": "Very satisfied with the experience at SNGPL online bill check 14 digit. Everything was handled efficiently and exactly as promised.",
-        "rating": 5,
-        "userName": "Hamza Sheikh"
+        "date": "3 days ago",
+        "userName": "Hamza Sheikh",
+        "id": "rev-starter-4-1786081359550"
       },
       {
-        "date": "4 days ago",
-        "userName": "Zainab Fatima",
-        "rating": 5,
+        "comment": "Highly recommended. The staff at SNGPL online bill check 14 digit were knowledgeable, courteous, and delivered excellent service throughout.",
         "id": "rev-starter-5-1786081359550",
-        "comment": "Highly recommended. The staff at SNGPL online bill check 14 digit were knowledgeable, courteous, and delivered excellent service throughout."
+        "rating": 5,
+        "userName": "Zainab Fatima",
+        "date": "4 days ago"
       }
     ],
     "faqs": []
@@ -462,6 +991,9 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "category": "Technology & IT",
     "categoryId": "technology",
     "city": "Islamabad",
+    "cities": [
+      "Islamabad"
+    ],
     "province": "Pakistan",
     "rating": 5,
     "reviewCount": 5,
@@ -474,6 +1006,7 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "email": "contact@business.pk",
     "website": "https://pmrrp.nitb.gov.pk/",
     "address": "Islamabad Pakistan",
+    "locations": [],
     "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
     "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
     "description": "The **Prime Minister's Ramzan Relief Package (PMRRP)** online portal and eligibility verification ecosystem, developed and managed by the National Information Technology Board (NITB) under the Government of Pakistan, is designed to deliver seamless digital access and transparent public welfare distribution across the nation. This specialized government e-services platform enables citizens across all provinces to quickly verify their eligibility for the **Ramzan Relief Package** and the **Nigehban Rashan Program** without needing to physically visit government centers or wait in long, exhausting queues during the holy month.\n\nTo perform an online status inquiry, citizens can use official government digital web portals or utilize the designated shortcode SMS verification system. To check eligibility via mobile phone, simply open your messaging app, type your 13-digit Computerized National Identity Card (CNIC) number without any spaces, dashes, or special characters (e.g., 1234567890123), and send it directly to **9999**. Within a few moments, the automated government system processes the CNIC against the national database and sends an immediate reply SMS detailing your eligibility status for the **Rs. 10,000 cash distribution**, subsidized flour, or \"Rashan Riayat\" family utility package.\n\nOur service platform acts as an educational and technical guidance portal to help citizens seamlessly navigate these online portals, understand eligibility benchmarks, check BISP and utility store enrollment criteria, and resolve technical discrepancies with CNIC identification numbers. By leveraging modern digital infrastructure, government data APIs, and real-time verification systems, we strive to simplify public utility access, enhance digital literacy among underprivileged communities, and ensure equitable relief distribution for every deserving household in Pakistan.\n\n",
@@ -490,37 +1023,37 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "reviews": [
       {
         "userName": "Tariq Mehmood",
-        "date": "Just now",
         "id": "rev-starter-1-1786079899409",
-        "comment": "Excellent service and a very professional team at PM Ramzan Relief Package CNIC Eligibility Portal. Highly recommended for anyone looking for reliable solutions.",
-        "rating": 5
+        "date": "Just now",
+        "rating": 5,
+        "comment": "Excellent service and a very professional team at PM Ramzan Relief Package CNIC Eligibility Portal. Highly recommended for anyone looking for reliable solutions."
       },
       {
         "comment": "Great overall experience from start to finish with PM Ramzan Relief Package CNIC Eligibility Portal. Friendly staff and outstanding customer support.",
         "id": "rev-starter-2-1786079899409",
+        "date": "1 day ago",
         "userName": "Saima Khan",
-        "rating": 5,
-        "date": "1 day ago"
+        "rating": 5
       },
       {
         "id": "rev-starter-3-1786079899409",
-        "rating": 5,
-        "userName": "Bilal Ahmed",
+        "date": "2 days ago",
         "comment": "PM Ramzan Relief Package CNIC Eligibility Portal exceeded expectations with quality service, quick response times, and professional communication.",
-        "date": "2 days ago"
+        "rating": 5,
+        "userName": "Bilal Ahmed"
       },
       {
         "rating": 5,
-        "id": "rev-starter-4-1786079899409",
-        "comment": "Very satisfied with the experience at PM Ramzan Relief Package CNIC Eligibility Portal. Everything was handled efficiently and exactly as promised.",
         "userName": "Hamza Sheikh",
-        "date": "3 days ago"
+        "date": "3 days ago",
+        "id": "rev-starter-4-1786079899409",
+        "comment": "Very satisfied with the experience at PM Ramzan Relief Package CNIC Eligibility Portal. Everything was handled efficiently and exactly as promised."
       },
       {
         "comment": "Highly recommended. The staff at PM Ramzan Relief Package CNIC Eligibility Portal were knowledgeable, courteous, and delivered excellent service throughout.",
-        "id": "rev-starter-5-1786079899409",
         "userName": "Zainab Fatima",
         "rating": 5,
+        "id": "rev-starter-5-1786079899409",
         "date": "4 days ago"
       }
     ],
@@ -533,6 +1066,9 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "category": "Finance & Banking",
     "categoryId": "finance",
     "city": "Lahore",
+    "cities": [
+      "Lahore"
+    ],
     "province": "Pakistan",
     "rating": 5,
     "reviewCount": 5,
@@ -545,6 +1081,7 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "email": "contact@business.pk",
     "website": "https://www.listpak.com",
     "address": "State Bank of Pakistan Islamabad",
+    "locations": [],
     "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
     "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
     "description": "If you are looking to maximize your financial investments with complete security and lucrative returns, keeping track of the **Rs. 25,000 Premium Prize Bond draw schedule** is essential. Issued by the Central Directorate of National Savings (CDNS) in collaboration with the State Bank of Pakistan (SBP), the Rs. 25,000 bond remains one of the most popular and trusted investment instruments in the country.\n\n### What Makes the Rs. 25,000 Premium Prize Bond Special?\n\nUnlike standard, unregistered prize bonds, the Rs. 25,000 Premium Prize Bond is a registered financial security linked directly to your CNIC and bank account. This provides investors with a dual advantage:\n\n1. **Bi-Annual Profit Payouts:** Regular profit rate returns deposited directly into your linked bank account every six months.\n2. **Quarterly Lucky Draws:** A chance to win massive monetary rewards four times a year without risking your initial principal investment.\n\n### How the Draw Schedule Works\n\nThe State Bank of Pakistan conducts draws for the Rs. 25,000 denomination on a strict quarterly basis—typically taking place in **March, June, September, and December**. The draw events rotate across major regional SBP Banking Services Corporation offices, including Karachi, Lahore, Rawalpindi, Peshawar, and Multan.\n\n### Prize Distribution Breakdown\n\nEach quarterly draw features an impressive prize pool distribution:\n\n* **1st Prize:** 2 winners receive **Rs. 30,000,000 (3 Crore)** each.\n* **2nd Prize:** 5 winners receive **Rs. 10,000,000 (1 Crore)** each.\n* **3rd Prize:** 700 winners receive **Rs. 300,000** each.\n\n### How to Check Your Results\n\nTo verify your bond serial numbers, simply visit our website or the official National Savings portal (`savings.gov.pk`) following each draw date. You can search your bond numbers instantly or download the complete official PDF winning lists. Stay updated with our latest draw schedule postings to ensure you never miss an upcoming balloting date or prize claim deadline!",
@@ -559,42 +1096,127 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     ],
     "reviews": [
       {
-        "rating": 5,
         "userName": "Tariq Mehmood",
-        "date": "Just now",
+        "comment": "Excellent service and a very professional team at Rs 25000 Prize Bond Draw Schedule. Highly recommended for anyone looking for reliable solutions.",
         "id": "rev-starter-1-1786082478597",
-        "comment": "Excellent service and a very professional team at Rs 25000 Prize Bond Draw Schedule. Highly recommended for anyone looking for reliable solutions."
+        "date": "Just now",
+        "rating": 5
       },
       {
+        "comment": "Great overall experience from start to finish with Rs 25000 Prize Bond Draw Schedule. Friendly staff and outstanding customer support.",
+        "id": "rev-starter-2-1786082478597",
         "userName": "Saima Khan",
         "rating": 5,
-        "date": "1 day ago",
-        "comment": "Great overall experience from start to finish with Rs 25000 Prize Bond Draw Schedule. Friendly staff and outstanding customer support.",
-        "id": "rev-starter-2-1786082478597"
+        "date": "1 day ago"
       },
       {
-        "userName": "Bilal Ahmed",
-        "date": "2 days ago",
         "id": "rev-starter-3-1786082478597",
         "rating": 5,
-        "comment": "Rs 25000 Prize Bond Draw Schedule exceeded expectations with quality service, quick response times, and professional communication."
+        "userName": "Bilal Ahmed",
+        "comment": "Rs 25000 Prize Bond Draw Schedule exceeded expectations with quality service, quick response times, and professional communication.",
+        "date": "2 days ago"
       },
       {
-        "userName": "Hamza Sheikh",
-        "date": "3 days ago",
         "rating": 5,
+        "date": "3 days ago",
+        "userName": "Hamza Sheikh",
         "id": "rev-starter-4-1786082478597",
         "comment": "Very satisfied with the experience at Rs 25000 Prize Bond Draw Schedule. Everything was handled efficiently and exactly as promised."
       },
       {
         "rating": 5,
+        "userName": "Zainab Fatima",
         "id": "rev-starter-5-1786082478597",
         "date": "4 days ago",
-        "comment": "Highly recommended. The staff at Rs 25000 Prize Bond Draw Schedule were knowledgeable, courteous, and delivered excellent service throughout.",
-        "userName": "Zainab Fatima"
+        "comment": "Highly recommended. The staff at Rs 25000 Prize Bond Draw Schedule were knowledgeable, courteous, and delivered excellent service throughout."
       }
     ],
     "faqs": []
+  },
+  {
+    "id": "biz-10pearls",
+    "slug": "10pearls",
+    "name": "10Pearls",
+    "category": "Technology & IT",
+    "categoryId": "technology",
+    "city": "Islamabad",
+    "cities": [
+      "Islamabad",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Pakistan",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://10pearls.com/",
+    "address": "10Pearls Principal Office, Islamabad, Pakistan",
+    "locations": [
+      {
+        "address": "10Pearls Principal Office, Islamabad, Pakistan",
+        "isPrimary": true,
+        "city": "Islamabad"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "10Pearls is an award-winning global digital transformation and software engineering company with a premier technology development campus in Islamabad, Pakistan. Operating across North America, Latin America, Europe, and South Asia, 10Pearls partners with Fortune 500 enterprises, high-growth scale-ups, and forward-thinking businesses to design, build, and scale innovative software solutions that drive measurable business impact.\n\nFrom cutting-edge mobile applications and enterprise cloud infrastructure to generative AI systems, machine learning pipelines, and cybersecurity engineering, 10Pearls blends human-centered design thinking with rigorous technical execution. The company is consistently recognized as a top software engineering employer in Pakistan, renowned for its diverse culture, gender diversity programs, and tech incubators.\n\n### Core Capabilities & Engineering Services\n- Digital Product Architecture, UI/UX Prototyping & Mobile App Development\n- Enterprise Cloud Modernization, AWS / Azure Architecture & DevOps Pipelines\n- Artificial Intelligence, Large Language Models (LLMs), and Machine Learning Solutions\n- Continuous Quality Assurance, Automated Testing & Information Security Audits\n- Dedicated Offshore Engineering Teams and Staff Augmentation for Global Tech Firms\n\n### Trust & Recognition\n- Recognized by Gartner, Forrester, and Inc. 5000 as a Leading Agile Innovation Partner\n- State-of-the-Art Islamabad Development Facility with Hundreds of Top Software Engineers\n- Proven Track Record Delivering Enterprise Software for Healthcare, Fintech, and Telecom\n\n### Verified Customer Service & Contact Information\n10Pearls provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Islamabad and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, 10Pearls remains one of the most reliable and recommended service providers in the Technology & IT sector.",
+    "services": [
+      "Software development",
+      "product design",
+      "AI",
+      "cloud",
+      "digital transformation",
+      "consulting"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "rating": 5,
+        "comment": "Excellent service and very professional experience with 10Pearls. Highly recommended.",
+        "date": "Just now",
+        "userName": "Tariq Mehmood",
+        "id": "rev-biz-1-1787486683197"
+      },
+      {
+        "id": "rev-biz-2-1787486683197",
+        "userName": "Saima Khan",
+        "comment": "Great overall service from start to finish with 10Pearls. Reliable and well-organized.",
+        "rating": 5,
+        "date": "1 day ago"
+      },
+      {
+        "rating": 5,
+        "date": "2 days ago",
+        "id": "rev-biz-3-1787486683197",
+        "comment": "10Pearls provides outstanding service, quick support, and professional standards.",
+        "userName": "Bilal Ahmed"
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "10Pearls offers a wide range of services including Software development, product design, AI, cloud.",
+        "question": "What services does 10Pearls offer?"
+      },
+      {
+        "question": "How can I contact 10Pearls?",
+        "answer": "You can reach 10Pearls via their official website at https://10pearls.com/ or visit their office in Islamabad."
+      }
+    ]
   },
   {
     "id": "biz-750-prize-bond-list-2025",
@@ -603,6 +1225,9 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "category": "finance",
     "categoryId": "finance",
     "city": "Lahore",
+    "cities": [
+      "Lahore"
+    ],
     "province": "Pakistan",
     "rating": 5,
     "reviewCount": 5,
@@ -615,6 +1240,7 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "email": "contact@business.pk",
     "website": "https://www.listpak.com",
     "address": "State Bank of Pakistan Islamabad",
+    "locations": [],
     "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
     "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
     "description": "If you are looking to check the official winning numbers and draw schedules for the **Rs. 750 Prize Bond List 2025**, keeping track of balloting results is essential. Issued and backed by the Central Directorate of National Savings (CDNS) and the State Bank of Pakistan (SBP), the Rs. 750 prize bond is one of the most widely held financial securities in Pakistan.\n\n### About the Rs. 750 Prize Bond\n\nThe Rs. 750 denomination prize bond offers investors a completely safe capital investment with zero risk to the principal amount, along with the opportunity to win substantial cash rewards through quarterly lucky draws.\n\n### Rs. 750 Prize Bond Draw Schedule & Balloting\n\nThe State Bank of Pakistan conducts the official draw for the Rs. 750 prize bond four times a year on a quarterly basis:\n- **January**\n- **April**\n- **July**\n- **October**\n\nDraws rotate across SBP Banking Services Corporation branches in major cities, including Lahore, Karachi, Rawalpindi, Peshawar, Multan, and Faisalabad.\n\n### Prize Money & Prize Pool Distribution\n\nEach draw of the Rs. 750 prize bond awards thousands of lucky winners across three main categories:\n\n- **1st Prize:** 1 lucky winner receives **Rs. 1,500,000 (15 Lakh PKR)**\n- **2nd Prize:** 3 lucky winners receive **Rs. 500,000 (5 Lakh PKR)** each\n- **3rd Prize:** 1,696 winners receive **Rs. 9,300** each\n\n### How to Check 750 Prize Bond Draw Results Online\n\n1. **Search Bond Serial Number**: Enter your specific 6-digit prize bond number into our online search tool to check instant matches.\n2. **Download PDF Winner Lists**: Access full official draw result lists published directly following SBP balloting.\n3. **Verify Historical Draw Results**: Look up previous 750 prize bond lists from 2024, 2025, and upcoming 2026 draw schedules.",
@@ -634,21 +1260,2417 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     ],
     "reviews": [
       {
-        "comment": "Excellent platform for checking 750 Prize Bond List 2025 draw results quickly and accurately.",
         "date": "Just now",
-        "id": "rev-pb-1",
         "rating": 5,
+        "comment": "Excellent platform for checking 750 Prize Bond List 2025 draw results quickly and accurately.",
+        "id": "rev-pb-1",
         "userName": "Tariq Mehmood"
+      },
+      {
+        "id": "rev-pb-2",
+        "rating": 5,
+        "comment": "Very easy to search bond numbers for Rs 750 prize bond. Highly recommended!",
+        "userName": "Saima Khan",
+        "date": "1 day ago"
+      }
+    ],
+    "faqs": []
+  },
+  {
+    "id": "biz-aga-khan-university-hospital-pakistan",
+    "slug": "aga-khan-university-hospital-pakistan",
+    "name": "Aga Khan University Hospital Pakistan",
+    "category": "Healthcare & Medical",
+    "categoryId": "healthcare",
+    "city": "Karachi",
+    "cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Sindh",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://hospitals.aku.edu/pakistan/Pages/default.aspx",
+    "address": "Aga Khan University Hospital Pakistan Principal Office, Karachi, Pakistan",
+    "locations": [
+      {
+        "address": "Aga Khan University Hospital Pakistan Principal Office, Karachi, Pakistan",
+        "city": "Karachi",
+        "isPrimary": true
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Aga Khan University Hospital (AKUH) Karachi is Pakistan's premier tertiary healthcare and medical research institution, accredited internationally by the Joint Commission International (JCI) for exceptional clinical care, patient safety, and medical education standards. Situated on Stadium Road, Karachi, AKUH offers round-the-clock emergency care, specialized surgical units, cancer treatment, and diagnostic services trusted by millions across Pakistan.\n\nThe hospital features world-class departments including oncology, cardiology, neurosurgery, pediatrics, organ transplantation, and intensive care units equipped with state-of-the-art diagnostic imaging (PET-CT, 3T MRI, Linear Accelerators). AKUH is integrated with the prestigious Aga Khan University Medical College, fostering evidence-based clinical practices and medical breakthroughs.\n\n### Key Clinical Services & Centers of Excellence\n- 24/7 Level-1 Emergency & Trauma Care with Dedicated Cardiac and Stroke Response\n- Comprehensive Cancer Center: Chemotherapy, Radiation Oncology & Surgical Oncology\n- Heart, Lung, and Vascular Center with Advanced Cath Labs and Bypass Surgery\n- High-Risk Maternity, Neonatal Intensive Care (NICU) and Pediatric Specialties\n- Extensive Clinical Laboratory Network & Home Sample Collection Across Pakistan\n\n### Patient-First Facilities\n- JCI-Accredited Healthcare Delivery with Stringent Infection Control Protocols\n- Automated Patient Portal for Instant Online Doctor Appointments & Lab Report Access\n- Financial Assistance and Patient Welfare Programs for Underprivileged Families\n\n### Verified Customer Service & Contact Information\nAga Khan University Hospital Pakistan provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Karachi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Aga Khan University Hospital Pakistan remains one of the most reliable and recommended service providers in the Healthcare & Medical sector.",
+    "services": [
+      "Hospital care",
+      "specialist doctors",
+      "diagnostics",
+      "laboratories",
+      "appointments",
+      "patient welfare",
+      "health packages"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "userName": "Tariq Mehmood",
+        "rating": 5,
+        "comment": "Excellent service and very professional experience with Aga Khan University Hospital Pakistan. Highly recommended.",
+        "id": "rev-biz-1-1787486683197",
+        "date": "Just now"
+      },
+      {
+        "rating": 5,
+        "userName": "Saima Khan",
+        "comment": "Great overall service from start to finish with Aga Khan University Hospital Pakistan. Reliable and well-organized.",
+        "date": "1 day ago",
+        "id": "rev-biz-2-1787486683197"
+      },
+      {
+        "date": "2 days ago",
+        "userName": "Bilal Ahmed",
+        "id": "rev-biz-3-1787486683197",
+        "comment": "Aga Khan University Hospital Pakistan provides outstanding service, quick support, and professional standards.",
+        "rating": 5
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "Aga Khan University Hospital Pakistan offers a wide range of services including Hospital care, specialist doctors, diagnostics, laboratories.",
+        "question": "What services does Aga Khan University Hospital Pakistan offer?"
+      },
+      {
+        "question": "How can I contact Aga Khan University Hospital Pakistan?",
+        "answer": "You can reach Aga Khan University Hospital Pakistan via their official website at https://hospitals.aku.edu/pakistan/Pages/default.aspx or visit their office in Karachi."
+      }
+    ]
+  },
+  {
+    "id": "biz-airblue-limited",
+    "slug": "airblue-limited",
+    "name": "Airblue Limited",
+    "category": "Travel & Tourism",
+    "categoryId": "travel",
+    "city": "Islamabad",
+    "cities": [
+      "Islamabad",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Federal Capital",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.airblue.com/",
+    "address": "Airblue Limited Principal Office, Islamabad, Pakistan",
+    "locations": [
+      {
+        "city": "Islamabad",
+        "address": "Airblue Limited Principal Office, Islamabad, Pakistan",
+        "isPrimary": true
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Airblue Limited is one of Pakistan's leading private scheduled commercial airlines, operating modern fleets of next-generation Airbus A320 and A321 aircraft connecting all major domestic cities with international business and tourism hubs across the United Arab Emirates and Saudi Arabia. Headquartered in Islamabad, Airblue is renowned for punctuality, digital ticketing convenience, and competitive airfares.\n\nAirblue operates frequent daily non-stop flights between Karachi, Lahore, Islamabad, Peshawar, and Multan, alongside high-demand international routes serving Dubai, Sharjah, Abu Dhabi, Jeddah, Riyadh, and Madinah. The airline has pioneered paperless e-ticketing, web check-in, and automated baggage handling systems in Pakistan's civil aviation market.\n\n### Flight Services & Network\n- Daily Domestic Scheduled Flights: Karachi, Lahore, Islamabad, Peshawar, Multan\n- Frequent International Flights to UAE (Dubai, Sharjah, Abu Dhabi) and KSA (Jeddah, Riyadh)\n- Dedicated Umrah Passenger Services and Special Pilgrimage Baggage Allowances\n- Online Flight Booking, Real-Time Schedule Tracking & Web Check-In Portals\n- Airblue Cargo Express: Fast Airfreight Services for Time-Sensitive Commercial Goods\n\n### Passenger Experience & Safety\n- Young, Fuel-Efficient Airbus Aircraft Fleet Maintained Under Strict EASA / CAA Regulations\n- Comfortable Ergonomic Seating, Complimentary Refreshments & Professional Cabin Crew\n- Dedicated 24/7 Customer Care Helpline and Easy Ticket Rescheduling / Refunds\n\n### Verified Customer Service & Contact Information\nAirblue Limited provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Islamabad and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Airblue Limited remains one of the most reliable and recommended service providers in the Travel & Tourism sector.",
+    "services": [
+      "Flight booking",
+      "schedules",
+      "check-in",
+      "baggage",
+      "flight status",
+      "customer support"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "comment": "Excellent service and very professional experience with Airblue Limited. Highly recommended.",
+        "id": "rev-biz-1-1787486683197",
+        "rating": 5,
+        "userName": "Tariq Mehmood",
+        "date": "Just now"
+      },
+      {
+        "date": "1 day ago",
+        "id": "rev-biz-2-1787486683197",
+        "rating": 5,
+        "userName": "Saima Khan",
+        "comment": "Great overall service from start to finish with Airblue Limited. Reliable and well-organized."
+      },
+      {
+        "id": "rev-biz-3-1787486683197",
+        "userName": "Bilal Ahmed",
+        "date": "2 days ago",
+        "rating": 5,
+        "comment": "Airblue Limited provides outstanding service, quick support, and professional standards."
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "Airblue Limited offers a wide range of services including Flight booking, schedules, check-in, baggage.",
+        "question": "What services does Airblue Limited offer?"
+      },
+      {
+        "answer": "You can reach Airblue Limited via their official website at https://www.airblue.com/ or visit their office in Islamabad.",
+        "question": "How can I contact Airblue Limited?"
+      }
+    ]
+  },
+  {
+    "id": "biz-arbisoft",
+    "slug": "arbisoft",
+    "name": "Arbisoft",
+    "category": "Technology & IT",
+    "categoryId": "technology",
+    "city": "Lahore",
+    "cities": [
+      "Lahore",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Punjab",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://arbisoft.com/",
+    "address": "Arbisoft Principal Office, Lahore, Pakistan",
+    "locations": [
+      {
+        "address": "Arbisoft Principal Office, Lahore, Pakistan",
+        "city": "Lahore",
+        "isPrimary": true
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Arbisoft is one of Pakistan's elite enterprise software houses and custom product development companies, headquartered in Lahore with engineering operations spanning Germany and the United States. Founded in 2007, Arbisoft designs, engineers, and scales mission-critical web applications, enterprise data pipelines, mobile ecosystems, and machine learning platforms for global technology leaders including edX, Kayak, and international travel conglomerates.\n\nThe company is distinguished for its engineering excellence, agile product development methodologies, and world-class developer culture. Arbisoft specializes in building scalable cloud software architectures capable of handling millions of concurrent users and petabytes of data transactions.\n\n### Core Technology Services\n- Custom Enterprise Software Engineering & Cloud-Native Web Applications\n- Advanced Mobile App Development for iOS and Android (React Native, Flutter, Swift, Kotlin)\n- Big Data Engineering, ETL Pipelines, Data Scraping & Predictive Analytics\n- Machine Learning, Artificial Intelligence & Natural Language Processing Systems\n- Dedicated Engineering Pods, Agile Scrum Teams & DevOps Infrastructure Automation\n\n### Engineering Culture & Global Impact\n- Core Technology Partner Behind edX (Harvard & MIT Open-Source Learning Platform)\n- World-Class Lahore Technology Campus Fostering Top Tier Software Engineers\n- Rigorous Software Quality Standards, Automated Testing, and Scalable Cloud Security\n\n### Verified Customer Service & Contact Information\nArbisoft provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Lahore and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Arbisoft remains one of the most reliable and recommended service providers in the Technology & IT sector.",
+    "services": [
+      "Software development",
+      "AI and machine learning",
+      "data engineering",
+      "product engineering",
+      "cloud",
+      "consulting"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "comment": "Excellent service and very professional experience with Arbisoft. Highly recommended.",
+        "date": "Just now",
+        "userName": "Tariq Mehmood",
+        "id": "rev-biz-1-1787486683197",
+        "rating": 5
+      },
+      {
+        "id": "rev-biz-2-1787486683197",
+        "userName": "Saima Khan",
+        "date": "1 day ago",
+        "rating": 5,
+        "comment": "Great overall service from start to finish with Arbisoft. Reliable and well-organized."
+      },
+      {
+        "date": "2 days ago",
+        "comment": "Arbisoft provides outstanding service, quick support, and professional standards.",
+        "rating": 5,
+        "userName": "Bilal Ahmed",
+        "id": "rev-biz-3-1787486683197"
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What services does Arbisoft offer?",
+        "answer": "Arbisoft offers a wide range of services including Software development, AI and machine learning, data engineering, product engineering."
+      },
+      {
+        "answer": "You can reach Arbisoft via their official website at https://arbisoft.com/ or visit their office in Lahore.",
+        "question": "How can I contact Arbisoft?"
+      }
+    ]
+  },
+  {
+    "id": "biz-bahria-town",
+    "slug": "bahria-town",
+    "name": "Bahria Town",
+    "category": "Real Estate & Property",
+    "categoryId": "real-estate",
+    "city": "Karachi",
+    "cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "project-specific record required",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://bahriatown.com/",
+    "address": "Bahria Town Principal Office, Karachi, Pakistan",
+    "locations": [
+      {
+        "isPrimary": true,
+        "address": "Bahria Town Principal Office, Karachi, Pakistan",
+        "city": "Karachi"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Bahria Town Pakistan is Asia's largest private real estate developer and master-planned community builder, celebrated for revolutionizing modern urban living across Pakistan. With landmark master-planned developments in Karachi, Lahore, Rawalpindi, and Islamabad, Bahria Town provides world-class residential housing, commercial commercial plazas, recreational infrastructure, and international lifestyle amenities.\n\nBahria Town communities feature private underground electricity grids ensuring 100% uninterrupted power supply (24/7 load-shedding free), international standard hospitals, private security forces, state-of-the-art schools, championship golf courses, modern shopping malls, and architectural wonders such as the Grand Jamia Mosque and Eiffel Tower replicas.\n\n### Signature Real Estate Projects\n- Bahria Town Karachi: Mega-City Housing Scheme, Golf City, and Luxury Farmhouses\n- Bahria Town Lahore & Bahria Orchard: Master-Planned Residential Sectors & Commercial Hubs\n- Bahria Town Rawalpindi / Islamabad: Executive Housing Schemes & Commercial Towers\n- Bahria Greens & Subsidized Housing Initiatives for Low-to-Middle Income Families\n- World-Class Commercial Business Hubs, Corporate Offices & Shopping Malls\n\n### Amenities & Lifestyle\n- 24/7 Uninterrupted Electricity Supply via Independent Power Plants\n- 24/7 Gated Security, Mobile Patrols & Comprehensive CCTV Surveillance\n- International Standard Healthcare Centers (Bahria International Hospitals)\n- World-Class Educational Campuses, Theme Parks, Cineworld Cinemas & Restaurants\n\n### Verified Customer Service & Contact Information\nBahria Town provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Karachi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Bahria Town remains one of the most reliable and recommended service providers in the Real Estate & Property sector.",
+    "services": [
+      "Residential plots",
+      "houses",
+      "apartments",
+      "commercial property",
+      "community facilities",
+      "project management"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "id": "rev-biz-1-1787486683197",
+        "date": "Just now",
+        "comment": "Excellent service and very professional experience with Bahria Town. Highly recommended.",
+        "userName": "Tariq Mehmood",
+        "rating": 5
+      },
+      {
+        "id": "rev-biz-2-1787486683197",
+        "rating": 5,
+        "comment": "Great overall service from start to finish with Bahria Town. Reliable and well-organized.",
+        "date": "1 day ago",
+        "userName": "Saima Khan"
+      },
+      {
+        "date": "2 days ago",
+        "id": "rev-biz-3-1787486683197",
+        "userName": "Bilal Ahmed",
+        "rating": 5,
+        "comment": "Bahria Town provides outstanding service, quick support, and professional standards."
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What services does Bahria Town offer?",
+        "answer": "Bahria Town offers a wide range of services including Residential plots, houses, apartments, commercial property."
+      },
+      {
+        "question": "How can I contact Bahria Town?",
+        "answer": "You can reach Bahria Town via their official website at https://bahriatown.com/ or visit their office in Karachi."
+      }
+    ]
+  },
+  {
+    "id": "biz-beaconhouse-school-system",
+    "slug": "beaconhouse-school-system",
+    "name": "Beaconhouse School System",
+    "category": "Education & Training",
+    "categoryId": "education",
+    "city": "Lahore",
+    "cities": [
+      "Lahore",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Punjab",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.beaconhouse.net/",
+    "address": "Beaconhouse School System Principal Office, Lahore, Pakistan",
+    "locations": [
+      {
+        "city": "Lahore",
+        "address": "Beaconhouse School System Principal Office, Lahore, Pakistan",
+        "isPrimary": true
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Beaconhouse School System is one of the world's largest international school networks and Pakistan's premier private educational institution, educating over 315,000 students across hundreds of modern campuses nationwide. Established in 1975, Beaconhouse delivers holistic, future-ready education from early years and primary levels up to Cambridge IGCSE, O Levels, A Levels, and the International Baccalaureate (IB).\n\nThe Beaconhouse educational philosophy combines rigorous academic standards with rich extracurricular opportunities, STEM learning laboratories, digital literacy, arts, and competitive sports. Its alumni consistently achieve top Cambridge distinctions and secure admissions to the world's most prestigious universities including Oxford, Cambridge, Harvard, and MIT.\n\n### Educational Programs & Curricula\n- Early Years Foundation Stage (EYFS) and Progressive Primary Education\n- Middle School Curriculum with Advanced STEM & Digital Robotics Integration\n- Cambridge Assessment International Education (CAIE) O Level and A Level Programs\n- International Baccalaureate (IB) Primary and Middle Years Programs\n- Comprehensive College Counseling, Career Guidance & International Scholarships\n\n### Infrastructure & Extracurricular Excellence\n- State-of-the-Art Science Laboratories, Robotics Labs & Multimedia Libraries\n- Inter-School Sports Leagues, Performing Arts Festivals & Model United Nations (MUN)\n- Dedicated Teacher Training & Continuous Pedagogical Development Programs\n\n### Verified Customer Service & Contact Information\nBeaconhouse School System provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Lahore and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Beaconhouse School System remains one of the most reliable and recommended service providers in the Education & Training sector.",
+    "services": [
+      "School admissions",
+      "early years",
+      "primary",
+      "secondary",
+      "campus services",
+      "activities"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "id": "rev-biz-1-1787486683197",
+        "date": "Just now",
+        "rating": 5,
+        "userName": "Tariq Mehmood",
+        "comment": "Excellent service and very professional experience with Beaconhouse School System. Highly recommended."
       },
       {
         "userName": "Saima Khan",
         "rating": 5,
+        "comment": "Great overall service from start to finish with Beaconhouse School System. Reliable and well-organized.",
         "date": "1 day ago",
-        "id": "rev-pb-2",
-        "comment": "Very easy to search bond numbers for Rs 750 prize bond. Highly recommended!"
+        "id": "rev-biz-2-1787486683197"
+      },
+      {
+        "rating": 5,
+        "id": "rev-biz-3-1787486683197",
+        "userName": "Bilal Ahmed",
+        "comment": "Beaconhouse School System provides outstanding service, quick support, and professional standards.",
+        "date": "2 days ago"
       }
     ],
-    "faqs": []
+    "faqs": [
+      {
+        "answer": "Beaconhouse School System offers a wide range of services including School admissions, early years, primary, secondary.",
+        "question": "What services does Beaconhouse School System offer?"
+      },
+      {
+        "answer": "You can reach Beaconhouse School System via their official website at https://www.beaconhouse.net/ or visit their office in Lahore.",
+        "question": "How can I contact Beaconhouse School System?"
+      }
+    ]
+  },
+  {
+    "id": "biz-daraz",
+    "slug": "daraz",
+    "name": "Daraz",
+    "category": "Retail & Shopping",
+    "categoryId": "retail",
+    "city": "Karachi",
+    "cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Sindh",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.daraz.pk/",
+    "address": "Daraz Principal Office, Karachi, Pakistan",
+    "locations": [
+      {
+        "address": "Daraz Principal Office, Karachi, Pakistan",
+        "isPrimary": true,
+        "city": "Karachi"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Daraz Pakistan (an Alibaba Group company) is Pakistan's undisputed e-commerce market leader, connecting tens of millions of online shoppers with over 100,000 verified sellers, local manufacturers, and leading global brands. Launched in 2012, Daraz transformed Pakistani retail by introducing the largest online marketplace covering mobile phones, electronics, fashion apparel, home appliances, groceries, and beauty products.\n\nPowered by Alibaba's world-class logistics network (Daraz Express - DEX) and proprietary fintech digital payment solutions (Daraz Wallet), Daraz delivers to every corner of Pakistan. The platform hosts marquee mega-sales campaigns like 11.11, 12.12, and Pakistan Day, offering unprecedented discounts, flash deals, and nationwide free shipping.\n\n### Product Categories & Ecosystem\n- Electronics & Gadgets: Smartphones, Laptops, Smart TVs, Home Appliances\n- Men's & Women's Fashion: Lawn Suits, Western Wear, Footwear, Accessories\n- Daraz Mart: Daily Online Grocery, Household Essentials & Express Delivery\n- Daraz Mall: 100% Authentic Brand Stores with 14-Day Easy Returns\n- Daraz Live & In-App Gamification: Interactive Shopping & Exclusive Vouchers\n\n### Customer Benefits & Protections\n- Comprehensive Buyer Protection Program with Guaranteed Authentic Products\n- Multiple Secure Payment Methods: Cash on Delivery, Daraz Wallet, Credit/Debit Cards\n- Dedicated 24/7 Customer Support and Hassle-Free Online Return Pickups Across Pakistan\n\n### Verified Customer Service & Contact Information\nDaraz provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Karachi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Daraz remains one of the most reliable and recommended service providers in the Retail & Shopping sector.",
+    "services": [
+      "Online marketplace",
+      "seller center",
+      "delivery",
+      "payment",
+      "returns",
+      "promotions",
+      "customer support"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "comment": "Excellent service and very professional experience with Daraz. Highly recommended.",
+        "rating": 5,
+        "date": "Just now",
+        "id": "rev-biz-1-1787486683197",
+        "userName": "Tariq Mehmood"
+      },
+      {
+        "id": "rev-biz-2-1787486683197",
+        "date": "1 day ago",
+        "userName": "Saima Khan",
+        "comment": "Great overall service from start to finish with Daraz. Reliable and well-organized.",
+        "rating": 5
+      },
+      {
+        "date": "2 days ago",
+        "userName": "Bilal Ahmed",
+        "comment": "Daraz provides outstanding service, quick support, and professional standards.",
+        "id": "rev-biz-3-1787486683197",
+        "rating": 5
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "Daraz offers a wide range of services including Online marketplace, seller center, delivery, payment.",
+        "question": "What services does Daraz offer?"
+      },
+      {
+        "question": "How can I contact Daraz?",
+        "answer": "You can reach Daraz via their official website at https://www.daraz.pk/ or visit their office in Karachi."
+      }
+    ]
+  },
+  {
+    "id": "biz-efu-insurance-group",
+    "slug": "efu-insurance-group",
+    "name": "EFU Insurance Group",
+    "category": "Finance & Banking",
+    "categoryId": "finance",
+    "city": "Karachi",
+    "cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Sindh",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.efulife.com/",
+    "address": "EFU Insurance Group Principal Office, Karachi, Pakistan",
+    "locations": [
+      {
+        "isPrimary": true,
+        "city": "Karachi",
+        "address": "EFU Insurance Group Principal Office, Karachi, Pakistan"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "EFU Insurance Group is Pakistan's oldest, largest, and most trusted non-bank insurance and financial protection enterprise, with over 90 years of dedicated service safeguarding Pakistani businesses, families, and critical infrastructure. EFU operates through two premier entities: EFU General Insurance Limited (general non-life coverage) and EFU Life Assurance Limited (life, health, and family financial protection).\n\nWith the highest financial strength ratings and an extensive branch network across every major city in Pakistan, EFU provides tailor-made risk management solutions for corporate industries, commercial shipping, energy projects, motor vehicles, family healthcare, and children's higher education planning.\n\n### Insurance Solutions & Policies\n- EFU Motor Insurance: Comprehensive Car Takaful, Theft, Accident & Third-Party Protection\n- EFU Health & Critical Illness Plans: Individual, Family & Corporate Group Health Cover\n- EFU Life Assurance: Family Savings, Child Education Investment Plans & Retirement Funds\n- Corporate Commercial Risks: Fire, Marine Cargo, Engineering, Aviation & Cyber Insurance\n- Shariah-Compliant Window Takaful Solutions Across All Insurance Segments\n\n### Why Trust EFU\n- Decades of Proven Track Record with Fastest Insurance Claim Settlement Ratios in Pakistan\n- AA+ Insurer Financial Strength Rating Signifying Unmatched Solvency and Reliability\n- Dedicated Corporate Account Managers and 24/7 Digital Claims Tracking Hotline\n\n### Verified Customer Service & Contact Information\nEFU Insurance Group provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Karachi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, EFU Insurance Group remains one of the most reliable and recommended service providers in the Finance & Banking sector.",
+    "services": [
+      "Life insurance",
+      "health protection",
+      "general insurance",
+      "corporate insurance",
+      "claims",
+      "financial planning"
+    ],
+    "operatingHours": {
+      "Monday - Friday": "09:00 AM - 05:00 PM",
+      "Saturday": "09:00 AM - 01:30 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "userName": "Tariq Mehmood",
+        "id": "rev-biz-1-1787486683196",
+        "rating": 5,
+        "comment": "Excellent service and very professional experience with EFU Insurance Group. Highly recommended.",
+        "date": "Just now"
+      },
+      {
+        "userName": "Saima Khan",
+        "date": "1 day ago",
+        "comment": "Great overall service from start to finish with EFU Insurance Group. Reliable and well-organized.",
+        "rating": 5,
+        "id": "rev-biz-2-1787486683196"
+      },
+      {
+        "userName": "Bilal Ahmed",
+        "comment": "EFU Insurance Group provides outstanding service, quick support, and professional standards.",
+        "id": "rev-biz-3-1787486683196",
+        "rating": 5,
+        "date": "2 days ago"
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "EFU Insurance Group offers a wide range of services including Life insurance, health protection, general insurance, corporate insurance.",
+        "question": "What services does EFU Insurance Group offer?"
+      },
+      {
+        "question": "How can I contact EFU Insurance Group?",
+        "answer": "You can reach EFU Insurance Group via their official website at https://www.efulife.com/ or visit their office in Karachi."
+      }
+    ]
+  },
+  {
+    "id": "biz-faisal-movers",
+    "slug": "faisal-movers",
+    "name": "Faisal Movers",
+    "category": "Transport & Logistics",
+    "categoryId": "logistics",
+    "city": "Lahore",
+    "cities": [
+      "Lahore",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Punjab",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.faisalmovers.com/",
+    "address": "Faisal Movers Principal Office, Lahore, Pakistan",
+    "locations": [
+      {
+        "isPrimary": true,
+        "city": "Lahore",
+        "address": "Faisal Movers Principal Office, Lahore, Pakistan"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Faisal Movers is Pakistan's leading luxury intercity passenger bus transit and freight logistics service provider, operating a state-of-the-art fleet of hundreds of luxury Daewoo and Yutong buses connecting over 60 cities across Punjab, Sindh, Khyber Pakhtunkhwa, Balochistan, and Gilgit-Baltistan. Founded in 2004, Faisal Movers has set the national benchmark for safety, punctual departures, passenger comfort, and affordable long-distance travel.\n\nThe company offers multi-tier travel experiences tailored to every budget: Standard, Executive, Super Executive, and ultra-luxurious Business Class featuring sleeper seats, personal entertainment LED screens, Wi-Fi, USB charging ports, and onboard refreshments served by courteous bus hosts.\n\n### Transit Routes & Travel Classes\n- Major Daily Routes: Lahore, Islamabad/Rawalpindi, Karachi, Multan, Faisalabad, Peshawar, Murree\n- Special Northern Area Routes: Naran, Hunza, Gilgit, Swat, and Skardu Luxury Tours\n- Business Class & Sleeper Buses with Ergonomic Massager Recliners\n- Dedicated FM Cargo Express: Fast Intercity Parcel & Courier Delivery Within 24 Hours\n- Convenient Online Ticket Booking via Faisal Movers App and Website\n\n### Terminal Facilities & Passenger Care\n- Fully Air-Conditioned Waiting Terminals with Clean Restrooms and Food Cafeterias\n- Rigorous Vehicle Maintenance Standards, GPS Speed Tracking & Certified Drivers\n- 24/7 Customer Booking Helpline (111-22-88-88) for Instant Ticket Inquiries\n\n### Verified Customer Service & Contact Information\nFaisal Movers provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Lahore and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Faisal Movers remains one of the most reliable and recommended service providers in the Transport & Logistics sector.",
+    "services": [
+      "Bus tickets",
+      "route schedules",
+      "terminals",
+      "online booking",
+      "passenger support",
+      "cargo where offered"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "userName": "Tariq Mehmood",
+        "id": "rev-biz-1-1787486683198",
+        "comment": "Excellent service and very professional experience with Faisal Movers. Highly recommended.",
+        "rating": 5,
+        "date": "Just now"
+      },
+      {
+        "userName": "Saima Khan",
+        "rating": 5,
+        "id": "rev-biz-2-1787486683198",
+        "comment": "Great overall service from start to finish with Faisal Movers. Reliable and well-organized.",
+        "date": "1 day ago"
+      },
+      {
+        "userName": "Bilal Ahmed",
+        "comment": "Faisal Movers provides outstanding service, quick support, and professional standards.",
+        "date": "2 days ago",
+        "id": "rev-biz-3-1787486683198",
+        "rating": 5
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "Faisal Movers offers a wide range of services including Bus tickets, route schedules, terminals, online booking.",
+        "question": "What services does Faisal Movers offer?"
+      },
+      {
+        "question": "How can I contact Faisal Movers?",
+        "answer": "You can reach Faisal Movers via their official website at https://www.faisalmovers.com/ or visit their office in Lahore."
+      }
+    ]
+  },
+  {
+    "id": "biz-fast-national-university-of-computer-emerging-sciences-fast-nuces",
+    "slug": "fast-national-university-of-computer-emerging-sciences-fast-nuces",
+    "name": "FAST National University of Computer & Emerging Sciences (FAST-NUCES)",
+    "category": "Education & Training",
+    "categoryId": "education",
+    "city": "Islamabad",
+    "cities": [
+      "Islamabad",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Pakistan",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.nu.edu.pk/",
+    "address": "FAST National University of Computer & Emerging Sciences (FAST-NUCES) Principal Office, Islamabad, Pakistan",
+    "locations": [
+      {
+        "address": "FAST National University of Computer & Emerging Sciences (FAST-NUCES) Principal Office, Islamabad, Pakistan",
+        "city": "Islamabad",
+        "isPrimary": true
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "FAST National University of Computer & Emerging Sciences (FAST-NUCES) is Pakistan's premier higher education institution for computer science, artificial intelligence, software engineering, and data science. Founded by the Foundation for Advancement of Science and Technology (FAST) in 1980, the university has campuses in Islamabad, Lahore, Karachi, Peshawar, and Faisalabad, producing the lion's share of Pakistan's elite software developers, tech founders, and tech executives globally.\n\nFAST-NUCES is renowned for its intense academic rigor, competitive coding culture, and research publications. Its alumni occupy leadership engineering positions at Silicon Valley giants including Google, Meta, Microsoft, Amazon, and Apple, as well as leading tech startups and fintech ventures across Pakistan.\n\n### Academic Degrees & Programs\n- Bachelor of Science (BS) in Computer Science, Software Engineering, AI, and Cyber Security\n- BS in Data Science, Electrical Engineering, Computer Engineering & Business Analytics\n- Master of Science (MS) and Ph.D. Programs in Computer Science and Emerging Tech\n- BBA and MBA Programs Focused on Technology Management and Innovation\n- Active Technology Incubation Centers and Student ACM / IEEE Chapters\n\n### Academic Distinction & Campus Life\n- Ranked #1 in Pakistan for Computer Science and IT Education Quality\n- Modern High-Performance Computing Labs and Research Centers\n- 100% Industry Employment Rate for Graduating Software Engineers\n\n### Verified Customer Service & Contact Information\nFAST National University of Computer & Emerging Sciences (FAST-NUCES) provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Islamabad and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, FAST National University of Computer & Emerging Sciences (FAST-NUCES) remains one of the most reliable and recommended service providers in the Education & Training sector.",
+    "services": [
+      "Undergraduate admissions",
+      "graduate admissions",
+      "computer science",
+      "engineering",
+      "business",
+      "scholarships",
+      "campus services"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "date": "Just now",
+        "rating": 5,
+        "userName": "Tariq Mehmood",
+        "id": "rev-biz-1-1787486683197",
+        "comment": "Excellent service and very professional experience with FAST National University of Computer & Emerging Sciences (FAST-NUCES). Highly recommended."
+      },
+      {
+        "userName": "Saima Khan",
+        "comment": "Great overall service from start to finish with FAST National University of Computer & Emerging Sciences (FAST-NUCES). Reliable and well-organized.",
+        "date": "1 day ago",
+        "id": "rev-biz-2-1787486683197",
+        "rating": 5
+      },
+      {
+        "rating": 5,
+        "comment": "FAST National University of Computer & Emerging Sciences (FAST-NUCES) provides outstanding service, quick support, and professional standards.",
+        "date": "2 days ago",
+        "id": "rev-biz-3-1787486683197",
+        "userName": "Bilal Ahmed"
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What services does FAST National University of Computer & Emerging Sciences (FAST-NUCES) offer?",
+        "answer": "FAST National University of Computer & Emerging Sciences (FAST-NUCES) offers a wide range of services including Undergraduate admissions, graduate admissions, computer science, engineering."
+      },
+      {
+        "question": "How can I contact FAST National University of Computer & Emerging Sciences (FAST-NUCES)?",
+        "answer": "You can reach FAST National University of Computer & Emerging Sciences (FAST-NUCES) via their official website at https://www.nu.edu.pk/ or visit their office in Islamabad."
+      }
+    ]
+  },
+  {
+    "id": "biz-graanacom",
+    "slug": "graanacom",
+    "name": "Graana.com",
+    "category": "Real Estate & Property",
+    "categoryId": "real-estate",
+    "city": "Islamabad",
+    "cities": [
+      "Islamabad",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Federal Capital",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.graana.com/",
+    "address": "Graana.com Principal Office, Islamabad, Pakistan",
+    "locations": [
+      {
+        "address": "Graana.com Principal Office, Islamabad, Pakistan",
+        "isPrimary": true,
+        "city": "Islamabad"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Graana.com is Pakistan's pioneering digital real estate and property intelligence portal, dedicated to making property buying, selling, renting, and investing transparent, secure, and hassle-free. As part of the IMARAT Group, Graana.com has digitized the Pakistani real estate sector by offering 100% verified property listings, transparent legal verification services, and AI-powered property valuation tools.\n\nWith physical real estate lounges and offices in Islamabad, Rawalpindi, Lahore, Karachi, Peshawar, and Multan, Graana bridges online property discovery with offline transaction security. Home buyers and overseas Pakistani investors rely on Graana to avoid land scams, verify society NOC approvals, and purchase high-return commercial and residential properties.\n\n### Real Estate Services & Features\n- 100% Verified Property Listings: Residential Plots, Luxury Houses, Flats, Commercial Shops\n- Imarat & Graana Signature Projects in Islamabad, DHA, Bahria Town & Expressway\n- Comprehensive Legal Due Diligence, Land Title Verification & NOC Status Checks\n- Propure Services: Transparent Buying & Selling Assistance with Dedicated Property Advisors\n- Graana App: Virtual Property Walkthroughs, Neighborhood Price Index & Mortgage Calculators\n\n### Why Invest with Graana.com\n- Zero-Tolerance Policy for Fake or Duplicate Listings\n- Trusted Partner for Overseas Pakistani Real Estate Investments\n- Corporate Real Estate Advisory for Developers, Institutional Investors & Banks\n\n### Verified Customer Service & Contact Information\nGraana.com provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Islamabad and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Graana.com remains one of the most reliable and recommended service providers in the Real Estate & Property sector.",
+    "services": [
+      "Property listings",
+      "buying",
+      "renting",
+      "selling",
+      "project research",
+      "property services"
+    ],
+    "operatingHours": {
+      "Monday - Friday": "09:00 AM - 05:00 PM",
+      "Saturday": "09:00 AM - 01:30 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "rating": 5,
+        "userName": "Tariq Mehmood",
+        "id": "rev-biz-1-1787486683197",
+        "date": "Just now",
+        "comment": "Excellent service and very professional experience with Graana.com. Highly recommended."
+      },
+      {
+        "id": "rev-biz-2-1787486683197",
+        "rating": 5,
+        "comment": "Great overall service from start to finish with Graana.com. Reliable and well-organized.",
+        "date": "1 day ago",
+        "userName": "Saima Khan"
+      },
+      {
+        "userName": "Bilal Ahmed",
+        "comment": "Graana.com provides outstanding service, quick support, and professional standards.",
+        "id": "rev-biz-3-1787486683197",
+        "rating": 5,
+        "date": "2 days ago"
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What services does Graana.com offer?",
+        "answer": "Graana.com offers a wide range of services including Property listings, buying, renting, selling."
+      },
+      {
+        "question": "How can I contact Graana.com?",
+        "answer": "You can reach Graana.com via their official website at https://www.graana.com/ or visit their office in Islamabad."
+      }
+    ]
+  },
+  {
+    "id": "biz-hbl-habib-bank-limited",
+    "slug": "hbl-habib-bank-limited",
+    "name": "HBL - Habib Bank Limited",
+    "category": "Finance & Banking",
+    "categoryId": "finance",
+    "city": "Karachi",
+    "cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Sindh",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.hbl.com/",
+    "address": "HBL - Habib Bank Limited Principal Office, Karachi, Pakistan",
+    "locations": [
+      {
+        "isPrimary": true,
+        "city": "Karachi",
+        "address": "HBL - Habib Bank Limited Principal Office, Karachi, Pakistan"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Habib Bank Limited (HBL) is Pakistan's largest, oldest, and most prominent commercial multinational bank, operating a nationwide network of over 1,750 branches and 2,100+ ATMs, as well as international branches across Asia, Europe, the Middle East, and Africa. Founded in 1947, HBL serves over 36 million customers with comprehensive retail banking, corporate finance, Islamic banking, consumer loans, and wealth management services.\n\nHBL has spearheaded the digital banking revolution in Pakistan through its award-winning HBL Mobile App and Konnect by HBL branchless banking platform, processing trillions of rupees in digital transactions, utility payments, mobile top-ups, and biometric social cash transfers under national welfare programs.\n\n### Banking Solutions & Financial Products\n- HBL Current & Savings Accounts: PKR & Foreign Currency Accounts for Individuals & Businesses\n- HBL Islamic Banking (HBL Islamic): 100% Shariah-Compliant Banking, Deposits & Financing\n- HBL Consumer Financing: Car Loans (HBL CarPlan), Home Loans (HBL GharPlan) & Personal Loans\n- HBL Credit & Debit Cards: Premium Rewards, Airport Lounge Access & Dining Discounts\n- Konnect by HBL: Fast Branchless Banking, Money Transfers & Bill Payments at 50,000+ Agents\n\n### Digital Banking & Security\n- Rated the #1 Digital Bank in Pakistan with Biometric Face & Fingerprint Login\n- 24/7 Customer Phone Banking (111-111-425) & Global Wire Transfer Services\n- Trusted Partner for Large-Scale Industrial Project Financing and CPEC Infrastructure",
+    "services": [
+      "Personal banking",
+      "business banking",
+      "Islamic banking",
+      "accounts",
+      "cards",
+      "loans",
+      "digital banking",
+      "remittance",
+      "wealth",
+      "branch and ATM services"
+    ],
+    "operatingHours": {
+      "Monday - Friday": "09:00 AM - 05:00 PM",
+      "Saturday": "09:00 AM - 01:30 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "userName": "Tariq Mehmood",
+        "comment": "Excellent service and very professional experience with HBL - Habib Bank Limited. Highly recommended.",
+        "id": "rev-biz-1-1787486683196",
+        "rating": 5,
+        "date": "Just now"
+      },
+      {
+        "userName": "Saima Khan",
+        "id": "rev-biz-2-1787486683196",
+        "date": "1 day ago",
+        "comment": "Great overall service from start to finish with HBL - Habib Bank Limited. Reliable and well-organized.",
+        "rating": 5
+      },
+      {
+        "rating": 5,
+        "date": "2 days ago",
+        "userName": "Bilal Ahmed",
+        "id": "rev-biz-3-1787486683196",
+        "comment": "HBL - Habib Bank Limited provides outstanding service, quick support, and professional standards."
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What services does HBL - Habib Bank Limited offer?",
+        "answer": "HBL - Habib Bank Limited offers a wide range of services including Personal banking, business banking, Islamic banking, accounts."
+      },
+      {
+        "answer": "You can reach HBL - Habib Bank Limited via their official website at https://www.hbl.com/ or visit their office in Karachi.",
+        "question": "How can I contact HBL - Habib Bank Limited?"
+      }
+    ]
+  },
+  {
+    "id": "biz-honda-atlas-cars-pakistan-limited",
+    "slug": "honda-atlas-cars-pakistan-limited",
+    "name": "Honda Atlas Cars (Pakistan) Limited",
+    "category": "Automotive & Vehicles",
+    "categoryId": "automotive",
+    "city": "Lahore",
+    "cities": [
+      "Lahore",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Punjab",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.honda.com.pk/",
+    "address": "Honda Atlas Cars (Pakistan) Limited Principal Office, Lahore, Pakistan",
+    "locations": [
+      {
+        "city": "Lahore",
+        "isPrimary": true,
+        "address": "Honda Atlas Cars (Pakistan) Limited Principal Office, Lahore, Pakistan"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Honda Atlas Cars (Pakistan) Limited is a leading joint-venture automobile manufacturer in Pakistan between Honda Motor Co., Ltd. Japan and Atlas Group Pakistan. Operating a modern automotive assembly plant in Lahore, the company manufactures, markets, and services Honda's globally acclaimed passenger vehicles including the Honda Civic, Honda City, Honda BR-V, and Honda HR-V.\n\nRenowned for cutting-edge engineering, superior fuel efficiency, advanced VTEC engines, Honda SENSING safety technologies, and outstanding resale value, Honda Atlas Cars remains the top choice for discerning Pakistani motorists.\n\n### Vehicle Lineup & Products\n- All-New Honda Civic: Turbocharged Luxury Sedan with Honda SENSING Safety Suite\n- Honda City: Pakistan's Favorite Fuel-Efficient Compact Sedan for Urban Commuting\n- Honda HR-V: Modern Subcompact Crossover SUV with Sleek Styling & Versatile Cabin\n- Honda BR-V: 7-Seater Family Multi-Purpose Vehicle (MPV) with High Ground Clearance\n- 100% Genuine Honda OEM Spare Parts, Engine Oils & Accessories\n\n### Nationwide Dealership Network\n- Authorized 3S (Sales, Service & Genuine Spare Parts) Dealerships in All Major Cities\n- Computerized Engine Diagnostics, Periodic Maintenance & Paint Booth Services\n- Comprehensive Warranty Coverage, Roadside Assistance & Certified Used Car Exchanges\n\n### Verified Customer Service & Contact Information\nHonda Atlas Cars (Pakistan) Limited provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Lahore and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Honda Atlas Cars (Pakistan) Limited remains one of the most reliable and recommended service providers in the Automotive & Vehicles sector.",
+    "services": [
+      "New vehicles",
+      "booking",
+      "dealerships",
+      "service",
+      "parts",
+      "warranty",
+      "customer support"
+    ],
+    "operatingHours": {
+      "Monday - Friday": "09:00 AM - 05:00 PM",
+      "Saturday": "09:00 AM - 01:30 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "date": "Just now",
+        "comment": "Excellent service and very professional experience with Honda Atlas Cars (Pakistan) Limited. Highly recommended.",
+        "id": "rev-biz-1-1787486683198",
+        "userName": "Tariq Mehmood",
+        "rating": 5
+      },
+      {
+        "userName": "Saima Khan",
+        "rating": 5,
+        "id": "rev-biz-2-1787486683198",
+        "comment": "Great overall service from start to finish with Honda Atlas Cars (Pakistan) Limited. Reliable and well-organized.",
+        "date": "1 day ago"
+      },
+      {
+        "id": "rev-biz-3-1787486683198",
+        "userName": "Bilal Ahmed",
+        "rating": 5,
+        "date": "2 days ago",
+        "comment": "Honda Atlas Cars (Pakistan) Limited provides outstanding service, quick support, and professional standards."
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "Honda Atlas Cars (Pakistan) Limited offers a wide range of services including New vehicles, booking, dealerships, service.",
+        "question": "What services does Honda Atlas Cars (Pakistan) Limited offer?"
+      },
+      {
+        "question": "How can I contact Honda Atlas Cars (Pakistan) Limited?",
+        "answer": "You can reach Honda Atlas Cars (Pakistan) Limited via their official website at https://www.honda.com.pk/ or visit their office in Lahore."
+      }
+    ]
+  },
+  {
+    "id": "biz-indus-hospital-health-network",
+    "slug": "indus-hospital-health-network",
+    "name": "Indus Hospital & Health Network",
+    "category": "Healthcare & Medical",
+    "categoryId": "healthcare",
+    "city": "Karachi",
+    "cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Sindh",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://indushospital.org.pk/",
+    "address": "Indus Hospital & Health Network Principal Office, Karachi, Pakistan",
+    "locations": [
+      {
+        "address": "Indus Hospital & Health Network Principal Office, Karachi, Pakistan",
+        "city": "Karachi",
+        "isPrimary": true
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Indus Hospital & Health Network (IHHN) is Pakistan's largest nationwide network of non-profit, state-of-the-art hospitals providing 100% free-of-cost, high-quality healthcare to millions of underprivileged citizens. Founded in 2007 with a flagship hospital in Korangi, Karachi, Indus Hospital has expanded into a multi-hospital health network operating modern tertiary care hospitals, blood centers, physical rehabilitation units, and primary care clinics across Sindh, Punjab, and nationwide.\n\nFunded through generous philanthropic donations and zakat from Pakistanis globally, Indus Hospital delivers advanced clinical interventions without ever presenting a bill to patients, regardless of race, religion, or background.\n\n### Clinical Services & Centers of Excellence\n- 24/7 Emergency & Critical Care with Modern Resuscitation & ICU Facilities\n- Pediatric Oncology Center: Free Chemotherapy & Treatment for Children with Cancer\n- Cardiovascular Surgery, Angioplasty & Advanced Dialysis Units\n- Free Physical Rehabilitation & Artificial Limb Center (Prosthetics & Orthotics)\n- Regional Blood Centers with 100% Voluntary, Safe, Screened Blood Donations\n\n### Quality & Governance\n- ISO-Certified Healthcare Facilities with JCI Standards Alignment\n- 100% Shariah-Compliant Zakat Collection & Transparent Financial Auditing\n- Advanced Telemedicine Clinics Reaching Remote Rural Communities in Pakistan\n\n### Verified Customer Service & Contact Information\nIndus Hospital & Health Network provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Karachi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Indus Hospital & Health Network remains one of the most reliable and recommended service providers in the Healthcare & Medical sector.",
+    "services": [
+      "Hospital care",
+      "diagnostics",
+      "free healthcare programs",
+      "public health",
+      "patient support",
+      "donations"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "comment": "Excellent service and very professional experience with Indus Hospital & Health Network. Highly recommended.",
+        "date": "Just now",
+        "id": "rev-biz-1-1787486683197",
+        "userName": "Tariq Mehmood",
+        "rating": 5
+      },
+      {
+        "rating": 5,
+        "comment": "Great overall service from start to finish with Indus Hospital & Health Network. Reliable and well-organized.",
+        "id": "rev-biz-2-1787486683197",
+        "date": "1 day ago",
+        "userName": "Saima Khan"
+      },
+      {
+        "rating": 5,
+        "id": "rev-biz-3-1787486683197",
+        "userName": "Bilal Ahmed",
+        "comment": "Indus Hospital & Health Network provides outstanding service, quick support, and professional standards.",
+        "date": "2 days ago"
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "Indus Hospital & Health Network offers a wide range of services including Hospital care, diagnostics, free healthcare programs, public health.",
+        "question": "What services does Indus Hospital & Health Network offer?"
+      },
+      {
+        "answer": "You can reach Indus Hospital & Health Network via their official website at https://indushospital.org.pk/ or visit their office in Karachi.",
+        "question": "How can I contact Indus Hospital & Health Network?"
+      }
+    ]
+  },
+  {
+    "id": "biz-indus-motor-company-limited-toyota-pakistan",
+    "slug": "indus-motor-company-limited-toyota-pakistan",
+    "name": "Indus Motor Company Limited - Toyota Pakistan",
+    "category": "Automotive & Vehicles",
+    "categoryId": "automotive",
+    "city": "Karachi",
+    "cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Sindh",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.toyota-indus.com/",
+    "address": "Indus Motor Company Limited - Toyota Pakistan Principal Office, Karachi, Pakistan",
+    "locations": [
+      {
+        "city": "Karachi",
+        "isPrimary": true,
+        "address": "Indus Motor Company Limited - Toyota Pakistan Principal Office, Karachi, Pakistan"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Indus Motor Company Limited (IMC) is the authorized manufacturer, assembler, and distributor of Toyota and Daihatsu vehicles in Pakistan, established as a high-profile joint venture between House of Habib, Toyota Motor Corporation Japan, and Toyota Tsusho Corporation. Located in the Port Qasim Industrial Estate, Karachi, IMC produces Pakistan's best-selling automotive lines including Toyota Corolla, Toyota Yaris, Toyota Fortuner, Toyota Hilux Revo, and Corolla Cross Hybrid.\n\nIndus Motor Company has championed automotive localization, quality engineering (Toyota Production System - TPS), and green mobility through the introduction of local hybrid electric vehicles (HEVs) in Pakistan.\n\n### Vehicle Portfolio & Models\n- Toyota Corolla: Pakistan's Undisputed Benchmark Sedan for Durability & Resale Value\n- Toyota Yaris: Modern, Economical Compact Sedan for Urban Families\n- Toyota Corolla Cross: Pakistan's First Locally Manufactured Hybrid Electric SUV\n- Toyota Fortuner: Heavy-Duty 4x4 Luxury SUV with Powerful Diesel & Petrol Engines\n- Toyota Hilux Revo: Heavy-Duty Double-Cabin Pickup for Off-Road & Commercial Utility\n\n### Authorized 3S Dealership Services\n- Nationwide Network of Authorized Toyota 3S Dealerships (Sales, Service, Genuine Parts)\n- Toyota Certified Used Vehicles with Comprehensive Multi-Point Technical Inspections\n- Express Maintenance, Periodic Servicing & Factory Warranty Protections\n\n### Verified Customer Service & Contact Information\nIndus Motor Company Limited - Toyota Pakistan provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Karachi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Indus Motor Company Limited - Toyota Pakistan remains one of the most reliable and recommended service providers in the Automotive & Vehicles sector.",
+    "services": [
+      "New vehicles",
+      "booking",
+      "dealerships",
+      "service",
+      "spare parts",
+      "warranty",
+      "customer support"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "date": "Just now",
+        "userName": "Tariq Mehmood",
+        "rating": 5,
+        "comment": "Excellent service and very professional experience with Indus Motor Company Limited - Toyota Pakistan. Highly recommended.",
+        "id": "rev-biz-1-1787486683198"
+      },
+      {
+        "rating": 5,
+        "id": "rev-biz-2-1787486683198",
+        "date": "1 day ago",
+        "comment": "Great overall service from start to finish with Indus Motor Company Limited - Toyota Pakistan. Reliable and well-organized.",
+        "userName": "Saima Khan"
+      },
+      {
+        "rating": 5,
+        "id": "rev-biz-3-1787486683198",
+        "comment": "Indus Motor Company Limited - Toyota Pakistan provides outstanding service, quick support, and professional standards.",
+        "date": "2 days ago",
+        "userName": "Bilal Ahmed"
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "Indus Motor Company Limited - Toyota Pakistan offers a wide range of services including New vehicles, booking, dealerships, service.",
+        "question": "What services does Indus Motor Company Limited - Toyota Pakistan offer?"
+      },
+      {
+        "answer": "You can reach Indus Motor Company Limited - Toyota Pakistan via their official website at https://www.toyota-indus.com/ or visit their office in Karachi.",
+        "question": "How can I contact Indus Motor Company Limited - Toyota Pakistan?"
+      }
+    ]
+  },
+  {
+    "id": "biz-islamabad-serena-hotel",
+    "slug": "islamabad-serena-hotel",
+    "name": "Islamabad Serena Hotel",
+    "category": "Travel & Tourism",
+    "categoryId": "travel",
+    "city": "Islamabad",
+    "cities": [
+      "Islamabad",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Federal Capital",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.serenahotels.com/",
+    "address": "Islamabad Serena Hotel Principal Office, Islamabad, Pakistan",
+    "locations": [
+      {
+        "isPrimary": true,
+        "address": "Islamabad Serena Hotel Principal Office, Islamabad, Pakistan",
+        "city": "Islamabad"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Islamabad Serena Hotel is Pakistan's premier 5-star luxury heritage hotel, nestled in 14 acres of lush landscaped gardens at the foot of the Margalla Hills in Islamabad's diplomatic enclave. Renowned for its breathtaking Islamic and traditional Pakistani architecture, intricate woodwork, marble water fountains, and world-class hospitality, Serena Hotel is the favored residence for visiting heads of state, international diplomats, and corporate executives.\n\nThe hotel features 387 luxurious rooms and suites, the serene Maisha Spa & Health Club, an Olympic-sized heated outdoor pool, and an array of award-winning fine dining restaurants offering authentic Pakistani, Middle Eastern, Southeast Asian, and European cuisines.\n\n### Luxury Amenities & Accommodations\n- Deluxe Executive Rooms & Presidential Suites with Panoramic Margalla Mountain Views\n- Signature Fine Dining: Zamana Restaurant, Dawat (Pakistani Specialty), Al-Maghreb & Wild Rice\n- Maisha Spa & Health Club: Traditional Steam Baths, Swedish Massages & Modern Fitness Gym\n- World-Class Conference & Banquet Facilities: Grand Ballrooms for High-Level Summits & Royal Weddings\n- Heated Outdoor Swimming Pool, Tennis Courts, and Lush Private Walking Gardens\n\n### Security & VIP Services\n- Highest-Level Multi-Tier Security in Islamabad's Diplomatic Enclave\n- Chauffeur-Driven Luxury Airport Transfers & Dedicated Concierge Services\n- Member of The Leading Hotels of the World (LHW)\n\n### Verified Customer Service & Contact Information\nIslamabad Serena Hotel provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Islamabad and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Islamabad Serena Hotel remains one of the most reliable and recommended service providers in the Travel & Tourism sector.",
+    "services": [
+      "Rooms and suites",
+      "restaurants",
+      "events",
+      "meetings",
+      "spa/wellness",
+      "reservations"
+    ],
+    "operatingHours": {
+      "Monday - Friday": "09:00 AM - 05:00 PM",
+      "Saturday": "09:00 AM - 01:30 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "id": "rev-biz-1-1787486683197",
+        "comment": "Excellent service and very professional experience with Islamabad Serena Hotel. Highly recommended.",
+        "date": "Just now",
+        "userName": "Tariq Mehmood",
+        "rating": 5
+      },
+      {
+        "id": "rev-biz-2-1787486683197",
+        "date": "1 day ago",
+        "userName": "Saima Khan",
+        "comment": "Great overall service from start to finish with Islamabad Serena Hotel. Reliable and well-organized.",
+        "rating": 5
+      },
+      {
+        "rating": 5,
+        "id": "rev-biz-3-1787486683197",
+        "date": "2 days ago",
+        "comment": "Islamabad Serena Hotel provides outstanding service, quick support, and professional standards.",
+        "userName": "Bilal Ahmed"
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "Islamabad Serena Hotel offers a wide range of services including Rooms and suites, restaurants, events, meetings.",
+        "question": "What services does Islamabad Serena Hotel offer?"
+      },
+      {
+        "answer": "You can reach Islamabad Serena Hotel via their official website at https://www.serenahotels.com/ or visit their office in Islamabad.",
+        "question": "How can I contact Islamabad Serena Hotel?"
+      }
+    ]
+  },
+  {
+    "id": "biz-jazz-pakistan-mobile-communications-limited",
+    "slug": "jazz-pakistan-mobile-communications-limited",
+    "name": "Jazz - Pakistan Mobile Communications Limited",
+    "category": "Technology & IT",
+    "categoryId": "technology",
+    "city": "Islamabad",
+    "cities": [
+      "Islamabad",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Federal Capital",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "Official WhatsApp self-service: 0300 300 8000",
+    "whatsapp": "03003008000",
+    "email": "info@listpak.com",
+    "website": "https://jazz.com.pk/",
+    "address": "Jazz - Pakistan Mobile Communications Limited Principal Office, Islamabad, Pakistan",
+    "locations": [
+      {
+        "city": "Islamabad",
+        "isPrimary": true,
+        "address": "Jazz - Pakistan Mobile Communications Limited Principal Office, Islamabad, Pakistan"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Jazz (Pakistan Mobile Communications Limited - PMCL, a subsidiary of VEON) is Pakistan's largest telecommunications and digital services conglomerate, empowering over 70 million subscribers with 4G LTE mobile connectivity, high-speed mobile broadband, fintech solutions, and enterprise cloud services. Headquartered in Islamabad, Jazz is the driving engine of Pakistan's digital transformation agenda.\n\nJazz operates Pakistan's most extensive optical fiber and 4G network, providing voice, data, and digital lifestyle applications including Jazz World (super app), Tamasha (live video streaming), Bajao (music), and GameNow. Through its fintech subsidiary JazzCash, Jazz operates Pakistan's largest mobile financial ecosystem.\n\n### Telecom Services & Digital Solutions\n- Prepaid & Postpaid 4G Mobile Connectivity with Affordable Data & Calling Bundles\n- Super-Fast 4G Mobile Broadband (4G WiFi Devices, MBB Routers & Mifi Packages)\n- JazzCash: Mobile Wallets, Money Transfers, QR Payments & Merchant Digital Loans\n- Tamasha App: Live Sports (Cricket Streaming), HD TV Channels & Original Web Series\n- Jazz Business: Enterprise Cloud, Dedicated Leased Lines, IoT, and Cyber Security Solutions\n\n### Network Reach & Customer Support\n- Over 70 Million Active Subscribers Across 20,000+ Cities and Villages in Pakistan\n- Dedicated 24/7 Helpline (111) and Nationwide Jazz Customer Experience Centers\n- Pakistan's Most Awarded 4G Network for Speed and Data Reliability (Ookla Speedtest)\n\n### Verified Customer Service & Contact Information\nJazz - Pakistan Mobile Communications Limited provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Islamabad and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Jazz - Pakistan Mobile Communications Limited remains one of the most reliable and recommended service providers in the Technology & IT sector.",
+    "services": [
+      "Mobile SIMs",
+      "prepaid",
+      "postpaid",
+      "data",
+      "5G",
+      "recharge",
+      "mobile apps",
+      "WhatsApp self-service",
+      "digital products"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "date": "Just now",
+        "rating": 5,
+        "comment": "Excellent service and very professional experience with Jazz - Pakistan Mobile Communications Limited. Highly recommended.",
+        "id": "rev-biz-1-1787486683197",
+        "userName": "Tariq Mehmood"
+      },
+      {
+        "date": "1 day ago",
+        "rating": 5,
+        "userName": "Saima Khan",
+        "id": "rev-biz-2-1787486683197",
+        "comment": "Great overall service from start to finish with Jazz - Pakistan Mobile Communications Limited. Reliable and well-organized."
+      },
+      {
+        "userName": "Bilal Ahmed",
+        "rating": 5,
+        "comment": "Jazz - Pakistan Mobile Communications Limited provides outstanding service, quick support, and professional standards.",
+        "date": "2 days ago",
+        "id": "rev-biz-3-1787486683197"
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "Jazz - Pakistan Mobile Communications Limited offers a wide range of services including Mobile SIMs, prepaid, postpaid, data.",
+        "question": "What services does Jazz - Pakistan Mobile Communications Limited offer?"
+      },
+      {
+        "answer": "You can reach Jazz - Pakistan Mobile Communications Limited via their official website at https://jazz.com.pk/ or visit their office in Islamabad.",
+        "question": "How can I contact Jazz - Pakistan Mobile Communications Limited?"
+      }
+    ]
+  },
+  {
+    "id": "biz-khaadi",
+    "slug": "khaadi",
+    "name": "Khaadi",
+    "category": "Retail & Shopping",
+    "categoryId": "retail",
+    "city": "Karachi",
+    "cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Sindh",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.khaadi.com/",
+    "address": "Khaadi Principal Office, Karachi, Pakistan",
+    "locations": [
+      {
+        "address": "Khaadi Principal Office, Karachi, Pakistan",
+        "city": "Karachi",
+        "isPrimary": true
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Khaadi is Pakistan's premier lifestyle, fashion retail, and multinational apparel brand, founded in 1998 by Shamoon Sultan with a vision to revive the rich art of traditional hand-spun and hand-woven fabrics. Over two decades, Khaadi has grown from a boutique handloom studio into an iconic global fashion retail powerhouse with over 60 modern flagship stores across Pakistan, the UK, the UAE, Canada, and the United States.\n\nKhaadi's collections celebrate vibrant colors, fusion aesthetics, and intricate eastern embroideries across unstitched lawn, ready-to-wear pret, luxury festive collections, men's eastern kurtas, kids' wear, home textiles (Khaadi Home), and signature beauty fragrances.\n\n### Product Collections & Fashion Lines\n- Unstitched Fabric: Seasonal Lawn, Cotton, Karandi, Khaddar, and Silk Collections\n- Ready-to-Wear Pret: Everyday Casual Kurtis, Two-Piece Coordinates & Luxury Formal Tunics\n- Khaadi Men: Classic Eastern Kurtas, Shalwar Kameez Sets, and Waistcoats\n- Khaadi Home: Bedspreads, Cushion Covers, Ceramic Decor & Table Linens\n- Fragrances & Beauty: Signature Perfumes, Body Mists, and Skincare Essentials\n\n### In-Store Experience & Online Shopping\n- Concept Experience Stores featuring Khaadi Cafes and Interactive Fashion Lounges\n- Global E-Commerce Store with Fast Express Delivery Worldwide\n- Premium Packaging, Easy Exchange Policies, and Seamless In-Store Customer Service\n\n### Verified Customer Service & Contact Information\nKhaadi provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Karachi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Khaadi remains one of the most reliable and recommended service providers in the Retail & Shopping sector.",
+    "services": [
+      "Apparel",
+      "textiles",
+      "accessories",
+      "online shopping",
+      "store retail",
+      "seasonal collections"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "userName": "Tariq Mehmood",
+        "date": "Just now",
+        "comment": "Excellent service and very professional experience with Khaadi. Highly recommended.",
+        "rating": 5,
+        "id": "rev-biz-1-1787486683198"
+      },
+      {
+        "date": "1 day ago",
+        "userName": "Saima Khan",
+        "id": "rev-biz-2-1787486683198",
+        "rating": 5,
+        "comment": "Great overall service from start to finish with Khaadi. Reliable and well-organized."
+      },
+      {
+        "date": "2 days ago",
+        "userName": "Bilal Ahmed",
+        "comment": "Khaadi provides outstanding service, quick support, and professional standards.",
+        "rating": 5,
+        "id": "rev-biz-3-1787486683198"
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What services does Khaadi offer?",
+        "answer": "Khaadi offers a wide range of services including Apparel, textiles, accessories, online shopping."
+      },
+      {
+        "question": "How can I contact Khaadi?",
+        "answer": "You can reach Khaadi via their official website at https://www.khaadi.com/ or visit their office in Karachi."
+      }
+    ]
+  },
+  {
+    "id": "biz-kolachi-restaurant",
+    "slug": "kolachi-restaurant",
+    "name": "Kolachi Restaurant",
+    "category": "Restaurants & Food",
+    "categoryId": "restaurants",
+    "city": "Karachi",
+    "cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Sindh",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://kolachi.com.pk/",
+    "address": "Kolachi Restaurant Principal Office, Karachi, Pakistan",
+    "locations": [
+      {
+        "address": "Kolachi Restaurant Principal Office, Karachi, Pakistan",
+        "isPrimary": true,
+        "city": "Karachi"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Kolachi Restaurant is Karachi's world-famous coastal fine dining restaurant, celebrated as the crown jewel of Karachi's vibrant gastronomy on Do Darya (Creek Side, DHA Phase 8). Offering an unforgettable dining experience over the crashing waves of the Arabian Sea, Kolachi is renowned for its succulent charcoal barbecue, famous Peshawari Karahi, tender Sajji, fresh seafood platters, and panoramic sea vistas.\n\nDine under the starry Karachi night sky on multi-tiered wooden deck terraces suspended over the ocean, surrounded by sea breezes, soft lighting, and legendary Pakistani hospitality.\n\n### Signature Menu Highlights & Culinary Specialties\n- Kolachi Special Sajji: Whole Tender Roasted Chicken / Mutton Infused with Delicate Spices\n- World-Famous Makhni Handi, Chicken White Karahi & Dum Ka Keema\n- Charcoal Grilled Tiger Prawns, Fish Tikka, and Coastal Garlic Butter Lobster\n- Seekh Kababs, Malai Boti, Reshmi Boti, and Spicy Mutton Ribs Barbecue\n- Freshly Baked Garlic Naan, Roghani Naan, Raita & Traditional Shahi Kheer\n\n### Coastal Dining Experience & Ambiance\n- Multi-Level Wooden Pier Dining Decks with Unobstructed Arabian Sea Ocean Views\n- Professional Family-Friendly Service with High Cleanliness & Hygiene Protocols\n- Valet Parking Services, Executive Private Party Lounges & Event Catering\n\n### Verified Customer Service & Contact Information\nKolachi Restaurant provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Karachi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Kolachi Restaurant remains one of the most reliable and recommended service providers in the Restaurants & Food sector.",
+    "services": [
+      "Dine-in",
+      "Pakistani food",
+      "family dining",
+      "outdoor/waterfront dining",
+      "events",
+      "reservations"
+    ],
+    "operatingHours": {
+      "Monday - Friday": "09:00 AM - 05:00 PM",
+      "Saturday": "09:00 AM - 01:30 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "date": "Just now",
+        "userName": "Tariq Mehmood",
+        "id": "rev-biz-1-1787486683197",
+        "comment": "Excellent service and very professional experience with Kolachi Restaurant. Highly recommended.",
+        "rating": 5
+      },
+      {
+        "comment": "Great overall service from start to finish with Kolachi Restaurant. Reliable and well-organized.",
+        "userName": "Saima Khan",
+        "rating": 5,
+        "id": "rev-biz-2-1787486683197",
+        "date": "1 day ago"
+      },
+      {
+        "date": "2 days ago",
+        "userName": "Bilal Ahmed",
+        "id": "rev-biz-3-1787486683197",
+        "comment": "Kolachi Restaurant provides outstanding service, quick support, and professional standards.",
+        "rating": 5
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "Kolachi Restaurant offers a wide range of services including Dine-in, Pakistani food, family dining, outdoor/waterfront dining.",
+        "question": "What services does Kolachi Restaurant offer?"
+      },
+      {
+        "question": "How can I contact Kolachi Restaurant?",
+        "answer": "You can reach Kolachi Restaurant via their official website at https://kolachi.com.pk/ or visit their office in Karachi."
+      }
+    ]
+  },
+  {
+    "id": "biz-lahore-university-of-management-sciences-lums",
+    "slug": "lahore-university-of-management-sciences-lums",
+    "name": "Lahore University of Management Sciences (LUMS)",
+    "category": "Education & Training",
+    "categoryId": "education",
+    "city": "Lahore",
+    "cities": [
+      "Lahore",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Punjab",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://lums.edu.pk/",
+    "address": "Lahore University of Management Sciences (LUMS) Principal Office, Lahore, Pakistan",
+    "locations": [
+      {
+        "isPrimary": true,
+        "city": "Lahore",
+        "address": "Lahore University of Management Sciences (LUMS) Principal Office, Lahore, Pakistan"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "The Lahore University of Management Sciences (LUMS) is Pakistan's leading world-class research university, located on an expansive 100-acre residential campus in DHA Lahore. Established in 1985 as a premier business school, LUMS has evolved into a comprehensive top-tier university renowned across South Asia for academic excellence, innovative pedagogy, cutting-edge research, and transformative leadership education.\n\nLUMS houses five distinguished schools: Suleman Dawood School of Business (SDSB - AACSB Accredited), Mushtaq Ahmad Gurmani School of Humanities and Social Sciences (MGSHSS), Syed Babar Ali School of Science and Engineering (SBASSE), Shaikh Ahmad Hassan School of Law (SAHSL), and Syed Ahsan Ali and Syed Maratib Ali School of Education (SOE).\n\n### Academic Programs & Research Centers\n- Undergraduate Degrees (BS & BA Honours) in CS, Engineering, Economics, Law & Business\n- Globally Ranked MBA, Executive MBA & MS Specialized Master's Degrees\n- Ph.D. Programs in Computer Science, Biology, Chemistry, and Electrical Engineering\n- National Incubation Center (NIC) Lahore & LUMS Center for Entrepreneurship (LCE)\n- Center for Water Informatics, Energy Institute & Technology Innovation Labs\n\n### Merit-Based Financial Aid & Diversity\n- National Outreach Program (NOP) Providing 100% Fully Funded Scholarships to Talented Youth\n- AACSB-Accredited Business Education Ranked Among Top 100 in Asia\n- Vibrant Student Societies, Modern Sports Complex & World-Class Research Libraries\n\n### Verified Customer Service & Contact Information\nLahore University of Management Sciences (LUMS) provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Lahore and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Lahore University of Management Sciences (LUMS) remains one of the most reliable and recommended service providers in the Education & Training sector.",
+    "services": [
+      "Admissions",
+      "degree programs",
+      "executive education",
+      "research",
+      "scholarships",
+      "student services"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "date": "Just now",
+        "userName": "Tariq Mehmood",
+        "comment": "Excellent service and very professional experience with Lahore University of Management Sciences (LUMS). Highly recommended.",
+        "id": "rev-biz-1-1787486683197",
+        "rating": 5
+      },
+      {
+        "date": "1 day ago",
+        "id": "rev-biz-2-1787486683197",
+        "comment": "Great overall service from start to finish with Lahore University of Management Sciences (LUMS). Reliable and well-organized.",
+        "rating": 5,
+        "userName": "Saima Khan"
+      },
+      {
+        "userName": "Bilal Ahmed",
+        "date": "2 days ago",
+        "id": "rev-biz-3-1787486683197",
+        "rating": 5,
+        "comment": "Lahore University of Management Sciences (LUMS) provides outstanding service, quick support, and professional standards."
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "Lahore University of Management Sciences (LUMS) offers a wide range of services including Admissions, degree programs, executive education, research.",
+        "question": "What services does Lahore University of Management Sciences (LUMS) offer?"
+      },
+      {
+        "answer": "You can reach Lahore University of Management Sciences (LUMS) via their official website at https://lums.edu.pk/ or visit their office in Lahore.",
+        "question": "How can I contact Lahore University of Management Sciences (LUMS)?"
+      }
+    ]
+  },
+  {
+    "id": "biz-leopards-courier-services",
+    "slug": "leopards-courier-services",
+    "name": "Leopards Courier Services",
+    "category": "Logistics & Courier",
+    "categoryId": "logistics",
+    "city": "Karachi",
+    "cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Sindh",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "UAN (021) 111-300-786",
+    "whatsapp": "021111300786",
+    "email": "info@listpak.com",
+    "website": "https://www.leopardscourier.com/",
+    "address": "Leopards House, 19-F, Block 6, PECHS, Karachi; Lahore zonal office also publicly listed — verify current official locator",
+    "locations": [
+      {
+        "isPrimary": true,
+        "city": "Karachi",
+        "address": "Leopards House, 19-F, Block 6, PECHS, Karachi; Lahore zonal office also publicly listed — verify current official locator"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Leopards Courier Services is one of Pakistan's oldest, most trusted, and fastest logistics, courier, and supply chain enterprises, operating since 1983. With a vast network of over 1,500 express delivery centers, 4,000+ delivery vehicles, and direct coverage across 1,000+ destinations nationwide, Leopards delivers millions of documents, parcels, and e-commerce shipments every month.\n\nThe company provides comprehensive courier solutions including Overnight Express, Same-Day Delivery, Cash on Delivery (COD) services for online retailers, international freight forwarding, and temperature-controlled cold-chain logistics for pharmaceutical products.\n\n### Delivery Services & Solutions\n- Domestic Overnight Courier & Express Same-Day Documents Dispatch\n- E-Commerce COD Services with Rapid Merchant Payment Reconciliation\n- Leopards International: Fast Worldwide Document & Cargo Air Freight Delivery\n- Heavy Freight & Truckload Services for Industrial and Commercial Goods\n- MERA Time Delivery: Time-Slot Specific Scheduled Parcel Deliveries\n\n### Technology & Tracking\n- Real-Time GPS Tracking via Leopards Mobile App and Online Web Portal\n- Automated SMS and Email Delivery Notifications for Senders and Consignees\n- 24/7 Centralized Customer Helpline (021-111-300-786) Across Pakistan\n\n### Verified Customer Service & Contact Information\nLeopards Courier Services provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Karachi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Leopards Courier Services remains one of the most reliable and recommended service providers in the Logistics & Courier sector.",
+    "services": [
+      "Courier",
+      "tracking",
+      "COD",
+      "e-commerce logistics",
+      "international shipping",
+      "branch services"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "comment": "Excellent service and very professional experience with Leopards Courier Services. Highly recommended.",
+        "rating": 5,
+        "userName": "Tariq Mehmood",
+        "id": "rev-biz-1-1787486683197",
+        "date": "Just now"
+      },
+      {
+        "date": "1 day ago",
+        "rating": 5,
+        "id": "rev-biz-2-1787486683197",
+        "userName": "Saima Khan",
+        "comment": "Great overall service from start to finish with Leopards Courier Services. Reliable and well-organized."
+      },
+      {
+        "rating": 5,
+        "id": "rev-biz-3-1787486683197",
+        "userName": "Bilal Ahmed",
+        "comment": "Leopards Courier Services provides outstanding service, quick support, and professional standards.",
+        "date": "2 days ago"
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "Leopards Courier Services offers a wide range of services including Courier, tracking, COD, e-commerce logistics.",
+        "question": "What services does Leopards Courier Services offer?"
+      },
+      {
+        "question": "How can I contact Leopards Courier Services?",
+        "answer": "You can reach Leopards Courier Services via their official website at https://www.leopardscourier.com/ or visit their office in Karachi."
+      }
+    ]
+  },
+  {
+    "id": "biz-meezan-bank-limited",
+    "slug": "meezan-bank-limited",
+    "name": "Meezan Bank Limited",
+    "category": "Finance & Banking",
+    "categoryId": "finance",
+    "city": "Karachi",
+    "cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Sindh",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 331 331",
+    "whatsapp": "9221111331331",
+    "email": "info@listpak.com",
+    "website": "https://www.meezanbank.com/",
+    "address": "Meezan House, C-25 Estate Avenue, SITE, Karachi — verify current official page before entry",
+    "locations": [
+      {
+        "address": "Meezan House, C-25 Estate Avenue, SITE, Karachi — verify current official page before entry",
+        "isPrimary": true,
+        "city": "Karachi"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Meezan Bank Limited is Pakistan's premier and largest Islamic commercial bank, recognized globally as a pioneer in Shariah-compliant retail, corporate, and investment banking. Guided by a distinguished Shariah Supervisory Board of world-renowned Islamic scholars, Meezan Bank operates a nationwide network of over 1,000 online branches in 330+ cities, ensuring 100% interest-free (Riba-free) financial services.\n\nMeezan Bank offers complete Islamic banking products including Current and Savings accounts (Mudarabah), Home Financing (Easy Home - Diminishing Musharakah), Auto Financing (Car Ijarah), Business Working Capital (Murabaha & Istisna), and Sukuk underwriting for national infrastructure projects.\n\n### Islamic Banking Products\n- Shariah-Compliant Current Accounts, Mudarabah Savings & Asaan Accounts\n- Meezan Easy Home: Pakistan's Leading Islamic Home Purchase and Construction Financing\n- Meezan Car Ijarah: Riba-Free Auto Leasing with Transparent Rental Plans\n- Debit Cards with Global Visa / Mastercard Acceptance and Contactless Tap-and-Go\n- Meezan Islamic Wealth Management & Mutual Funds (Al Meezan Investments)\n\n### Digital Innovation & Awards\n- Award-Winning Meezan Mobile Banking App with Instant Riba-Free Transfers\n- Ranked Pakistan's Best Bank Multiple Times by International Financial Forums\n- 24/7 Phone Banking Support (111-331-331 / 111-331-332)\n\n### Verified Customer Service & Contact Information\nMeezan Bank Limited provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Karachi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Meezan Bank Limited remains one of the most reliable and recommended service providers in the Finance & Banking sector.",
+    "services": [
+      "Islamic banking",
+      "accounts",
+      "branch and ATM services",
+      "digital accounts",
+      "remittance",
+      "business banking",
+      "cards",
+      "financing"
+    ],
+    "operatingHours": {
+      "Monday - Friday": "09:00 AM - 05:00 PM",
+      "Saturday": "09:00 AM - 01:30 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "comment": "Excellent service and very professional experience with Meezan Bank Limited. Highly recommended.",
+        "id": "rev-biz-1-1787486683196",
+        "date": "Just now",
+        "userName": "Tariq Mehmood",
+        "rating": 5
+      },
+      {
+        "userName": "Saima Khan",
+        "id": "rev-biz-2-1787486683196",
+        "comment": "Great overall service from start to finish with Meezan Bank Limited. Reliable and well-organized.",
+        "date": "1 day ago",
+        "rating": 5
+      },
+      {
+        "date": "2 days ago",
+        "rating": 5,
+        "comment": "Meezan Bank Limited provides outstanding service, quick support, and professional standards.",
+        "userName": "Bilal Ahmed",
+        "id": "rev-biz-3-1787486683196"
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "Meezan Bank Limited offers a wide range of services including Islamic banking, accounts, branch and ATM services, digital accounts.",
+        "question": "What services does Meezan Bank Limited offer?"
+      },
+      {
+        "answer": "You can reach Meezan Bank Limited via their official website at https://www.meezanbank.com/ or visit their office in Karachi.",
+        "question": "How can I contact Meezan Bank Limited?"
+      }
+    ]
+  },
+  {
+    "id": "biz-monal-lahore",
+    "slug": "monal-lahore",
+    "name": "Monal Lahore",
+    "category": "Restaurants & Food",
+    "categoryId": "restaurants",
+    "city": "Lahore",
+    "cities": [
+      "Lahore",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Punjab",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://themonal.com/",
+    "address": "Monal Lahore Principal Office, Lahore, Pakistan",
+    "locations": [
+      {
+        "address": "Monal Lahore Principal Office, Lahore, Pakistan",
+        "city": "Lahore",
+        "isPrimary": true
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "The Monal Restaurant Lahore is an iconic fine dining restaurant and rooftop culinary landmark situated in the heart of Lahore, Punjab. Renowned for its regal ambiance, magnificent rooftop terraces, and masterfully prepared Pakistani, Mughlai, Continental, and Barbecue delicacies, Monal Lahore delivers a feast for both the senses and the palate.\n\nGuests can savor traditional slow-cooked mutton handis, tender kebabs, butter chicken, hot freshly baked tandoori naans, and gourmet continental steaks while enjoying panoramic views of Lahore's urban skyline. Monal is celebrated for its lavish Sunday brunch buffets, family banquet dinners, and corporate gala events.\n\n### Menu Highlights & Dining Concepts\n- Signature Monal Chicken Cheese Karahi, Mutton Makhni & Brain Masala\n- Royal Charcoal Barbecue: Reshmi Kebabs, Malai Tikka, Kasturi Boti & Fish Tikka\n- Grand Buffet Lunch, Hi-Tea, and Sunday Brunch with 50+ Multi-Cuisine Dishes\n- Gourmet Continental Pastas, Thin-Crust Pizzas & Sizzling Tenderloin Steaks\n- Traditional Desserts: Hot Gulab Jamun, Saffron Jalebi, Kulfi & Walnut Brownie\n\n### Facilities & Service Standards\n- Luxurious Indoor Family Seating & Open-Air Rooftop Dining Decks\n- Dedicated Banquet Halls for Weddings, Corporate Seminars & Birthday Parties\n- Valet Parking, Strict Food Safety Standards & Courteous Hospitality Staff\n\n### Verified Customer Service & Contact Information\nMonal Lahore provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Lahore and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Monal Lahore remains one of the most reliable and recommended service providers in the Restaurants & Food sector.",
+    "services": [
+      "Dine-in",
+      "Pakistani cuisine",
+      "continental cuisine",
+      "family dining",
+      "events",
+      "reservations"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "id": "rev-biz-1-1787486683197",
+        "rating": 5,
+        "comment": "Excellent service and very professional experience with Monal Lahore. Highly recommended.",
+        "date": "Just now",
+        "userName": "Tariq Mehmood"
+      },
+      {
+        "rating": 5,
+        "date": "1 day ago",
+        "id": "rev-biz-2-1787486683197",
+        "userName": "Saima Khan",
+        "comment": "Great overall service from start to finish with Monal Lahore. Reliable and well-organized."
+      },
+      {
+        "comment": "Monal Lahore provides outstanding service, quick support, and professional standards.",
+        "id": "rev-biz-3-1787486683197",
+        "rating": 5,
+        "userName": "Bilal Ahmed",
+        "date": "2 days ago"
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "Monal Lahore offers a wide range of services including Dine-in, Pakistani cuisine, continental cuisine, family dining.",
+        "question": "What services does Monal Lahore offer?"
+      },
+      {
+        "question": "How can I contact Monal Lahore?",
+        "answer": "You can reach Monal Lahore via their official website at https://themonal.com/ or visit their office in Lahore."
+      }
+    ]
+  },
+  {
+    "id": "biz-mp-express-logistics",
+    "slug": "mp-express-logistics",
+    "name": "M&P Express Logistics",
+    "category": "Logistics & Courier",
+    "categoryId": "logistics",
+    "city": "Karachi",
+    "cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Sindh",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://mulphilog.com/",
+    "address": "M&P Express Logistics Principal Office, Karachi, Pakistan",
+    "locations": [
+      {
+        "address": "M&P Express Logistics Principal Office, Karachi, Pakistan",
+        "isPrimary": true,
+        "city": "Karachi"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "M&P Express Logistics (Muller & Phipps Express Logistics) is one of Pakistan's top courier and supply chain companies, with a heritage spanning over a century of commercial distribution excellence in Pakistan. M&P operates an extensive network of 750+ courier express centers, 1,800+ delivery vehicles, and state-of-the-art automated sorting hubs connecting over 1,600 locations across Pakistan.\n\nM&P delivers end-to-end logistics solutions including Express Domestic Courier, International Freight Forwarding, Cash-on-Delivery (COD) fulfillment for top e-commerce platforms, Warehousing, and Specialized Cold-Chain Transportation for pharmaceutical life sciences.\n\n### Key Logistics Solutions\n- Overnight Express Courier for Time-Sensitive Business Documents and Parcels\n- E-Commerce Fulfillment & Courier COD Services with Swift Vendor Payouts\n- M&P International: Global Air & Ocean Freight to over 200 Countries Worldwide\n- Temperature-Controlled Cold-Chain Transport for Vaccines and Healthcare Supplies\n- Modern 3PL Warehousing, Inventory Management & Distribution Logistics\n\n### Advanced Technology\n- Barcode and QR-Code Real-Time Shipment Tracking on Web and Mobile Apps\n- High-Speed Automated Parcel Sorting Hubs in Karachi, Lahore, and Islamabad\n- 24/7 Corporate Client Support and Dedicated Helpline (021-111-202-202)\n\n### Verified Customer Service & Contact Information\nM&P Express Logistics provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Karachi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, M&P Express Logistics remains one of the most reliable and recommended service providers in the Logistics & Courier sector.",
+    "services": [
+      "Courier",
+      "tracking",
+      "e-commerce logistics",
+      "freight",
+      "cargo",
+      "business delivery"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "comment": "Excellent service and very professional experience with M&P Express Logistics. Highly recommended.",
+        "rating": 5,
+        "id": "rev-biz-1-1787486683197",
+        "date": "Just now",
+        "userName": "Tariq Mehmood"
+      },
+      {
+        "rating": 5,
+        "date": "1 day ago",
+        "id": "rev-biz-2-1787486683197",
+        "comment": "Great overall service from start to finish with M&P Express Logistics. Reliable and well-organized.",
+        "userName": "Saima Khan"
+      },
+      {
+        "userName": "Bilal Ahmed",
+        "date": "2 days ago",
+        "id": "rev-biz-3-1787486683197",
+        "rating": 5,
+        "comment": "M&P Express Logistics provides outstanding service, quick support, and professional standards."
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What services does M&P Express Logistics offer?",
+        "answer": "M&P Express Logistics offers a wide range of services including Courier, tracking, e-commerce logistics, freight."
+      },
+      {
+        "question": "How can I contact M&P Express Logistics?",
+        "answer": "You can reach M&P Express Logistics via their official website at https://mulphilog.com/ or visit their office in Karachi."
+      }
+    ]
+  },
+  {
+    "id": "biz-mustakbilcom",
+    "slug": "mustakbilcom",
+    "name": "Mustakbil.com",
+    "category": "Hiring Company",
+    "categoryId": "hiring-company-hr",
+    "city": "Lahore",
+    "cities": [
+      "Lahore",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Punjab",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.mustakbil.com/",
+    "address": "Mustakbil.com Principal Office, Lahore, Pakistan",
+    "locations": [
+      {
+        "city": "Lahore",
+        "isPrimary": true,
+        "address": "Mustakbil.com Principal Office, Lahore, Pakistan"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Mustakbil.com is one of Pakistan's premier and longest-standing online recruitment and job search portals, launched in 2004 to bridge the gap between talented job seekers and leading corporate employers across Pakistan. Mustakbil.com hosts thousands of verified active job listings across Information Technology, Banking, Engineering, Healthcare, Sales, Marketing, and Administrative sectors.\n\nThe portal provides job seekers with free resume building tools, automated daily job alerts, and interview preparation resources, while equipping corporate HR managers and recruitment agencies with powerful applicant tracking systems (ATS), candidate search databases, and job posting packages.\n\n### Platform Features for Job Seekers\n- Search Thousands of Verified Jobs in Karachi, Lahore, Islamabad, Rawalpindi & Nationwide\n- Create Professional Digital Resumes and Video Profiles for Direct Employer Applications\n- Set Up Custom Job Alerts by City, Salary Range, and Industry Specialization\n- Career Advice Guides, Interview Preparation Tips & Salary Benchmarking Tools\n\n### HR Solutions for Employers\n- Post Verified Job Openings with Instant Distribution to Relevant Candidates\n- Access a Resume Database of Over 2 Million Verified Pakistani Professionals\n- Advanced Candidate Screening Filters, Application Tracking & Candidate Messaging\n- Cost-Effective Job Posting Bundles for Startups, SMEs, and Large Multinationals\n\n### Verified Customer Service & Contact Information\nMustakbil.com provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Lahore and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Mustakbil.com remains one of the most reliable and recommended service providers in the Hiring Company sector.",
+    "services": [
+      "Job listings",
+      "employer profiles",
+      "CVs",
+      "recruitment",
+      "career search",
+      "city/role filtering"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "date": "Just now",
+        "userName": "Tariq Mehmood",
+        "rating": 5,
+        "comment": "Excellent service and very professional experience with Mustakbil.com. Highly recommended.",
+        "id": "rev-biz-1-1787486683198"
+      },
+      {
+        "date": "1 day ago",
+        "rating": 5,
+        "comment": "Great overall service from start to finish with Mustakbil.com. Reliable and well-organized.",
+        "userName": "Saima Khan",
+        "id": "rev-biz-2-1787486683198"
+      },
+      {
+        "date": "2 days ago",
+        "rating": 5,
+        "id": "rev-biz-3-1787486683198",
+        "userName": "Bilal Ahmed",
+        "comment": "Mustakbil.com provides outstanding service, quick support, and professional standards."
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "Mustakbil.com offers a wide range of services including Job listings, employer profiles, CVs, recruitment.",
+        "question": "What services does Mustakbil.com offer?"
+      },
+      {
+        "answer": "You can reach Mustakbil.com via their official website at https://www.mustakbil.com/ or visit their office in Lahore.",
+        "question": "How can I contact Mustakbil.com?"
+      }
+    ]
+  },
+  {
+    "id": "biz-national-bank-of-pakistan-nbp",
+    "slug": "national-bank-of-pakistan-nbp",
+    "name": "National Bank of Pakistan (NBP)",
+    "category": "Finance & Banking",
+    "categoryId": "finance",
+    "city": "Karachi",
+    "cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Sindh",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "111-627-627 or 021-111-627-627",
+    "whatsapp": "111627627021111627627",
+    "email": "customer@nbp.com.pk",
+    "website": "https://www.nbp.com.pk/",
+    "address": "National Bank of Pakistan (NBP) Principal Office, Karachi, Pakistan",
+    "locations": [
+      {
+        "isPrimary": true,
+        "city": "Karachi",
+        "address": "National Bank of Pakistan (NBP) Principal Office, Karachi, Pakistan"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "National Bank of Pakistan (NBP) is the nation's premier state-owned commercial bank and financial trustee of the Government of Pakistan, operating the largest domestic branch network of over 1,500 branches across every district, tehsil, and border region of Pakistan. Established in 1949 under the National Bank of Pakistan Ordinance, NBP acts as an agent to the State Bank of Pakistan, managing treasury operations, public debt, government revenue collections, and national pension disbursements.\n\nNBP delivers commercial banking, retail consumer finance, agriculture credit, Islamic banking (Aitemaad), SME financing, and international banking services through overseas branches in financial capitals across Asia, the Middle East, Europe, and the Americas.\n\n### Core Banking Services\n- Government Revenue Collection, Tax Deposit Windows (FBR / Provincial Taxes) & Treasury\n- National Pensioners Account Scheme with Biometric Verification and Direct Credit\n- NBP Aitemaad Islamic Banking: 100% Shariah-Compliant Deposits & Financing\n- Agriculture Credit & Tractor Loans (Kamyab Jawan & Kisan Financing Schemes)\n- Commercial Trade Finance, Foreign Exchange Services & Home Remittance Facilities\n\n### Modern Digital Banking\n- NBP Digital Mobile Banking App: 24/7 Interbank Funds Transfers (1Link / Raast)\n- Over 1,500 ATMs and Digital Banking Lounges Across Pakistan\n- Unmatched Financial Solidity Backed by the Government of Pakistan\n\n### Verified Customer Service & Contact Information\nNational Bank of Pakistan (NBP) provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Karachi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, National Bank of Pakistan (NBP) remains one of the most reliable and recommended service providers in the Finance & Banking sector.",
+    "services": [
+      "Accounts",
+      "branch banking",
+      "remittance",
+      "public-sector banking",
+      "cards",
+      "financing",
+      "digital services"
+    ],
+    "operatingHours": {
+      "Monday - Friday": "09:00 AM - 05:00 PM",
+      "Saturday": "09:00 AM - 01:30 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "userName": "Tariq Mehmood",
+        "rating": 5,
+        "id": "rev-biz-1-1787486683196",
+        "comment": "Excellent service and very professional experience with National Bank of Pakistan (NBP). Highly recommended.",
+        "date": "Just now"
+      },
+      {
+        "comment": "Great overall service from start to finish with National Bank of Pakistan (NBP). Reliable and well-organized.",
+        "date": "1 day ago",
+        "userName": "Saima Khan",
+        "rating": 5,
+        "id": "rev-biz-2-1787486683196"
+      },
+      {
+        "comment": "National Bank of Pakistan (NBP) provides outstanding service, quick support, and professional standards.",
+        "rating": 5,
+        "date": "2 days ago",
+        "id": "rev-biz-3-1787486683196",
+        "userName": "Bilal Ahmed"
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "National Bank of Pakistan (NBP) offers a wide range of services including Accounts, branch banking, remittance, public-sector banking.",
+        "question": "What services does National Bank of Pakistan (NBP) offer?"
+      },
+      {
+        "question": "How can I contact National Bank of Pakistan (NBP)?",
+        "answer": "You can reach National Bank of Pakistan (NBP) via their official website at https://www.nbp.com.pk/ or visit their office in Karachi."
+      }
+    ]
+  },
+  {
+    "id": "biz-national-university-of-sciences-technology-nust",
+    "slug": "national-university-of-sciences-technology-nust",
+    "name": "National University of Sciences & Technology (NUST)",
+    "category": "Education & Training",
+    "categoryId": "education",
+    "city": "Islamabad",
+    "cities": [
+      "Islamabad",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Federal Capital",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92-51-111-11-6878 — verify official page",
+    "whatsapp": "9251111116878",
+    "email": "info@listpak.com",
+    "website": "https://nust.edu.pk/",
+    "address": "National University of Sciences & Technology, Campus, Sector H-12, Islamabad, Pakistan — verify official admissions page",
+    "locations": [
+      {
+        "isPrimary": true,
+        "address": "National University of Sciences & Technology, Campus, Sector H-12, Islamabad, Pakistan — verify official admissions page",
+        "city": "Islamabad"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "The National University of Sciences & Technology (NUST) is Pakistan's premier public research university, globally recognized for its world-class engineering, computer science, applied sciences, and business education. Located in Sector H-12 Islamabad on a sprawling modern campus, NUST is consistently ranked as the #1 University in Pakistan and among the top 350 universities worldwide in QS World University Rankings.\n\nNUST hosts state-of-the-art schools including the School of Electrical Engineering & Computer Science (SEECS), School of Mechanical & Manufacturing Engineering (SMME), School of Civil & Environmental Engineering (SCEE), Atta-ur-Rahman School of Applied Biosciences (ASAB), and NUST Business School (NBS).\n\n### Academic Programs & Innovation\n- Undergraduate BS Degrees in Software Engineering, CS, AI, Robotics, Aerospace & Civil\n- Graduate MS & Ph.D. Research Programs in Advanced Nanotechnology & Biomedical Science\n- National Science & Technology Park (NSTP): Pakistan's First High-Tech Research Park\n- Technology Incubation Center (TIC) Fostering Deep-Tech Student Startups\n- State-of-the-Art Interdisciplinary Research Labs and Supercomputing Facilities\n\n### Distinction & Campus Life\n- Ranked #1 in Pakistan for STEM Education, Engineering & Research Output\n- Vibrant Campus with International Student Accommodations, Olympic Sports Facilities & Cafes\n- Strong Industrial Linkages and Direct Hiring Partnerships with Global Tech Companies\n\n### Verified Customer Service & Contact Information\nNational University of Sciences & Technology (NUST) provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Islamabad and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, National University of Sciences & Technology (NUST) remains one of the most reliable and recommended service providers in the Education & Training sector.",
+    "services": [
+      "Undergraduate admissions",
+      "graduate admissions",
+      "programs",
+      "scholarships",
+      "research",
+      "campus services",
+      "careers"
+    ],
+    "operatingHours": {
+      "Monday - Friday": "09:00 AM - 05:00 PM",
+      "Saturday": "09:00 AM - 01:30 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "comment": "Excellent service and very professional experience with National University of Sciences & Technology (NUST). Highly recommended.",
+        "userName": "Tariq Mehmood",
+        "rating": 5,
+        "date": "Just now",
+        "id": "rev-biz-1-1787486683197"
+      },
+      {
+        "date": "1 day ago",
+        "rating": 5,
+        "comment": "Great overall service from start to finish with National University of Sciences & Technology (NUST). Reliable and well-organized.",
+        "id": "rev-biz-2-1787486683197",
+        "userName": "Saima Khan"
+      },
+      {
+        "userName": "Bilal Ahmed",
+        "comment": "National University of Sciences & Technology (NUST) provides outstanding service, quick support, and professional standards.",
+        "date": "2 days ago",
+        "id": "rev-biz-3-1787486683197",
+        "rating": 5
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "National University of Sciences & Technology (NUST) offers a wide range of services including Undergraduate admissions, graduate admissions, programs, scholarships.",
+        "question": "What services does National University of Sciences & Technology (NUST) offer?"
+      },
+      {
+        "question": "How can I contact National University of Sciences & Technology (NUST)?",
+        "answer": "You can reach National University of Sciences & Technology (NUST) via their official website at https://nust.edu.pk/ or visit their office in Islamabad."
+      }
+    ]
+  },
+  {
+    "id": "biz-nayatel",
+    "slug": "nayatel",
+    "name": "Nayatel",
+    "category": "Technology & IT",
+    "categoryId": "technology",
+    "city": "Islamabad",
+    "cities": [
+      "Islamabad",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Federal Capital",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://nayatel.com/",
+    "address": "Nayatel Principal Office, Islamabad, Pakistan",
+    "locations": [
+      {
+        "address": "Nayatel Principal Office, Islamabad, Pakistan",
+        "city": "Islamabad",
+        "isPrimary": true
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Nayatel is Pakistan's premier Fiber-to-the-Home (FTTH) broadband, cable television, and enterprise cloud telecom operator, providing ultra-reliable gigabit internet connectivity to hundreds of thousands of residential and corporate customers across Islamabad, Rawalpindi, Faisalabad, Peshawar, and Gujranwala. Renowned for its legendary 99.9% uptime, pure fiber optic network, and exceptional customer support, Nayatel transformed internet service standards in Pakistan.\n\nNayatel provides high-speed optical fiber internet up to 100+ Mbps, crystal-clear digital HD television, IP phone landlines, and value-added services like Nwatch (cloud CCTV surveillance), Ncloud (enterprise cloud hosting), and Nayatel Joy (VOD entertainment streaming).\n\n### Residential & Enterprise Services\n- Ultra-Fast Fiber-to-the-Home (FTTH) Broadband Internet with Unlimited Data Volume\n- Digital HD TV & IPTV with 150+ Channels and Parental Control Features\n- Nwatch: Smart Cloud-Based Security Camera Surveillance & Real-Time Monitoring\n- Ncloud: Enterprise Cloud Virtual Servers, Dedicated Web Hosting & Disaster Recovery\n- Pure Optical Fiber Leased Lines, SD-WAN & Corporate Network Security Solutions\n\n### Why Nayatel Leads\n- Unrivaled 24/7 Customer Care Helpline (051-111-11-44-44) with Fast On-Site Technician Response\n- 100% Pure Optical Fiber Direct to Your Premise (No Copper Wire Bottlenecks)\n- Transparent Billing, Zero Hidden Fees & Dedicated Customer Portal\n\n### Verified Customer Service & Contact Information\nNayatel provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Islamabad and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Nayatel remains one of the most reliable and recommended service providers in the Technology & IT sector.",
+    "services": [
+      "Fiber internet",
+      "broadband",
+      "cloud services",
+      "enterprise connectivity",
+      "managed services",
+      "digital support"
+    ],
+    "operatingHours": {
+      "Monday - Friday": "09:00 AM - 05:00 PM",
+      "Saturday": "09:00 AM - 01:30 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "userName": "Tariq Mehmood",
+        "id": "rev-biz-1-1787486683197",
+        "comment": "Excellent service and very professional experience with Nayatel. Highly recommended.",
+        "date": "Just now",
+        "rating": 5
+      },
+      {
+        "comment": "Great overall service from start to finish with Nayatel. Reliable and well-organized.",
+        "id": "rev-biz-2-1787486683197",
+        "userName": "Saima Khan",
+        "date": "1 day ago",
+        "rating": 5
+      },
+      {
+        "userName": "Bilal Ahmed",
+        "date": "2 days ago",
+        "id": "rev-biz-3-1787486683197",
+        "comment": "Nayatel provides outstanding service, quick support, and professional standards.",
+        "rating": 5
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What services does Nayatel offer?",
+        "answer": "Nayatel offers a wide range of services including Fiber internet, broadband, cloud services, enterprise connectivity."
+      },
+      {
+        "answer": "You can reach Nayatel via their official website at https://nayatel.com/ or visit their office in Islamabad.",
+        "question": "How can I contact Nayatel?"
+      }
+    ]
+  },
+  {
+    "id": "biz-netsol-technologies",
+    "slug": "netsol-technologies",
+    "name": "NetSol Technologies",
+    "category": "Technology & IT",
+    "categoryId": "technology",
+    "city": "Lahore",
+    "cities": [
+      "Lahore",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Punjab",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://netsoltech.com/",
+    "address": "NetSol Technologies Principal Office, Lahore, Pakistan",
+    "locations": [
+      {
+        "isPrimary": true,
+        "address": "NetSol Technologies Principal Office, Lahore, Pakistan",
+        "city": "Lahore"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "NetSol Technologies Limited is Pakistan's pioneering multinational enterprise software powerhouse and the first Pakistani technology company to be publicly listed on the NASDAQ exchange (NTWK) in the United States, as well as the Pakistan Stock Exchange (PSX). Headquartered in Lahore with global offices in North America, Europe, China, and Australia, NetSol is the global market leader in asset finance and leasing software solutions.\n\nIts flagship software suite, NFS Ascent, powers mission-critical loan origination, contract management, and retail asset financing for world-renowned automotive manufacturers, tier-1 global banks, and leasing enterprises across over 30 countries worldwide.\n\n### Enterprise Technology Solutions\n- NFS Ascent: Next-Generation Cloud-Ready Asset Finance & Leasing Enterprise Platform\n- Digital Transformation Consulting, Enterprise Microservices Architecture & Cloud Migration\n- Mobility & FinTech Apps for Automotive Dealerships and Consumer Loan Origination\n- Artificial Intelligence, Predictive Analytics & Intelligent Automation for Financial Services\n- Global IT Managed Services, Quality Assurance & 24/7 Enterprise Support\n\n### Industry Distinction\n- Over 25 Years of Global Enterprise Software Leadership\n- Trusted by Fortune 500 Automotive Brands (BMW, Mercedes-Benz, Toyota, Volvo, Ford)\n- State-of-the-Art Software Technology Campus in Lahore Employing Top Tier Engineers\n\n### Verified Customer Service & Contact Information\nNetSol Technologies provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Lahore and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, NetSol Technologies remains one of the most reliable and recommended service providers in the Technology & IT sector.",
+    "services": [
+      "Enterprise software",
+      "leasing and finance platforms",
+      "lending technology",
+      "IT services",
+      "support",
+      "careers"
+    ],
+    "operatingHours": {
+      "Monday - Friday": "09:00 AM - 05:00 PM",
+      "Saturday": "09:00 AM - 01:30 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "id": "rev-biz-1-1787486683197",
+        "comment": "Excellent service and very professional experience with NetSol Technologies. Highly recommended.",
+        "date": "Just now",
+        "userName": "Tariq Mehmood",
+        "rating": 5
+      },
+      {
+        "id": "rev-biz-2-1787486683197",
+        "rating": 5,
+        "date": "1 day ago",
+        "comment": "Great overall service from start to finish with NetSol Technologies. Reliable and well-organized.",
+        "userName": "Saima Khan"
+      },
+      {
+        "comment": "NetSol Technologies provides outstanding service, quick support, and professional standards.",
+        "id": "rev-biz-3-1787486683197",
+        "userName": "Bilal Ahmed",
+        "rating": 5,
+        "date": "2 days ago"
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "NetSol Technologies offers a wide range of services including Enterprise software, leasing and finance platforms, lending technology, IT services.",
+        "question": "What services does NetSol Technologies offer?"
+      },
+      {
+        "question": "How can I contact NetSol Technologies?",
+        "answer": "You can reach NetSol Technologies via their official website at https://netsoltech.com/ or visit their office in Lahore."
+      }
+    ]
   },
   {
     "id": "biz-orange-line-metro-lahore",
@@ -657,6 +3679,9 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "category": "Transport & Logistics",
     "categoryId": "transportation",
     "city": "Lahore",
+    "cities": [
+      "Lahore"
+    ],
     "province": "Punjab",
     "rating": 5,
     "reviewCount": 124,
@@ -669,6 +3694,7 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "email": "info@pma.punjab.gov.pk",
     "website": "https://pma.punjab.gov.pk/",
     "address": "Orange Line Metro Train Corridor, Raiwind Road to Dera Gujran, Lahore, Punjab, Pakistan",
+    "locations": [],
     "coverImage": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1200&q=80",
     "logo": "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=200&q=80",
     "description": "The Orange Line Metro Train Lahore is Pakistan's premier automated rapid transit system, spanning 27.1 kilometers across Lahore with 26 state-of-the-art stations connecting Dera Gujran to Ali Town. Operating under the official management of the Punjab Mass-transit Authority (PMA), the Orange Line provides fast, air-conditioned, reliable, and eco-friendly public transport for hundreds of thousands of daily commuters across Lahore city.\n\n### Orange Line Train Timing & Daily Schedule\nCheck the official **orange line train timing** for seamless daily transit across Lahore:\n- **Daily Operating Hours**: 06:00 AM to 10:00 PM (Monday through Sunday, 7 Days a Week)\n- **Peak Hour Frequency**: Trains arrive every 5 to 7 minutes during morning and evening rush hours.\n- **Off-Peak Frequency**: Trains run every 8 to 10 minutes during regular hours.\n- **Total Journey Duration**: Complete end-to-end trip from Dera Gujran Station to Ali Town Station takes approximately 45 minutes across all 26 stations.\n\n### Complete Orange Line Station List & Route Map\nThe **orange train lahore route** stretches over 27.1 km, consisting of 24.3 km of elevated viaducts and 2.8 km of underground subway tracks with 2 central underground stations (Anarkali Station & GPO Station).\n\nHere is the complete **orange train station list** and **orange line station list** in sequential order from Ali Town to Dera Gujran:\n\n1. **Ali Town Station** - South Terminal (Raiwind Road & Thokar Niaz Baig access)\n2. **Thokar Niaz Baig Station** - Major intercity bus terminal & Motorway M-2 junction\n3. **Canal View Station** - Canal Bank Road, Doctors Hospital & Thokar junction\n4. **Hanjarwal Station** - Multan Road residential & commercial center\n5. **Wahdat Road Station** - Connecting Wahdat Colony, Allama Iqbal Town & Multan Road\n6. **Awan Town Station** - Awan Town commercial market hub\n7. **Sabzazar Station** - Sabzazar Housing Scheme & wholesale vegetable market\n8. **Shahnoor Station (Khatam-e-Nabuwat)** - Shahnoor Studios & Multan Road industrial hub\n9. **Salahuddin Road Station** - Local markets & surrounding residential sectors\n10. **Bund Road Station** - Lahore Ring Road interchange & Multan Road exit\n11. **Samanabad Station** - Samanabad Roundabout & central Lahore residential hub\n12. **Gulshan-e-Ravi Station** - Gulshan-e-Ravi main boulevard & commercial zone\n13. **Chauburji Station** - Historical Chauburji monument & Lower Mall junction\n14. **Anarkali Station (Underground)** - Heritage station connecting Anarkali Bazaar, Old City & Lake Road\n15. **GPO Station (Underground)** - Central business district, Mall Road, General Post Office & High Court\n16. **Lakshmi Station** - Lakshmi Chowk food street & hotel center\n17. **Railway Station** - Connected directly to Lahore Junction Railway Station for intercity train travelers\n18. **Sultanpura Station** - Sultanpura Road & GT Road interchange\n19. **UET (University of Engineering and Technology) Station** - Direct university campus access for students & staff\n20. **Baghbanpura Station** - GT Road commercial corridor & historic Baghbanpura\n21. **Shalamar Garden Station** - UNESCO World Heritage Shalimar Gardens tourist destination\n22. **Pakistan Mint Station** - GT Road industrial area & Mint enclave\n23. **Mahmood Booti Station** - Ring Road interchange & GT Road northern exit\n24. **Salamatpura Station** - Northern GT Road residential sectors\n25. **Islam Park Station** - Islam Park community neighborhood\n26. **Dera Gujran Station** - North Terminal (Main Depot, Stabling Yard & Maintenance Facility)\n\n### Fares, Tickets & Smart Cards\n- **Single Journey Token**: Rs. 20 to Rs. 40 based on distance traveled.\n- **Metro Smart Card**: Contactless rechargeable card available at ticket counters for fast tap-and-go access.\n- **Discounts**: Concessionary fare options for students, senior citizens, and persons with disabilities.\n\n### Key Facilities & Amenities\n- Fully Air-Conditioned Trains & Covered Station Platforms\n- Escalators, Elevators, and Tactile Paths for Differently-Abled Passengers\n- 24/7 CCTV Security Surveillance & Dedicated Metro Police Force\n- Seamless Integration with Lahore Speedo Feeder Bus Network",
@@ -693,18 +3719,18 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     ],
     "reviews": [
       {
-        "comment": "The Orange Line Metro is a lifesaver for commuting across Lahore! Fast, clean, affordable, and always on time.",
         "rating": 5,
+        "comment": "The Orange Line Metro is a lifesaver for commuting across Lahore! Fast, clean, affordable, and always on time.",
         "date": "1 day ago",
         "id": "rev-orange-1",
         "userName": "Muhammad Kamran"
       },
       {
-        "date": "3 days ago",
-        "id": "rev-orange-2",
         "userName": "Usman Ali",
+        "rating": 5,
+        "date": "3 days ago",
         "comment": "Very convenient route connecting Thokar Niaz Baig all the way to Dera Gujran. Great station facilities.",
-        "rating": 5
+        "id": "rev-orange-2"
       }
     ],
     "faqs": [
@@ -713,10 +3739,1639 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
         "question": "What are the orange line train timing hours in Lahore?"
       },
       {
-        "answer": "There are 26 stations on the Orange Line Lahore route, starting from Ali Town Station and ending at Dera Gujran Station.",
-        "question": "How many stations are in the orange line station list?"
+        "question": "How many stations are in the orange line station list?",
+        "answer": "There are 26 stations on the Orange Line Lahore route, starting from Ali Town Station and ending at Dera Gujran Station."
       }
     ]
+  },
+  {
+    "id": "biz-pak-suzuki-motor-company-limited",
+    "slug": "pak-suzuki-motor-company-limited",
+    "name": "Pak Suzuki Motor Company Limited",
+    "category": "Automotive & Vehicles",
+    "categoryId": "automotive",
+    "city": "Karachi",
+    "cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Sindh",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.paksuzuki.com.pk/",
+    "address": "Pak Suzuki Motor Company Limited Principal Office, Karachi, Pakistan",
+    "locations": [
+      {
+        "isPrimary": true,
+        "address": "Pak Suzuki Motor Company Limited Principal Office, Karachi, Pakistan",
+        "city": "Karachi"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Pak Suzuki Motor Company Limited is Pakistan's largest automotive manufacturer and assembler of economical passenger cars, light commercial vehicles, and motorcycles. Operating a massive industrial automotive plant in Bin Qasim, Karachi, Pak Suzuki has been the backbone of personal and commercial vehicular transit in Pakistan for over four decades, manufacturing household names like the Suzuki Alto, Cultus, Swift, Bolan, and Ravi.\n\nPak Suzuki vehicles are celebrated across Pakistan for exceptional fuel economy, widespread availability of affordable genuine spare parts, simple maintenance, and peerless resale value in every urban and rural market.\n\n### Popular Vehicle Models\n- Suzuki Alto 660cc: Pakistan's Top-Selling Fuel-Efficient Hatchback\n- Suzuki Cultus: Modern, Feature-Packed Hatchback with AGS (Auto Gear Shift) Transmission\n- Suzuki Swift: Premium 1.2L Hatchback with Sporty Design, Push Start & Cruise Control\n- Suzuki Bolan & Ravi: Dependable Light Commercial Vans and Pickups for Cargo & Commercial Transport\n- Suzuki Motorcycles: GS-150, GR-150, and GD-110S Reliable Commuter Bikes\n\n### Service Network & Quality\n- Largest Dealership Network Across Pakistan with Over 150+ Authorized 3S Centers\n- 100% Genuine Suzuki SGP Spare Parts & Suzuki Recommended Engine Lubricants\n- Comprehensive 3-Year / 60,000 KM Factory Warranty and Mobile Service Vans\n\n### Verified Customer Service & Contact Information\nPak Suzuki Motor Company Limited provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Karachi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Pak Suzuki Motor Company Limited remains one of the most reliable and recommended service providers in the Automotive & Vehicles sector.",
+    "services": [
+      "New vehicles",
+      "booking",
+      "dealer network",
+      "maintenance",
+      "parts",
+      "warranty",
+      "customer support"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "userName": "Tariq Mehmood",
+        "id": "rev-biz-1-1787486683198",
+        "rating": 5,
+        "date": "Just now",
+        "comment": "Excellent service and very professional experience with Pak Suzuki Motor Company Limited. Highly recommended."
+      },
+      {
+        "id": "rev-biz-2-1787486683198",
+        "rating": 5,
+        "comment": "Great overall service from start to finish with Pak Suzuki Motor Company Limited. Reliable and well-organized.",
+        "userName": "Saima Khan",
+        "date": "1 day ago"
+      },
+      {
+        "rating": 5,
+        "id": "rev-biz-3-1787486683198",
+        "userName": "Bilal Ahmed",
+        "date": "2 days ago",
+        "comment": "Pak Suzuki Motor Company Limited provides outstanding service, quick support, and professional standards."
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What services does Pak Suzuki Motor Company Limited offer?",
+        "answer": "Pak Suzuki Motor Company Limited offers a wide range of services including New vehicles, booking, dealer network, maintenance."
+      },
+      {
+        "answer": "You can reach Pak Suzuki Motor Company Limited via their official website at https://www.paksuzuki.com.pk/ or visit their office in Karachi.",
+        "question": "How can I contact Pak Suzuki Motor Company Limited?"
+      }
+    ]
+  },
+  {
+    "id": "biz-pakistan-international-airlines-pia",
+    "slug": "pakistan-international-airlines-pia",
+    "name": "Pakistan International Airlines (PIA)",
+    "category": "Travel & Tourism",
+    "categoryId": "travel",
+    "city": "Karachi",
+    "cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Sindh",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.piac.com.pk/",
+    "address": "Pakistan International Airlines (PIA) Principal Office, Karachi, Pakistan",
+    "locations": [
+      {
+        "address": "Pakistan International Airlines (PIA) Principal Office, Karachi, Pakistan",
+        "isPrimary": true,
+        "city": "Karachi"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Pakistan International Airlines (PIA) is the historic national flag carrier of Pakistan, connecting millions of passengers across domestic destinations and global aviation gateways in the Middle East, Asia, Europe, and North America. Headquartered in Karachi at Jinnah International Airport, PIA operates a diverse fleet of wide-body Boeing 777s, fuel-efficient Airbus A320s, and ATR turboprop aircraft for regional and remote airstrip connectivity.\n\nPIA has a storied history of aviation leadership, having trained premier international airlines and established landmark flight routes. Today, PIA provides scheduled passenger flights, dedicated seasonal Hajj and Umrah pilgrimage charters, and PIA Cargo logistics services.\n\n### Flight Network & Aviation Operations\n- Domestic Network: Karachi, Lahore, Islamabad, Peshawar, Quetta, Multan, Faisalabad, Sukkur, Gwadar, Gilgit, Skardu\n- International Destinations: UAE (Dubai, Sharjah, Abu Dhabi), KSA (Jeddah, Riyadh, Madinah, Dammam), Oman, Qatar, Malaysia, UK\n- Dedicated Hajj & Umrah Flights with Specialized Pilgrimage Passenger Care\n- PIA Cargo: Fast Air Cargo Transportation for Perishable Goods, Commercial Freight & Textiles\n- PIA Speedex: Fast Domestic Courier Network Connecting Major Pakistani Cities\n\n### In-Flight Services & Booking\n- Modern Online Flight Booking, Seat Selection & Web Check-In System\n- Halal In-Flight Meal Service and In-Flight Entertainment on Long-Haul Routes\n- 24/7 Global Passenger Call Center (111-786-786) and Airport Lounges\n\n### Verified Customer Service & Contact Information\nPakistan International Airlines (PIA) provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Karachi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Pakistan International Airlines (PIA) remains one of the most reliable and recommended service providers in the Travel & Tourism sector.",
+    "services": [
+      "Ticket booking",
+      "flight status",
+      "web check-in",
+      "baggage",
+      "seat selection",
+      "pre-book meals",
+      "special assistance",
+      "charter flights"
+    ],
+    "operatingHours": {
+      "Monday - Friday": "09:00 AM - 05:00 PM",
+      "Saturday": "09:00 AM - 01:30 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "userName": "Tariq Mehmood",
+        "comment": "Excellent service and very professional experience with Pakistan International Airlines (PIA). Highly recommended.",
+        "id": "rev-biz-1-1787486683197",
+        "rating": 5,
+        "date": "Just now"
+      },
+      {
+        "date": "1 day ago",
+        "rating": 5,
+        "comment": "Great overall service from start to finish with Pakistan International Airlines (PIA). Reliable and well-organized.",
+        "userName": "Saima Khan",
+        "id": "rev-biz-2-1787486683197"
+      },
+      {
+        "userName": "Bilal Ahmed",
+        "comment": "Pakistan International Airlines (PIA) provides outstanding service, quick support, and professional standards.",
+        "id": "rev-biz-3-1787486683197",
+        "date": "2 days ago",
+        "rating": 5
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What services does Pakistan International Airlines (PIA) offer?",
+        "answer": "Pakistan International Airlines (PIA) offers a wide range of services including Ticket booking, flight status, web check-in, baggage."
+      },
+      {
+        "question": "How can I contact Pakistan International Airlines (PIA)?",
+        "answer": "You can reach Pakistan International Airlines (PIA) via their official website at https://www.piac.com.pk/ or visit their office in Karachi."
+      }
+    ]
+  },
+  {
+    "id": "biz-pakistan-telecommunication-company-limited-ptcl",
+    "slug": "pakistan-telecommunication-company-limited-ptcl",
+    "name": "Pakistan Telecommunication Company Limited (PTCL)",
+    "category": "Technology & IT",
+    "categoryId": "technology",
+    "city": "Islamabad",
+    "cities": [
+      "Islamabad",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Federal Capital",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://ptcl.com.pk/",
+    "address": "Pakistan Telecommunication Company Limited (PTCL) Principal Office, Islamabad, Pakistan",
+    "locations": [
+      {
+        "address": "Pakistan Telecommunication Company Limited (PTCL) Principal Office, Islamabad, Pakistan",
+        "isPrimary": true,
+        "city": "Islamabad"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Pakistan Telecommunication Company Limited (PTCL) is the national telecommunications backbone and largest integrated ICT provider in Pakistan. Headquartered in Islamabad, PTCL operates the country's most extensive optical fiber infrastructure, submarine cable landing stations (SMW3, SMW4, SMW5, AAE-1), and nationwide fixed-line voice, high-speed broadband, and corporate data networks.\n\nPTCL delivers cutting-edge digital connectivity to millions of homes and commercial enterprises through PTCL Flash Fiber (FTTH gigabit broadband), CharJi 4G wireless broadband, Smart TV interactive television, and enterprise cloud solutions via PTCL Business Solutions.\n\n### Services for Homes & Businesses\n- PTCL Flash Fiber: Gigabit High-Speed Pure Optical Fiber Internet Up to 100 Mbps\n- PTCL Smart TV: Digital Television with 100+ Live Channels, DVR Recording & Time Shift TV\n- Fixed Line Landline Telephony with Crystal Clear Voice Quality Across Pakistan\n- PTCL Cloud Services: Tier-3 Certified Data Centers in Karachi, Lahore, and Islamabad\n- Corporate ICT Solutions: Leased Lines, MPLS VPNs, Cyber Security, and Managed IT Services\n\n### Infrastructure Leadership\n- Critical Backbone Carrying Over 70% of Pakistan's Internet and Data Traffic\n- Nationwide Customer Support via 1218 Helpline and Modern PTCL Experience Centers\n- Major Investor in Cross-Border Submarine Cables Connecting Pakistan to the Global Internet\n\n### Verified Customer Service & Contact Information\nPakistan Telecommunication Company Limited (PTCL) provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Islamabad and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Pakistan Telecommunication Company Limited (PTCL) remains one of the most reliable and recommended service providers in the Technology & IT sector.",
+    "services": [
+      "Broadband",
+      "fiber where available",
+      "telephone",
+      "enterprise connectivity",
+      "digital services",
+      "billing and support"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "id": "rev-biz-1-1787486683197",
+        "userName": "Tariq Mehmood",
+        "date": "Just now",
+        "rating": 5,
+        "comment": "Excellent service and very professional experience with Pakistan Telecommunication Company Limited (PTCL). Highly recommended."
+      },
+      {
+        "comment": "Great overall service from start to finish with Pakistan Telecommunication Company Limited (PTCL). Reliable and well-organized.",
+        "date": "1 day ago",
+        "id": "rev-biz-2-1787486683197",
+        "userName": "Saima Khan",
+        "rating": 5
+      },
+      {
+        "userName": "Bilal Ahmed",
+        "comment": "Pakistan Telecommunication Company Limited (PTCL) provides outstanding service, quick support, and professional standards.",
+        "date": "2 days ago",
+        "rating": 5,
+        "id": "rev-biz-3-1787486683197"
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What services does Pakistan Telecommunication Company Limited (PTCL) offer?",
+        "answer": "Pakistan Telecommunication Company Limited (PTCL) offers a wide range of services including Broadband, fiber where available, telephone, enterprise connectivity."
+      },
+      {
+        "question": "How can I contact Pakistan Telecommunication Company Limited (PTCL)?",
+        "answer": "You can reach Pakistan Telecommunication Company Limited (PTCL) via their official website at https://ptcl.com.pk/ or visit their office in Islamabad."
+      }
+    ]
+  },
+  {
+    "id": "biz-pearl-continental-hotels-resorts",
+    "slug": "pearl-continental-hotels-resorts",
+    "name": "Pearl-Continental Hotels & Resorts",
+    "category": "Travel & Tourism",
+    "categoryId": "travel",
+    "city": "Karachi",
+    "cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Sindh",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.pchotels.com/",
+    "address": "Pearl-Continental Hotels & Resorts Principal Office, Karachi, Pakistan",
+    "locations": [
+      {
+        "isPrimary": true,
+        "city": "Karachi",
+        "address": "Pearl-Continental Hotels & Resorts Principal Office, Karachi, Pakistan"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Pearl-Continental Hotels & Resorts (PC Hotels - Hashoo Group) is Pakistan's largest and most prestigious hospitality chain of 5-star luxury hotels, with landmark properties situated in Karachi, Lahore, Rawalpindi, Islamabad (Bhurban), Peshawar, Muzaffarabad, Gwadar, and Malam Jabba. For over five decades, PC Hotels has set the benchmark for luxury accommodations, state banquets, international diplomatic conferences, and regal weddings.\n\nEach Pearl-Continental property combines modern architectural luxury with legendary traditional Pakistani hospitality, offering opulent suites, fine dining multi-cuisine restaurants, tranquil wellness spas, and state-of-the-art convention facilities.\n\n### Accommodations & Luxury Services\n- Deluxe Rooms, Executive Suites, and Royal Presidential Suites with 5-Star Amenities\n- Award-Winning Fine Dining: Bukhara (Pakistani Barbecue), Taipan (Chinese Cuisine), Marco Polo & Sakura (Japanese)\n- Health Clubs & Spas: Temperature-Controlled Swimming Pools, Saunas, Jacuzzis & Gyms\n- Grand Marquees & Ballrooms Accommodating Up to 3,000 Guests for Conferences & Galas\n- High-Altitude Mountain Resorts in Bhurban (Murree Hills) and Malam Jabba (Ski Resort)\n\n### Safety & VIP Standards\n- Highest Level Multi-Tier Security Infrastructure and Private Helipads\n- Dedicated Concierge Services, Chauffeur-Driven Airport Limousines & Business Centers\n- Recipient of Multiple International Travel and Hospitality Excellence Awards\n\n### Verified Customer Service & Contact Information\nPearl-Continental Hotels & Resorts provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Karachi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Pearl-Continental Hotels & Resorts remains one of the most reliable and recommended service providers in the Travel & Tourism sector.",
+    "services": [
+      "Accommodation",
+      "restaurants",
+      "banquets",
+      "conferences",
+      "events",
+      "wellness and guest services"
+    ],
+    "operatingHours": {
+      "Monday - Friday": "09:00 AM - 05:00 PM",
+      "Saturday": "09:00 AM - 01:30 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "id": "rev-biz-1-1787486683197",
+        "userName": "Tariq Mehmood",
+        "comment": "Excellent service and very professional experience with Pearl-Continental Hotels & Resorts. Highly recommended.",
+        "date": "Just now",
+        "rating": 5
+      },
+      {
+        "rating": 5,
+        "userName": "Saima Khan",
+        "date": "1 day ago",
+        "comment": "Great overall service from start to finish with Pearl-Continental Hotels & Resorts. Reliable and well-organized.",
+        "id": "rev-biz-2-1787486683197"
+      },
+      {
+        "userName": "Bilal Ahmed",
+        "rating": 5,
+        "comment": "Pearl-Continental Hotels & Resorts provides outstanding service, quick support, and professional standards.",
+        "date": "2 days ago",
+        "id": "rev-biz-3-1787486683197"
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What services does Pearl-Continental Hotels & Resorts offer?",
+        "answer": "Pearl-Continental Hotels & Resorts offers a wide range of services including Accommodation, restaurants, banquets, conferences."
+      },
+      {
+        "question": "How can I contact Pearl-Continental Hotels & Resorts?",
+        "answer": "You can reach Pearl-Continental Hotels & Resorts via their official website at https://www.pchotels.com/ or visit their office in Karachi."
+      }
+    ]
+  },
+  {
+    "id": "biz-priceoye",
+    "slug": "priceoye",
+    "name": "PriceOye",
+    "category": "Retail & Shopping",
+    "categoryId": "retail",
+    "city": "Karachi",
+    "cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Sindh",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://priceoye.pk/",
+    "address": "PriceOye Principal Office, Karachi, Pakistan",
+    "locations": [
+      {
+        "address": "PriceOye Principal Office, Karachi, Pakistan",
+        "city": "Karachi",
+        "isPrimary": true
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "PriceOye is Pakistan's leading, highly trusted online consumer electronics marketplace, specializing in 100% authentic mobile phones, tablets, smartwatches, wireless earbuds, and consumer accessories. Founded in 2020 and backed by premier international venture capital funds, PriceOye has disrupted electronics e-commerce in Pakistan by offering genuine PTA-approved smartphones at the lowest guaranteed market prices.\n\nPriceOye eliminates counterfeit risks by sourcing directly from authorized brand manufacturers including Samsung, Apple, Xiaomi, Infinix, Tecno, Realme, Vivo, and Oppo, providing official manufacturer warranties and fast express delivery across all Pakistani cities.\n\n### Product Portfolio & Categories\n- 100% Original PTA-Approved Smartphones from Apple iPhone, Samsung Galaxy, Xiaomi, Tecno & Infinix\n- Smartwatches & Fitness Bands (Apple Watch, Samsung Galaxy Watch, Haylou, Amazfit, Mibro)\n- Wireless Earbuds & Bluetooth Headphones (AirPods, Galaxy Buds, Soundpeats, Audionic, Ronin)\n- Power Banks, Fast Chargers, Type-C Cables & Mobile Protection Accessories\n- Laptops, Tablets, and Smart Home Entertainment Electronics\n\n### Customer Guarantees & Features\n- Lowest Price Guarantee in Pakistan with Real-Time Market Price Comparison Tools\n- Open Parcel Delivery: Inspect Your Product Before Paying the Delivery Rider\n- Easy 3-Day Return Policy and 100% Official Brand Warranty Coverage\n- Nationwide Express Shipping with Cash on Delivery (COD) and Online Card Payments\n\n### Verified Customer Service & Contact Information\nPriceOye provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Karachi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, PriceOye remains one of the most reliable and recommended service providers in the Retail & Shopping sector.",
+    "services": [
+      "Mobile phones",
+      "electronics",
+      "accessories",
+      "online ordering",
+      "delivery",
+      "warranty/returns where applicable"
+    ],
+    "operatingHours": {
+      "Monday - Friday": "09:00 AM - 05:00 PM",
+      "Saturday": "09:00 AM - 01:30 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "rating": 5,
+        "comment": "Excellent service and very professional experience with PriceOye. Highly recommended.",
+        "date": "Just now",
+        "id": "rev-biz-1-1787486683198",
+        "userName": "Tariq Mehmood"
+      },
+      {
+        "id": "rev-biz-2-1787486683198",
+        "date": "1 day ago",
+        "comment": "Great overall service from start to finish with PriceOye. Reliable and well-organized.",
+        "userName": "Saima Khan",
+        "rating": 5
+      },
+      {
+        "userName": "Bilal Ahmed",
+        "id": "rev-biz-3-1787486683198",
+        "comment": "PriceOye provides outstanding service, quick support, and professional standards.",
+        "date": "2 days ago",
+        "rating": 5
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "PriceOye offers a wide range of services including Mobile phones, electronics, accessories, online ordering.",
+        "question": "What services does PriceOye offer?"
+      },
+      {
+        "answer": "You can reach PriceOye via their official website at https://priceoye.pk/ or visit their office in Karachi.",
+        "question": "How can I contact PriceOye?"
+      }
+    ]
+  },
+  {
+    "id": "biz-rehman-travels-pvt-ltd",
+    "slug": "rehman-travels-pvt-ltd",
+    "name": "Rehman Travels (Pvt.) Ltd.",
+    "category": "Travel & Tourism",
+    "categoryId": "travel",
+    "city": "Islamabad",
+    "cities": [
+      "Islamabad",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Pakistan",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.rehmantravel.com/",
+    "address": "Rehman Travels (Pvt.) Ltd. Principal Office, Islamabad, Pakistan",
+    "locations": [
+      {
+        "address": "Rehman Travels (Pvt.) Ltd. Principal Office, Islamabad, Pakistan",
+        "isPrimary": true,
+        "city": "Islamabad"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Rehman Travels (Pvt.) Ltd. is one of Pakistan's most established, IATA-accredited travel agencies and tour management companies, headquartered in Islamabad with branches across major cities. With over 25 years of travel excellence, Rehman Travels specializes in cheap international and domestic flight tickets, customized Umrah and Hajj packages, international holiday tours, and visa facilitation services.\n\nThe company operates an advanced online flight booking portal that aggregates airfares from over 500 international airlines, allowing travelers to instantly compare ticket prices, baggage allowances, and flight schedules for destinations across Saudi Arabia, UAE, UK, USA, Canada, Europe, and Asia.\n\n### Travel Services & Solutions\n- Cheap Airline Ticket Bookings for All Domestic and International Airlines\n- Comprehensive Umrah Packages (Economy, 3-Star, 4-Star & 5-Star Luxury Packages Near Haram)\n- Worldwide Visa Consultancy & Document Processing Support (Dubai, UK, Schengen, USA, Turkey, Malaysia)\n- Customized International Holiday Packages for Families, Honeymooners, and Group Tours\n- Hotel Reservations, Airport Transfers, and Travel Insurance Policies\n\n### Customer Benefits & Trust\n- IATA-Certified Travel Management Company with Dedicated 24/7 Booking Helpline (051-111-786-785)\n- Transparent Pricing Without Hidden Surcharges and Instant E-Ticket Issuance\n- Thousands of Satisfied Pilgrims and Corporate Business Travelers Served Annually\n\n### Verified Customer Service & Contact Information\nRehman Travels (Pvt.) Ltd. provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Islamabad and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Rehman Travels (Pvt.) Ltd. remains one of the most reliable and recommended service providers in the Travel & Tourism sector.",
+    "services": [
+      "Airline tickets",
+      "visa consultancy",
+      "tours",
+      "Hajj and Umrah",
+      "hotel booking",
+      "travel support"
+    ],
+    "operatingHours": {
+      "Monday - Friday": "09:00 AM - 05:00 PM",
+      "Saturday": "09:00 AM - 01:30 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "id": "rev-biz-1-1787486683197",
+        "rating": 5,
+        "comment": "Excellent service and very professional experience with Rehman Travels (Pvt.) Ltd.. Highly recommended.",
+        "date": "Just now",
+        "userName": "Tariq Mehmood"
+      },
+      {
+        "date": "1 day ago",
+        "rating": 5,
+        "userName": "Saima Khan",
+        "comment": "Great overall service from start to finish with Rehman Travels (Pvt.) Ltd.. Reliable and well-organized.",
+        "id": "rev-biz-2-1787486683197"
+      },
+      {
+        "date": "2 days ago",
+        "rating": 5,
+        "comment": "Rehman Travels (Pvt.) Ltd. provides outstanding service, quick support, and professional standards.",
+        "userName": "Bilal Ahmed",
+        "id": "rev-biz-3-1787486683197"
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What services does Rehman Travels (Pvt.) Ltd. offer?",
+        "answer": "Rehman Travels (Pvt.) Ltd. offers a wide range of services including Airline tickets, visa consultancy, tours, Hajj and Umrah."
+      },
+      {
+        "answer": "You can reach Rehman Travels (Pvt.) Ltd. via their official website at https://www.rehmantravel.com/ or visit their office in Islamabad.",
+        "question": "How can I contact Rehman Travels (Pvt.) Ltd.?"
+      }
+    ]
+  },
+  {
+    "id": "biz-rozeepk",
+    "slug": "rozeepk",
+    "name": "ROZEE.PK",
+    "category": "Hiring Company",
+    "categoryId": "hiring-company-hr",
+    "city": "Lahore",
+    "cities": [
+      "Lahore",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Punjab",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.rozee.pk/",
+    "address": "ROZEE.PK Principal Office, Lahore, Pakistan",
+    "locations": [
+      {
+        "city": "Lahore",
+        "isPrimary": true,
+        "address": "ROZEE.PK Principal Office, Lahore, Pakistan"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "ROZEE.PK (Naseeb Networks Inc.) is Pakistan's pioneer and largest online job matching, recruitment, and HR technology platform, connecting over 10 million registered job seekers with more than 65,000 corporate employers and multinationals across Pakistan. Founded by Monis Rahman, ROZEE.PK revolutionized Pakistan's labor market by digitizing employment applications and introducing AI-powered resume matching algorithms.\n\nThe platform provides job seekers with free job search tools, verified company reviews, CV optimization services, and personalized email job alerts, while empowering HR departments with enterprise recruitment software, video screening, and candidate aptitude assessments.\n\n### Key Offerings for Job Seekers\n- Search and Apply to Thousands of Verified Jobs Across Karachi, Lahore, Islamabad, and Nationwide\n- Build Free Digital Resumes (CVs) Optimized for Automated Applicant Tracking Systems (ATS)\n- Receive Instant Job Alerts Matching Your Skills, Experience Level, and Desired Salary\n- Access Free Salary Guides, Career Consultation Advice & Industry Hiring Trends\n\n### HR & Enterprise Recruitment Solutions\n- Post Job Openings to Reach Over 10 Million Active Pakistani Job Seekers\n- Advanced AI Candidate Search & Resume Filtering Across 30+ Industries\n- Managed Recruitment Services, Pre-Employment Skill Testing & Video Interviews\n- Cost-Effective Job Posting Packages for Startups, SMEs, and Multinational Corporations\n\n### Verified Customer Service & Contact Information\nROZEE.PK provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Lahore and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, ROZEE.PK remains one of the most reliable and recommended service providers in the Hiring Company sector.",
+    "services": [
+      "Job search",
+      "employer listings",
+      "recruitment",
+      "company pages",
+      "CV/profile tools",
+      "career resources"
+    ],
+    "operatingHours": {
+      "Monday - Friday": "09:00 AM - 05:00 PM",
+      "Saturday": "09:00 AM - 01:30 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "id": "rev-biz-1-1787486683198",
+        "rating": 5,
+        "date": "Just now",
+        "comment": "Excellent service and very professional experience with ROZEE.PK. Highly recommended.",
+        "userName": "Tariq Mehmood"
+      },
+      {
+        "userName": "Saima Khan",
+        "rating": 5,
+        "id": "rev-biz-2-1787486683198",
+        "date": "1 day ago",
+        "comment": "Great overall service from start to finish with ROZEE.PK. Reliable and well-organized."
+      },
+      {
+        "date": "2 days ago",
+        "rating": 5,
+        "id": "rev-biz-3-1787486683198",
+        "comment": "ROZEE.PK provides outstanding service, quick support, and professional standards.",
+        "userName": "Bilal Ahmed"
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "ROZEE.PK offers a wide range of services including Job search, employer listings, recruitment, company pages.",
+        "question": "What services does ROZEE.PK offer?"
+      },
+      {
+        "question": "How can I contact ROZEE.PK?",
+        "answer": "You can reach ROZEE.PK via their official website at https://www.rozee.pk/ or visit their office in Lahore."
+      }
+    ]
+  },
+  {
+    "id": "biz-saltn-pepper-restaurants",
+    "slug": "saltn-pepper-restaurants",
+    "name": "Salt'n Pepper Restaurants",
+    "category": "Restaurants & Food",
+    "categoryId": "restaurants",
+    "city": "Lahore",
+    "cities": [
+      "Lahore",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Punjab",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://saltnpepper.com.pk/",
+    "address": "Salt'n Pepper Restaurants Principal Office, Lahore, Pakistan",
+    "locations": [
+      {
+        "isPrimary": true,
+        "address": "Salt'n Pepper Restaurants Principal Office, Lahore, Pakistan",
+        "city": "Lahore"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "The Salt'n Pepper Restaurants is Pakistan's most iconic and celebrated food brand, founded in 1983 by hotelier and restaurateur Mahmood Akbar. Over four decades, Salt'n Pepper has defined Pakistani dining culture with its legendary Salt'n Pepper Village in Lahore—Pakistan's first traditional live-cooking heritage food buffet—alongside modern casual dining restaurants and express takeaway outlets across Lahore, Islamabad, Rawalpindi, and Faisalabad.\n\nSalt'n Pepper is renowned for its unmatched culinary consistency, authentic Pakistani barbecue, rich handis, crispy broast chicken, continental club sandwiches, and sizzling Chinese platters served in elegant, family-friendly atmospheres.\n\n### Restaurant Concepts & Menus\n- Salt'n Pepper Village: Grand Open-Air Heritage Buffet with 80+ Live Traditional Pakistani Dishes\n- Salt'n Pepper Classic Restaurants: Signature Karahis, Mutton Chops, Stuffed Chicken & Broast\n- Salt'n Pepper Express: Fast Takeaway and Delivery Outlets for Burgers, Pizzas, and Fried Chicken\n- Freshly Baked Tandoori Naans, Raita, Salads & Iconic Desserts (Firni, Kheer, Jalebi, Halwa)\n- Grand Banquet Catering for Weddings, Corporate Receptions, and Family Celebrations\n\n### Food Quality & Hygiene Standards\n- Pioneer of Restaurant Hygiene and Professional Food Service in Pakistan\n- 100% Fresh Halal Ingredients, Premium Cooking Oils, and Generational Recipes\n- Spacious Air-Conditioned Family Halls with Attentive Table Service and Valet Parking\n\n### Verified Customer Service & Contact Information\nSalt'n Pepper Restaurants provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Lahore and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Salt'n Pepper Restaurants remains one of the most reliable and recommended service providers in the Restaurants & Food sector.",
+    "services": [
+      "Dine-in",
+      "takeaway",
+      "delivery",
+      "Pakistani cuisine",
+      "continental cuisine",
+      "branch reservations"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "date": "Just now",
+        "rating": 5,
+        "comment": "Excellent service and very professional experience with Salt'n Pepper Restaurants. Highly recommended.",
+        "id": "rev-biz-1-1787486683197",
+        "userName": "Tariq Mehmood"
+      },
+      {
+        "id": "rev-biz-2-1787486683197",
+        "comment": "Great overall service from start to finish with Salt'n Pepper Restaurants. Reliable and well-organized.",
+        "date": "1 day ago",
+        "userName": "Saima Khan",
+        "rating": 5
+      },
+      {
+        "userName": "Bilal Ahmed",
+        "date": "2 days ago",
+        "id": "rev-biz-3-1787486683197",
+        "comment": "Salt'n Pepper Restaurants provides outstanding service, quick support, and professional standards.",
+        "rating": 5
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What services does Salt'n Pepper Restaurants offer?",
+        "answer": "Salt'n Pepper Restaurants offers a wide range of services including Dine-in, takeaway, delivery, Pakistani cuisine."
+      },
+      {
+        "question": "How can I contact Salt'n Pepper Restaurants?",
+        "answer": "You can reach Salt'n Pepper Restaurants via their official website at https://saltnpepper.com.pk/ or visit their office in Lahore."
+      }
+    ]
+  },
+  {
+    "id": "biz-sastaticketpk",
+    "slug": "sastaticketpk",
+    "name": "Sastaticket.pk",
+    "category": "Travel & Tourism",
+    "categoryId": "travel",
+    "city": "Karachi",
+    "cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Sindh",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.sastaticket.pk/",
+    "address": "Sastaticket.pk Principal Office, Karachi, Pakistan",
+    "locations": [
+      {
+        "address": "Sastaticket.pk Principal Office, Karachi, Pakistan",
+        "city": "Karachi",
+        "isPrimary": true
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Sastaticket.pk is Pakistan's leading online travel agency (OTA) and digital flight booking portal, dedicated to making air travel, hotel bookings, and holiday packages affordable, transparent, and effortlessly accessible. Headquartered in Karachi, Sastaticket.pk allows travelers to search, compare, and instantly book domestic and international flight tickets with all major airlines at unbeatable promotional fares.\n\nWhether booking a domestic flight between Karachi, Lahore, and Islamabad on PIA, Airblue, SereneAir, or Fly Jinnah, or planning an international trip to Dubai, London, Istanbul, or Toronto, Sastaticket.pk provides seamless digital ticketing with zero hidden convenience fees.\n\n### Travel Products & Features\n- Instant Online Flight Booking for Domestic Airlines (PIA, Airblue, SereneAir, AirSial, Fly Jinnah)\n- Global International Flights Comparison Across Emirates, Qatar Airways, Saudia, Turkish Airlines, and More\n- Best Price Guarantee on Domestic and International Hotel Room Reservations\n- 100% Transparent Pricing with No Hidden Booking Surcharges\n- Flexible Payment Options: Credit/Debit Cards, JazzCash, Easypaisa, Bank Transfers, and UnionPay\n\n### Customer Support & Ease\n- 24/7 Dedicated Travel Helpline (021-37130251) and WhatsApp Support for Instant Ticket Changes & Cancellations\n- Instant E-Ticket Delivery Direct to Your Email and Mobile Phone\n- Trusted by Hundreds of Thousands of Pakistani Business and Leisure Travelers\n\n### Verified Customer Service & Contact Information\nSastaticket.pk provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Karachi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Sastaticket.pk remains one of the most reliable and recommended service providers in the Travel & Tourism sector.",
+    "services": [
+      "Flight booking",
+      "bus tickets",
+      "hotel booking",
+      "airline comparisons",
+      "travel support"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "date": "Just now",
+        "comment": "Excellent service and very professional experience with Sastaticket.pk. Highly recommended.",
+        "id": "rev-biz-1-1787486683197",
+        "rating": 5,
+        "userName": "Tariq Mehmood"
+      },
+      {
+        "rating": 5,
+        "comment": "Great overall service from start to finish with Sastaticket.pk. Reliable and well-organized.",
+        "userName": "Saima Khan",
+        "date": "1 day ago",
+        "id": "rev-biz-2-1787486683197"
+      },
+      {
+        "comment": "Sastaticket.pk provides outstanding service, quick support, and professional standards.",
+        "userName": "Bilal Ahmed",
+        "date": "2 days ago",
+        "id": "rev-biz-3-1787486683197",
+        "rating": 5
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "Sastaticket.pk offers a wide range of services including Flight booking, bus tickets, hotel booking, airline comparisons.",
+        "question": "What services does Sastaticket.pk offer?"
+      },
+      {
+        "question": "How can I contact Sastaticket.pk?",
+        "answer": "You can reach Sastaticket.pk via their official website at https://www.sastaticket.pk/ or visit their office in Karachi."
+      }
+    ]
+  },
+  {
+    "id": "biz-sereneair",
+    "slug": "sereneair",
+    "name": "SereneAir",
+    "category": "Travel & Tourism",
+    "categoryId": "travel",
+    "city": "Islamabad",
+    "cities": [
+      "Islamabad",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Federal Capital",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://sereneair.com/",
+    "address": "SereneAir Principal Office, Islamabad, Pakistan",
+    "locations": [
+      {
+        "isPrimary": true,
+        "address": "SereneAir Principal Office, Islamabad, Pakistan",
+        "city": "Islamabad"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "SereneAir is a premier private scheduled passenger airline of Pakistan, commencing operations in 2017 with a commitment to providing a luxurious, punctual, and serene air travel experience. Operating a modern fleet of wide-body Airbus A330s and next-generation Boeing 737-800 aircraft, SereneAir connects Pakistan's primary cities—Karachi, Lahore, Islamabad, Peshawar, and Quetta—with international destinations across the United Arab Emirates and Saudi Arabia.\n\nSereneAir is celebrated for its spacious cabin legroom, complimentary hot gourmet meals served on all flights, generous baggage allowances, and friendly, professional cabin crew.\n\n### Route Network & Operations\n- Domestic Flight Routes: Karachi, Lahore, Islamabad, Peshawar, Quetta\n- International Scheduled Flights: Dubai, Sharjah, Jeddah, Riyadh, Madinah\n- Modern Fleet of Airbus A330-200 and Boeing 737-800 Aircraft Configured for Maximum Comfort\n- SereneAir Cargo Express: Rapid Air Freight Solutions for Commercial Shippers\n- Online Web Booking, Mobile Check-In, and Live Flight Status Tracking\n\n### Passenger Experience & Amenities\n- Complimentary Hot Meals and Beverages on All Domestic and International Flights\n- Industry-Leading Free Checked Baggage Allowances (Up to 32kg - 40kg on Selected Routes)\n- 24/7 Customer Care Helpline (111-737-363) and Easy Ticket Rescheduling Policies\n\n### Verified Customer Service & Contact Information\nSereneAir provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Islamabad and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, SereneAir remains one of the most reliable and recommended service providers in the Travel & Tourism sector.",
+    "services": [
+      "Flight booking",
+      "schedules",
+      "web check-in",
+      "baggage",
+      "flight status",
+      "passenger support"
+    ],
+    "operatingHours": {
+      "Monday - Friday": "09:00 AM - 05:00 PM",
+      "Saturday": "09:00 AM - 01:30 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "id": "rev-biz-1-1787486683197",
+        "rating": 5,
+        "comment": "Excellent service and very professional experience with SereneAir. Highly recommended.",
+        "date": "Just now",
+        "userName": "Tariq Mehmood"
+      },
+      {
+        "comment": "Great overall service from start to finish with SereneAir. Reliable and well-organized.",
+        "id": "rev-biz-2-1787486683197",
+        "date": "1 day ago",
+        "userName": "Saima Khan",
+        "rating": 5
+      },
+      {
+        "rating": 5,
+        "comment": "SereneAir provides outstanding service, quick support, and professional standards.",
+        "date": "2 days ago",
+        "id": "rev-biz-3-1787486683197",
+        "userName": "Bilal Ahmed"
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "SereneAir offers a wide range of services including Flight booking, schedules, web check-in, baggage.",
+        "question": "What services does SereneAir offer?"
+      },
+      {
+        "question": "How can I contact SereneAir?",
+        "answer": "You can reach SereneAir via their official website at https://sereneair.com/ or visit their office in Islamabad."
+      }
+    ]
+  },
+  {
+    "id": "biz-shaukat-khanum-memorial-cancer-hospital-and-research-centre",
+    "slug": "shaukat-khanum-memorial-cancer-hospital-and-research-centre",
+    "name": "Shaukat Khanum Memorial Cancer Hospital and Research Centre",
+    "category": "Healthcare & Medical",
+    "categoryId": "healthcare",
+    "city": "Lahore",
+    "cities": [
+      "Lahore",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Punjab",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://shaukatkhanum.org.pk/",
+    "address": "Shaukat Khanum Memorial Cancer Hospital and Research Centre Principal Office, Lahore, Pakistan",
+    "locations": [
+      {
+        "isPrimary": true,
+        "address": "Shaukat Khanum Memorial Cancer Hospital and Research Centre Principal Office, Lahore, Pakistan",
+        "city": "Lahore"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Shaukat Khanum Memorial Cancer Hospital and Research Centre (SKMCH&RC) is Pakistan's premier non-profit specialized cancer hospital, diagnostic institute, and cancer research center, established in 1994 by Imran Khan in memory of his mother. With state-of-the-art tertiary cancer hospitals in Lahore and Peshawar, and a third mega-hospital under completion in Karachi, Shaukat Khanum provides comprehensive, world-class cancer treatment to all patients, with over 75% receiving treatment 100% free of cost through charitable donations.\n\nAccredited by the Joint Commission International (JCI), SKMCH&RC boasts cutting-edge radiation therapy (Linear Accelerators), PET-CT scanners, specialized surgical oncology theaters, chemotherapy suites, and bone marrow transplant units.\n\n### Comprehensive Cancer Care Services\n- Advanced Diagnostic Radiology: PET-CT, 3T MRI, Digital Mammography & Ultrasound\n- Radiation Oncology, Medical Oncology & Specialized Pediatric Oncology Care\n- Advanced Surgical Oncology Suites, Intensive Care Units & Bone Marrow Transplants\n- Nationwide Network of 150+ Pathology Diagnostic Lab Collection Centers & Walk-In Clinics\n- Palliative Care, Oncology Pharmacy & Psychological Counseling Services\n\n### Governance & Global Trust\n- JCI Enterprise-Wide International Healthcare Accreditation\n- Transparent Zakat & Donation Utilization Audited Annually by Top International Accounting Firms\n- Dedicated Online Donor Portal and 24/7 Patient Appointment Helpline (042-35905000)\n\n### Verified Customer Service & Contact Information\nShaukat Khanum Memorial Cancer Hospital and Research Centre provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Lahore and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Shaukat Khanum Memorial Cancer Hospital and Research Centre remains one of the most reliable and recommended service providers in the Healthcare & Medical sector.",
+    "services": [
+      "Cancer diagnosis",
+      "treatment",
+      "patient support",
+      "research",
+      "fundraising",
+      "welfare programs"
+    ],
+    "operatingHours": {
+      "Monday - Friday": "09:00 AM - 05:00 PM",
+      "Saturday": "09:00 AM - 01:30 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "comment": "Excellent service and very professional experience with Shaukat Khanum Memorial Cancer Hospital and Research Centre. Highly recommended.",
+        "userName": "Tariq Mehmood",
+        "date": "Just now",
+        "id": "rev-biz-1-1787486683197",
+        "rating": 5
+      },
+      {
+        "date": "1 day ago",
+        "userName": "Saima Khan",
+        "rating": 5,
+        "comment": "Great overall service from start to finish with Shaukat Khanum Memorial Cancer Hospital and Research Centre. Reliable and well-organized.",
+        "id": "rev-biz-2-1787486683197"
+      },
+      {
+        "rating": 5,
+        "date": "2 days ago",
+        "userName": "Bilal Ahmed",
+        "comment": "Shaukat Khanum Memorial Cancer Hospital and Research Centre provides outstanding service, quick support, and professional standards.",
+        "id": "rev-biz-3-1787486683197"
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "Shaukat Khanum Memorial Cancer Hospital and Research Centre offers a wide range of services including Cancer diagnosis, treatment, patient support, research.",
+        "question": "What services does Shaukat Khanum Memorial Cancer Hospital and Research Centre offer?"
+      },
+      {
+        "answer": "You can reach Shaukat Khanum Memorial Cancer Hospital and Research Centre via their official website at https://shaukatkhanum.org.pk/ or visit their office in Lahore.",
+        "question": "How can I contact Shaukat Khanum Memorial Cancer Hospital and Research Centre?"
+      }
+    ]
+  },
+  {
+    "id": "biz-sui-northern-gas-pipelines-limited-sngpl",
+    "slug": "sui-northern-gas-pipelines-limited-sngpl",
+    "name": "Sui Northern Gas Pipelines Limited (SNGPL)",
+    "category": "Energy & Utilities",
+    "categoryId": "technology",
+    "city": "Lahore",
+    "cities": [
+      "Lahore",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Punjab",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.sngpl.com.pk/",
+    "address": "Sui Northern Gas Pipelines Limited (SNGPL) Principal Office, Lahore, Pakistan",
+    "locations": [
+      {
+        "isPrimary": true,
+        "city": "Lahore",
+        "address": "Sui Northern Gas Pipelines Limited (SNGPL) Principal Office, Lahore, Pakistan"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Sui Northern Gas Pipelines Limited (SNGPL) is the largest integrated natural gas transmission and distribution utility company in Pakistan, serving over 7.5 million industrial, commercial, and domestic consumer accounts across Punjab, Khyber Pakhtunkhwa, and Azad Jammu & Kashmir. Headquartered in Lahore, SNGPL operates a vast pipeline network spanning more than 150,000 kilometers of high-pressure transmission and low-pressure distribution mains.\n\nSNGPL manages natural gas supplies, regasified liquefied natural gas (RLNG) imports, new domestic gas connections, computerized meter billing, pipeline leak repairs, and customer helpline services.\n\n### Core Utility Operations & Public Services\n- Natural Gas & RLNG Transmission and Distribution Across Punjab and KPK\n- Online 14-Digit Consumer Bill Inquiries, Duplicate Bill Downloads & Digital Payment Integration\n- New Domestic, Commercial, and Industrial Gas Connection Processing & Status Tracking\n- Gas Meter Testing, Maintenance, Pipeline Extension & Pressure Regulation\n- 24/7 Emergency Gas Leakage Response & Pipeline Safety Services\n\n### Customer Care & Helpline\n- 24/7 Central Emergency Gas Helpline (1199) for Immediate Leakage Reporting\n- Customer Care Centers in Lahore, Rawalpindi, Islamabad, Faisalabad, Multan, and Peshawar\n- SNGPL Customer Mobile App for Bill Tracking, Complaints & Tariff Information\n\n### Verified Customer Service & Contact Information\nSui Northern Gas Pipelines Limited (SNGPL) provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Lahore and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Sui Northern Gas Pipelines Limited (SNGPL) remains one of the most reliable and recommended service providers in the Energy & Utilities sector.",
+    "services": [
+      "Gas connections",
+      "billing",
+      "bill inquiry",
+      "complaints",
+      "customer service",
+      "commercial/industrial supply"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "rating": 5,
+        "id": "rev-biz-1-1787486683198",
+        "comment": "Excellent service and very professional experience with Sui Northern Gas Pipelines Limited (SNGPL). Highly recommended.",
+        "date": "Just now",
+        "userName": "Tariq Mehmood"
+      },
+      {
+        "id": "rev-biz-2-1787486683198",
+        "date": "1 day ago",
+        "comment": "Great overall service from start to finish with Sui Northern Gas Pipelines Limited (SNGPL). Reliable and well-organized.",
+        "userName": "Saima Khan",
+        "rating": 5
+      },
+      {
+        "userName": "Bilal Ahmed",
+        "date": "2 days ago",
+        "comment": "Sui Northern Gas Pipelines Limited (SNGPL) provides outstanding service, quick support, and professional standards.",
+        "id": "rev-biz-3-1787486683198",
+        "rating": 5
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What services does Sui Northern Gas Pipelines Limited (SNGPL) offer?",
+        "answer": "Sui Northern Gas Pipelines Limited (SNGPL) offers a wide range of services including Gas connections, billing, bill inquiry, complaints."
+      },
+      {
+        "question": "How can I contact Sui Northern Gas Pipelines Limited (SNGPL)?",
+        "answer": "You can reach Sui Northern Gas Pipelines Limited (SNGPL) via their official website at https://www.sngpl.com.pk/ or visit their office in Lahore."
+      }
+    ]
+  },
+  {
+    "id": "biz-systems-limited",
+    "slug": "systems-limited",
+    "name": "Systems Limited",
+    "category": "Technology & IT",
+    "categoryId": "technology",
+    "city": "Lahore",
+    "cities": [
+      "Lahore",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Punjab",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.systemsltd.com/",
+    "address": "Systems Limited Principal Office, Lahore, Pakistan",
+    "locations": [
+      {
+        "isPrimary": true,
+        "address": "Systems Limited Principal Office, Lahore, Pakistan",
+        "city": "Lahore"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Systems Limited is Pakistan's premier global technology consulting, enterprise software engineering, and business process automation corporation, founded in 1977 as the country's first professional software house. Listed on the Pakistan Stock Exchange (SYS), Systems Limited has achieved international acclaim, repeatedly winning the Forbes Asia's 'Best Under A Billion' award and Microsoft Country Partner of the Year honors.\n\nWith advanced development centers across Lahore, Karachi, Islamabad, Dubai, Riyadh, London, and the US, Systems Limited delivers enterprise digital transformations across Banking, Telecommunications, Retail, Healthcare, and Public Sector industries.\n\n### Enterprise Capabilities & Core Practices\n- Microsoft Dynamics 365, Cloud ERP & CRM Enterprise Implementations\n- Cloud Engineering, AWS / Azure Architecture Modernization & DevOps Automation\n- Digital Banking Platforms, Fintech Integration & Core Banking Transformations\n- Data Analytics, Business Intelligence, Artificial Intelligence & Machine Learning\n- Enterprise Business Process Outsourcing (BPO), Contact Centers & Managed IT Services\n\n### Global Distinction & Scale\n- Over 6,000 Certified Technology Professionals and Solution Architects Worldwide\n- Pakistan's Top IT Exporter with Multi-Million Dollar Global Projects\n- Long-Standing Strategic Partnerships with Microsoft, SAP, IBM, AWS, and Salesforce\n\n### Verified Customer Service & Contact Information\nSystems Limited provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Lahore and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Systems Limited remains one of the most reliable and recommended service providers in the Technology & IT sector.",
+    "services": [
+      "AI transformation",
+      "data and analytics",
+      "cloud",
+      "digital consulting",
+      "banking technology",
+      "telecom",
+      "health",
+      "retail",
+      "automotive",
+      "hospitality"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "id": "rev-biz-1-1787486683197",
+        "date": "Just now",
+        "userName": "Tariq Mehmood",
+        "rating": 5,
+        "comment": "Excellent service and very professional experience with Systems Limited. Highly recommended."
+      },
+      {
+        "date": "1 day ago",
+        "id": "rev-biz-2-1787486683197",
+        "userName": "Saima Khan",
+        "comment": "Great overall service from start to finish with Systems Limited. Reliable and well-organized.",
+        "rating": 5
+      },
+      {
+        "userName": "Bilal Ahmed",
+        "comment": "Systems Limited provides outstanding service, quick support, and professional standards.",
+        "id": "rev-biz-3-1787486683197",
+        "rating": 5,
+        "date": "2 days ago"
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "Systems Limited offers a wide range of services including AI transformation, data and analytics, cloud, digital consulting.",
+        "question": "What services does Systems Limited offer?"
+      },
+      {
+        "answer": "You can reach Systems Limited via their official website at https://www.systemsltd.com/ or visit their office in Lahore.",
+        "question": "How can I contact Systems Limited?"
+      }
+    ]
+  },
+  {
+    "id": "biz-tcs-courier",
+    "slug": "tcs-courier",
+    "name": "TCS Courier",
+    "category": "Logistics & Courier",
+    "categoryId": "logistics",
+    "city": "Karachi",
+    "cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Sindh",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.tcs.com.pk/",
+    "address": "TCS Courier Principal Office, Karachi, Pakistan",
+    "locations": [
+      {
+        "city": "Karachi",
+        "isPrimary": true,
+        "address": "TCS Courier Principal Office, Karachi, Pakistan"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "TCS Courier (Tranzum Courier Services) is Pakistan's most recognized, ubiquitous, and trusted express logistics, courier, and freight forwarding enterprise, established in 1983. TCS operates the largest private transport network in Pakistan, featuring over 1,000 express centers, 4,000+ delivery couriers, dedicated cargo aircraft, and hundreds of satellite-tracked freight trucks delivering to 3,500+ destinations nationwide.\n\nTCS delivers an extensive portfolio of logistical solutions including TCS Overnight Express, Same-Day Delivery, E-Commerce Cash-on-Delivery (COD) services for online merchants, Yayvo e-commerce logistics, TCS Hazir (60-minute pickup), and TCS Sentiments Express (gift delivery).\n\n### Express Courier & Cargo Solutions\n- TCS Overnight Express: Next-Day Guaranteed Delivery for Documents & Parcels\n- TCS Hazir: 60-Minute Urgent Document Pickup from Your Doorstep\n- TCS E-COM: Fast Cash-on-Delivery (COD) Delivery & Automated Merchant Portal\n- TCS International Express: Worldwide Express Air Freight to over 220 Countries\n- TCS Sentiments Express: Fresh Flower Bouquets, Cakes, and Gift Delivery Across Pakistan\n\n### Technology & Customer Convenience\n- Advanced Live GPS Parcel Tracking via TCS Mobile App and Web Portal\n- 24/7 Dedicated Customer Care Helpline (021-111-123-456)\n- Self-Service Automated Parcel Lockers and Convenient Express Center Drop-Offs\n\n### Verified Customer Service & Contact Information\nTCS Courier provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Karachi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, TCS Courier remains one of the most reliable and recommended service providers in the Logistics & Courier sector.",
+    "services": [
+      "Courier",
+      "tracking",
+      "domestic delivery",
+      "international shipping",
+      "e-commerce logistics",
+      "cash on delivery where offered"
+    ],
+    "operatingHours": {
+      "Monday - Friday": "09:00 AM - 05:00 PM",
+      "Saturday": "09:00 AM - 01:30 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "date": "Just now",
+        "userName": "Tariq Mehmood",
+        "comment": "Excellent service and very professional experience with TCS Courier. Highly recommended.",
+        "id": "rev-biz-1-1787486683197",
+        "rating": 5
+      },
+      {
+        "date": "1 day ago",
+        "rating": 5,
+        "comment": "Great overall service from start to finish with TCS Courier. Reliable and well-organized.",
+        "userName": "Saima Khan",
+        "id": "rev-biz-2-1787486683197"
+      },
+      {
+        "userName": "Bilal Ahmed",
+        "rating": 5,
+        "comment": "TCS Courier provides outstanding service, quick support, and professional standards.",
+        "id": "rev-biz-3-1787486683197",
+        "date": "2 days ago"
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "TCS Courier offers a wide range of services including Courier, tracking, domestic delivery, international shipping.",
+        "question": "What services does TCS Courier offer?"
+      },
+      {
+        "question": "How can I contact TCS Courier?",
+        "answer": "You can reach TCS Courier via their official website at https://www.tcs.com.pk/ or visit their office in Karachi."
+      }
+    ]
+  },
+  {
+    "id": "biz-telemart",
+    "slug": "telemart",
+    "name": "Telemart",
+    "category": "Retail & Shopping",
+    "categoryId": "retail",
+    "city": "Karachi",
+    "cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Sindh",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.telemart.pk/",
+    "address": "Telemart Principal Office, Karachi, Pakistan",
+    "locations": [
+      {
+        "address": "Telemart Principal Office, Karachi, Pakistan",
+        "isPrimary": true,
+        "city": "Karachi"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Telemart is one of Pakistan's leading omnichannel consumer electronics, smartphone, and lifestyle e-commerce marketplaces, operating since 2014. In addition to a high-traffic online shopping portal, Telemart operates a nationwide network of 30+ physical retail experience stores in major shopping malls across Karachi, Lahore, Islamabad, Rawalpindi, Peshawar, Hyderabad, and other cities.\n\nTelemart provides 100% authentic, PTA-approved smartphones, laptops, gaming consoles (PlayStation, Xbox), LED smart TVs, smart home appliances, beauty products, and luxury perfumes directly sourced from official brand distributors.\n\n### Product Range & Electronics Catalog\n- 100% Original PTA-Approved Smartphones from Apple iPhone, Samsung, Xiaomi, Realme, Vivo & Oppo\n- Laptops, Gaming PCs, Monitors, PC Hardware & Graphic Cards\n- PlayStation 5, Xbox Series X, Nintendo Switch & Gaming Accessories\n- Smart LED TVs, Inverter ACs, Refrigerators & Kitchen Home Appliances\n- Luxury Designer Watches, Branded Fragrances, and Beauty Gadgets\n\n### Customer Benefits & Purchasing Options\n- Physical Retail Stores Allowing Customers to Test Products Before Buying\n- Telemart Easy Installments: Zero-Markup Monthly Installment Plans on Credit Cards\n- 100% Genuine Brand Warranties with Fast Express Home Delivery\n- Safe Payment Methods: Cash on Delivery, Credit/Debit Cards, and Bank Transfer\n\n### Verified Customer Service & Contact Information\nTelemart provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Karachi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Telemart remains one of the most reliable and recommended service providers in the Retail & Shopping sector.",
+    "services": [
+      "Electronics retail",
+      "online shopping",
+      "physical stores",
+      "mobile phones",
+      "accessories",
+      "delivery",
+      "support"
+    ],
+    "operatingHours": {
+      "Monday - Friday": "09:00 AM - 05:00 PM",
+      "Saturday": "09:00 AM - 01:30 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "date": "Just now",
+        "id": "rev-biz-1-1787486683198",
+        "comment": "Excellent service and very professional experience with Telemart. Highly recommended.",
+        "rating": 5,
+        "userName": "Tariq Mehmood"
+      },
+      {
+        "userName": "Saima Khan",
+        "comment": "Great overall service from start to finish with Telemart. Reliable and well-organized.",
+        "id": "rev-biz-2-1787486683198",
+        "date": "1 day ago",
+        "rating": 5
+      },
+      {
+        "id": "rev-biz-3-1787486683198",
+        "date": "2 days ago",
+        "comment": "Telemart provides outstanding service, quick support, and professional standards.",
+        "rating": 5,
+        "userName": "Bilal Ahmed"
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What services does Telemart offer?",
+        "answer": "Telemart offers a wide range of services including Electronics retail, online shopping, physical stores, mobile phones."
+      },
+      {
+        "answer": "You can reach Telemart via their official website at https://www.telemart.pk/ or visit their office in Karachi.",
+        "question": "How can I contact Telemart?"
+      }
+    ]
+  },
+  {
+    "id": "biz-united-bank-limited-ubl",
+    "slug": "united-bank-limited-ubl",
+    "name": "United Bank Limited (UBL)",
+    "category": "Finance & Banking",
+    "categoryId": "finance",
+    "city": "Karachi",
+    "cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Sindh",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.ubldigital.com/",
+    "address": "United Bank Limited (UBL) Principal Office, Karachi, Pakistan",
+    "locations": [
+      {
+        "city": "Karachi",
+        "address": "United Bank Limited (UBL) Principal Office, Karachi, Pakistan",
+        "isPrimary": true
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "United Bank Limited (UBL) is one of Pakistan's largest and most innovative private commercial banks, serving over 11 million customers across a network of 1,400+ branches and 1,500+ ATMs nationwide, alongside international branches in the UAE, Bahrain, Qatar, and the UK. Established in 1959, UBL is a pioneer in digital banking, consumer credit, trade finance, and rural financial inclusion.\n\nUBL's flagship mobile app, UBL Digital, is celebrated as Pakistan's top-rated digital banking platform, offering instant biometric account opening, paperless funds transfers via Raast, utility bill payments, QR payments, and virtual debit card management.\n\n### Banking Solutions & Financial Products\n- UBL Current & Savings Accounts: Premium Checking, Freelancer Accounts & Asaan Accounts\n- UBL Ameen Islamic Banking: 100% Shariah-Compliant Banking, Home Loans & Car Financing\n- UBL Consumer Financing: Auto Loans (UBL Drive), Home Loans (UBL Address) & Personal Loans\n- UBL Credit & Debit Cards: Multi-Currency Visa / Mastercard with Airport Lounge Access & Dining Perks\n- UBL Omni: Branchless Banking Network Providing Bill Payments & Domestic Remittances\n\n### Digital Innovation & Security\n- Multiple Award Winner for 'Best Digital Bank in Pakistan'\n- 24/7 Phone Banking Support (111-825-888) and Global SWIFT Wire Transfers\n- Advanced Biometric Face & Fingerprint Authentication for Complete Account Safety\n\n### Verified Customer Service & Contact Information\nUnited Bank Limited (UBL) provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Karachi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, United Bank Limited (UBL) remains one of the most reliable and recommended service providers in the Finance & Banking sector.",
+    "services": [
+      "Digital banking",
+      "accounts",
+      "cards",
+      "loans",
+      "remittance",
+      "branch and ATM services",
+      "business banking"
+    ],
+    "operatingHours": {
+      "Monday - Friday": "09:00 AM - 05:00 PM",
+      "Saturday": "09:00 AM - 01:30 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "userName": "Tariq Mehmood",
+        "comment": "Excellent service and very professional experience with United Bank Limited (UBL). Highly recommended.",
+        "date": "Just now",
+        "id": "rev-biz-1-1787486683196",
+        "rating": 5
+      },
+      {
+        "rating": 5,
+        "id": "rev-biz-2-1787486683196",
+        "date": "1 day ago",
+        "userName": "Saima Khan",
+        "comment": "Great overall service from start to finish with United Bank Limited (UBL). Reliable and well-organized."
+      },
+      {
+        "date": "2 days ago",
+        "rating": 5,
+        "id": "rev-biz-3-1787486683196",
+        "userName": "Bilal Ahmed",
+        "comment": "United Bank Limited (UBL) provides outstanding service, quick support, and professional standards."
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "United Bank Limited (UBL) offers a wide range of services including Digital banking, accounts, cards, loans.",
+        "question": "What services does United Bank Limited (UBL) offer?"
+      },
+      {
+        "answer": "You can reach United Bank Limited (UBL) via their official website at https://www.ubldigital.com/ or visit their office in Karachi.",
+        "question": "How can I contact United Bank Limited (UBL)?"
+      }
+    ]
+  },
+  {
+    "id": "biz-zameencom",
+    "slug": "zameencom",
+    "name": "Zameen.com",
+    "category": "Real Estate & Property",
+    "categoryId": "real-estate",
+    "city": "Lahore",
+    "cities": [
+      "Lahore",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Punjab",
+    "rating": 5,
+    "reviewCount": 3,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 21 111 000 000",
+    "whatsapp": "9221111000000",
+    "email": "info@listpak.com",
+    "website": "https://www.zameen.com/",
+    "address": "Zameen.com Principal Office, Lahore, Pakistan",
+    "locations": [
+      {
+        "isPrimary": true,
+        "address": "Zameen.com Principal Office, Lahore, Pakistan",
+        "city": "Lahore"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Zameen.com (part of Dubizzle Group / EMPG) is Pakistan's undisputed #1 online real estate, property portal, and property intelligence company, founded in 2006 by Zeeshan Ali Khan and Imran Ali Khan. Zameen.com transformed the Pakistani real estate landscape by digitizing property search, connecting millions of property buyers, sellers, tenants, and real estate agents across Pakistan and overseas.\n\nThe platform lists hundreds of thousands of verified residential and commercial properties, including plots, houses, luxury apartments, and commercial shops in top societies like DHA, Bahria Town, Gulberg, and Gwadar. Zameen.com also operates an exclusive project sales division, marketing multi-billion-rupee vertical developments and organizing mega Zameen Property Expos.\n\n### Property Portal Services & Tools\n- Search Hundreds of Thousands of 100% Verified Property Listings for Buy, Sell & Rent\n- Interactive GPS Society Maps for DHA, Bahria Town, and All Approved Housing Societies\n- Zameen Property Index: Historical Real Estate Price Trends and Investment Analytics\n- Exclusive Developer Marketing for Premium Vertical Towers, Commercial Plazas & Malls\n- Comprehensive Home Loan (Mortgage) Calculators & Legal Property Guides\n\n### Trust & Global Reach\n- Trusted by Over 5 Million Monthly Visitors and Millions of Overseas Pakistani Investors\n- Physical Zameen Property Lounges in Karachi, Lahore, Islamabad, Rawalpindi, and Peshawar\n- Largest Organizer of International Real Estate Expos in Dubai and Pakistan\n\n### Verified Customer Service & Contact Information\nZameen.com provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Lahore and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Zameen.com remains one of the most reliable and recommended service providers in the Real Estate & Property sector.",
+    "services": [
+      "Property listings",
+      "sale",
+      "rent",
+      "new projects",
+      "agents",
+      "area guides",
+      "property search"
+    ],
+    "operatingHours": {
+      "Saturday": "09:00 AM - 01:30 PM",
+      "Monday - Friday": "09:00 AM - 05:00 PM"
+    },
+    "features": [
+      "Verified Profile",
+      "Official Directory Listing",
+      "Nationwide Support"
+    ],
+    "reviews": [
+      {
+        "userName": "Tariq Mehmood",
+        "comment": "Excellent service and very professional experience with Zameen.com. Highly recommended.",
+        "id": "rev-biz-1-1787486683197",
+        "date": "Just now",
+        "rating": 5
+      },
+      {
+        "id": "rev-biz-2-1787486683197",
+        "comment": "Great overall service from start to finish with Zameen.com. Reliable and well-organized.",
+        "rating": 5,
+        "date": "1 day ago",
+        "userName": "Saima Khan"
+      },
+      {
+        "comment": "Zameen.com provides outstanding service, quick support, and professional standards.",
+        "rating": 5,
+        "date": "2 days ago",
+        "id": "rev-biz-3-1787486683197",
+        "userName": "Bilal Ahmed"
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What services does Zameen.com offer?",
+        "answer": "Zameen.com offers a wide range of services including Property listings, sale, rent, new projects."
+      },
+      {
+        "answer": "You can reach Zameen.com via their official website at https://www.zameen.com/ or visit their office in Lahore.",
+        "question": "How can I contact Zameen.com?"
+      }
+    ]
+  },
+  {
+    "id": "fax7diM241e6N2Khra8q",
+    "slug": "the-monal-restaurant-pakistans-premier-dining-experience",
+    "name": "The Monal Restaurant - Pakistan's Premier Dining Experience",
+    "category": "Restaurants & Food",
+    "categoryId": "restaurants",
+    "city": "Islamabad",
+    "cities": [
+      "Islamabad",
+      "Lahore",
+      "Murree",
+      "Peshawar"
+    ],
+    "province": "Pakistan",
+    "rating": 5,
+    "reviewCount": 5,
+    "verified": true,
+    "isClaimed": true,
+    "isFeatured": false,
+    "status": "approved",
+    "phone": "051-111777778 ",
+    "whatsapp": "051111777778",
+    "email": "info@themonal.com",
+    "website": "https://themonal.com/",
+    "address": "Plot # 253-A, Street # 06, Sector I-9/2, Islamabad",
+    "locations": [
+      {
+        "isPrimary": true,
+        "address": "Plot # 253-A, Street # 06, Sector I-9/2, Islamabad",
+        "city": "Islamabad"
+      },
+      {
+        "isPrimary": false,
+        "address": "Liberty Chowk, Gulberg III, Lahore",
+        "city": "Lahore"
+      },
+      {
+        "address": "Murree Road, Saddar, Rawalpindi",
+        "city": "Murree",
+        "isPrimary": false
+      },
+      {
+        "isPrimary": false,
+        "city": "Peshawar",
+        "address": "Peshawar Cantonment, Peshawar"
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "The Monal is one of Pakistan’s premier fine-dining restaurant brands, renowned for offering an authentic culinary experience that bridges traditional Pakistani heritage with modern hospitality. Inspired by the rich history of the Indus Valley, its menu features a fusion of indigenous flavors combined with culinary traditions from Arabia, Persia, and Central Asia. Beyond its diverse food menu—which includes traditional Pakistani BBQ, local karahi specialties, continental dishes, steaks, and desserts—The Monal is widely celebrated for its scenic dining ambiance, rooftop views, and event hosting facilities.\n\nKey Highlights & Services\n\nCuisine: Authentic Pakistani, BBQ, Continental, and Fusion dishes.\n\nServices: Dine-in, Roof-top Dining, Buffet Services, Corporate Events, Private Parties, and Online Table Reservations.\n\nCustomer Offerings: Dedicated mobile app (iOS/Android), feedback system, and mystery shopper programs.\n\nBranch Network & Contact Details\n\nIslamabad (Expressway Branch)\n\nAddress: Roof top, Mall of Imarat, Islamabad Expressway\n\nContact: +92 51 2898066 / +92 325 0000665\n\nTiming: Mon–Sun: 10:30 AM – 12:30 PM\n\nLahore\n\nAddress: Liberty Chowk, Gulberg III, Lahore\n\nContact: +92 42 35789823 / +92 324 8166625\n\nTiming: Mon–Sat: 1:00 PM – 12:00 AM\n\nRawalpindi\n\nAddress: Murree Road, Saddar, Rawalpindi\n\nContact: +92 51 5130304 / +92 325 0000669\n\nTiming: Mon–Thu: 11:00 AM – 11:30 PM\n\nMurree\n\nAddress: Park Ridge Apartment, Lower Topa, Murree\n\nContact: +92 325 0000662 / +92 325 0000661\n\nTiming: Mon–Sun: 9:00 AM – 12:00 AM\n\nPeshawar\n\nAddress: Peshawar Cantonment, Peshawar\n\nContact: +92 91 7242224 / +92 301 1189124\n\nTiming: Mon–Sat: 12:00 PM – 11:30 PM\n\nBhera (Fusion Branch)\n\nAddress: Motorway Service Area, Bhera (North)\n\nContact: +92 309 2108000 / +92 308 2108000\n\nTiming: Mon–Sun: 7:00 AM – 2:00 AM\n\nHead Office & Corporate Info\n\nAddress: Plot # 253-A, Street # 06, Sector I-9/2, Islamabad, Pakistan\n\nUAN / Phone: 051-111777778\n\nEmail: info@themonal.com\n\nWebsite: themonal.com",
+    "services": [
+      "General Services"
+    ],
+    "operatingHours": {
+      "Monday - Saturday": "09:00 AM - 07:00 PM"
+    },
+    "features": [
+      "Verified Listing"
+    ],
+    "reviews": [
+      {
+        "rating": 5,
+        "date": "Just now",
+        "userName": "Tariq Mehmood",
+        "comment": "Excellent service and a very professional team at The Monal Restaurant - Pakistan's Premier Dining Experience. Highly recommended for anyone looking for reliable solutions.",
+        "id": "rev-starter-1-1786605435565"
+      },
+      {
+        "date": "1 day ago",
+        "id": "rev-starter-2-1786605435565",
+        "comment": "Great overall experience from start to finish with The Monal Restaurant - Pakistan's Premier Dining Experience. Friendly staff and outstanding customer support.",
+        "rating": 5,
+        "userName": "Saima Khan"
+      },
+      {
+        "id": "rev-starter-3-1786605435565",
+        "userName": "Bilal Ahmed",
+        "date": "2 days ago",
+        "comment": "The Monal Restaurant - Pakistan's Premier Dining Experience exceeded expectations with quality service, quick response times, and professional communication.",
+        "rating": 5
+      },
+      {
+        "rating": 5,
+        "userName": "Hamza Sheikh",
+        "comment": "Very satisfied with the experience at The Monal Restaurant - Pakistan's Premier Dining Experience. Everything was handled efficiently and exactly as promised.",
+        "date": "3 days ago",
+        "id": "rev-starter-4-1786605435565"
+      },
+      {
+        "id": "rev-starter-5-1786605435565",
+        "userName": "Zainab Fatima",
+        "date": "4 days ago",
+        "rating": 5,
+        "comment": "Highly recommended. The staff at The Monal Restaurant - Pakistan's Premier Dining Experience were knowledgeable, courteous, and delivered excellent service throughout."
+      }
+    ],
+    "faqs": []
+  },
+  {
+    "id": "fdiS9TGvTRbHU04oMnmd",
+    "slug": "kolachi-restaurant",
+    "name": "Kolachi Restaurant",
+    "category": "Restaurants & Food",
+    "categoryId": "restaurants",
+    "city": "Karachi",
+    "cities": [
+      "Karachi"
+    ],
+    "province": "Pakistan",
+    "rating": 5,
+    "reviewCount": 5,
+    "verified": true,
+    "isClaimed": true,
+    "isFeatured": false,
+    "status": "approved",
+    "phone": "021 111 111 001",
+    "whatsapp": "021111111001",
+    "email": "contact@business.pk",
+    "website": "https://web.facebook.com/KolachiSpiritofkarachi/?_rdc=1&_rdr#",
+    "address": "sed Do Darya, Abdul Sattar Edhi Ave, D.H.A. Phase 8 Zone C Phase 8 Defence Housing Authority, Karachi, 75500",
+    "locations": [],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Kolachi Restaurant](https://www.google.com/search?kgmid=/g/11c4sswt6j) is Karachi’s premier seaside fine-dining destination, offering an unforgettable culinary journey by the Arabian Sea. Originally named after the historic fishing village that birthed modern Karachi, Kolachi has evolved into an iconic culinary landmark. It perfectly blends traditional Pakistani hospitality with spectacular waterfront views, making it the top choice for locals and tourists seeking the best restaurant in Karachi.\n## The Ultimate Do Darya Dining Experience\nThe flagship branch at Do Darya, DHA Phase 8, features open-air wooden decks built directly over the water. Guests can enjoy the cool sea breeze and the soothing sound of waves while dining under the stars. For those preferring an urban view, the Ocean Mall Clifton branch offers premium indoor sky-dining, while the Highway branch caters to families looking for a vibrant, accessible feast.\n## Authentic Pakistani Cuisine and Famous BBQ\nKolachi is celebrated globally for its authentic flavors and high-quality ingredients. The extensive menu showcases the rich heritage of Pakistani food, prepared by expert chefs using traditional cooking techniques.\n\n* \n* Signature BBQ: Succulent Malai Boti, Sajji, and the famous Hunzai Kebabs.\n* Traditional Karahis: Rich Peshawari Mutton Karahi and aromatic chicken handi options.\n* Seafood Delights: Freshly caught grilled fish and prawns seasoned with local spices.\n* Mocktails & Desserts: Refreshing mint lemonades alongside classic Pakistani desserts.\n* \n\n## Perfect for Every Occasion\nWhether you are hosting a grand family gathering, a corporate dinner, or a romantic evening, Kolachi provides the perfect ambiance. The impeccable service, live traditional music, and breathtaking views create a memorable atmosphere. It is widely regarded as the best BBQ restaurant in Karachi for special occasions.\n## Plan Your Visit\nExperience the magic of authentic Pakistani fine dining at Kolachi Restaurant Karachi. Due to high demand, particularly on weekends at the Do Darya branch, advanced reservations are highly recommended to secure the best waterfront tables.\nWould you like me to adjust this listing text to highlight a specific branch, include contact details, or target additional SEO keywords?\n\ntext = \"\"\"\nKolachi Restaurant is Karachi’s premier seaside fine-dining destination, offering an unforgettable culinary journey by the Arabian Sea. Originally named after the historic fishing village that birthed modern Karachi, Kolachi has evolved into an iconic culinary landmark. It perfectly blends traditional Pakistani hospitality with spectacular waterfront views, making it the top choice for locals and tourists seeking the best restaurant in Karachi.\n\nThe Ultimate Do Darya Dining Experience\nThe flagship branch at Do Darya, DHA Phase 8, features open-air wooden decks built directly over the water. Guests can enjoy the cool sea breeze and the soothing sound of waves while dining under the stars. For those preferring an urban view, the Ocean Mall Clifton branch offers premium indoor sky-dining, while the Highway branch caters to families looking for a vibrant, accessible feast.\n\nAuthentic Pakistani Cuisine and Famous BBQ\nKolachi is celebrated globally for its authentic flavors and high-quality ingredients. The extensive menu showcases the rich heritage of Pakistani food, prepared by expert chefs using traditional cooking techniques.\n- Signature BBQ: Succulent Malai Boti, Sajji, and the famous Hunzai Kebabs.\n- Traditional Karahis: Rich Peshawari Mutton Karahi and aromatic chicken handi options.\n- Seafood Delights: Freshly caught grilled fish and prawns seasoned with local spices.\n- Mocktails & Desserts: Refreshing mint lemonades alongside classic Pakistani desserts.\n\nPerfect for Every Occasion\nWhether you are hosting a grand family gathering, a corporate dinner, or a romantic evening, Kolachi provides the perfect ambiance. The impeccable service, live traditional music, and breathtaking views create a memorable atmosphere. It is widely regarded as the best BBQ restaurant in Karachi for special occasions.\n\nPlan Your Visit\nExperience the magic of authentic Pakistani fine dining at Kolachi Restaurant Karachi. Due to high demand, particularly on weekends at the Do Darya branch, advanced reservations are highly recommended to secure the best waterfront tables.\n\n\n",
+    "services": [
+      "Signature BBQ & Kebabs",
+      "Desi Karahis & Handis",
+      "Seafood Delights",
+      "Beverages & Mocktails"
+    ],
+    "operatingHours": {
+      "Monday - Saturday": "09:00 AM - 07:00 PM"
+    },
+    "features": [
+      "Verified Listing"
+    ],
+    "reviews": [
+      {
+        "id": "rev-starter-1-1786602503831",
+        "userName": "Tariq Mehmood",
+        "comment": "Excellent service and a very professional team at Kolachi Restaurant. Highly recommended for anyone looking for reliable solutions.",
+        "rating": 5,
+        "date": "Just now"
+      },
+      {
+        "comment": "Great overall experience from start to finish with Kolachi Restaurant. Friendly staff and outstanding customer support.",
+        "id": "rev-starter-2-1786602503831",
+        "userName": "Saima Khan",
+        "rating": 5,
+        "date": "1 day ago"
+      },
+      {
+        "comment": "Kolachi Restaurant exceeded expectations with quality service, quick response times, and professional communication.",
+        "userName": "Bilal Ahmed",
+        "rating": 5,
+        "date": "2 days ago",
+        "id": "rev-starter-3-1786602503831"
+      },
+      {
+        "comment": "Very satisfied with the experience at Kolachi Restaurant. Everything was handled efficiently and exactly as promised.",
+        "rating": 5,
+        "date": "3 days ago",
+        "id": "rev-starter-4-1786602503831",
+        "userName": "Hamza Sheikh"
+      },
+      {
+        "id": "rev-starter-5-1786602503831",
+        "rating": 5,
+        "comment": "Highly recommended. The staff at Kolachi Restaurant were knowledgeable, courteous, and delivered excellent service throughout.",
+        "userName": "Zainab Fatima",
+        "date": "4 days ago"
+      }
+    ],
+    "faqs": []
   },
   {
     "id": "gEtBygWVOCIPsYhXiYYs",
@@ -725,6 +5380,9 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "category": "technology",
     "categoryId": "services",
     "city": "Lahore",
+    "cities": [
+      "Lahore"
+    ],
     "province": "Pakistan",
     "rating": 5,
     "reviewCount": 5,
@@ -737,9 +5395,10 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "email": "info@lahoretech.pk",
     "website": "https://www.lahoretech.pk",
     "address": "45-C, Gulberg III",
+    "locations": [],
     "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
     "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
-    "description": "Lahore Tech Systems is a premium software development and digital transformation agency in Lahore. We specialize in custom web apps, mobile apps development, cloud deployment, UI/UX design, and SEO services.",
+    "description": "Lahore Tech Systems is a premier software development studio, IT consultancy, and custom digital product engineering agency based in Lahore, Pakistan. We partner with innovative startups, fast-growing scale-ups, and established enterprises across the United States, United Kingdom, Middle East, and Pakistan to engineer high-performance web applications, mobile platforms, and enterprise cloud solutions.\n\nOur team of senior software engineers, UI/UX designers, and DevOps specialists utilizes cutting-edge modern tech stacks including React.js, Next.js, Node.js, Python, TypeScript, and AWS cloud infrastructure. We emphasize clean code architectures, agile sprint velocity, test-driven development (TDD), and enterprise-grade security.\n\n### Core Technology Services\n- Custom Full-Stack Web Application Development & SaaS Architecture\n- Cross-Platform Mobile Application Development (React Native & Flutter)\n- Cloud Infrastructure Modernization, Serverless Computing & AWS / Azure DevOps\n- RESTful & GraphQL API Engineering, Third-Party Integrations & Payment Gateways\n- UI/UX Wireframing, Interactive Figma Prototyping & User Research\n\n### Why Work With Lahore Tech Systems\n- Dedicated Agile Engineering Squads Delivering on Strict Milestones\n- Transparent Communication, Daily Scrum Updates, and Flexible Engagement Models\n- Proven Track Record Delivering Scalable Software for Fintech, E-Commerce, and Healthcare\n- Competitive Offshore Development Rates Without Compromising on Engineering Quality\n\n### Verified Customer Service & Contact Information\nLahore Tech Systems provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Lahore and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Lahore Tech Systems remains one of the most reliable and recommended service providers in the technology sector.",
     "services": [
       "Professional Services"
     ],
@@ -759,6 +5418,9 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "category": "construction",
     "categoryId": "services",
     "city": "Gujranwala",
+    "cities": [
+      "Gujranwala"
+    ],
     "province": "Pakistan",
     "rating": 5,
     "reviewCount": 5,
@@ -771,9 +5433,10 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "email": "sales@gujranwalamachinery.pk",
     "website": "https://www.listpak.com",
     "address": "G.T. Road Industrial Zone",
+    "locations": [],
     "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
     "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
-    "description": "Gujranwala Electrical Machinery designs and manufactures heavy-duty electric motors, water pumps, industrial fans, and generators. Certified for performance and energy efficiency across Pakistan.",
+    "description": "Gujranwala Electrical Machinery is Gujranwala's leading manufacturer and wholesale supplier of heavy-duty industrial electric motors, distribution transformers, power pumps, agricultural monoblock pumps, and electrical switchgear. Located in the industrial heartland of Gujranwala, Punjab, we supply precision-engineered electrical machinery to factories, textile mills, agricultural farms, and commercial infrastructure projects across Pakistan.\n\nOur manufacturing facility adheres strictly to Pakistan Standards Quality Control Authority (PSQCA) and international ISO benchmarks. Every electric motor is wound with 99.9% pure copper wire, fitted with heavy-duty SKF bearings, and dynamically balanced for vibration-free operation, maximum energy efficiency, and thermal longevity under tough industrial conditions.\n\n### Industrial Product Portfolio\n- Three-Phase & Single-Phase Heavy-Duty Industrial Electric Motors (1 HP to 150 HP)\n- High-Pressure Agricultural Tube Well Pumps & Deep Well Turbine Pumps\n- Industrial Monoblock Centrifugal Water Pumps for Chemical and Textile Units\n- Electrical Distribution Transformers, Voltage Stabilizers & HT/LT Control Panels\n- Custom Motor Rewinding, Electrical Overhaul, and Predictive Maintenance Services\n\n### Quality & Commercial Distribution\n- 100% Pure Electrolytic Copper Winding with Class F / H High-Temperature Insulation\n- Rigorous Factory Load Testing and 1-Year Comprehensive Performance Warranty\n- Wholesale Supply and Fast Freight Dispatch to Lahore, Faisalabad, Karachi, and Multan\n- Highly Competitive Direct Factory Pricing for Industrial Contractors and Dealers\n\n### Verified Customer Service & Contact Information\nGujranwala Electrical Machinery provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Gujranwala and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Gujranwala Electrical Machinery remains one of the most reliable and recommended service providers in the construction sector.",
     "services": [
       "Professional Services"
     ],
@@ -787,12 +5450,60 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "faqs": []
   },
   {
+    "id": "kl30ZvV6p59Co0b4wJ2l",
+    "slug": "abdullah-sofa-poshish",
+    "name": "Abdullah Sofa Poshish",
+    "category": "Furniture & Interior Decor",
+    "categoryId": "furniture",
+    "city": "Lahore",
+    "cities": [
+      "Lahore"
+    ],
+    "province": "Pakistan",
+    "rating": 5,
+    "reviewCount": 5,
+    "verified": false,
+    "isClaimed": false,
+    "isFeatured": false,
+    "status": "pending",
+    "phone": "+923244814609",
+    "whatsapp": "+923244814609",
+    "email": "nadeem4814609@gmail.com",
+    "website": "https://www.google.com/search?sca_esv=ae66a29e8f623646&cs=0&output=search&q=Abdullah+Sofa+Poshish&ludocid=17781092751282277411&lsig=AB86z5V7LwH0nz2lV1E6vZ1hYYuD&sa=X&ved=2ahUKEwiMvPSZq7aWAxVIOPsDHUk1NKQQj9IGegQIFRAG&biw=1707&bih=780&dpr=1.13",
+    "address": "K-1, Marhaba Plaza, Valencia Town, Sunrise Road, Lahore",
+    "locations": [
+      {
+        "city": "Lahore",
+        "address": "K-1, Marhaba Plaza, Valencia Town, Sunrise Road, Lahore",
+        "isPrimary": true
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Welcome to Abdullah Sofa Poshish, your premier destination for expert upholstery, custom furniture manufacturing, professional sofa restoration, wallpaper installation, and curtain fabric provider in Lahore. With a commitment to exceptional craftsmanship and timeless design, we breathe new life into your living spaces by transforming worn-out or outdated furniture into stunning statement pieces.\n\nSpecializing in complete furniture makeovers, our skilled artisans handle everything from frame repair and spring replacement to high-density foam upgrades and premium fabric selection. Whether you want to recreate a modern aesthetic from a client inspiration photo, restore a cherished family heirloom, or design a custom sofa tailored specifically to your room dimensions, we deliver meticulous attention to detail at every step. Our team is also deal in Italian imports.\n\nAt Abdullah Sofa Poshish, we understand that quality furniture is an investment in your home's comfort and elegance. That is why we source only durable frames, robust cushioning materials, and a vast collection of luxurious, durable fabrics, leathers, and textures that withstand daily wear while maintaining a sophisticated look. Our team works closely with you to match your exact vision, ensuring seamless stitching, impeccable tufting, and a flawless finish.\n\nConveniently serving clients across Lahore, we pride ourselves on reliable craftsmanship, transparent pricing, and customer satisfaction. Upgrade your drawing room, lounge, or office interior without the high cost of buying brand-new furniture. Contact Abdullah Sofa Poshish today to discuss your project, explore our extensive catalog of materials, and give your seating the expert care and luxury finish it deserves.",
+    "services": [
+      "Delievry",
+      "on-site visits",
+      "free-wifi",
+      "parking"
+    ],
+    "operatingHours": {
+      "Monday - Saturday": "09:00 AM - 07:00 PM"
+    },
+    "features": [],
+    "reviews": [],
+    "faqs": []
+  },
+  {
     "id": "l2DGmXU6T5j2TkPJ8p5j",
     "slug": "faisalabad-textile-outlets-faisalabad",
     "name": "Faisalabad Textile Outlets",
     "category": "retail",
     "categoryId": "services",
     "city": "Faisalabad",
+    "cities": [
+      "Faisalabad"
+    ],
     "province": "Pakistan",
     "rating": 5,
     "reviewCount": 5,
@@ -805,9 +5516,10 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "email": "sales@faisalabadtextile.pk",
     "website": "https://www.listpak.com",
     "address": "D-Ground Commercial Plaza",
+    "locations": [],
     "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
     "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
-    "description": "Faisalabad Textile Outlets brings you high-quality unstitched lawn, linen, cotton fabrics, and home textiles direct from our industrial mills. Enjoy premium export-quality clothing at wholesale rates.",
+    "description": "Faisalabad Textile Outlets is Faisalabad's premier wholesale fabric emporium and textile distribution network, connecting Pakistan's textile capital with commercial cloth merchants, retail boutiques, and fashion brands nationwide. Operating from the bustling commercial textile markets of Faisalabad, we supply premium unstitched cotton, luxury lawn collections, dyed khaddar, jacquard, linen, and commercial yarn at unbeatable factory-direct wholesale prices.\n\nWe partner directly with leading composite textile mills, weaving units, and printing facilities in Faisalabad to bring you the highest quality fabrics with colorfast dyes, high thread counts, and modern designer prints.\n\n### Fabric Collections & Wholesale Catalog\n- 100% Pure Combed Cotton Fabric & Premium Wash-and-Wear Men's Fabric\n- Seasonal 3-Piece & 2-Piece Designer Digital Printed Lawn & Embroidered Suits\n- Traditional Handloom Khaddar, Woolen Shawls, and Winter Linen Collections\n- Commercial Dyed Poplin, Twill Fabric, Pocketing, and Polyester Cotton Blends\n- Export-Quality Bedding Sets, Hospital Linen, and Institutional Cotton Fabrics\n\n### Wholesale Supply & Nationwide Freight\n- Massive Warehouse Inventory Ready for Immediate Bulk Order Dispatch\n- Minimum Order Quantities Tailored for Small Boutiques and High-Volume Wholesalers\n- Fast Cargo Truck Delivery to Karachi, Lahore, Rawalpindi, Peshawar, and Quetta\n- Guaranteed Fabric Quality, Shrinkage Resistance, and Reliable Long-Term Business Terms\n\n### Verified Customer Service & Contact Information\nFaisalabad Textile Outlets provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Faisalabad and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Faisalabad Textile Outlets remains one of the most reliable and recommended service providers in the retail sector.",
     "services": [
       "Professional Services"
     ],
@@ -827,6 +5539,9 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "category": "retail",
     "categoryId": "services",
     "city": "Peshawar",
+    "cities": [
+      "Peshawar"
+    ],
     "province": "Pakistan",
     "rating": 5,
     "reviewCount": 5,
@@ -839,9 +5554,10 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "email": "orders@peshawarichappal.pk",
     "website": "https://www.listpak.com",
     "address": "Khyber Bazaar",
+    "locations": [],
     "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
     "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
-    "description": "Discover authentic Peshawari Chappals hand-crafted from premium pure leather. Our chappals combine traditional designs with modern comfort. Shipping throughout Pakistan and worldwide.",
+    "description": "Peshawar Traditional Chappal Center is Khyber Pakhtunkhwa's renowned artisan workshop and master footwear maker, specializing in authentic handcrafted Peshawari Chappals, Kaptaan Chappals, Zalmi Chappals, and traditional Norozi footwear. Located in historic Peshawar, our master shoemakers continue a century-old heritage of leather craftsmanship, hand-stitching each pair using 100% genuine full-grain leather, supple cowhide linings, and durable tire-rubber outsoles.\n\nEvery Peshawari chappal is a masterpiece of comfort and cultural elegance, featuring double-needle hand stitching, hand-burnished leather finishes, cushioned memory foam insoles, and adjustable steel buckles. Our traditional footwear is the premier choice for Eid celebrations, traditional weddings, Juma prayers, and everyday distinguished eastern attire.\n\n### Signature Footwear Collections\n- Authentic Kaptaan Chappal: High-Arch Double Sole Style Crafted in Premium Mustard & Black Leather\n- Peshawari Zalmi Chappal: Lightweight, Ergonomic Design with Sleek Cut and Tire Sole\n- Traditional Norozi Chappal: Classic Quetta-Style Wide Flap with Contrast Hand Stitching\n- Royal Wedding Edition Chappals: Hand-Embroidered Tilla & Zari Work on Pure Calf Leather\n- Formal Eastern Slip-Ons and Custom Tailored Footwear to Exact Foot Dimensions\n\n### Quality & Nationwide Express Delivery\n- 100% Guaranteed Genuine Full-Grain Leather (Zero Synthetic or Faux Leather)\n- Durable Recycled Aircraft/Automotive Rubber Tire Soles Built to Last for Years\n- Beautifully Packaged Gift Boxes with Fast Express Courier Delivery Across Pakistan and Worldwide\n- Hassle-Free Size Exchange and Customer Satisfaction Guarantee",
     "services": [
       "Professional Services"
     ],
@@ -861,6 +5577,9 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "category": "real-estate",
     "categoryId": "services",
     "city": "Rawalpindi",
+    "cities": [
+      "Rawalpindi"
+    ],
     "province": "Pakistan",
     "rating": 5,
     "reviewCount": 5,
@@ -873,9 +5592,10 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "email": "deal@pindirealtors.pk",
     "website": "https://www.listpak.com",
     "address": "Phase 4, Bahria Town",
+    "locations": [],
     "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
     "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
-    "description": "Rawalpindi Realtors & Builders is a trusted real estate consultation agency in Rawalpindi. We assist in buying, selling, and leasing residential plots, commercial properties, and luxury apartments in Bahria Town and DHA.",
+    "description": "Rawalpindi Realtors & Builders is a premier real estate consultancy, investment advisory, and architectural construction firm headquartered in Rawalpindi, Punjab. With decades of real estate market expertise across the Twin Cities (Rawalpindi & Islamabad), we help residential buyers, commercial investors, and overseas Pakistanis discover lucrative property investments in top housing societies including Bahria Town Rawalpindi, DHA Islamabad, New Metro City, Park View City, and Mumtaz City.\n\nOur experienced team offers comprehensive property solutions: transparent plot buying and selling, legal title verification, housing society NOC checks, modern architectural house design, grey-structure and turnkey luxury villa construction, and rental management.\n\n### Real Estate & Construction Services\n- Buying, Selling & Plot Booking in Top Approved Societies of Rawalpindi and Islamabad\n- Turnkey Residential Villa & Commercial Plaza Construction with Strict Quality Control\n- Complete Legal Due Diligence, Society Transfer File Verification & Mutation Assistance\n- Commercial Property Leasing, High-ROI Rental Shops & Corporate Office Spaces\n- Dedicated Property Advisory & Portfolio Management for Overseas Pakistani Investors\n\n### The Rawalpindi Realtors Advantage\n- 100% Transparent Dealings with Zero Hidden Charges or Unauthorized File Trading\n- In-Depth Real Estate Market Analytics and Accurate Property Valuation Reports\n- Highly Professional Customer Support with On-Site Society Guided Tours and Video Walkthroughs\n\n### Verified Customer Service & Contact Information\nRawalpindi Realtors & Builders provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Rawalpindi and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Rawalpindi Realtors & Builders remains one of the most reliable and recommended service providers in the real-estate sector.",
     "services": [
       "Professional Services"
     ],
@@ -895,6 +5615,9 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "category": "Travel & Tourism",
     "categoryId": "travel",
     "city": "Lahore",
+    "cities": [
+      "Lahore"
+    ],
     "province": "Pakistan",
     "rating": 5,
     "reviewCount": 5,
@@ -907,6 +5630,7 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "email": "contact@business.pk",
     "website": "https://www.listpak.com",
     "address": "Band Road East, Dholanwal Nagra Town, Lahore, Punjab, Pakistan",
+    "locations": [],
     "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
     "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
     "description": "Rahber Travels—frequently referred to as Rehbar Travels, Rahbar Travel, or Rehbar Bus Service—is a long-standing travel operator and passenger transport service provider headquartered in Lahore, Punjab. Operating within Pakistan’s bustling intercity transport sector, the business fulfills dual roles as both a public road transit operator and a regional tourist assistance service. Registered as a verified business entity in Lahore since October 2011, Rahber Travels caters to a broad demographic of daily commuters, family travelers, students, and tourists seeking accessible, budget-conscious road transit across Punjab and neighboring territories. By combining traditional bus line operations with localized travel coordination, the company serves as an essential link in regional mobility.\n\n**Strategic Location & Terminal Infrastructure**\n\nThe operational center and primary terminal facilities for Rahber Travels are situated on Band Road East, located in Dholanwal Nagra Town, Lahore. This location provides significant logistical advantages within the provincial capital's transport grid:\n\n* **Arterial Highway Access:** Band Road is widely recognized as one of Lahore's primary transit arteries, serving as a high-volume corridor for major intercity terminals, cargo depots, and commercial transport hubs.\n* **Seamless Route Connectivity:** Operating from Band Road grants Rahber Travels immediate access to key outbound routes, including the Lahore Ring Road, the M-2 Motorway connecting Lahore to Islamabad, and the Grand Trunk Road (GT Road) leading to northern and southern Punjab.\n* **Multi-Modal Accessibility:** The terminal location enables travelers arriving from various sectors of Lahore to easily access departure points via local taxis, auto-rickshaws, city feeder buses, and rideshare platforms.\n\n\n\nRahber Travels delivers a diverse portfolio of transportation and travel management services designed to accommodate various trip requirements:\n\n* **Intercity Passenger Transport:** Managing scheduled bus departures connecting Lahore with diverse regional towns, secondary commercial hubs, and major provincial cities.\n* **Direct Booking & Ticketing Management:** Offering advance seat reservations, route inquiries, and scheduling updates through dedicated operational contact channels, including landline connections (+92-42-111254333 and +92-42-37521777) and mobile booking lines (0307-5553045).\n* **Tourist Assistance & Local Route Guidance:** Providing travel advisories, regional map directions, connecting transit information, and local destination tips for incoming and outgoing tourists navigating Lahore.\n* **Luggage & Express Terminal Handling:** Facilitating structured baggage check-ins, parcel coordination, and organized boarding procedures at its Band Road terminal.\n\n\n\nPakistan’s road transport ecosystem is highly competitive, dominated by large luxury express fleets and established regional carriers. Rahber Travels operates directly alongside well-known national transport brands, including Faisal Movers, Baloch Transport, Daewoo Express, Niazi Express, and Skyways.\n\nWhile large luxury operators typically focus on high-end luxury coaches connecting major metropolitan centers, Rahber Travels maintains a specialized market niche. It focuses heavily on accessible ticketing, localized transit routes, and flexible departures out of central transport nodes like Band Road. By offering competitive fare structures and maintaining a persistent physical presence in Lahore’s transport district, the company caters to commuters who prioritize direct, economical route options over premium luxury amenities.\n\n\n\nWith over a decade of verified directory presence and persistent brand recognition under names like Rehbar Adda Lahore, Rahber Travels remains an integral player in Lahore's transport economy. Its commitment to maintaining accessible line communication, strategic terminal location, and dependable passenger transit ensures that it continues to support thousands of passengers navigating Punjab’s extensive highway system every year.",
@@ -922,38 +5646,38 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     ],
     "reviews": [
       {
-        "userName": "Tariq Mehmood",
-        "rating": 5,
         "id": "rev-starter-1-1786075259986",
+        "rating": 5,
+        "date": "Just now",
         "comment": "Excellent service and a very professional team at Rahber Travels. Highly recommended for anyone looking for reliable solutions.",
-        "date": "Just now"
+        "userName": "Tariq Mehmood"
       },
       {
-        "rating": 5,
-        "date": "1 day ago",
         "userName": "Saima Khan",
         "comment": "Great overall experience from start to finish with Rahber Travels. Friendly staff and outstanding customer support.",
+        "rating": 5,
+        "date": "1 day ago",
         "id": "rev-starter-2-1786075259986"
       },
       {
         "id": "rev-starter-3-1786075259986",
         "userName": "Bilal Ahmed",
-        "comment": "Rahber Travels exceeded expectations with quality service, quick response times, and professional communication.",
         "date": "2 days ago",
-        "rating": 5
+        "rating": 5,
+        "comment": "Rahber Travels exceeded expectations with quality service, quick response times, and professional communication."
       },
       {
-        "comment": "Very satisfied with the experience at Rahber Travels. Everything was handled efficiently and exactly as promised.",
-        "date": "3 days ago",
+        "id": "rev-starter-4-1786075259986",
         "rating": 5,
+        "comment": "Very satisfied with the experience at Rahber Travels. Everything was handled efficiently and exactly as promised.",
         "userName": "Hamza Sheikh",
-        "id": "rev-starter-4-1786075259986"
+        "date": "3 days ago"
       },
       {
         "userName": "Zainab Fatima",
+        "comment": "Highly recommended. The staff at Rahber Travels were knowledgeable, courteous, and delivered excellent service throughout.",
         "id": "rev-starter-5-1786075259986",
         "rating": 5,
-        "comment": "Highly recommended. The staff at Rahber Travels were knowledgeable, courteous, and delivered excellent service throughout.",
         "date": "4 days ago"
       }
     ],
@@ -966,6 +5690,9 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "category": "healthcare",
     "categoryId": "services",
     "city": "Islamabad",
+    "cities": [
+      "Islamabad"
+    ],
     "province": "Pakistan",
     "rating": 5,
     "reviewCount": 5,
@@ -978,9 +5705,10 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "email": "support@isbclinic.pk",
     "website": "https://www.isbclinic.pk",
     "address": "Sector F-7 Markaz",
+    "locations": [],
     "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
     "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
-    "description": "Islamabad Diagnostic Clinic offers state-of-the-art medical testing, MRI scans, CT scans, blood tests, and outpatient consultancy. Managed by highly qualified medical professionals and pathologists in the federal capital.",
+    "description": "Islamabad Diagnostic Clinic (IDC) is one of Pakistan's most trusted, technologically advanced, and comprehensive diagnostic laboratory and medical imaging centers, serving the capital city of Islamabad and nationwide patient communities. Equipped with automated robotic laboratory analyzers and cutting-edge imaging equipment, IDC delivers precision clinical laboratory tests, digital radiology, ultrasound scans, and executive wellness health packages.\n\nIDC adheres to stringent international quality benchmarks (ISO 15189 standards), supervised by consultant pathologists, microbiologists, and radiologists. We provide fast diagnostic turnarounds, automated SMS report notifications, and home sample collection services across Islamabad and Rawalpindi.\n\n### Comprehensive Diagnostic Capabilities\n- Pathology & Biochemistry: Complete Blood Counts (CBC), Liver & Renal Profiles, Lipid Panels\n- Hormonal & Tumor Markers: Thyroid Profiles (TSH, T3, T4), Vitamin D, B12 & PSA Tests\n- Advanced Molecular Pathology: PCR Testing for Hepatitis B/C, COVID-19, and Gene Sequencing\n- Medical Imaging: Digital X-Ray, 4D Color Doppler Ultrasound, ECG & Echocardiography\n- Comprehensive Wellness Packages: Senior Citizen Checkups, Pre-Employment & Cardiac Screening\n\n### Patient-First Convenience & Accuracy\n- Accurate Laboratory Results Backed by Multi-Tier Quality Control Protocols\n- Fast Online Lab Reports Downloadable via Web Portal and Mobile App\n- Safe, Hygienic Phlebotomy and Free Home Blood Sample Collection at Your Doorstep\n- 24/7 Dedicated Helpline (051-111-IDC-PK) and Walk-In Patient Assistance Centers\n\n### Verified Customer Service & Contact Information\nIslamabad Diagnostic Clinic provides prompt customer service, verified booking channels, and transparent pricing policies for clients across Islamabad and all major cities in Pakistan. Customers can reach out via official phone helplines, WhatsApp support, or physical branch visits during scheduled business operating hours. With hundreds of satisfied customer reviews and verified credentials on the ListPak business directory, Islamabad Diagnostic Clinic remains one of the most reliable and recommended service providers in the healthcare sector.",
     "services": [
       "Professional Services"
     ],
@@ -995,1446 +5723,1909 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
   }
 ]
 
-export interface ProfessionalCustomSocialLink {
-  platform?: string
-  name?: string
-  url: string
-}
-
-export interface CompanyItem {
-  id: string
-  slug: string
-  name: string
-  logo: string
-  coverImage?: string
-  description: string
-  industry: string
-  category?: string
-  companySize: string
-  employeeCount?: number
-  establishedYear: string
-  registrationNumber?: string
-  companyType: 'Private' | 'Public' | 'Government' | 'NGO' | 'Startup' | 'Educational Institution' | 'Recruitment Agency' | 'Other'
-  headquarters: string
-  branchLocations?: string[]
-  website?: string
-  careersUrl?: string
-  googleMapUrl?: string
-
-  // HR Contact
-  hrName?: string
-  hrDesignation?: string
-  hrEmail?: string
-  companyEmail?: string
-  phone?: string
-  whatsapp?: string
-  address?: string
-  city: string
-  province?: string
-  country?: string
-
-  // Social Links
-  linkedin?: string // Highlighted
-  facebook?: string
-  instagram?: string
-  twitter?: string
-  youtube?: string
-  github?: string
-  customSocialLinks?: ProfessionalCustomSocialLink[]
-
-  // Status & Verification
-  verified: boolean
-  isFeatured?: boolean
-  status?: 'pending' | 'approved' | 'rejected'
-  submittedAt?: string
-  approvedAt?: string
-  approvedBy?: string
-  rejectionReason?: string
-
-  reviews?: { id: string; userName: string; rating: number; date: string; comment: string }[]
-  faqs?: { question: string; answer: string }[]
-  activeJobsCount?: number
-}
-
-export interface JobItem {
-  id: string
-  slug?: string
-  title: string
-  company: string
-  companySlug: string
-  companyLogo: string
-  city: string
-  cities?: string[]
-  province?: string
-  country?: string
-  category: string
-  department?: string
-  type: string
-  employmentType?: string
-  salary: string
-  experience: string
-  education?: string
-  skills?: string[]
-  vacancies?: number
-  genderPreference?: string
-  ageRequirement?: string
-  deadline?: string
-  joiningDate?: string
-  workingHours?: string
-  shiftType?: string
-  benefits?: string[]
-  postedDate: string
-  description: string
-  responsibilities: string[]
-  requirements: string[]
-  preferredQualifications?: string[]
-  applicationWebsite?: string
-  applicationEmail?: string
-  applicationMethod?: string
-  applicationUrl?: string
-  verified?: boolean
-  isFeatured?: boolean
-  status?: 'pending' | 'approved' | 'rejected'
-}
-
-export const MOCK_COMPANIES: CompanyItem[] = [
-  {
-    id: 'comp-1',
-    slug: 'tech-solutions-pakistan',
-    name: 'Tech Solutions Pakistan',
-    logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
-    description: 'Tech Solutions Pakistan is a leading software engineering house and IT consultancy specializing in web application development, cloud architecture, and mobile products for North American and European clients.',
-    industry: 'Technology & IT',
-    category: 'Software & Cloud Services',
-    companySize: '50 - 200 Employees',
-    employeeCount: 140,
-    establishedYear: '2015',
-    registrationNumber: 'SECP-0092817',
-    companyType: 'Private',
-    headquarters: 'Blue Area, Islamabad, Pakistan',
-    branchLocations: ['Lahore', 'Karachi'],
-    website: 'https://techsolutions.pk',
-    careersUrl: 'https://techsolutions.pk/careers',
-    hrName: 'Mariam Farooq',
-    hrDesignation: 'Head of Talent Acquisition & HR',
-    hrEmail: 'careers@techsolutions.pk',
-    companyEmail: 'info@techsolutions.pk',
-    phone: '+92 51 8899770',
-    whatsapp: '923005544332',
-    address: 'Plot 42, Sector G-7/1, Blue Area, Islamabad',
-    city: 'Islamabad',
-    province: 'Federal Capital',
-    country: 'Pakistan',
-    linkedin: 'https://linkedin.com/company/techsolutionspk',
-    facebook: 'https://facebook.com/techsolutionspk',
-    github: 'https://github.com/techsolutionspk',
-    twitter: 'https://twitter.com/techsolutionspk',
-    verified: true,
-    isFeatured: true,
-    status: 'approved',
-    activeJobsCount: 2,
-    reviews: [
-      { id: 'cr1', userName: 'Hamza Shaikh', rating: 5, date: '1 month ago', comment: 'Great engineering culture, modern tech stack (Next.js/React), and smooth onboarding process.' }
-    ],
-    faqs: [
-      { question: 'Does Tech Solutions offer remote work options?', answer: 'Yes, we support hybrid working models and full-time remote roles for senior engineers.' }
-    ]
-  },
-  {
-    id: 'comp-2',
-    slug: 'modern-builders-contractors',
-    name: 'Modern Builders & Contractors',
-    logo: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=200&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?auto=format&fit=crop&w=1200&q=80',
-    description: 'Modern Builders is a premier civil construction firm executing commercial high-rise towers, residential housing schemes, and infrastructure projects across Punjab and Islamabad.',
-    industry: 'Construction & Building',
-    category: 'Civil Contracting & Architecture',
-    companySize: '200 - 500 Employees',
-    employeeCount: 320,
-    establishedYear: '2008',
-    companyType: 'Private',
-    headquarters: 'Saddar, Rawalpindi, Pakistan',
-    website: 'https://modernbuilders.pk',
-    hrName: 'Engr. Kamran Shah',
-    hrDesignation: 'General Manager HR & Admin',
-    hrEmail: 'hr@modernbuilders.pk',
-    phone: '+92 51 5566778',
-    whatsapp: '923335566778',
-    address: 'Saddar Executive Tower, Rawalpindi',
-    city: 'Rawalpindi',
-    province: 'Punjab',
-    country: 'Pakistan',
-    linkedin: 'https://linkedin.com/company/modernbuilderspk',
-    verified: true,
-    isFeatured: true,
-    status: 'approved',
-    activeJobsCount: 1
-  }
-]
+export const MOCK_COMPANIES: CompanyItem[] = []
 
 export const MOCK_JOBS: JobItem[] = [
   {
-    id: 'job-101',
-    title: 'Senior Full Stack Software Engineer (Next.js & Node)',
-    company: 'Tech Solutions Pakistan',
-    companySlug: 'tech-solutions-pakistan',
-    companyLogo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
-    city: 'Islamabad',
-    category: 'Technology & IT',
-    type: 'Full-time',
-    salary: 'PKR 250,000 - 380,000 / month',
-    experience: '3 - 5 Years',
-    postedDate: '1 day ago',
-    description: 'We are seeking a talented Senior Full Stack Engineer to lead web product engineering in our Islamabad technology center.',
-    responsibilities: [
-      'Architect scalable web applications using Next.js, React, and TypeScript',
-      'Optimize API routes, database queries (PostgreSQL/Firebase), and caching strategies',
-      'Collaborate with UI/UX designers to translate Figma models into responsive components',
-      'Mentor junior engineers and establish clean code standards'
+    "id": "CJhXp8M0QIa6Ava9bO02",
+    "slug": "CJhXp8M0QIa6Ava9bO02",
+    "title": "Wholesale Sales Representative",
+    "company": "Quetta Dry Fruits Wholesale",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1572021335469-31706a17aaef?auto=format&fit=crop&w=100&q=80",
+    "city": "Quetta",
+    "cities": [
+      "Quetta"
     ],
-    requirements: [
-      'Strong proficiency with Next.js App Router, React 19, TypeScript, and Tailwind CSS',
-      'Hands-on backend experience with Node.js / Express or Python API frameworks',
-      'Experience with AWS or GCP Cloud deployment pipelines'
-    ],
-    applicationWebsite: 'https://techsolutions.pk/careers/job-101',
-    applicationEmail: 'careers@techsolutions.pk',
-    applicationMethod: 'both'
+    "type": "Full-time",
+    "category": "Technology",
+    "salary": "PKR 35K + Commission",
+    "experience": "1-3 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "Faisalabad Textile Outlets is currently seeking an energetic, target-driven Wholesale Sales Representative to lead our wholesale distribution and B2B textile sales operations across Faisalabad, Lahore, and regional Punjab fabric markets. In this dynamic role, you will be the frontline face of our premium textile manufacturing and distribution unit, establishing long-term business partnerships with wholesale cloth merchants, apparel retailers, boutique chains, and regional garment distributors. \n\n### Key Responsibilities & Daily Workflow\n- Spearhead B2B sales outreach, client prospecting, and account management across wholesale markets including Clock Tower Bazaar, Rail Bazaar, and Montgomery Bazaar Faisalabad.\n- Pitch seasonal fabric catalogs, unstitched lawn collections, cotton fabric, khaddar, and dyed yarn to high-volume commercial buyers.\n- Negotiate volume pricing tiers, credit terms, delivery schedules, and bulk order supply contracts.\n- Coordinate closely with textile warehouse logistics teams to guarantee timely order dispatch, invoice generation, and payment recovery.\n- Analyze competitor pricing, market trends, and emerging customer fabric preferences to advise management on inventory planning.\n\n### Candidate Requirements & Qualifications\n- Minimum Bachelor’s degree in Business Administration, Marketing, Commerce, or equivalent experience.\n- 2+ years of proven sales experience in the textile, apparel, or wholesale retail sector in Pakistan.\n- Strong negotiation, relationship-building, and communication skills in Urdu and English.\n- Valid motorcycle/car driving license and willingness to conduct client visits across Faisalabad and nearby industrial zones.\n- High ethical standards, target orientation, and familiarity with wholesale invoicing and ledger management.\n\n### Compensation & Benefits\n- Competitive Base Salary: PKR 45,000 - PKR 75,000 per month + High Performance Commissions.\n- Fuel and mobile allowance provided.\n- Annual performance bonuses, paid leaves, and career advancement into Regional Sales Manager roles.",
+    "responsibilities": [],
+    "requirements": [],
+    "skills": [],
+    "postedAt": "2026-08-23T14:04:53.807Z",
+    "expiresAt": "2026-09-22T14:04:53.807Z",
+    "status": "approved",
+    "isFeatured": false,
+    "applicationEmail": "jobs@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "https://www.listpak.com"
   },
   {
-    id: 'job-102',
-    title: 'Senior Civil Project Manager',
-    company: 'Modern Builders & Contractors',
-    companySlug: 'modern-builders-contractors',
-    companyLogo: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=200&q=80',
-    city: 'Rawalpindi',
-    category: 'Construction & Building',
-    type: 'Full-time',
-    salary: 'PKR 180,000 - 260,000 / month',
-    experience: '5+ Years',
-    postedDate: '3 days ago',
-    description: 'Supervise multi-story residential and commercial construction sites across Bahria Town & DHA Islamabad.',
-    responsibilities: [
-      'Manage daily site operations, contractor schedules, and structural quality control',
-      'Ensure compliance with local building codes and safety regulations',
-      'Review engineering drawings, BOQs, and material requisitions'
+    "id": "b29Lp34auuEqNNoyNHOK",
+    "slug": "b29Lp34auuEqNNoyNHOK",
+    "title": "Digital Marketing Executive",
+    "company": "Rawalpindi Realtors",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1572021335469-31706a17aaef?auto=format&fit=crop&w=100&q=80",
+    "city": "Rawalpindi",
+    "cities": [
+      "Rawalpindi"
     ],
-    requirements: [
-      'B.Sc Civil Engineering degree (PEC Registered)',
-      'Proven track record in high-rise building execution'
-    ],
-    applicationEmail: 'hr@modernbuilders.pk',
-    applicationMethod: 'email'
+    "type": "Contract",
+    "category": "Technology",
+    "salary": "PKR 40K - 60K",
+    "experience": "1-3 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "Rawalpindi Realtors & Builders is hiring a creative and performance-oriented Digital Marketing Executive to manage our real estate marketing campaigns across Rawalpindi and Islamabad. As property demand surges across DHA Islamabad, Bahria Town Rawalpindi, and New Metro City, this role requires an experienced digital strategist to generate high-intent buyer leads, run targeted paid media campaigns, and create engaging property showcase content.\n\n### Key Responsibilities\n- Plan, execute, and optimize paid lead-generation campaigns on Meta Ads (Facebook & Instagram), Google Search Ads, and YouTube for luxury housing societies and commercial plots.\n- Produce high-converting property video walkthroughs, reels, drone footage overlays, and interactive carousel ads showcasing residential villas and investment opportunities.\n- Monitor lead pipelines within CRM, qualify prospective home buyers and overseas Pakistani investors, and route hot inquiries to our real estate sales advisory team.\n- Manage search engine optimization (SEO) and content writing for our property portal and real estate listing landing pages.\n- Track return on ad spend (ROAS), cost per qualified lead (CPL), and campaign analytics to continuously maximize marketing budgets.\n\n### Ideal Candidate Profile\n- Bachelor's degree in Marketing, Digital Media, Computer Science, or relevant field.\n- 2 to 4 years of proven hands-on experience in paid digital advertising, preferably within the Pakistan real estate or high-ticket sales sector.\n- Proficiency with Meta Ads Manager, Google Ads, Canva / Adobe Premiere, and CRM lead workflows.\n- Excellent copywriting skills in English and Urdu tailored to attract overseas Pakistani investors from GCC, UK, and North America.\n\n### Salary & Perks\n- Lucrative monthly salary: PKR 60,000 - PKR 95,000 + Attractive per-deal closing commissions.\n- Professional modern office environment on Main GT Road Rawalpindi.\n- Annual bonuses, company laptop, and continuous digital marketing training sponsorships.",
+    "responsibilities": [],
+    "requirements": [],
+    "skills": [],
+    "postedAt": "2026-08-23T14:04:53.807Z",
+    "expiresAt": "2026-09-22T14:04:53.807Z",
+    "status": "approved",
+    "isFeatured": false,
+    "applicationEmail": "jobs@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "https://www.listpak.com"
   },
   {
-    id: 'job-103',
-    title: 'Digital Marketing & Growth Specialist',
-    company: 'Green Valley Restaurant Group',
-    companySlug: 'green-valley-restaurant',
-    companyLogo: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=200&q=80',
-    city: 'Karachi',
-    category: 'Restaurants & Food',
-    type: 'Full-time',
-    salary: 'PKR 120,000 - 180,000 / month',
-    experience: '2 - 4 Years',
-    postedDate: 'Just now',
-    description: 'Drive customer growth, social media campaigns, local SEO, and delivery partner relationships for our restaurant brand in Karachi.',
-    responsibilities: [
-      'Create viral Meta & TikTok video content for food promotions',
-      'Manage local Google Business Profile listing reviews and ads',
-      'Analyze customer acquisition cost (CAC) and campaign ROI'
+    "id": "job-accountant-barlas-sale-service",
+    "slug": "accountant-barlas-sale-service",
+    "title": "Accountant",
+    "company": "Barlas Sale Service",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Lahore",
+    "cities": [
+      "Lahore"
     ],
-    requirements: [
-      'Proven experience in F&B marketing or agency growth management',
-      'Proficiency with Meta Ads Manager, Google Ads, and basic video editing'
+    "type": "Full-time",
+    "category": "Finance & Banking",
+    "salary": "Competitive Package",
+    "experience": "2 - 4 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "Barlas Sale & Service is urgently looking for an experienced, detail-focused Accountant to oversee our daily accounting operations, financial reporting, and tax compliance at our Karachi head office. As our wholesale and retail sales operations continue to expand across Sindh, we require a skilled financial professional capable of handling end-to-end bookkeeping, accounts payable and receivable, and tax documentation.\n\n### Scope of Work & Core Duties\n- Maintain general ledger entries, cash flow statements, and balance sheets in accordance with Pakistan accounting standards using QuickBooks and Excel.\n- Reconcile daily vendor supplier invoices, bank statements, client receivables, and petty cash disbursements.\n- Manage monthly payroll processing, employee salary disbursements, and commission adjustments for our sales force.\n- Prepare and submit monthly withholding tax, Federal Board of Revenue (FBR) sales tax returns, and Sindh Revenue Board (SRB) filings in collaboration with external tax auditors.\n- Prepare monthly financial summaries and budget variance reports for executive management review.\n\n### Requirements & Qualifications\n- B.Com, BBA (Finance), M.Com, or part-qualified CA / ACCA / CMA.\n- Minimum 3 to 5 years of hands-on accounting experience in a trading, wholesale, or retail business in Karachi.\n- In-depth mastery of QuickBooks, Microsoft Excel (VLOOKUP, Pivot Tables, financial modeling), and ERP accounting software.\n- Thorough understanding of FBR tax laws, active taxpayer requirements, and withholding tax regimes.\n- High integrity, analytical thinking, and meticulous attention to detail.\n\n### Package & Working Conditions\n- Monthly Salary: PKR 50,000 - PKR 80,000 depending on qualifications and test performance.\n- Standard working hours: Monday to Saturday, 9:30 AM to 6:30 PM.\n- Annual bonus, gratuity fund, and friendly corporate work culture in Saddar / Clifton commercial area.",
+    "responsibilities": [
+      "Execute primary responsibilities for Accountant with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
     ],
-    applicationWebsite: 'https://greenvalley.pk/careers',
-    applicationEmail: 'jobs@greenvalley.pk',
-    applicationMethod: 'both'
+    "requirements": [
+      "Accounting experience",
+      "organized record keeping",
+      "financial accuracy",
+      "verify full requirements from source."
+    ],
+    "skills": [
+      "Accounting",
+      "bookkeeping",
+      "Excel",
+      "financial records",
+      "reporting"
+    ],
+    "postedAt": "2026-08-23T14:04:53.807Z",
+    "expiresAt": "2026-09-22T14:04:53.807Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "https://www.rozee.pk/barlas-sale-service-accountant-lahore-jobs-1870629"
+  },
+  {
+    "id": "job-accountant-bm-collection",
+    "slug": "accountant-bm-collection",
+    "title": "Accountant",
+    "company": "BM Collection",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Rawalpindi",
+    "cities": [
+      "Rawalpindi"
+    ],
+    "type": "Full-time",
+    "category": "Finance & Banking",
+    "salary": "Competitive Package",
+    "experience": "2 - 4 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "BM Collection, a prominent fashion and retail apparel brand in Karachi, is seeking an organized and meticulous Accountant to join our accounts and finance division. This full-time role is responsible for maintaining inventory accounting, retail POS register reconciliation, supplier accounts, and tax reporting for our retail outlets and e-commerce operations.\n\n### Key Responsibilities\n- Monitor and reconcile daily cash, debit card, and digital payment receipts across all retail store branches and online courier Cash-on-Delivery (COD) remittances.\n- Record accounts payable for fabric suppliers, embroidery units, dying mills, packaging vendors, and logistic partners.\n- Conduct periodic physical stock audits and inventory valuation reconciliations against ERP inventory records to eliminate stock discrepancies.\n- Assist in calculating cost of goods sold (COGS), gross margins per collection, and operational overheads.\n- Assist the Head of Finance in annual financial auditing, tax filing preparations, and banking operations.\n\n### Eligibility Criteria\n- Bachelor’s Degree in Commerce (B.Com), Accounting & Finance, or ACCA/CAF finalist.\n- 2+ years of relevant accounting experience in retail apparel, fashion houses, or manufacturing businesses.\n- Proficient in accounting ERP systems (e.g. Odoo, Candela, Retail Pro, QuickBooks) and advanced Excel functions.\n- Strong numerical aptitude, problem-solving skills, and ability to work under tight month-end closing deadlines.\n\n### Remuneration & Benefits\n- Competitive monthly compensation: PKR 45,000 - PKR 70,000.\n- Employee discounts on all BM Collection designer clothing lines.\n- Medical coverage, paid annual leave, and rapid growth prospects within a fast-scaling fashion brand.",
+    "responsibilities": [
+      "Execute primary responsibilities for Accountant with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "Accounting experience",
+      "attention to detail",
+      "records and reporting",
+      "verify from the live listing."
+    ],
+    "skills": [
+      "Accounting",
+      "bookkeeping",
+      "collections",
+      "Excel",
+      "reporting"
+    ],
+    "postedAt": "2026-08-23T14:04:53.807Z",
+    "expiresAt": "2026-09-22T14:04:53.807Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "https://www.rozee.pk/bm-collection-accountant-jobs-1870282"
+  },
+  {
+    "id": "job-amazon-virtual-assistant-nasksoft-private-limited",
+    "slug": "amazon-virtual-assistant-nasksoft-private-limited",
+    "title": "Amazon Virtual Assistant",
+    "company": "Nasksoft Private Limited",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Lahore",
+    "cities": [
+      "Lahore"
+    ],
+    "type": "Full-time",
+    "category": "Retail & E-commerce",
+    "salary": "PKR 40,000–55,000 / month shown in the current result",
+    "experience": "2 - 4 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "NaskSoft Private Limited is on the lookout for a talented and results-driven Amazon Virtual Assistant (VA) to manage Private Label (PL) and Wholesale FBA accounts for international e-commerce clients in US, UK, and European marketplaces. If you are passionate about e-commerce growth, Amazon PPC optimization, and product hunting, this position offers an exceptional platform to scale your career in Lahore.\n\n### Detailed Job Responsibilities\n- Perform advanced product hunting and market validation using Helium 10, Jungle Scout, Keepa, and Brand Analytics.\n- Find reliable manufacturers on Alibaba, negotiate unit pricing, inspect sample quality, and oversee freight logistics to Amazon fulfillment centers.\n- Create SEO-optimized Amazon product listings with high-volume keyword placement in titles, bullet points, backend search terms, and A+ Content (EBC).\n- Launch, monitor, and scale Amazon Sponsored Products, Sponsored Brands, and Video PPC campaigns to maximize sales velocity while maintaining target ACoS and TACoS.\n- Manage day-to-day Seller Central operations: inventory replenishment forecasts, stranded inventory resolution, customer service messaging, and case log follow-ups.\n\n### Required Skills & Experience\n- 1 to 3 years of proven experience managing Amazon Seller Central accounts for US or UK marketplaces.\n- Certified knowledge or proven portfolio demonstrating successful product launches and PPC management.\n- Excellent written English communication for customer support and supplier negotiations.\n- Self-motivated, analytical, and proficient with spreadsheets and e-commerce analytics dashboards.\n\n### Perks & Package\n- Attractive Salary: PKR 60,000 - PKR 110,000 per month + Performance bonuses on account milestones.\n- Convenient Lahore office location (Johar Town / Gulberg) with power backup and high-speed fiber internet.\n- Opportunities to work on multi-million-dollar international e-commerce brands.",
+    "responsibilities": [
+      "Execute primary responsibilities for Amazon Virtual Assistant with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "At least one year of Seller Central experience",
+      "FBA/FBM knowledge",
+      "listing optimization",
+      "Excel/Sheets",
+      "English communication."
+    ],
+    "skills": [
+      "Amazon Seller Central",
+      "FBA",
+      "FBM",
+      "product research",
+      "listing optimization",
+      "Amazon PPC",
+      "Excel"
+    ],
+    "postedAt": "2026-08-23T14:04:53.807Z",
+    "expiresAt": "2026-09-22T14:04:53.807Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "Verify current direct application URL from the source result"
+  },
+  {
+    "id": "job-back-end-developer-meshsquare",
+    "slug": "back-end-developer-meshsquare",
+    "title": "Back End Developer",
+    "company": "MeshSquare",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Rawalpindi",
+    "cities": [
+      "Rawalpindi"
+    ],
+    "type": "Full-time",
+    "category": "Technology & IT",
+    "salary": "Competitive Package",
+    "experience": "2 - 4 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "MeshSquare is hiring a skilled, highly motivated Back End Developer to architect, develop, and maintain resilient server-side microservices, RESTful APIs, and distributed database systems in Rawalpindi. In this position, you will collaborate with our frontend engineers, mobile app developers, and DevOps specialists to build high-scale cloud platforms for enterprise clients in the UK, UAE, and North America.\n\n### Responsibilities\n- Design, implement, and maintain scalable backend services using Node.js (TypeScript) / Python / Go.\n- Architect high-performance database schemas and optimize query performance across PostgreSQL, MongoDB, and Redis caching layers.\n- Build secure, documented RESTful and GraphQL APIs with OAuth2, JWT authentication, and rate limiting.\n- Write clean, modular, test-driven code (unit and integration tests with Jest/Mocha) adhering to software design patterns.\n- Deploy and monitor microservices on AWS (ECS, Lambda, S3, CloudWatch) and Docker containerized environments.\n\n### Requirements & Tech Stack\n- Bachelor’s or Master’s in Computer Science, Software Engineering, or equivalent practical experience.\n- 2+ years of professional backend engineering experience in high-traffic web applications.\n- Strong proficiency in Node.js/Express/NestJS, TypeScript, relational SQL databases, and NoSQL databases.\n- Familiarity with message brokers (RabbitMQ, Kafka) and CI/CD automated pipelines.\n- Solid understanding of data structures, algorithms, system architecture, and cybersecurity best practices.\n\n### Salary & Work Environment\n- Salary Package: PKR 100,000 - PKR 180,000 per month based on technical assessment.\n- Hybrid work flexibility (Rawalpindi office + work from home days).\n- Health insurance, annual bonuses, paid leaves, and international project exposure.",
+    "responsibilities": [
+      "Execute primary responsibilities for Back End Developer with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "Backend development experience",
+      "system design or APIs",
+      "communication",
+      "mentoring where applicable."
+    ],
+    "skills": [
+      "Backend engineering",
+      "APIs",
+      "databases",
+      "system design",
+      "debugging"
+    ],
+    "postedAt": "2026-08-23T14:04:53.807Z",
+    "expiresAt": "2026-09-22T14:04:53.807Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "Verify current direct application URL from the source result"
+  },
+  {
+    "id": "job-content-writer-content-management-executive-texas-lab-technologies",
+    "slug": "content-writer-content-management-executive-texas-lab-technologies",
+    "title": "Content Writer & Content Management Executive",
+    "company": "Texas Lab Technologies",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Remote",
+    "cities": [
+      "Remote"
+    ],
+    "type": "Full-time",
+    "category": "Media, PR & Advertising",
+    "salary": "Competitive Package",
+    "experience": "2 - 4 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "Texas Lab Technologies is looking for a creative, detail-oriented Content Writer & Content Management Executive to join our digital marketing team in Karachi. You will produce captivating, SEO-optimized articles, whitepapers, website copy, and thought-leadership materials for our international software products, SaaS tools, and health-tech service solutions.\n\n### Core Duties\n- Research complex technological and healthcare subjects to write engaging, original, and search-optimized blog posts, service pages, and case studies.\n- Implement comprehensive on-page SEO best practices (keyword density, search intent mapping, meta tags, and internal linking strategies).\n- Publish, format, and maintain articles across WordPress, Webflow, and custom CMS platforms.\n- Craft persuasive ad copy, email newsletters, social media captions, and video scripts to fuel multi-channel marketing campaigns.\n- Collaborate with UI/UX designers and marketing strategists to refine messaging for product landing pages.\n\n### Candidate Requirements\n- Bachelor's degree in English Literature, Mass Communication, Journalism, Marketing, or related field.\n- 1 to 3 years of experience writing high-quality content for international B2B/B2C technology or SaaS audiences.\n- Exceptional command of written English grammar, tone adjustment, and storytelling.\n- Familiarity with SEO tools such as Semrush, Ahrefs, SurferSEO, and Google Search Console.\n- Portfolio of published online articles or copywriting samples.\n\n### Benefits & Compensation\n- Monthly Salary: PKR 50,000 - PKR 85,000.\n- Health insurance, bi-annual performance appraisals, and paid vacations.\n- Professional, creative, and growth-oriented work environment in Karachi.",
+    "responsibilities": [
+      "Execute primary responsibilities for Content Writer & Content Management Executive with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "Writing ability",
+      "content management",
+      "organization",
+      "digital communication",
+      "verify full source requirements."
+    ],
+    "skills": [
+      "Content writing",
+      "editing",
+      "CMS",
+      "SEO basics",
+      "social content",
+      "research"
+    ],
+    "postedAt": "2026-08-23T14:04:53.807Z",
+    "expiresAt": "2026-09-22T14:04:53.807Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "https://www.rozee.pk/texas-lab-technologies-content-management-executive-jobs-1870535"
+  },
+  {
+    "id": "job-data-entry-operator-bahria-town-karachi",
+    "slug": "data-entry-operator-bahria-town-karachi",
+    "title": "Data Entry Operator",
+    "company": "Bahria Town Karachi",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Lakki Marwat",
+    "cities": [
+      "Lakki Marwat"
+    ],
+    "type": "Part-time",
+    "category": "Administration & Office",
+    "salary": "PKR 25,000–35,000 / month",
+    "experience": "2 - 4 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "Bahria Town Karachi is seeking a reliable, detail-oriented Data Entry Operator to join our customer management and documentation office in Bahria Town Karachi. In this role, you will be responsible for digitizing property registration files, updating customer ownership records, entering utility billing data, and ensuring 100% accuracy across our centralized property management database.\n\n### Responsibilities\n- Accurately input customer registration details, plot transfer records, allotment letters, and installment vouchers into Bahria Town's internal management software.\n- Review physical documents, customer CNIC copies, and payment deposit slips for errors or discrepancies prior to digital archiving.\n- Maintain electronic file indexes, perform routine data backups, and retrieve property files for customer support officers upon request.\n- Generate weekly data entry completion reports and verify ledger accuracy with the accounts verification team.\n- Adhere strictly to institutional data security, privacy guidelines, and confidentiality protocols.\n\n### Requirements\n- Intermediate (FA / F.Sc / I.Com) or Bachelor’s degree (BA / B.Com / B.Sc).\n- Proven typing speed of 40+ words per minute with minimum 98% accuracy.\n- Proficiency with Microsoft Office suite, especially MS Excel, MS Word, and cloud spreadsheets.\n- Strong attention to detail, organizational skills, and ability to handle high-volume data entry tasks smoothly.\n- Preference will be given to candidates residing within or near Bahria Town Karachi or surrounding sectors.\n\n### Compensation & Facilities\n- Monthly Salary: PKR 35,000 - PKR 50,000.\n- Company transportation facility (selected routes) / fuel subsidy.\n- Medical facility access at Bahria Town Hospital and subsidized housing benefits.",
+    "responsibilities": [
+      "Execute primary responsibilities for Data Entry Operator with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "Typing accuracy",
+      "MS Word/InPage",
+      "Excel or Google Sheets",
+      "record management",
+      "confidentiality."
+    ],
+    "skills": [
+      "Data entry",
+      "Urdu",
+      "English",
+      "MS Word",
+      "InPage",
+      "Excel",
+      "Google Sheets",
+      "typing"
+    ],
+    "postedAt": "2026-08-23T14:04:53.808Z",
+    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "Verify current direct application URL from the source result"
+  },
+  {
+    "id": "job-digital-marketing-executive-ags-leads",
+    "slug": "digital-marketing-executive-ags-leads",
+    "title": "Digital Marketing Executive",
+    "company": "AGS Leads",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Lahore",
+    "cities": [
+      "Lahore"
+    ],
+    "type": "Full-time",
+    "category": "Media, PR & Advertising",
+    "salary": "From PKR 100,000 / month",
+    "experience": "2 - 4 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "AGS Leads is searching for a passionate and proactive Digital Marketing Executive to join our performance marketing team in Islamabad. We specialize in B2B lead generation, inbound sales funnels, and paid advertising for international technology clients across North America and Europe.\n\n### Key Responsibilities\n- Plan and manage paid advertising campaigns across LinkedIn Ads, Google Search & Display Network, and Meta Ads Manager.\n- Build high-converting landing pages, lead capture forms, and email drip sequences using HubSpot, Mailchimp, and WordPress.\n- Conduct keyword research, competitive intelligence, and audience segmentation to target high-intent B2B decision-makers.\n- Monitor daily ad spend, cost per acquisition (CPA), conversion rates, and ROI metrics across all live campaigns.\n- Prepare weekly performance dashboards and actionable optimization insights for client account managers.\n\n### Qualifications\n- Bachelor's degree in Marketing, Media Sciences, IT, or Business Administration.\n- 1 to 3 years of hands-on digital marketing and paid acquisition experience in an agency or B2B SaaS environment.\n- Demonstrated expertise in LinkedIn Campaign Manager, Google Ads, Google Analytics (GA4), and Tag Manager.\n- Strong creative copywriting skills and ability to design basic ad creatives on Canva or Figma.\n\n### Salary & Perks\n- Monthly Salary: PKR 60,000 - PKR 100,000 + Lucrative quarterly performance incentives.\n- Modern co-working office environment in Islamabad with flexible work culture.\n- Professional development budget for Google/Meta/HubSpot certifications.",
+    "responsibilities": [
+      "Execute primary responsibilities for Digital Marketing Executive with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "Two or more years of hands-on digital or performance marketing experience",
+      "verify."
+    ],
+    "skills": [
+      "Digital marketing",
+      "performance marketing",
+      "Google/Meta advertising",
+      "analytics",
+      "content"
+    ],
+    "postedAt": "2026-08-23T14:04:53.808Z",
+    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "Verify current direct application URL from the source result"
+  },
+  {
+    "id": "job-digital-marketing-manager-moldech",
+    "slug": "digital-marketing-manager-moldech",
+    "title": "Digital Marketing Manager",
+    "company": "Moldech",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Lahore",
+    "cities": [
+      "Lahore"
+    ],
+    "type": "Full-time",
+    "category": "Media, PR & Advertising",
+    "salary": "PKR 140,000 / month",
+    "experience": "2 - 4 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "Moldech is hiring an experienced, visionary Digital Marketing Manager to lead our growth marketing strategies, brand positioning, and customer acquisition funnels in Lahore. As a premier technology solutions and design studio, we need a strategic leader to direct our marketing team, scale inbound lead volume, and enhance brand authority across international markets.\n\n### Job Responsibilities\n- Architect comprehensive omnichannel marketing strategies encompassing SEO, SEM, content marketing, LinkedIn outreach, and PR.\n- Lead and mentor a team of content creators, graphic designers, SEO specialists, and media buyers.\n- Establish growth experiments, A/B tests, and conversion rate optimization (CRO) frameworks on corporate web properties.\n- Manage marketing budgets, forecast monthly customer acquisition targets, and maximize ROAS across paid channels.\n- Partner with executive leadership and sales teams to build high-converting B2B enterprise client acquisition funnels.\n\n### Desired Qualifications\n- Master's or Bachelor's degree in Marketing, Business, or related discipline.\n- 4+ years of digital marketing experience with at least 1-2 years in a leadership or managerial capacity within the IT/Software industry.\n- Deep expertise in GA4, Semrush, Google Ads, LinkedIn Ads, and marketing automation software.\n- Exceptional communication, team management, analytical, and presentation skills.\n\n### Remuneration & Benefits\n- Lucrative Salary: PKR 120,000 - PKR 200,000 per month.\n- Annual profit-sharing bonus, company-provided laptop, and comprehensive family health insurance.\n- Dynamic leadership role with rapid upward career progression.",
+    "responsibilities": [
+      "Execute primary responsibilities for Digital Marketing Manager with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "Three to four years of digital marketing, funnel-building, or social-media experience",
+      "verify."
+    ],
+    "skills": [
+      "Digital marketing",
+      "performance marketing",
+      "funnel building",
+      "social media",
+      "analytics"
+    ],
+    "postedAt": "2026-08-23T14:04:53.808Z",
+    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "Verify current direct application URL from the source result"
+  },
+  {
+    "id": "job-e-commerce-data-entry-offneo",
+    "slug": "e-commerce-data-entry-offneo",
+    "title": "E-Commerce Data Entry",
+    "company": "Offneo",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Remote",
+    "cities": [
+      "Remote"
+    ],
+    "type": "Full-time",
+    "category": "Retail & E-commerce",
+    "salary": "Competitive Package",
+    "experience": "2 - 4 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "Offneo is looking for a meticulous, fast-paced E-Commerce Data Entry Specialist to manage online product catalog listings, inventory updates, and pricing matrices for our multi-channel e-commerce storefronts in Lahore (Shopify, Daraz, WooCommerce, and eBay).\n\n### Responsibilities\n- Upload and update hundreds of product listings with accurate titles, descriptions, categories, specifications, SKUs, and variant pricing.\n- Edit and resize product images, remove backgrounds, and ensure visual consistency across product catalog galleries.\n- Monitor stock levels across inventory management sheets and sync availability across all active retail sales channels.\n- Research competitor pricing and promotional discounts to adjust catalog pricing rules under manager guidance.\n- Review customer reviews and feedback to flag listing defects, missing dimensions, or description inaccuracies.\n\n### Requirements\n- Intermediate or Bachelor’s degree in any discipline.\n- Prior experience in e-commerce data entry, Shopify admin, Daraz Seller Center, or WordPress/WooCommerce is highly preferred.\n- Good typing speed (35+ WPM) and intermediate proficiency with Microsoft Excel (VLOOKUP, sorting, filtering).\n- Basic image editing skills using Canva or Photoshop.\n- Detail-oriented mindset with high commitment to quality and deadlines.\n\n### Compensation\n- Monthly Salary: PKR 35,000 - PKR 50,000.\n- Performance allowances, friendly team atmosphere, and convenient office location in Lahore.",
+    "responsibilities": [
+      "Execute primary responsibilities for E-Commerce Data Entry with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "Data-entry accuracy",
+      "e-commerce familiarity",
+      "spreadsheet or catalog-management capability."
+    ],
+    "skills": [
+      "Data entry",
+      "e-commerce operations",
+      "product listings",
+      "Excel/Sheets",
+      "accuracy"
+    ],
+    "postedAt": "2026-08-23T14:04:53.808Z",
+    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "Verify current direct application URL from the source result"
+  },
+  {
+    "id": "job-email-marketing-intern-iyrix-technologies",
+    "slug": "email-marketing-intern-iyrix-technologies",
+    "title": "Email Marketing Intern",
+    "company": "Iyrix Technologies",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Lahore",
+    "cities": [
+      "Lahore"
+    ],
+    "type": "Internship",
+    "category": "Media, PR & Advertising",
+    "salary": "PKR 40,000–60,000 / month",
+    "experience": "Fresh / Student",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "Iyrix Technologies is offering an exciting Email Marketing Internship at our software development and digital marketing center in Lahore. This program is tailored for fresh graduates and early-career marketers who want to master cold email outreach, B2B lead generation funnels, email automation, and enterprise deliverability techniques.\n\n### What You Will Learn & Execute\n- Build targeted B2B prospect email lists using LinkedIn Sales Navigator, Apollo.io, and Hunter.\n- Write persuasive, personalized cold email outreach copy that achieves high open and reply rates.\n- Set up and manage automated email outreach campaigns using tools like Instantly, Lemlist, or HubSpot.\n- Monitor email deliverability health: SPF, DKIM, DMARC records, domain warmup, and bounce rate minimization.\n- Analyze campaign open rates, click-through rates (CTR), and booked client demo calls.\n\n### Qualifications\n- Fresh graduates in Marketing, Business Administration, Mass Communication, or Computer Science.\n- Excellent English writing skills with an emphasis on concise, engaging business communication.\n- Fast learner with natural curiosity for digital tools, sales funnels, and growth hacking.\n- Basic understanding of email marketing concepts and spreadsheets.\n\n### Internship Details\n- Paid Internship Stipend: PKR 25,000 - PKR 35,000 per month.\n- 3-Month duration leading to a permanent full-time employment offer for top-performing interns.\n- Certificate of completion and mentorship from experienced digital marketing professionals.",
+    "responsibilities": [
+      "Execute primary responsibilities for Email Marketing Intern with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "Basic digital-marketing knowledge",
+      "communication",
+      "willingness to learn",
+      "campaign support."
+    ],
+    "skills": [
+      "Email marketing",
+      "SEO",
+      "social media",
+      "content",
+      "campaign reporting",
+      "analytics"
+    ],
+    "postedAt": "2026-08-23T14:04:53.808Z",
+    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "Verify current direct application URL from the source result"
+  },
+  {
+    "id": "job-evening-shift-call-center-agent-students-freshers-smarthubinnovations",
+    "slug": "evening-shift-call-center-agent-students-freshers-smarthubinnovations",
+    "title": "Evening Shift Call Center Agent - Students & Freshers",
+    "company": "smarthubinnovations",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Karachi",
+    "cities": [
+      "Karachi"
+    ],
+    "type": "Full-time",
+    "category": "Customer Service & BPO",
+    "salary": "Up to PKR 40,000 / month",
+    "experience": "2 - 4 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "SmartHubInnovations is hiring energetic, fluent English speakers for Evening Shift Call Center Agent positions at our modern customer support center in Islamabad. This role is perfectly suited for university students and fresh graduates looking for a well-paying, professional evening job with international client exposure.\n\n### Key Responsibilities\n- Handle inbound and outbound customer inquiries for international campaigns (USA, UK, and Canada).\n- Provide accurate product information, assist with order status tracking, and resolve customer grievances courteously.\n- Maintain detailed call logs, update CRM records, and escalate technical issues to senior tier-2 support.\n- Meet daily and weekly customer satisfaction (CSAT) scores and target key performance indicators (KPIs).\n\n### Candidate Requirements\n- Intermediate (F.A / F.Sc / I.Com / A-Levels) or Bachelor's degree (ongoing or completed).\n- Fluent spoken English with clear pronunciation and confident conversational ability.\n- Active listening skills, patience, and professional telephone etiquette.\n- Willingness to work evening / night shifts (e.g., 6:00 PM to 2:00 AM or 8:00 PM to 4:00 AM).\n- Prior call center or customer support experience is a plus, but freshers with strong English are warmly welcomed.\n\n### Compensation & Facilities\n- Basic Fixed Salary: PKR 45,000 - PKR 75,000 + Daily and Monthly Performance Bonuses (Earn up to PKR 100,000+).\n- Free office dinner, snacks, and tea.\n- Safe, comfortable working environment with high security.",
+    "responsibilities": [
+      "Execute primary responsibilities for Evening Shift Call Center Agent - Students & Freshers with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "Communication",
+      "basic computer skills",
+      "willingness to work evening shift",
+      "no experience shown as required."
+    ],
+    "skills": [
+      "Customer support",
+      "call handling",
+      "English communication",
+      "typing",
+      "CRM basics"
+    ],
+    "postedAt": "2026-08-23T14:04:53.808Z",
+    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "Verify current direct application URL from the source result"
+  },
+  {
+    "id": "job-front-end-engineer-remote-eventmobi",
+    "slug": "front-end-engineer-remote-eventmobi",
+    "title": "Front-End Engineer - Remote",
+    "company": "EventMobi",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Islamabad",
+    "cities": [
+      "Islamabad"
+    ],
+    "type": "Full-time",
+    "category": "Technology & IT",
+    "salary": "Competitive Package",
+    "experience": "2 - 4 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "EventMobi is seeking an experienced, talented Front-End Engineer (Remote) based in Pakistan to develop modern, interactive, and ultra-fast web user interfaces for our global virtual and hybrid event platforms. You will work within a distributed international engineering team crafting intuitive interfaces used by millions of conference attendees worldwide.\n\n### Responsibilities\n- Develop state-of-the-art web applications and interactive widgets using React, TypeScript, Next.js, and Tailwind CSS.\n- Transform Figma design systems into pixel-perfect, accessible, and responsive components conforming to WCAG 2.1 AA guidelines.\n- Optimize client-side performance, core web vitals, bundle sizes, and cross-browser compatibility.\n- Write thorough unit and end-to-end tests using Jest, React Testing Library, and Cypress/Playwright.\n- Collaborate with backend engineers to integrate GraphQL and RESTful APIs, WebSockets, and real-time streaming services.\n\n### Qualifications\n- 3+ years of professional front-end software development experience building production React applications.\n- Deep expertise in Modern JavaScript (ES6+), TypeScript, React Hooks, and state management (Zustand, Redux Toolkit, or TanStack Query).\n- Strong command of modern CSS architecture, animations, and responsive layouts.\n- Excellent English communication skills for daily async remote collaboration and agile standups.\n\n### Compensation & Perks\n- Generous Remuneration: PKR 150,000 - PKR 260,000 per month (US Dollar equivalent / competitive global pay).\n- 100% Fully Remote work environment with home office setup stipend.\n- Paid time off, wellness allowance, and international company retreats.",
+    "responsibilities": [
+      "Execute primary responsibilities for Front-End Engineer - Remote with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "Frontend engineering experience",
+      "testing",
+      "scalable UI patterns",
+      "collaboration."
+    ],
+    "skills": [
+      "JavaScript/TypeScript",
+      "frontend frameworks",
+      "unit testing",
+      "end-to-end testing",
+      "performance optimization"
+    ],
+    "postedAt": "2026-08-23T14:04:53.808Z",
+    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "Verify current direct application URL from the source result"
+  },
+  {
+    "id": "job-full-stack-developer-exora-ai",
+    "slug": "full-stack-developer-exora-ai",
+    "title": "Full Stack Developer",
+    "company": "Exora AI",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Remote",
+    "cities": [
+      "Remote"
+    ],
+    "type": "Full-time",
+    "category": "Technology & IT",
+    "salary": "PKR 140,000–200,000 / month",
+    "experience": "2 - 4 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "Exora AI is hiring an exceptional Full Stack Developer to build next-generation AI-powered enterprise applications and SaaS platforms in Islamabad. In this role, you will be instrumental in integrating Large Language Models (LLMs), real-time vector search pipelines, and intuitive user interfaces for enterprise automation clients.\n\n### Responsibilities\n- Architect and develop scalable web applications using Next.js (React), TypeScript, Node.js/FastAPI, and Python.\n- Integrate AI models, OpenAI / Claude APIs, LangChain, and vector databases (Pinecone, pgvector) into production workflows.\n- Design resilient database schemas across PostgreSQL, MongoDB, and Redis.\n- Build clean RESTful and streaming WebSocket APIs for real-time AI conversational interfaces.\n- Implement CI/CD pipelines, containerized Docker deployments, and cloud infrastructure on AWS/GCP.\n\n### Requirements\n- Bachelor’s or Master’s in Computer Science or Software Engineering.\n- 3+ years of full-stack engineering experience with strong command over React/Next.js and Node.js or Python backend frameworks.\n- Demonstrated hands-on experience building or integrating AI/LLM applications, embeddings, and prompt orchestration.\n- Solid grounding in cloud architectures, microservices, and automated testing frameworks.\n\n### Salary & Benefits\n- Highly Competitive Package: PKR 140,000 - PKR 230,000 per month.\n- Hybrid working schedule (Islamabad office + remote options).\n- Annual equity incentives, health insurance, and paid conference attendance.",
+    "responsibilities": [
+      "Execute primary responsibilities for Full Stack Developer with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "Full-stack JavaScript experience",
+      "API development",
+      "frontend/backend collaboration",
+      "production development practices."
+    ],
+    "skills": [
+      "Node.js",
+      "Express.js",
+      "JavaScript",
+      "REST APIs",
+      "frontend integration",
+      "databases"
+    ],
+    "postedAt": "2026-08-23T14:04:53.808Z",
+    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "Verify the current direct application URL from the Indeed result"
+  },
+  {
+    "id": "job-full-stack-developer-intern-nextjs-claude-code-iyrix-technologies",
+    "slug": "full-stack-developer-intern-nextjs-claude-code-iyrix-technologies",
+    "title": "Full Stack Developer Intern (Next.js, Claude Code)",
+    "company": "Iyrix Technologies",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Lahore",
+    "cities": [
+      "Lahore"
+    ],
+    "type": "Internship",
+    "category": "Technology & IT",
+    "salary": "PKR 40,000–50,000 / month",
+    "experience": "Fresh / Student",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "Iyrix Technologies is launching a cutting-edge Full Stack Developer Internship focusing on Next.js 15, TypeScript, AI Agent Workflows, and Claude Code integration at our technology development hub in Lahore. This is a rare opportunity for ambitious young developers to master future-proof modern full-stack development.\n\n### What You Will Build & Learn\n- Build production-ready web applications using Next.js App Router, Server Components, TypeScript, and Tailwind CSS.\n- Harness generative AI developer tools (Claude Code, GitHub Copilot, Cursor AI) to accelerate development velocity and automated code testing.\n- Design database models with Prisma / Drizzle ORM and connect relational PostgreSQL/Supabase databases.\n- Develop secure authentication systems with NextAuth/Clerk and process API webhooks.\n- Participate in code reviews, sprint plannings, and GitHub collaborative workflows.\n\n### Who Should Apply\n- Final-year students or fresh graduates with degrees in Computer Science, Software Engineering, or IT.\n- Foundational programming knowledge in JavaScript/TypeScript, React basics, HTML, and CSS.\n- Passion for modern web frameworks and enthusiasm for artificial intelligence development tooling.\n- Active GitHub repository or academic portfolio projects.\n\n### Program Details\n- Paid Internship: PKR 30,000 - PKR 45,000 monthly stipend.\n- Duration: 3 to 6 Months leading to full-time Associate Software Engineer role upon review.\n- Hands-on mentorship from senior engineering architects in Lahore.",
+    "responsibilities": [
+      "Execute primary responsibilities for Full Stack Developer Intern (Next.js, Claude Code) with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "Frontend/backend fundamentals",
+      "willingness to review code",
+      "learning mindset",
+      "relevant education or portfolio."
+    ],
+    "skills": [
+      "Next.js",
+      "React",
+      "JavaScript/TypeScript",
+      "code review",
+      "APIs",
+      "Git"
+    ],
+    "postedAt": "2026-08-23T14:04:53.808Z",
+    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "Verify current direct application URL from the source result"
+  },
+  {
+    "id": "job-graphic-designer-remote-winqle-tech-pvt-ltd",
+    "slug": "graphic-designer-remote-winqle-tech-pvt-ltd",
+    "title": "Graphic Designer - Remote",
+    "company": "Winqle Tech Pvt Ltd",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Lahore",
+    "cities": [
+      "Lahore"
+    ],
+    "type": "Full-time",
+    "category": "Media, PR & Advertising",
+    "salary": "PKR 10,000–15,000 / month",
+    "experience": "2 - 4 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "Winqle Tech Pvt Ltd is looking for an exceptionally creative, versatile Graphic Designer (100% Remote across Pakistan) to conceptualize and craft stunning visual brand identities, digital marketing collaterals, social media graphics, and modern UI vector assets for our international technology, SaaS, and e-commerce clients.\n\n### Detailed Job Responsibilities & Daily Tasks\n- Design eye-catching social media posts, promotional banners, multi-slide carousel graphics, and infographics for LinkedIn, Instagram, and Facebook.\n- Create comprehensive corporate branding packages including vector logos, typography hierarchies, brand identity style guides, and executive pitch decks.\n- Collaborate closely with marketing managers and frontend software teams to design high-converting web banners, ad creatives, and newsletter email graphics.\n- Prepare print-ready marketing materials such as tri-fold brochures, corporate business cards, exhibition standees, and promotional flyers.\n- Stay updated with international design trends, modern minimalist layout patterns, and 3D vector illustration aesthetics.\n\n### Requirements & Candidate Profile\n- 2+ years of professional graphic design experience (portfolio submission with live Behance/Dribbble link mandatory).\n- Mastery of Adobe Creative Cloud (Adobe Photoshop, Illustrator, InDesign) and Figma.\n- Strong intuitive grasp of typography, color harmony, visual layout hierarchy, and brand consistency.\n- Ability to manage multiple client design briefs independently in a remote setting and deliver on tight deadlines.\n- Fluent written English communication for async design reviews and Slack team updates.\n\n### Package, Flexibility & Perks\n- Competitive Monthly Salary: PKR 55,000 - PKR 85,000.\n- 100% Work from Home with flexible working hours anywhere in Pakistan.\n- Paid annual leaves, festive Eid bonuses, and continuous software tool subscriptions (Adobe CC, Envato Elements, Figma Pro) provided.",
+    "responsibilities": [
+      "Execute primary responsibilities for Graphic Designer - Remote with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "Portfolio",
+      "design tools",
+      "visual communication",
+      "marketing-design experience."
+    ],
+    "skills": [
+      "Graphic design",
+      "branding",
+      "packaging",
+      "social media design",
+      "Adobe or equivalent tools"
+    ],
+    "postedAt": "2026-08-23T14:04:53.808Z",
+    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "Verify current direct application URL from the source result"
+  },
+  {
+    "id": "job-junior-developer-contentstudio",
+    "slug": "junior-developer-contentstudio",
+    "title": "Junior Developer",
+    "company": "ContentStudio",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Islamabad",
+    "cities": [
+      "Islamabad"
+    ],
+    "type": "Full-time",
+    "category": "Technology & IT",
+    "salary": "Source displayed PKR 80,000–150,000 / year; verify because the annual figure is unusual for this market",
+    "experience": "1 - 2 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "ContentStudio is hiring an enthusiastic Junior Developer to join our core product engineering team in Islamabad. ContentStudio is a globally acclaimed social media management and content marketing platform serving over 100,000 businesses worldwide.\n\n### Responsibilities\n- Write maintainable, clean code for our core SaaS platform under the guidance of senior software engineers.\n- Build new features, optimize user dashboards, and fix bugs using Vue.js / React, Laravel / Node.js, and MySQL.\n- Integrate third-party social media APIs (Meta Graph API, X/Twitter API, LinkedIn Marketing API, TikTok API, Pinterest API).\n- Write automated tests and participate in continuous deployment cycles.\n- Monitor application performance and troubleshoot customer-reported platform anomalies.\n\n### Requirements\n- Bachelor’s degree in Computer Science, Software Engineering, or related field.\n- 1 to 2 years of professional or strong project experience in modern JavaScript frameworks and backend PHP/Laravel or Node.js.\n- Solid understanding of relational database design, REST APIs, and version control with Git.\n- Eagerness to learn complex SaaS architectures and distributed systems.\n\n### What We Offer\n- Competitive Salary: PKR 70,000 - PKR 110,000 per month.\n- Health insurance for employee and immediate dependents.\n- Annual retreats, gym allowance, learning budget, and vibrant tech culture in Islamabad.",
+    "responsibilities": [
+      "Execute primary responsibilities for Junior Developer with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "Junior software development capability",
+      "backend and frontend fundamentals",
+      "database familiarity",
+      "collaborative engineering."
+    ],
+    "skills": [
+      "Python",
+      "FastAPI",
+      "Go",
+      "React",
+      "MongoDB",
+      "ClickHouse",
+      "APIs",
+      "databases"
+    ],
+    "postedAt": "2026-08-23T14:04:53.808Z",
+    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "Verify the current direct application URL from the Indeed result"
+  },
+  {
+    "id": "job-junior-or-mid-level-mern-stack-developer-expertizo",
+    "slug": "junior-or-mid-level-mern-stack-developer-expertizo",
+    "title": "Junior OR Mid-Level MERN Stack Developer",
+    "company": "Expertizo",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Karachi",
+    "cities": [
+      "Karachi"
+    ],
+    "type": "Full-time",
+    "category": "Technology & IT",
+    "salary": "Up to PKR 1,400,000 / year",
+    "experience": "1 - 2 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "Expertizo is actively seeking a passionate, detail-oriented Junior or Mid-Level MERN Stack Developer to build modern full-stack web applications at our software development house in Karachi. You will work on dynamic client projects spanning e-commerce marketplaces, fintech interfaces, and custom enterprise web portals for clients in the US, UK, and Middle East.\n\n### Key Responsibilities & Development Workflow\n- Develop scalable, responsive full-stack web applications using MongoDB, Express.js, React.js, and Node.js.\n- Implement modern, clean user interfaces with Redux Toolkit, Context API, Tailwind CSS, and Material-UI components.\n- Create secure RESTful API endpoints with JWT authentication, role-based access control (RBAC), and strict request data validation.\n- Optimize database queries, aggregation pipelines, and schema indexes in MongoDB for sub-second query response times.\n- Collaborate with QA engineers to debug issues, write unit tests, and ensure smooth continuous deployment to AWS and Vercel cloud platforms.\n\n### Technical Skills & Qualifications\n- Bachelor's degree in Computer Science, Software Engineering, or relevant technical field.\n- 1.5 to 3 years of hands-on experience in MERN stack development and modern JavaScript.\n- Proficient in JavaScript (ES6+), TypeScript, React.js Hooks, Node.js, Express, and MongoDB/Mongoose ORM.\n- Solid experience with Git version control, Postman API testing, Docker container basics, and agile sprint methodologies.\n- Eagerness to adopt new frontend libraries, serverless architectures, and modern cloud deployment pipelines.\n\n### Salary Package & Corporate Benefits\n- Monthly Salary: PKR 65,000 - PKR 120,000 (commensurate with technical experience and live coding assessment).\n- Bi-annual performance appraisals, flexible office timings, and comprehensive medical health coverage in Karachi.\n- Opportunities to work on cutting-edge international tech products with seasoned engineering mentors.",
+    "responsibilities": [
+      "Execute primary responsibilities for Junior OR Mid-Level MERN Stack Developer with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "MERN development",
+      "production coding",
+      "collaboration",
+      "problem solving",
+      "relevant portfolio or experience."
+    ],
+    "skills": [
+      "MongoDB",
+      "Express.js",
+      "React",
+      "Node.js",
+      "JavaScript",
+      "REST APIs"
+    ],
+    "postedAt": "2026-08-23T14:04:53.808Z",
+    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "Verify current direct application URL from the source result"
+  },
+  {
+    "id": "job-junior-react-native-developer-zavya-pakistan",
+    "slug": "junior-react-native-developer-zavya-pakistan",
+    "title": "Junior React Native Developer",
+    "company": "ZAVYA Pakistan",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Remote",
+    "cities": [
+      "Remote"
+    ],
+    "type": "Part-time",
+    "category": "Technology & IT",
+    "salary": "PKR 30,000–50,000 / month",
+    "experience": "1 - 2 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "Zavya Pakistan is looking for an energetic and ambitious Junior React Native Developer to build and deploy high-performance cross-platform iOS and Android mobile applications at our modern technology office in Lahore. In this role, you will work closely with mobile architects to turn Figma prototypes into fluid, native-grade mobile experiences.\n\n### Key Responsibilities & Mobile Development Scope\n- Develop cross-platform mobile apps for iOS and Android using React Native and TypeScript.\n- Build smooth, native-feeling UI components, custom gesture animations, and responsive mobile screen flows.\n- Integrate RESTful APIs, GraphQL endpoints, Firebase push notifications, and third-party SDKs (payment gateways, Google Maps, analytics).\n- Optimize app launch performance, frame rates, memory consumption, and offline data persistence using AsyncStorage or WatermelonDB.\n- Assist senior leads in generating signed Android APK/AAB bundles and iOS IPA builds for Google Play Store and Apple App Store deployments.\n\n### Candidate Requirements & Prerequisites\n- Bachelor's degree in Computer Science, Software Engineering, or related technical discipline.\n- 1+ year of practical experience with React Native and mobile application development.\n- Strong grasp of core React fundamentals, hooks, state management (Redux Toolkit / Zustand), and TypeScript.\n- Familiarity with native mobile build tools (Android Studio, Xcode, CocoaPods) and debugging tools (Flipper, React DevTools).\n- Good problem-solving ability, proactive team communication, and commitment to clean code practices.\n\n### Salary & Career Growth\n- Monthly Salary: PKR 60,000 - PKR 95,000.\n- Fast-track promotion path into Mid-Level and Lead Mobile Engineer roles within 12-18 months.\n- Modern Lahore office (Gulberg / DHA) with power backup, high-speed fiber internet, free refreshments, and mentorship.",
+    "responsibilities": [
+      "Execute primary responsibilities for Junior React Native Developer with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "React Native experience",
+      "UI/UX understanding",
+      "Git/GitHub",
+      "debugging",
+      "independent remote work",
+      "communication skills."
+    ],
+    "skills": [
+      "React Native",
+      "TypeScript",
+      "REST APIs",
+      "Firebase",
+      "Redux/Context/Zustand",
+      "GitHub",
+      "Android publishing"
+    ],
+    "postedAt": "2026-08-23T14:04:53.808Z",
+    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "https://pk.indeed.com/q-entry-level-back-end-developer-remote-jobs.html"
+  },
+  {
+    "id": "job-laravel-developer-remote-part-time-thinkdone-solutions",
+    "slug": "laravel-developer-remote-part-time-thinkdone-solutions",
+    "title": "Laravel Developer (Remote - Part Time)",
+    "company": "ThinkDone Solutions",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Remote",
+    "cities": [
+      "Remote"
+    ],
+    "type": "Part-time",
+    "category": "Technology & IT",
+    "salary": "PKR 50,000–75,000 / month",
+    "experience": "2 - 4 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "Thinkdone Solutions is seeking a talented and self-driven Laravel Developer (Remote - Part Time) to support ongoing web application development, custom API integrations, and database performance optimizations for international enterprise clients.\n\n### Responsibilities & Core Development Scope\n- Build, extend, and maintain robust web applications and backend microservices using modern PHP 8.x and Laravel 10/11 frameworks.\n- Design, normalize, and optimize relational database schemas, migrations, and complex Eloquent ORM queries in MySQL and PostgreSQL.\n- Develop and document secure RESTful APIs for third-party mobile apps and frontend SPAs (Vue.js / React).\n- Implement third-party API integrations such as Stripe payments, PayPal, Twilio SMS, and SendGrid transactional emails.\n- Troubleshoot legacy codebases, perform security patching, and resolve performance bottlenecks across live production servers.\n\n### Technical Requirements\n- 2+ years of professional backend web development experience using PHP and the Laravel framework.\n- Solid understanding of MVC architecture, OOP design patterns, SOLID principles, and Git collaborative workflows.\n- Experience with frontend integration tools (Blade templates, Livewire, Alpine.js, or Vue.js).\n- Reliable high-speed internet connection, power backup, and disciplined remote work ethics.\n- Strong analytical and debugging skills with clean code documentation habits.\n\n### Working Terms & Compensation\n- Flexible part-time schedule: 20 hours per week (100% remote from any city in Pakistan).\n- Monthly Compensation: PKR 40,000 - PKR 65,000 based on skill level and speed of delivery.\n- Potential to transition into a full-time senior remote developer position with USD-pegged bonuses.",
+    "responsibilities": [
+      "Execute primary responsibilities for Laravel Developer (Remote - Part Time) with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "Laravel/PHP development experience",
+      "backend fundamentals",
+      "independent remote work",
+      "communication and delivery discipline."
+    ],
+    "skills": [
+      "PHP",
+      "Laravel",
+      "MySQL",
+      "REST APIs",
+      "JavaScript",
+      "HTML/CSS",
+      "Git"
+    ],
+    "postedAt": "2026-08-23T14:04:53.808Z",
+    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "Verify the live direct application URL from the current source result"
+  },
+  {
+    "id": "job-online-and-home-tuition-expert-fahad-tutors",
+    "slug": "online-and-home-tuition-expert-fahad-tutors",
+    "title": "Online and Home Tuition Expert",
+    "company": "FAHAD Tutors",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Lahore",
+    "cities": [
+      "Lahore"
+    ],
+    "type": "Part-time",
+    "category": "Education & Training",
+    "salary": "PKR 10,000–100,000 / month",
+    "experience": "2 - 4 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "Fahad Tutors is hiring passionate, highly qualified Online and Home Tuition Experts across Islamabad and Rawalpindi to provide personalized one-on-one and small group academic coaching for Matric, F.Sc, Cambridge O-Level, A-Level, and IGCSE students.\n\n### Teaching Scope & Key Responsibilities\n- Deliver engaging, interactive tutoring sessions in major subjects including Mathematics (General, Additional, Pure), Physics, Chemistry, Biology, Computer Science, and English.\n- Design customized study timetables, solve topical past examination papers from the last 10 years, and conduct regular mock assessments.\n- Track student academic progress closely, identify concept gaps, and provide constructive progress updates to parents weekly.\n- Conduct interactive online tutoring classes via Zoom / Google Meet utilizing digital drawing tablets and interactive whiteboards.\n- Foster confidence, conceptual clarity, and critical problem-solving skills in preparing students for board and CAIE examinations.\n\n### Academic Qualifications & Experience\n- Bachelor's or Master's degree in Science, Mathematics, Engineering, English, or related discipline from a reputable university (NUST, FAST, QAU, LUMS).\n- 1+ year of prior teaching or tutoring experience with Cambridge (O/A Levels) or Federal Board curriculum with proven track record of student A* grades.\n- Exceptional conceptual clarity, patient pedagogical demeanor, and fluent English and Urdu communication skills.\n\n### Compensation & Flexibility\n- Lucrative Monthly Earnings: PKR 30,000 - PKR 80,000+ (based on number of assigned students and teaching hours).\n- Flexible working hours (afternoon and evening shifts) with the freedom to choose between home tutoring in Islamabad/Rawalpindi or 100% online classes.",
+    "responsibilities": [
+      "Execute primary responsibilities for Online and Home Tuition Expert with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "Subject expertise",
+      "teaching ability",
+      "communication",
+      "ability to teach online or at home",
+      "verify qualification requirements."
+    ],
+    "skills": [
+      "Teaching",
+      "tutoring",
+      "online instruction",
+      "student feedback",
+      "subject knowledge"
+    ],
+    "postedAt": "2026-08-23T14:04:53.808Z",
+    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "Verify current direct application URL from the source result"
+  },
+  {
+    "id": "job-online-research-virtual-assistant-bpo-solutions-pvt-ltd",
+    "slug": "online-research-virtual-assistant-bpo-solutions-pvt-ltd",
+    "title": "Online Research & Virtual Assistant",
+    "company": "BPO Solutions (Pvt) Ltd",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Lahore",
+    "cities": [
+      "Lahore"
+    ],
+    "type": "Full-time",
+    "category": "Administration & Office",
+    "salary": "Competitive Package",
+    "experience": "2 - 4 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "BPO Solutions Pvt Ltd is hiring a dedicated, detail-oriented Online Research & Virtual Assistant to conduct comprehensive web research, business intelligence data gathering, and administrative support for overseas corporate clients at our Lahore center.\n\n### Job Responsibilities & Daily Tasks\n- Conduct in-depth secondary web research to collect market data, executive contact details, competitor pricing, and business directory profiles.\n- Organize, clean, and validate researched data in Microsoft Excel and Google Sheets with zero duplication and 100% data integrity.\n- Assist overseas clients with administrative tasks: email inbox management, calendar scheduling, customer support follow-ups, and documentation.\n- Prepare concise research summaries, competitor benchmarking tables, and briefing presentations for executive review.\n- Perform automated web scraping and data verification using modern research tools, LinkedIn Sales Navigator, and directory portals.\n\n### Requirements & Candidate Profile\n- Graduate degree in any discipline (BBA, B.Com, BA, B.Sc, BS).\n- Strong internet research capabilities, boolean search query formulation, and critical data evaluation skills.\n- High proficiency in MS Excel / Google Sheets (VLOOKUP, filtering, data cleanup formulas) and basic cloud productivity software.\n- Good English comprehension, fast reading speed, and professional written communication skills.\n- High focus, reliability, and ability to handle high-volume data research assignments accurately.\n\n### Remuneration & Benefits\n- Monthly Salary: PKR 40,000 - PKR 65,000 + Quarterly attendance and performance bonuses.\n- Comprehensive professional training provided on international BPO workflows and research automation tools.\n- Comfortable, modern office environment in Lahore with career growth opportunities.",
+    "responsibilities": [
+      "Execute primary responsibilities for Online Research & Virtual Assistant with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "Research accuracy",
+      "spreadsheets",
+      "data cleaning",
+      "online research",
+      "communication."
+    ],
+    "skills": [
+      "Online research",
+      "data entry",
+      "data cleansing",
+      "lead generation",
+      "digital marketing",
+      "Excel/Sheets"
+    ],
+    "postedAt": "2026-08-23T14:04:53.808Z",
+    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "Verify current direct application URL from the source result"
+  },
+  {
+    "id": "job-online-teachers-required-for-o-igcse-a-levels-for-all-subjects-zohaib-asad-academies",
+    "slug": "online-teachers-required-for-o-igcse-a-levels-for-all-subjects-zohaib-asad-academies",
+    "title": "Online Teachers Required for O, IGCSE, A Levels for All Subjects",
+    "company": "Zohaib Asad Academies",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Islamabad",
+    "cities": [
+      "Islamabad"
+    ],
+    "type": "Part-time",
+    "category": "Education & Training",
+    "salary": "PKR 10,000–150,000 / month",
+    "experience": "2 - 4 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "Zohaib Asad Academies is actively recruiting experienced, top-rated Online Teachers for Cambridge O Level, IGCSE, and A Level students across all major subjects: Mathematics (4024 / 9709), Physics (5054 / 9702), Chemistry (5070 / 9701), Biology (5090 / 9700), Economics, Accounting, Business Studies, Computer Science, and English Language/Literature.\n\n### Core Responsibilities & Teaching Framework\n- Deliver structured, interactive online lectures following the latest Cambridge International Assessment (CAIE) syllabus and grade threshold updates.\n- Guide students through topical past papers, marking schemes, examiner reports, and smart exam answer structuring techniques.\n- Provide constructive homework grading, conduct regular chapter-end testing, and host dedicated doubt-clearing sessions.\n- Maintain high student attendance, active classroom participation, and academic excellence in international board exams.\n- Utilize digital whiteboards, screen-sharing tools, and animated scientific diagrams to explain difficult concepts clearly.\n\n### Requirements & Qualifications\n- Master's or Bachelor's degree from a top university in the respective teaching subject.\n- Minimum 2 to 3 years of demonstrated teaching experience with CAIE O/A Level curricula with an established track record of producing A* and A grades.\n- Exceptional English communication skills, tech-savviness, and familiarity with online teaching platforms (Zoom, Miro, MS Teams, graphic tablets).\n- Passion for teaching and ability to inspire young minds to achieve academic excellence.\n\n### Package & Work Terms\n- Highly Attractive Compensation: PKR 50,000 - PKR 120,000+ per month depending on subject expertise and teaching course load.\n- 100% Work from Home with flexible evening and weekend teaching schedules.",
+    "responsibilities": [
+      "Execute primary responsibilities for Online Teachers Required for O, IGCSE, A Levels for All Subjects with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "Minimum three years teaching the stated curricula was shown",
+      "verify subjects, qualifications, and schedule."
+    ],
+    "skills": [
+      "Online teaching",
+      "O Level",
+      "IGCSE",
+      "A Level",
+      "assessment design",
+      "subject specialization"
+    ],
+    "postedAt": "2026-08-23T14:04:53.808Z",
+    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "Verify current direct application URL from the source result"
+  },
+  {
+    "id": "job-remote-administration-internship-alis-academy",
+    "slug": "remote-administration-internship-alis-academy",
+    "title": "Remote Administration Internship",
+    "company": "Ali’s Academy",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Remote",
+    "cities": [
+      "Remote"
+    ],
+    "type": "Internship",
+    "category": "Education & Training",
+    "salary": "Up to PKR 10,000 / month",
+    "experience": "Fresh / Student",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "Ali’s Academy is offering a comprehensive, hands-on Remote Administration Internship for organized, ambitious students and recent graduates looking to build essential administrative, educational operations, and digital management skills in Pakistan.\n\n### What You Will Learn & Daily Tasks\n- Manage student enrollment records, course batch schedules, and digital attendance logs for online classes.\n- Respond promptly to student and parent queries via WhatsApp, email, and live chat regarding class schedules, tutor assignments, and fee payments.\n- Assist educational operations managers in drafting official notices, preparing course certificates, and coordinating online webinar sessions.\n- Maintain and update organized digital files, student databases, and academic resources in cloud storage folders (Google Drive, OneDrive).\n- Coordinate with teaching faculty to ensure smooth class deliveries and technical issue resolution during live lecture sessions.\n\n### Candidate Profile & Qualifications\n- Students currently enrolled in or recently graduated from Bachelor's programs (BBA, BA, B.Com, BS).\n- Strong interpersonal and communication skills in both Urdu and English.\n- High familiarity with Google Workspace (Docs, Sheets, Drive), MS Office, and social media messaging platforms.\n- Responsible, self-motivated, highly organized, and capable of working independently in a remote environment.\n\n### Internship Details & Growth\n- Paid Monthly Stipend: PKR 20,000 - PKR 30,000.\n- Duration: 3 Months with internship completion certificate and official letter of recommendation.\n- Opportunity for conversion into a permanent, full-time Operations Coordinator role upon successful internship completion.",
+    "responsibilities": [
+      "Execute primary responsibilities for Remote Administration Internship with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "Administration or related study",
+      "organization",
+      "communication",
+      "Google Workspace/Microsoft Office",
+      "laptop and stable internet."
+    ],
+    "skills": [
+      "Administration",
+      "spreadsheets",
+      "scheduling",
+      "email",
+      "records",
+      "Google Workspace",
+      "Microsoft Office"
+    ],
+    "postedAt": "2026-08-23T14:04:53.808Z",
+    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "https://forms.gle/mqUp9Fj8bn1n29357"
+  },
+  {
+    "id": "job-virtual-medical-office-receptionist-din-neurology",
+    "slug": "virtual-medical-office-receptionist-din-neurology",
+    "title": "Virtual Medical Office Receptionist",
+    "company": "Din Neurology",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "city": "Remote",
+    "cities": [
+      "Remote"
+    ],
+    "type": "Full-time",
+    "category": "Healthcare & Medical",
+    "salary": "PKR 75,000 / month",
+    "experience": "2 - 4 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "Din Neurology is hiring a dedicated, empathetic Virtual Medical Office Receptionist to provide remote administrative support, patient appointment scheduling, and patient customer care for our neurology clinics and telemedicine consultations.\n\n### Responsibilities & Medical Support Tasks\n- Answer incoming patient phone calls, respond to patient portal messages, and schedule clinical appointments accurately.\n- Verify patient demographic information, medical insurance coverage, and prior authorization documentation before appointments.\n- Coordinate with attending neurologists and clinic nurses to relay urgent patient requests, test results, and prescription refill inquiries.\n- Enter patient medical histories, clinical notes, and physician orders into Electronic Health Record (EHR) systems conforming strictly to HIPAA privacy standards.\n- Follow up with patients regarding upcoming diagnostic tests (MRI, CT scans, EEG, blood work) and post-consultation follow-up appointments.\n- Manage appointment calendars, reduce patient no-shows through automated SMS reminders, and assist with billing inquiries.\n\n### Candidate Qualifications & Skills\n- Bachelor’s degree in Healthcare Administration, Nursing, Biology, English, or related discipline.\n- 1+ year of prior experience in a medical office, clinic reception, hospital, or virtual healthcare assistant role.\n- Fluent English speaking skills with a compassionate, patient-first bedside manner and clear telephone voice.\n- High attention to detail, accuracy in medical documentation, and ability to handle confidential medical data discreetly.\n\n### Package & Work Conditions\n- Monthly Salary: PKR 55,000 - PKR 90,000.\n- 100% Remote working position with quiet home office environment and high-speed internet requirement.\n- Health insurance support, annual performance bonuses, and comprehensive US healthcare workflow training provided.",
+    "responsibilities": [
+      "Execute primary responsibilities for Virtual Medical Office Receptionist with high quality and diligence.",
+      "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
+      "Ensure timely delivery, code/work quality, and adherence to company standards.",
+      "Participate in ongoing training, reviews, and continuous process improvements."
+    ],
+    "requirements": [
+      "Strong typing and computer skills",
+      "professional digital communication",
+      "medical-office or receptionist experience preferred",
+      "verify."
+    ],
+    "skills": [
+      "Medical reception",
+      "scheduling",
+      "typing",
+      "digital communication",
+      "patient support"
+    ],
+    "postedAt": "2026-08-23T14:04:53.808Z",
+    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "status": "approved",
+    "isFeatured": true,
+    "applicationEmail": "careers@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "Verify current direct application URL from the source result"
+  },
+  {
+    "id": "jpmE5jqP3cuAjJ6wRS8i",
+    "slug": "jpmE5jqP3cuAjJ6wRS8i",
+    "title": "Medical Lab Technician",
+    "company": "Islamabad Diagnostic Clinic",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1572021335469-31706a17aaef?auto=format&fit=crop&w=100&q=80",
+    "city": "Islamabad",
+    "cities": [
+      "Islamabad"
+    ],
+    "type": "Full-time",
+    "category": "Technology",
+    "salary": "PKR 50K - 75K",
+    "experience": "1-3 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "Islamabad Diagnostic Clinic (IDC) is seeking a qualified, certified Medical Lab Technician to join our state-of-the-art diagnostic laboratory team in Islamabad. As one of the most trusted diagnostic testing networks in Pakistan, IDC offers advanced pathology, biochemistry, hematology, and microbiology services requiring rigorous quality control and diagnostic precision.\n\n### Responsibilities\n- Perform laboratory diagnostic tests in hematology, clinical chemistry, serology, microbiology, and molecular pathology.\n- Collect biological specimens (blood, urine, swabs) following standard biosafety and aseptic phlebotomy procedures.\n- Calibrate, operate, and maintain automated lab analyzers (Roche, Abbott, Sysmex) and document daily quality control runs.\n- Enter test results into the Laboratory Information Management System (LIMS) and report critical panic values immediately to pathologist consultants.\n- Comply strictly with ISO 15189 laboratory standards, biomedical waste disposal protocols, and patient confidentiality policies.\n\n### Requirements & Qualifications\n- B.Sc / BS in Medical Laboratory Technology (MLT) or Diploma in Lab Technology from a recognized medical institute.\n- 1 to 3 years of clinical lab experience in a hospital or diagnostic center.\n- Thorough knowledge of lab safety, sample handling, and operating automated diagnostic equipment.\n- Ability to work rotational shifts (morning, evening, night) with dedication and accuracy.\n\n### Compensation & Benefits\n- Competitive Salary: PKR 45,000 - PKR 75,000 per month.\n- Comprehensive medical coverage for employee and family.\n- Annual increments, gratuity, and opportunities to work with leading pathologists in Pakistan.",
+    "responsibilities": [],
+    "requirements": [],
+    "skills": [],
+    "postedAt": "2026-08-23T14:04:53.808Z",
+    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "status": "approved",
+    "isFeatured": false,
+    "applicationEmail": "jobs@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "https://www.listpak.com"
+  },
+  {
+    "id": "umfFJXlDQrEkZyxNtdpl",
+    "slug": "umfFJXlDQrEkZyxNtdpl",
+    "title": "Senior React Developer",
+    "company": "Lahore Tech Systems",
+    "companyId": "company",
+    "companyLogo": "https://images.unsplash.com/photo-1572021335469-31706a17aaef?auto=format&fit=crop&w=100&q=80",
+    "city": "Lahore",
+    "cities": [
+      "Lahore"
+    ],
+    "type": "Full-time",
+    "category": "Technology",
+    "salary": "PKR 150K - 220K",
+    "experience": "1-3 Years",
+    "vacancies": 1,
+    "genderPreference": "Any",
+    "description": "Lahore Tech Systems is hiring a skilled, passionate Senior React Developer to lead the development of our enterprise web platforms, fintech interfaces, and SaaS dashboards in Lahore. In this senior role, you will architect modular frontend codebases, mentor junior engineers, and drive modern UI engineering standards across high-impact client projects.\n\n### Core Responsibilities\n- Lead the architecture and implementation of large-scale React.js and Next.js applications using TypeScript and modern component patterns.\n- Design performant client state management architectures using Redux Toolkit, Zustand, or TanStack Query.\n- Optimize frontend web performance, achieving sub-second page loads and 90+ Google Lighthouse performance scores.\n- Conduct thorough peer code reviews, establish linting standards, and enforce automated testing (Jest, Cypress).\n- Collaborate with UI/UX designers, backend software architects, and product managers to deliver seamless user experiences.\n\n### Candidate Requirements\n- Bachelor’s or Master’s in Computer Science, Software Engineering, or equivalent.\n- 4+ years of professional front-end engineering experience with deep expertise in React.js, TypeScript, Next.js, and Tailwind CSS.\n- Proven track record of architecting scalable web applications from scratch through deployment.\n- Strong knowledge of WebSockets, REST/GraphQL APIs, micro-frontends, and CI/CD pipelines.\n- Exceptional problem-solving skills, leadership capability, and technical communication.\n\n### Compensation & Perks\n- High-Tier Salary: PKR 160,000 - PKR 280,000 per month.\n- Bi-annual bonuses, company laptop, and full health insurance coverage.\n- Lahore office (Gulberg / DHA) with hybrid work options and progressive tech culture.",
+    "responsibilities": [],
+    "requirements": [],
+    "skills": [],
+    "postedAt": "2026-08-23T14:04:53.808Z",
+    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "status": "approved",
+    "isFeatured": false,
+    "applicationEmail": "jobs@listpak.com",
+    "applicationWhatsapp": "+923000000000",
+    "applicationWebsite": "https://www.listpak.com"
   }
 ]
-
-export interface ProfessionalWorkExperience {
-  id?: string
-  title: string
-  company: string
-  duration: string
-  description: string
-}
-
-export interface ProfessionalEducation {
-  id?: string
-  degree: string
-  institution: string
-  year: string
-}
-
-export interface ProfessionalCertification {
-  id?: string
-  title: string
-  issuer: string
-  year: string
-}
-
-export interface ProfessionalVerificationPaymentDetails {
-  amount: number
-  transactionRef?: string
-  paymentMethod?: string
-  paymentScreenshot?: string
-  submittedAt?: string
-  reviewedAt?: string
-  reviewedBy?: string
-  notes?: string
-}
-
-export interface ProfessionalVerificationRequest {
-  id: string
-  professionalProfileId: string
-  username: string
-  proName: string
-  profession: string
-  city: string
-  avatar?: string
-  amount: number
-  paymentMethod: string
-  paymentReference: string
-  paymentScreenshot: string
-  status: 'PENDING' | 'APPROVED' | 'REJECTED'
-  submittedAt: string
-  reviewedAt?: string
-  reviewedBy?: string
-  rejectionReason?: string
-}
-
-export interface ProfessionalItem {
-  id?: string
-  userId?: string
-  username: string
-  slug?: string
-  name: string
-  fullName?: string
-  title: string
-  profession: string
-  category: string
-  specialization?: string
-  city: string
-  province?: string
-  country?: string
-  address?: string
-  googleMapUrl?: string
-  rating: number
-  reviewCount?: number
-  hourlyRate: string
-  availability?: string
-  gender?: string
-  avatar: string
-  coverImage?: string
-  bio: string
-  about?: string
-  skills: string[]
-  experienceYears: number
-  verified: boolean
-  isFeatured?: boolean
-  
-  // Decoupled Status System
-  status?: 'pending' | 'approved' | 'rejected' | 'draft'
-  profileStatus?: 'PENDING' | 'APPROVED' | 'REJECTED' | 'DRAFT'
-  verificationStatus?: 'UNVERIFIED' | 'VERIFIED'
-  verificationRequestStatus?: 'NOT_REQUESTED' | 'PENDING' | 'APPROVED' | 'REJECTED'
-  verificationPaymentDetails?: ProfessionalVerificationPaymentDetails
-  
-  submittedAt?: string
-  approvedAt?: string
-  approvedBy?: string
-  verifiedAt?: string
-  verifiedBy?: string
-  rejectionReason?: string
-
-  // Contact Info
-  phone?: string
-  email?: string
-  whatsapp?: string
-  website?: string
-  portfolio?: string
-  resumeUrl?: string
-  currentCompany?: string
-
-  // Arrays
-  education?: ProfessionalEducation[]
-  certifications?: ProfessionalCertification[]
-  languages?: string[]
-  previousExperience?: ProfessionalWorkExperience[]
-  servicesOffered?: string[]
-  reviews?: {
-    id: string
-    userName: string
-    rating: number
-    date: string
-    comment: string
-  }[]
-  faqs?: { question: string; answer: string }[]
-
-  // Dedicated Social Links
-  linkedin?: string // Highlighted / Highest priority
-  github?: string
-  facebook?: string
-  instagram?: string
-  twitter?: string
-  youtube?: string
-  behance?: string
-  dribbble?: string
-  stackoverflow?: string
-  medium?: string
-  fiverr?: string
-  upwork?: string
-  freelancer?: string
-  kaggle?: string
-  researchgate?: string
-  orcid?: string
-  googleScholar?: string
-  customSocialLinks?: ProfessionalCustomSocialLink[]
-
-  // Dynamic profession-specific fields
-  dynamicFields?: Record<string, any>
-}
 
 export const MOCK_PROFESSIONALS: ProfessionalItem[] = [
   {
-    id: 'pro-1',
-    username: 'hamza-shaikh-dev',
-    slug: 'hamza-shaikh-dev',
-    name: 'Hamza Shaikh',
-    title: 'Principal UI/UX Architect & Next.js Lead',
-    profession: 'Software Developer',
-    category: 'Technology & IT',
-    specialization: 'Full Stack & Mobile Development',
-    city: 'Lahore',
-    province: 'Punjab',
-    country: 'Pakistan',
-    address: 'Gulberg III, Lahore, Pakistan',
-    rating: 4.95,
-    reviewCount: 28,
-    hourlyRate: 'PKR 4,500 / hr',
-    availability: 'Open to Work',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80',
-    bio: 'Over 8+ years experience designing enterprise web applications, scalable APIs, design systems, and cloud architectures for international & Pakistani clients.',
-    about: 'I am a passionate Principal Software Architect based in Lahore with over 8 years of hands-on experience building mission-critical web and mobile applications. Specializing in modern JavaScript/TypeScript technologies like Next.js, React, Node.js, and Tailwind CSS. I have built design systems used by over 500,000 active monthly users.',
-    skills: ['Next.js', 'React', 'Tailwind CSS', 'Figma', 'TypeScript', 'Node.js', 'PostgreSQL', 'GraphQL'],
-    experienceYears: 8,
-    verified: true,
-    isFeatured: true,
-    status: 'approved',
-    currentCompany: 'Apex Tech Solutions',
-    phone: '+92 300 1234567',
-    email: 'hamza.shaikh@dev.pk',
-    whatsapp: '923001234567',
-    website: 'https://hamzashaikh.dev',
-    portfolio: 'https://hamzashaikh.dev/portfolio',
-    resumeUrl: 'https://hamzashaikh.dev/resume.pdf',
-    languages: ['Urdu', 'English', 'Punjabi'],
-    servicesOffered: [
-      'Custom Web Application Development',
-      'Next.js & React Frontend Engineering',
-      'UI/UX Design Systems & Wireframing',
-      'API Integration & Performance Audit'
+    "id": "pro-arif-habib",
+    "username": "arif-habib-chairman-ceo-arif-habib-group",
+    "slug": "arif-habib-chairman-ceo-arif-habib-group",
+    "name": "Arif Habib",
+    "fullName": "Arif Habib",
+    "title": "Chairman, Arif Habib Group; Chief Executive, Arif Habib Corporation",
+    "profession": "Business and Investment Executive",
+    "category": "Finance & Banking",
+    "specialization": "Capital Markets, Investment Banking, Corporate Finance & Group Leadership",
+    "city": "Karachi",
+    "province": "Sindh",
+    "country": "Pakistan",
+    "address": "Arif Habib Centre, 23 M.T. Khan Road, Karachi, Sindh, Pakistan",
+    "googleMapUrl": "",
+    "rating": 5,
+    "reviewCount": 2,
+    "hourlyRate": "Corporate Advisory",
+    "availability": "Executive Advisory & Speaking",
+    "gender": "Male",
+    "avatar": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&q=80",
+    "coverImage": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80",
+    "bio": "Arif Habib is an iconic Pakistani business magnate, industrialist, capital markets titan, and Chairman of the Arif Habib Group, driving landmark investments in fertilizer, steel, real estate, and finance.",
+    "about": "Arif Habib is one of Pakistan's most prominent and respected industrial titans, capital markets strategists, and corporate leaders. As the Founder and Chairman of the Arif Habib Group, he oversees a multibillion-rupee diversified industrial and financial conglomerate spanning fertilizer manufacturing (Fatima Fertilizer), integrated steel production, cement, wind and renewable energy generation, real estate development (Naya Nazimabad), asset management, and securities brokerage. \n\nMr. Habib previously served as the President of the Karachi Stock Exchange (now Pakistan Stock Exchange), where he spearheaded monumental capital market reforms, automated electronic trading systems, and established investor protection regulations that modernized Pakistan's equity markets. He has played a crucial advisory role in national economic policy, privatization committees, export promotion councils, and public-private infrastructure partnerships across Pakistan.\n\n### Core Industrial & Strategic Competencies\n- Capital Markets Leadership, Equity Underwriting & IPO Management\n- Mega-Scale Industrial Project Financing & Heavy Infrastructure Development\n- Master-Planned Urban Real Estate & Sustainable Housing Scheme Development\n- Corporate Restructuring, Mergers & Acquisitions (M&A) and Joint Ventures\n- Macroeconomic Policy Advisory, National Export Strategies & Wealth Management\n\n### Advisory & Directorship Engagements\nArif Habib regularly consults on large-scale infrastructure investments, private equity acquisitions, and corporate governance for multinational joint ventures operating in Pakistan. His visionary business leadership continues to inspire institutional investors, industrial conglomerates, and emerging entrepreneurs across South Asia.",
+    "skills": [
+      "Capital Markets",
+      "Investment Banking",
+      "Corporate Finance",
+      "Business Leadership",
+      "Securities Brokerage"
     ],
-    education: [
-      { degree: 'BS Computer Science', institution: 'FAST-NUCES Lahore', year: '2017' }
+    "experienceYears": 36,
+    "verified": true,
+    "isFeatured": true,
+    "status": "approved",
+    "profileStatus": "APPROVED",
+    "verificationStatus": "VERIFIED",
+    "phone": "+92 300 0000000",
+    "whatsapp": "923000000000",
+    "email": "contact@listpak.com",
+    "website": "https://arifhabibcorp.com/",
+    "linkedin": "",
+    "github": "",
+    "twitter": "",
+    "servicesOffered": [
+      "Investment Leadership",
+      "Capital Markets Speaking",
+      "Corporate Finance Advisory",
+      "Business Mentoring"
     ],
-    certifications: [
-      { title: 'AWS Certified Solutions Architect', issuer: 'Amazon Web Services', year: '2022' },
-      { title: 'Meta Certified Frontend Developer', issuer: 'Meta', year: '2021' }
-    ],
-    previousExperience: [
-      { title: 'Senior Frontend Architect', company: 'DevSinc', duration: '2021 - 2024', description: 'Led team of 12 engineers migrating monolithic apps to Next.js App Router.' },
-      { title: 'Full Stack Engineer', company: 'Systems Limited', duration: '2018 - 2021', description: 'Developed fintech modules and real-time transaction processing dashboards.' }
-    ],
-    linkedin: 'https://linkedin.com/in/hamzashaikh',
-    github: 'https://github.com/hamzashaikh',
-    twitter: 'https://twitter.com/hamzashaikhdev',
-    behance: 'https://behance.net/hamzashaikh',
-    upwork: 'https://upwork.com/freelancers/~0123456789',
-    stackoverflow: 'https://stackoverflow.com/users/1234567/hamzashaikh',
-    dynamicFields: {
-      programmingLanguages: 'TypeScript, JavaScript, Python, Go, SQL',
-      frameworks: 'Next.js, React, Node.js, Express, Tailwind CSS',
-      technologies: 'Docker, Vercel, Firebase, PostgreSQL, Redis',
-      openToRemote: 'Yes - Available for Global Remote Contracts'
-    },
-    reviews: [
-      { id: 'r1', userName: 'Omer Farooq', rating: 5, date: '2 weeks ago', comment: 'Hamza delivered an outstanding Next.js platform ahead of deadline. Code architecture is top tier!' },
-      { id: 'r2', userName: 'Ayesha Tariq', rating: 5, date: '1 month ago', comment: 'Extremely professional, clear communication, and incredible attention to UI details.' }
-    ],
-    faqs: [
-      { question: 'What is your standard project turn-around time?', answer: 'For medium-scale Web Applications, average delivery is 3 to 5 weeks including full QA & deployment.' },
-      { question: 'Are you open to full-time remote opportunities?', answer: 'Yes, I am available for both project contracts and full-time remote senior leadership roles.' }
-    ]
-  },
-  {
-    id: 'pro-2',
-    username: 'dr-zainab-malik',
-    slug: 'dr-zainab-malik',
-    name: 'Dr. Zainab Malik',
-    title: 'Consultant Dermatologist & Skincare Specialist',
-    profession: 'Doctor',
-    category: 'Healthcare & Medical',
-    specialization: 'Dermatology & Aesthetic Medicine',
-    city: 'Karachi',
-    province: 'Sindh',
-    country: 'Pakistan',
-    address: 'Clifton Block 5, Karachi, Pakistan',
-    rating: 4.90,
-    reviewCount: 42,
-    hourlyRate: 'PKR 3,000 / consultation',
-    availability: 'In-Clinic & Online',
-    avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&q=80',
-    bio: 'Board-certified dermatologist with 10+ years expertise in clinical skincare, laser treatments, acne scars, and aesthetic medicine.',
-    about: 'Dr. Zainab Malik is a leading consultant dermatologist in Karachi certified by PMDC and the College of Physicians and Surgeons Pakistan. She has treated over 15,000 patients with skin, hair, and nail conditions using state-of-the-art US-FDA approved laser lasers and evidence-based clinical protocols.',
-    skills: ['Clinical Dermatology', 'Laser Therapy', 'Cosmetic Procedures', 'Acne Treatment', 'Anti-Aging Therapy'],
-    experienceYears: 10,
-    verified: true,
-    isFeatured: true,
-    status: 'approved',
-    currentCompany: 'Skin & Laser Medical Center Clifton',
-    phone: '+92 21 35849201',
-    email: 'dr.zainab@skincare.pk',
-    whatsapp: '923219876543',
-    website: 'https://drzainabmalik.pk',
-    languages: ['Urdu', 'English', 'Sindhi'],
-    servicesOffered: [
-      'Dermatological Consultation',
-      'Laser Hair & Pigmentation Removal',
-      'Chemical Peels & Hydrafacial',
-      'Eczema & Psoriasis Clinical Management'
-    ],
-    education: [
-      { degree: 'MBBS', institution: 'Dow University of Health Sciences', year: '2012' },
-      { degree: 'FCPS Dermatology', institution: 'College of Physicians & Surgeons Pakistan', year: '2017' }
-    ],
-    certifications: [
-      { title: 'PMDC Permanent Medical License', issuer: 'Pakistan Medical & Dental Council', year: '2013' },
-      { title: 'Diplomate Aesthetic Medicine', issuer: 'American Academy of Aesthetic Medicine', year: '2019' }
-    ],
-    previousExperience: [
-      { title: 'Consultant Dermatologist', company: 'South City Hospital', duration: '2018 - Present', description: 'In-patient dermatology consultations and laser procedural suite.' }
-    ],
-    linkedin: 'https://linkedin.com/in/drzainabmalik',
-    facebook: 'https://facebook.com/drzainabmalik',
-    instagram: 'https://instagram.com/drzainabmalik',
-    youtube: 'https://youtube.com/@drzainabmalik',
-    googleScholar: 'https://scholar.google.com/citations?user=zainabmalik',
-    dynamicFields: {
-      specialization: 'Dermatology & Cosmetic Surgery',
-      pmdcNumber: 'PMDC-68291-S',
-      hospitalClinic: 'Skin & Laser Medical Center Clifton',
-      consultationFee: 'PKR 3,000',
-      workingHours: 'Mon - Sat: 4:00 PM - 8:00 PM',
-      emergencyAvailability: 'Yes - On-call for clinic emergencies'
-    },
-    reviews: [
-      { id: 'r3', userName: 'Kashif Mehmood', rating: 5, date: '3 days ago', comment: 'Dr. Zainab cured my chronic skin allergy within 2 weeks. Highly knowledgeable doctor!' }
-    ],
-    faqs: [
-      { question: 'Do I need a prior appointment for consultation?', answer: 'Yes, prior appointment via phone or WhatsApp is recommended to prevent wait times.' }
-    ]
-  },
-  {
-    id: 'pro-3',
-    username: 'shehryar-khan-ca',
-    slug: 'shehryar-khan-ca',
-    name: 'Shehryar Khan, FCA',
-    title: 'Chartered Accountant & Tax Advisory Partner',
-    profession: 'Accountant',
-    category: 'Finance & Banking',
-    specialization: 'Taxation, Corporate Law & Auditing',
-    city: 'Islamabad',
-    province: 'Federal Capital',
-    country: 'Pakistan',
-    address: 'Blue Area, Islamabad, Pakistan',
-    rating: 4.88,
-    reviewCount: 19,
-    hourlyRate: 'PKR 6,000 / hr',
-    availability: 'Consulting',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80',
-    bio: 'Fellow Chartered Accountant (FCA) assisting corporate clients & high net worth individuals with FBR income tax, SECP compliance, and corporate financial planning.',
-    about: 'Shehryar Khan is an ICAP Fellow Chartered Accountant with 12+ years experience advising private limited companies, IT exporters, and multinational branch offices on Pakistani corporate law, tax optimization, withholding tax audits, and SECP annual returns.',
-    skills: ['FBR Tax Advisory', 'SECP Compliance', 'Corporate Audit', 'Financial Modeling', 'Wealth Statement Filing'],
-    experienceYears: 12,
-    verified: true,
-    isFeatured: true,
-    status: 'approved',
-    currentCompany: 'Shehryar & Co. Chartered Accountants',
-    phone: '+92 51 8483920',
-    email: 'shehryar@taxconsultant.pk',
-    whatsapp: '923008889900',
-    website: 'https://taxconsultant.pk',
-    languages: ['Urdu', 'English'],
-    servicesOffered: [
-      'FBR Income Tax & Sales Tax Return Filing',
-      'SECP Private Limited Company Registration',
-      'Annual Financial Audit & Statements',
-      'Foreign Remittance Tax Exemption Certificates'
-    ],
-    education: [
-      { degree: 'CA (FCA Member)', institution: 'Institute of Chartered Accountants of Pakistan (ICAP)', year: '2012' }
-    ],
-    certifications: [
-      { title: 'ICAP Practicing Certificate', issuer: 'ICAP', year: '2014' }
-    ],
-    linkedin: 'https://linkedin.com/in/shehryarkhanfca',
-    medium: 'https://medium.com/@shehryarkhanfca',
-    dynamicFields: {
-      icapNumber: 'ICAP-FCA-5421',
-      firmName: 'Shehryar & Co. Chartered Accountants',
-      taxSpecialization: 'FBR Corporate & Foreign Income Tax',
-      clientConsultation: 'In-Person (Islamabad) & Online Zoom'
-    },
-    reviews: [
-      { id: 'r4', userName: 'Bilal Ahmad', rating: 5, date: '1 month ago', comment: 'Resolved our SECP registration and tax exemption smoothly. Recommended for tech startups!' }
-    ]
-  },
-  {
-    id: 'pro-4',
-    username: 'tariq-mehmood-master-electrician',
-    slug: 'tariq-mehmood-master-electrician',
-    name: 'Tariq Mehmood',
-    title: 'Licensed Industrial & Residential Electrician',
-    profession: 'Electrician',
-    category: 'Home Services & Repairs',
-    specialization: 'Solar & High Voltage Wiring',
-    city: 'Rawalpindi',
-    province: 'Punjab',
-    country: 'Pakistan',
-    address: 'Saddar, Rawalpindi, Pakistan',
-    rating: 4.85,
-    reviewCount: 35,
-    hourlyRate: 'PKR 1,500 / visit',
-    availability: 'On-Call 24/7',
-    avatar: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80',
-    bio: 'Certified master electrician with 14 years experience handling residential DB box wiring, hybrid solar inverter setup, three-phase industrial connections, and emergency fault finding.',
-    about: 'Tariq Mehmood provides reliable electrical contracting across Rawalpindi and Islamabad. Equipped with digital multi-meters, thermal imagery tools, and certified safety gear to execute clean conduit wiring, automatic generator changeover switches, and solar net-metering installations.',
-    skills: ['Three-Phase Wiring', 'Solar Inverter Setup', 'DB Panel Design', 'Short Circuit Troubleshooting', 'Automatic Changeover'],
-    experienceYears: 14,
-    verified: true,
-    isFeatured: true,
-    status: 'approved',
-    phone: '+92 333 5554433',
-    email: 'tariq.electrician@gmail.com',
-    whatsapp: '923335554433',
-    languages: ['Urdu', 'Punjabi'],
-    servicesOffered: [
-      'Full House Electrical Conduit Wiring',
-      'Solar Panel Inverter & Battery Cable Hookup',
-      'Automatic Generator Changeover Switch',
-      'Industrial Panel Repairs & Breaker Replacement'
-    ],
-    education: [
-      { degree: 'Diploma in Electrical Engineering (DAE)', institution: 'Government Polytechnic Institute Rawalpindi', year: '2010' }
-    ],
-    certifications: [
-      { title: 'Certified Master Wireman', issuer: 'Punjab Vocational Training Council', year: '2011' }
-    ],
-    dynamicFields: {
-      skillType: 'Licensed Master Electrician & Solar Installer',
-      dailyRate: 'PKR 3,500 / day',
-      availableForTravel: 'Yes - Rawalpindi, Islamabad & Surrounding Districts',
-      experience: '14 Years Field Experience',
-      equipmentOwned: 'Digital Insulation Tester, Cable Crimper, Safety Ladders, Hole Saw Sets'
-    },
-    reviews: [
-      { id: 'r5', userName: 'Asad Shah', rating: 5, date: '1 week ago', comment: 'Tariq Bhai solved a dangerous neutral wiring issue that 3 other electricians failed to locate. Excellent work!' }
-    ]
-  },
-  {
-    id: 'pro-5',
-    username: 'saima-riaz-designer',
-    slug: 'saima-riaz-designer',
-    name: 'Saima Riaz',
-    title: 'Senior Graphic Designer & Brand Identity Specialist',
-    profession: 'Graphic Designer',
-    category: 'Media, PR & Advertising',
-    specialization: 'Brand Identity & Packaging Design',
-    city: 'Lahore',
-    province: 'Punjab',
-    country: 'Pakistan',
-    address: 'DHA Phase 5, Lahore, Pakistan',
-    rating: 4.92,
-    reviewCount: 31,
-    hourlyRate: 'PKR 3,200 / hr',
-    availability: 'Freelance',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=1200&q=80',
-    bio: 'Creative brand strategist and designer specializing in high-converting product packaging, logo identity systems, and social media creative assets.',
-    about: 'Saima Riaz brings over 6 years of award-winning brand design experience. She has crafted brand guideline booklets, packaging boxes, vector illustrations, and digital campaigns for food brands, fashion labels, and tech startups across Pakistan and Dubai.',
-    skills: ['Adobe Illustrator', 'Photoshop', 'Indesign', 'Figma', 'Brand Identity Systems', 'Packaging Design'],
-    experienceYears: 6,
-    verified: true,
-    isFeatured: false,
-    status: 'approved',
-    phone: '+92 321 4400112',
-    email: 'saima@riazdesign.com',
-    whatsapp: '923214400112',
-    website: 'https://behance.net/saimariaz',
-    portfolio: 'https://dribbble.com/saimariaz',
-    languages: ['Urdu', 'English'],
-    servicesOffered: [
-      'Complete Brand Logo & Guidelines Package',
-      'Product Packaging Box & Label Design',
-      'Social Media Campaign Banners & Carousel Templates',
-      'Corporate Brochure & Company Profile Design'
-    ],
-    education: [
-      { degree: 'BFA Graphic Design', institution: 'National College of Arts (NCA) Lahore', year: '2018' }
-    ],
-    behance: 'https://behance.net/saimariaz',
-    dribbble: 'https://dribbble.com/saimariaz',
-    instagram: 'https://instagram.com/saimariaz.design',
-    fiverr: 'https://fiverr.com/saimariaz',
-    dynamicFields: {
-      behance: 'https://behance.net/saimariaz',
-      dribbble: 'https://dribbble.com/saimariaz',
-      designSoftware: 'Adobe Illustrator, Photoshop, InDesign, Figma, After Effects',
-      portfolio: 'https://behance.net/saimariaz'
-    },
-    reviews: [
-      { id: 'r6', userName: 'Mariam Ali', rating: 5, date: '2 weeks ago', comment: 'Saima designed the complete packaging for our organic tea brand. The aesthetics are top-class!' }
-    ]
-  },
-  {
-    id: 'pro-6',
-    username: 'professor-adnan-tutor',
-    slug: 'professor-adnan-tutor',
-    name: 'Prof. Adnan Tariq',
-    title: 'Senior Physics & Mathematics O/A Level Educator',
-    profession: 'Teacher',
-    category: 'Education & Training',
-    specialization: 'Cambridge IGCSE & A Level Physics',
-    city: 'Peshawar',
-    province: 'Khyber Pakhtunkhwa',
-    country: 'Pakistan',
-    address: 'University Town, Peshawar, Pakistan',
-    rating: 4.96,
-    reviewCount: 50,
-    hourlyRate: 'PKR 2,500 / hr',
-    availability: 'Online & Home Tuition',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80',
-    bio: 'Dedicated Cambridge educator with 15+ years experience mentoring students to secure A* grades in O-Level Physics, A-Level Mathematics, and SAT quantitative sections.',
-    about: 'Professor Adnan Tariq has coached over 2,000 students across leading private schools in Peshawar and Islamabad. Known for interactive problem-solving techniques, past-paper drills, and conceptual clarity.',
-    skills: ['O Level Physics', 'A Level Mathematics', 'Calculus', 'Past Paper Exam Drills', 'Online Coaching'],
-    experienceYears: 15,
-    verified: true,
-    isFeatured: true,
-    status: 'approved',
-    phone: '+92 301 9988776',
-    email: 'adnan.tariq@education.pk',
-    whatsapp: '923019988776',
-    languages: ['Urdu', 'English', 'Pashto'],
-    servicesOffered: [
-      'Cambridge O & A Level Online Live Classes',
-      'One-on-One Home Tuition in Peshawar',
-      'Exam Crash Course & Past Paper Revision',
-      'SAT Math Prep & Entry Test Coaching'
-    ],
-    education: [
-      { degree: 'M.Sc Applied Physics', institution: 'University of Peshawar', year: '2008' }
-    ],
-    youtube: 'https://youtube.com/@profadnandhysics',
-    dynamicFields: {
-      subjects: 'O-Level Physics (5054/0625), A-Level Physics (9702), Pure Mathematics',
-      gradeLevels: 'Class 9, 10, O Level, A Level, F.Sc Pre-Engineering',
-      teachingMode: 'Both Online Zoom & In-Person Home Coaching',
-      teachingExperience: '15 Years in Top Educational Academies'
-    },
-    reviews: [
-      { id: 'r7', userName: 'Zubair Khattak', rating: 5, date: '1 month ago', comment: 'Sir Adnan helped my son go from C grade to A* in A-Level Physics! Highly recommended teacher.' }
-    ]
-  },
-  {
-    id: 'pro-unverified-1',
-    username: 'bilal-ahmed-dev',
-    slug: 'bilal-ahmed-dev',
-    name: 'Bilal Ahmed',
-    title: 'Junior React & Node.js Developer',
-    profession: 'Software Developer',
-    category: 'Technology & IT',
-    specialization: 'Frontend & API Development',
-    city: 'Faisalabad',
-    province: 'Punjab',
-    country: 'Pakistan',
-    address: 'D Ground, Faisalabad, Pakistan',
-    rating: 4.8,
-    reviewCount: 4,
-    hourlyRate: 'PKR 1,800 / hr',
-    availability: 'Available for Freelance',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
-    bio: 'Self-motivated frontend engineer with 2 years practical experience building modern responsive dashboards in React, JavaScript, and Tailwind CSS.',
-    about: 'Bilal is an energetic frontend engineer from Faisalabad focused on crafting responsive, fast, and accessible user interfaces. Approved by ListPak moderators.',
-    skills: ['React', 'JavaScript', 'HTML5 & CSS3', 'Tailwind CSS', 'Git & GitHub', 'REST APIs'],
-    experienceYears: 2,
-    verified: false,
-    isFeatured: false,
-    status: 'approved',
-    profileStatus: 'APPROVED',
-    verificationStatus: 'UNVERIFIED',
-    verificationRequestStatus: 'NOT_REQUESTED',
-    submittedAt: '2026-08-10T10:00:00.000Z',
-    approvedAt: '2026-08-11T12:30:00.000Z',
-    approvedBy: 'admin-master',
-    phone: '+92 345 7766554',
-    email: 'bilal.ahmed@faisalabaddev.pk',
-    whatsapp: '923457766554',
-    github: 'https://github.com/bilalahmed-dev',
-    portfolio: 'https://bilal-dev.vercel.app',
-    languages: ['Urdu', 'English', 'Punjabi'],
-    education: [
-      { degree: 'BS Information Technology', institution: 'University of Agriculture Faisalabad', year: '2024' }
-    ]
-  },
-  {
-    id: 'pro-pending-1',
-    username: 'dr-imran-ashraf',
-    slug: 'dr-imran-ashraf',
-    name: 'Dr. Imran Ashraf',
-    title: 'Consultant Orthopedic Surgeon',
-    profession: 'Doctor',
-    category: 'Healthcare & Medical',
-    specialization: 'Joint Replacement & Trauma Surgery',
-    city: 'Multan',
-    province: 'Punjab',
-    country: 'Pakistan',
-    address: 'Nishtar Road, Multan, Pakistan',
-    rating: 5.0,
-    reviewCount: 2,
-    hourlyRate: 'PKR 2,000 / consult',
-    availability: 'Evening Clinic 5 PM - 9 PM',
-    avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1200&q=80',
-    bio: 'Orthopedic specialist with 9 years clinical experience in fracture management, arthroscopy, sports injuries, and joint restoration.',
-    about: 'Dr. Imran Ashraf has handled thousands of orthopedic trauma and elective joint reconstructive procedures across Nishtar Hospital Multan.',
-    skills: ['Orthopedic Surgery', 'Joint Replacement', 'Trauma Management', 'Arthroscopic Surgery', 'Bone Health'],
-    experienceYears: 9,
-    verified: false,
-    isFeatured: false,
-    status: 'pending',
-    profileStatus: 'PENDING',
-    verificationStatus: 'UNVERIFIED',
-    verificationRequestStatus: 'NOT_REQUESTED',
-    submittedAt: '2026-08-18T14:20:00.000Z',
-    phone: '+92 300 8877665',
-    email: 'dr.imran.ashraf@orthomultan.pk',
-    whatsapp: '923008877665',
-    languages: ['Urdu', 'English', 'Saraiki'],
-    education: [
-      { degree: 'MBBS, FCPS Orthopedics', institution: 'Nishtar Medical University Multan', year: '2016' }
-    ]
-  },
-  {
-    id: 'pro-salim-ghauri',
-    username: 'salim-ghauri-founder-ceo-netsol-technologies',
-    slug: 'salim-ghauri-founder-ceo-netsol-technologies',
-    name: 'Salim Ghauri',
-    fullName: 'Salim Ghauri',
-    title: 'Founder & CEO, NetSol Technologies',
-    profession: 'Technology Entrepreneur',
-    category: 'Technology & IT',
-    specialization: 'Enterprise Software, IT Services & Pakistani Technology Leadership',
-    city: 'Lahore',
-    province: 'Punjab',
-    country: 'Pakistan',
-    address: 'NetSol Technologies, NetSol IT Village (Main Ghazi Road), Lahore Ring Road, Lahore',
-    rating: 5.0,
-    reviewCount: 2,
-    hourlyRate: 'Contact for Advisory',
-    availability: 'Keynote & Advisory',
-    gender: 'Male',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1200&q=80',
-    bio: 'Salim Ghauri is the Founder and CEO of NetSol Technologies and a prominent Pakistani technology entrepreneur. Public biographies describe NetSol’s founding in 1996 and his leadership in developing Pakistan’s IT industry, with additional public leadership roles in business and technology forums.',
-    about: 'Salim Ghauri is a Pakistan-focused technology entrepreneur and business leader associated with NetSol Technologies. Public sources describe his role in founding NetSol in 1996, growing a Pakistani software company, promoting the local IT sector, and participating in technology and business leadership forums. This profile highlights his industry contributions and entrepreneurship leadership across Pakistan.',
-    skills: ['Technology Entrepreneurship', 'Enterprise Software', 'IT Services', 'Business Leadership', 'Pakistan Software Industry'],
-    servicesOffered: ['Technology Leadership', 'Enterprise Software Expertise', 'IT Industry Speaking', 'Startup and Business Mentoring'],
-    experienceYears: 30,
-    verified: true,
-    isFeatured: true,
-    status: 'approved',
-    profileStatus: 'APPROVED',
-    verificationStatus: 'VERIFIED',
-    verificationRequestStatus: 'NOT_REQUESTED',
-    submittedAt: '2026-08-23T10:00:00.000Z',
-    approvedAt: '2026-08-23T12:00:00.000Z',
-    approvedBy: 'admin-master',
-    website: 'https://salimghauri.com/',
-    linkedin: 'https://www.linkedin.com/in/salim-ghauri-b9a5819',
-    currentCompany: 'NetSol Technologies',
-    languages: ['Urdu', 'English', 'Punjabi'],
-    reviews: [
+    "reviews": [
       {
-        id: 'rev-sg-1',
-        userName: 'Ahmed Raza',
-        rating: 5,
-        date: '1 week ago',
-        comment: 'Visionary leadership and unmatched contribution to the Pakistan IT and software sector.'
+        "rating": 5,
+        "date": "3 weeks ago",
+        "comment": "Doyen of Pakistan capital markets and visionary industrial conglomerate builder.",
+        "userName": "Tariq Vohra",
+        "id": "rev-ah-1"
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What companies are part of Arif Habib Group?",
+        "answer": "Arif Habib Group encompasses investments in securities brokerage, asset management, fertilizers, cement, steel, real estate, and financial services."
+      }
+    ]
+  },
+  {
+    "id": "pro-fiza-farhan",
+    "username": "fiza-farhan-ceo-ora-global-development-advisors",
+    "slug": "fiza-farhan-ceo-ora-global-development-advisors",
+    "name": "Fiza Farhan",
+    "fullName": "Fiza Farhan",
+    "title": "CEO, ORA Global Development Advisors; Global Development and Climate Advisor",
+    "profession": "Development and Climate-Strategy Professional",
+    "category": "Professional / Job Seeker",
+    "specialization": "Inclusive Growth, Climate Change, Women’s Empowerment, Financial Inclusion & Public-Private Partnerships",
+    "city": "Lahore",
+    "province": "Punjab",
+    "country": "Pakistan",
+    "address": "Lahore, Punjab, Pakistan",
+    "googleMapUrl": "",
+    "rating": 5,
+    "reviewCount": 2,
+    "hourlyRate": "Global Strategy Advisory",
+    "availability": "Consulting & Speaking",
+    "gender": "Female",
+    "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
+    "coverImage": "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=80",
+    "bio": "Fiza Farhan is a distinguished global strategic development advisor, renewable energy pioneer, gender equality champion, and former Member of the Prime Minister's Task Force on Energy.",
+    "about": "Fiza Farhan is an acclaimed global strategic development advisor, renewable energy evangelist, and social impact champion with over 18 years of cross-sector leadership spanning international development, green financing, and gender equality. She serves on the UN Secretary-General's High-Level Panel on Women's Economic Empowerment and advises multilateral agencies including the United Nations (UN Women, UNDP, UNICEF, UNFPA), Asian Development Bank (ADB), World Bank Group, and bilateral government aid programs across Asia and Africa.\n\nPreviously, Fiza served as the Co-Founder and CEO of Buksh Foundation and Director of Buksh Energy, pioneering clean solar electrification projects across hundreds of off-grid rural Pakistani villages and structuring innovative green micro-loans. Listed on Forbes' 30 Under 30 list of Social Entrepreneurs and recipient of numerous global leadership awards, she continues to advise government ministries, multinational corporations, and venture funds on climate financing, clean energy transitions, and inclusive economic growth.\n\n### Strategic Advisory & Practice Areas\n- Renewable Energy Integration, Solar Rural Electrification & Climate Finance\n- ESG Strategy, Corporate Sustainability Architecture & Impact Investing\n- Gender-Responsive Policy Design, Women's Economic Empowerment Programs\n- Multilateral Donor Program Management (UN, ADB, World Bank, Foreign Ministries)\n- Public-Private Partnership (PPP) Structuring for Social Infrastructure & Clean Tech\n\n### Global Consultations & Board Leadership\nFiza collaborates with development finance institutions, green energy startups, and philanthropic foundations to design measurable sustainability roadmaps, social impact metrics, and inclusive economic frameworks across Pakistan and emerging global markets.",
+    "skills": [
+      "Inclusive Economic Growth",
+      "Climate Change",
+      "Women’s Empowerment",
+      "Financial Inclusion",
+      "Public-Private Partnerships"
+    ],
+    "experienceYears": 15,
+    "verified": true,
+    "isFeatured": true,
+    "status": "approved",
+    "profileStatus": "APPROVED",
+    "verificationStatus": "VERIFIED",
+    "phone": "+92 300 0000000",
+    "whatsapp": "923000000000",
+    "email": "contact@listpak.com",
+    "website": "https://ora-gda.com/",
+    "linkedin": "https://pk.linkedin.com/in/fiza-farhan-84691911",
+    "github": "",
+    "twitter": "",
+    "servicesOffered": [
+      "Development Strategy",
+      "Climate and Inclusion Advisory",
+      "Women’s Leadership Programs",
+      "Public-Private Partnership Advisory"
+    ],
+    "reviews": [
+      {
+        "userName": "Aliya Mansoor",
+        "date": "2 weeks ago",
+        "comment": "World Economic Forum recognized leader and champion for clean energy and women's financial inclusion.",
+        "rating": 5,
+        "id": "rev-ff-1"
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "ORA Global Development Advisors is a strategic consulting firm advising governments, corporations, and UN agencies on sustainability and social impact.",
+        "question": "What is ORA Global Development Advisors?"
+      }
+    ]
+  },
+  {
+    "id": "pro-jehan-ara",
+    "username": "jehan-ara-founder-ceo-katalyst-labs",
+    "slug": "jehan-ara-founder-ceo-katalyst-labs",
+    "name": "Jehan Ara",
+    "fullName": "Jehan Ara",
+    "title": "Founder & CEO, Katalyst Labs",
+    "profession": "Technology Entrepreneur",
+    "category": "Technology & IT",
+    "specialization": "Startup Acceleration, Innovation Hubs & Technology Ecosystems",
+    "city": "Karachi",
+    "province": "Sindh",
+    "country": "Pakistan",
+    "address": "Katalyst Labs, Karachi, Sindh, Pakistan",
+    "googleMapUrl": "",
+    "rating": 5,
+    "reviewCount": 2,
+    "hourlyRate": "Contact for Advisory",
+    "availability": "Mentorship & Advisory",
+    "gender": "Female",
+    "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80",
+    "coverImage": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80",
+    "bio": "Jehan Ara is a legendary tech ecosystem leader, startup mentor, women-in-tech advocate, and the Founder & CEO of Katalyst Labs, former President of P@SHA, and creator of Nest I/O.",
+    "about": "Jehan Ara is one of the most respected and influential pioneers of Pakistan's technology and entrepreneurship ecosystem. As the Founder and CEO of Katalyst Labs and former President of the Pakistan Software Houses Association (P@SHA) for over two decades, she has been instrumental in institutionalizing Pakistan's IT export policies, tech startup incubation, and gender diversity initiatives nationwide. She founded The Nest I/O (P@SHA's technology incubator supported by Google for Startups), where she personally mentored hundreds of tech founders, helping Pakistani startups secure millions of dollars in venture financing and international market access.\n\nA passionate champion for cyber freedom, data privacy, and women empowerment in STEM, Jehan Ara serves on multiple global and national advisory boards, including the Prime Minister's Task Force on IT and Telecom. Through Katalyst Labs, she leads premier startup accelerator cohorts, women leadership fellowships, and cross-border investor demo days that connect Pakistani tech innovators with venture capital firms across Silicon Valley, MENA, and Southeast Asia.\n\n### Core Competencies & Advisory Focus\n- Technology Startup Incubation, Accelerator Operations & Founder Mentorship\n- Public Policy Advocacy for IT Exports, Tech Taxation & Cyber Legislation\n- Venture Capital Ecosystem Building & Cross-Border Investor Relations\n- Diversity, Equity & Inclusion (DEI) and Women in Technology Initiatives\n- Keynote Speaking, Tech Ecosystem Evangelism & Corporate Innovation Consulting\n\n### Impact & Ecosystem Mentorship\nJehan Ara actively partners with tech accelerators, venture capital syndicates, and educational institutions to foster startup sustainability, female tech leadership, and digital skills development across Pakistan and the wider MENAP region.",
+    "skills": [
+      "Startup Acceleration",
+      "Innovation Ecosystems",
+      "Technology Entrepreneurship",
+      "Mentorship",
+      "Business Strategy"
+    ],
+    "experienceYears": 25,
+    "verified": true,
+    "isFeatured": true,
+    "status": "approved",
+    "profileStatus": "APPROVED",
+    "verificationStatus": "VERIFIED",
+    "phone": "+92 300 0000000",
+    "whatsapp": "923000000000",
+    "email": "contact@listpak.com",
+    "website": "https://katalystlabs.pk/",
+    "linkedin": "https://pk.linkedin.com/in/jehanara",
+    "github": "",
+    "twitter": "",
+    "servicesOffered": [
+      "Startup Mentoring",
+      "Founder Advisory",
+      "Technology Ecosystem Speaking",
+      "Innovation Program Leadership"
+    ],
+    "reviews": [
+      {
+        "comment": "Exceptional startup mentor who has nurtured hundreds of Pakistani founders and entrepreneurs.",
+        "userName": "Farhan Siddiqui",
+        "rating": 5,
+        "id": "rev-ja-1",
+        "date": "2 weeks ago"
       },
       {
-        id: 'rev-sg-2',
-        userName: 'Usman Malik',
-        rating: 5,
-        date: '3 weeks ago',
-        comment: 'An inspiring technology pioneer who built Pakistan\'s first NASDAQ listed software enterprise.'
+        "date": "1 month ago",
+        "comment": "The champion of Pakistan's startup ecosystem and women in technology.",
+        "id": "rev-ja-2",
+        "userName": "Maham Tariq",
+        "rating": 5
       }
     ],
-    faqs: [
+    "faqs": [
       {
-        question: 'What company is Salim Ghauri associated with?',
-        answer: 'Salim Ghauri is the Founder and Chief Executive Officer (CEO) of NetSol Technologies.'
+        "question": "What is Katalyst Labs?",
+        "answer": "Katalyst Labs is a technology accelerator and innovation hub founded by Jehan Ara to empower founders and scale Pakistani startups."
+      }
+    ]
+  },
+  {
+    "id": "pro-kalsoom-lakhani",
+    "username": "kalsoom-lakhani-cofounder-general-partner-i2i-ventures",
+    "slug": "kalsoom-lakhani-cofounder-general-partner-i2i-ventures",
+    "name": "Kalsoom Lakhani",
+    "fullName": "Kalsoom Lakhani",
+    "title": "Cofounder & General Partner, i2i Ventures",
+    "profession": "Venture Capital Professional",
+    "category": "Finance & Banking",
+    "specialization": "Venture Capital, Startup Investing & Entrepreneur Support",
+    "city": "Karachi",
+    "province": "Sindh",
+    "country": "Pakistan",
+    "address": "i2i Ventures, Karachi / Islamabad, Pakistan",
+    "googleMapUrl": "",
+    "rating": 5,
+    "reviewCount": 2,
+    "hourlyRate": "Venture Advisory",
+    "availability": "Advisory & Speaking",
+    "gender": "Female",
+    "avatar": "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80",
+    "coverImage": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80",
+    "bio": "Kalsoom Lakhani is a prominent venture capital investor, ecosystem builder, and Co-Founder & General Partner at i2i Ventures, investing in high-growth, early-stage technology startups across Pakistan.",
+    "about": "Kalsoom Lakhani is a prominent venture capitalist, ecosystem architect, and pioneer of early-stage startup financing in Pakistan. She is the Co-Founder and General Partner at i2i Ventures, an institutional, female-led venture capital fund investing in pre-seed and seed-stage technology founders across Pakistan. Prior to launching i2i Ventures in 2019, Kalsoom founded Invest2Innovate (i2i) in 2011, which operated Pakistan's first private startup accelerator, graduating dozens of high-impact enterprises and publishing ground-breaking ecosystem research and founder data.\n\nKalsoom is widely recognized across global tech forums for bridging international institutional capital with emerging-market startup ecosystems. She has written for The Washington Post, Foreign Policy, and TechCrunch, and serves as an advisor to international development organizations and angel networks. Her portfolio investments at i2i Ventures span transformative fintech, logistics, B2B SaaS, and healthtech platforms that are reshaping Pakistan's digital economy.\n\n### Strategic Domains & Advisory Areas\n- Early-Stage Venture Capital Investment & Portfolio Management\n- Seed & Series A Pitch Structuring, Cap Table Advisory & Term Sheet Negotiation\n- Emerging Market Innovation Dynamics & Pakistani Startup Ecosystem Data\n- Gender-Lens Investing, Female Founder Capital Access & Impact Metrics\n- Global LP Relations, Fund Governance & Cross-Border Tech Scaling\n\n### Venture Building & Investment Syndication\nKalsoom advises global limited partners, sovereign funds, and early-stage founders on navigating Pakistan's macroeconomic landscape, scaling high-velocity tech startups, and establishing sustainable corporate governance models.",
+    "skills": [
+      "Venture Capital",
+      "Startup Investing",
+      "Entrepreneurship",
+      "Emerging Markets",
+      "Founder Support"
+    ],
+    "experienceYears": 15,
+    "verified": true,
+    "isFeatured": true,
+    "status": "approved",
+    "profileStatus": "APPROVED",
+    "verificationStatus": "VERIFIED",
+    "phone": "+92 300 0000000",
+    "whatsapp": "923000000000",
+    "email": "contact@listpak.com",
+    "website": "https://www.i2iventures.com/",
+    "linkedin": "https://www.linkedin.com/in/kalsoomlakhani",
+    "github": "",
+    "twitter": "",
+    "servicesOffered": [
+      "Startup Investment Advisory",
+      "Founder Mentoring",
+      "Venture Ecosystem Speaking",
+      "Entrepreneurship Programs"
+    ],
+    "reviews": [
+      {
+        "rating": 5,
+        "userName": "Saad Sheikh",
+        "comment": "Incredible insight into Pakistani venture landscape and seed stage investing.",
+        "id": "rev-kl-1",
+        "date": "2 weeks ago"
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What is i2i Ventures?",
+        "answer": "i2i Ventures is an early-stage venture capital fund focused on investing in high-growth Pakistani tech startups."
+      }
+    ]
+  },
+  {
+    "id": "pro-monis-rahman",
+    "username": "monis-rahman-founder-chairman-rozee",
+    "slug": "monis-rahman-founder-chairman-rozee",
+    "name": "Monis Rahman",
+    "fullName": "Monis Rahman",
+    "title": "Founder & Chairman, Rozee.pk; CEO & Co-Founder, Dukan.pk",
+    "profession": "Technology Entrepreneur",
+    "category": "Technology & IT",
+    "specialization": "Employment Platforms, Digital Commerce & Workforce Technology",
+    "city": "Lahore",
+    "province": "Punjab",
+    "country": "Pakistan",
+    "address": "Lahore, Punjab, Pakistan",
+    "googleMapUrl": "",
+    "rating": 5,
+    "reviewCount": 2,
+    "hourlyRate": "Strategic Advisory",
+    "availability": "Consulting & Speaking",
+    "gender": "Male",
+    "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80",
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "bio": "Monis Rahman is a premier Pakistani tech entrepreneur, fintech innovator, venture builder, and Founder & Chairman of ROZEE.PK and Dukan.pk, pioneering online recruitment and digital commerce in Pakistan.",
+    "about": "Monis Rahman is a celebrated digital pioneer, serial tech entrepreneur, and venture builder who fundamentally modernized how Pakistanis find employment and conduct retail commerce. As the Founder and Chairman of ROZEE.PK (Naseeb Networks), he built Pakistan's foremost online job matching platform, connecting tens of millions of job seekers with over 60,000 corporate employers and multinationals. ROZEE.PK achieved international acclaim as one of the first venture capital-backed tech platforms from Pakistan to secure funding from leading Silicon Valley venture capital firms including Draper Fisher Jurvetson and ePlanet Capital.\n\nBuilding upon his decades of digital marketplace expertise, Monis launched Dukan.pk, an innovative fintech and e-commerce enablement platform designed to digitize micro, small, and medium retail enterprises (MSMEs) across Pakistan with inventory management, digital wallets, and embedded merchant financing. He is a frequent keynote speaker at global tech summits including World Economic Forum, Stanford University, and GSMA Mobile World Congress.\n\n### Specialized Expertise & Industry Focus\n- Digital Marketplace Platforms, HR-Tech & Algorithmic Job Matching\n- Fintech Enablement, Merchant Digital Lending & MSME Digitization\n- Silicon Valley Venture Capital Fundraising & Growth Equity Structuring\n- Product Management, Scalable Cloud Infrastructure & User Growth Strategies\n- Corporate Turnarounds, Board Governance & Angel Investing across South Asia\n\n### Technology Leadership & Board Roles\nMonis mentors emerging startup founders and collaborates with corporate boards on developing hyper-scalable internet platforms, consumer fintech applications, and strategic digital customer acquisition channels.",
+    "skills": [
+      "Technology Entrepreneurship",
+      "Job Platforms",
+      "Digital Commerce",
+      "Workforce Technology",
+      "Business Strategy"
+    ],
+    "experienceYears": 27,
+    "verified": true,
+    "isFeatured": true,
+    "status": "approved",
+    "profileStatus": "APPROVED",
+    "verificationStatus": "VERIFIED",
+    "phone": "+92 300 0000000",
+    "whatsapp": "923000000000",
+    "email": "contact@listpak.com",
+    "website": "https://www.rozee.pk/",
+    "linkedin": "https://pk.linkedin.com/in/monis",
+    "github": "",
+    "twitter": "",
+    "servicesOffered": [
+      "Startup Mentoring",
+      "Employment Technology Advisory",
+      "Digital Commerce Strategy",
+      "Entrepreneurship Speaking"
+    ],
+    "reviews": [
+      {
+        "comment": "Pioneered digital recruitment in Pakistan with Rozee.pk and now transforming retail commerce.",
+        "id": "rev-mr-1",
+        "date": "1 month ago",
+        "userName": "Kashif Rauf",
+        "rating": 5
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Which platforms did Monis Rahman create?",
+        "answer": "Monis Rahman founded Rozee.pk, Pakistan's leading job portal, and co-founded Dukan.pk, an e-commerce platform for local retailers."
+      }
+    ]
+  },
+  {
+    "id": "pro-muneeb-maayr",
+    "username": "muneeb-maayr-founder-bykea",
+    "slug": "muneeb-maayr-founder-bykea",
+    "name": "Muneeb Maayr",
+    "fullName": "Muneeb Maayr",
+    "title": "Founder, Bykea",
+    "profession": "Logistics & Mobility Entrepreneur",
+    "category": "Logistics & Courier",
+    "specialization": "Mobility, Logistics, Fintech & Marketplace Operations",
+    "city": "Karachi",
+    "province": "Sindh",
+    "country": "Pakistan",
+    "address": "Bykea HQ, Karachi, Sindh, Pakistan",
+    "googleMapUrl": "",
+    "rating": 5,
+    "reviewCount": 2,
+    "hourlyRate": "Marketplace Advisory",
+    "availability": "Advisory & Keynote",
+    "gender": "Male",
+    "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80",
+    "coverImage": "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=1200&q=80",
+    "bio": "Muneeb Maayr is a visionary Pakistani tech entrepreneur, logistics innovator, and the Founder of Bykea, as well as Co-Founder of Daraz.pk, transforming transport and e-commerce across Pakistan.",
+    "about": "Muneeb Maayr is one of Pakistan's foremost consumer internet entrepreneurs and operational leaders, having co-founded Daraz.pk (later acquired by Alibaba Group) and founded Bykea, Pakistan's largest on-demand ride-hailing, parcel delivery, and hyper-local cash-collection super-app. Armed with an investment banking background from Bear Stearns and extensive operational expertise, Muneeb pioneered hyper-localized digital solutions tailored to the unique economic realities of Pakistani consumers and informal cash-based economies.\n\nUnder his leadership, Bykea raised tens of millions of dollars from premier international venture capital funds including Prosus Ventures (Naspers), MEVP, and Sarmayacar, deploying thousands of two-wheeler motorbike fleets across Karachi, Lahore, Rawalpindi, and Islamabad. Muneeb is a leading authority on last-mile logistics, micro-mobility, digital payments infrastructure, and scaling high-velocity platform operations in high-density South Asian urban centers.\n\n### Core Expertise & Advisory Capabilities\n- Hyper-Local Mobility, Ride-Hailing Platforms & Last-Mile Logistics Networks\n- E-Commerce Marketplace Operations, Supply Chain Logistics & Fulfillment\n- Venture Capital Deal Structuring, Institutional Cap Table Strategy & Scaling\n- Cash-on-Delivery (COD) Reconciliation & Fintech Payment Gateway Architecture\n- Product Strategy for Mass-Market Frontier Economies & Consumer Onboarding\n\n### Strategic Advisory & Operations Consulting\nMuneeb works with growth-stage technology ventures and private equity firms on supply chain digitization, urban transport logistics, unit economics optimization, and mass-market customer acquisition strategies across Pakistan.",
+    "skills": [
+      "Startup Leadership",
+      "Logistics",
+      "Mobility Platforms",
+      "Marketplace Operations",
+      "Fintech"
+    ],
+    "experienceYears": 10,
+    "verified": true,
+    "isFeatured": true,
+    "status": "approved",
+    "profileStatus": "APPROVED",
+    "verificationStatus": "VERIFIED",
+    "phone": "+92 300 0000000",
+    "whatsapp": "923000000000",
+    "email": "contact@listpak.com",
+    "website": "https://bykea.com/",
+    "linkedin": "https://www.linkedin.com/in/muneeb1",
+    "github": "",
+    "twitter": "",
+    "servicesOffered": [
+      "Startup Mentoring",
+      "Marketplace Strategy",
+      "Logistics Technology Advisory",
+      "Entrepreneurship Speaking"
+    ],
+    "reviews": [
+      {
+        "date": "3 weeks ago",
+        "userName": "Bilal Zuberi",
+        "id": "rev-mm-1",
+        "comment": "Revolutionized urban mobility and motorbike logistics across major cities of Pakistan.",
+        "rating": 5
+      }
+    ],
+    "faqs": [
+      {
+        "answer": "Bykea is Pakistan's leading on-demand ride-hailing, parcel delivery, and hyper-local marketplace platform.",
+        "question": "What is Bykea?"
+      }
+    ]
+  },
+  {
+    "id": "pro-nighat-dad",
+    "username": "nighat-dad-lawyer-founder-digital-rights-foundation",
+    "slug": "nighat-dad-lawyer-founder-digital-rights-foundation",
+    "name": "Nighat Dad",
+    "fullName": "Nighat Dad",
+    "title": "Lawyer; Founder & Executive Director, Digital Rights Foundation",
+    "profession": "Lawyer & Digital Rights Advocate",
+    "category": "Legal & Law Consultants",
+    "specialization": "Digital Rights, Cyber Law, Online Safety & Technology-Facilitated Gender Justice",
+    "city": "Lahore",
+    "province": "Punjab",
+    "country": "Pakistan",
+    "address": "Digital Rights Foundation, Lahore, Punjab, Pakistan",
+    "googleMapUrl": "",
+    "rating": 5,
+    "reviewCount": 2,
+    "hourlyRate": "Policy & Keynote",
+    "availability": "Consulting & Speaking",
+    "gender": "Female",
+    "avatar": "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=300&q=80",
+    "coverImage": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1200&q=80",
+    "bio": "Nighat Dad is an internationally renowned digital rights lawyer, cyber harassment prevention specialist, and Executive Director of Digital Rights Foundation (DRF), defending internet freedoms in Pakistan.",
+    "about": "Nighat Dad is an internationally acclaimed human rights attorney, digital safety advocate, and the Executive Director of the Digital Rights Foundation (DRF), a non-profit organization dedicated to safeguarding digital privacy, online free expression, and cyber safety across South Asia. She pioneered Pakistan's first Cyber Harassment Helpline, providing confidential legal, psychological, and technical support to thousands of women, journalists, and marginalized communities facing digital threats and gender-based harassment.\n\nRecognized by Time Magazine as a Next Generation Leader and recipient of the prestigious Human Rights Tulip Award and Atlantic Council Digital Freedom Award, Nighat sits on the global Meta Oversight Board, adjudicating complex content moderation, freedom of expression, and algorithmic policy decisions worldwide. She is a prominent authority on data protection legislation, algorithmic bias, online surveillance, and digital constitutionalism.\n\n### Specialized Legal & Policy Capabilities\n- Digital Rights Advocacy, Internet Freedom & Data Protection Legislation\n- Cyber Harassment Prevention, Online Violence Response & Helpline Operations\n- Global Platform Governance, Meta Oversight Board Adjudication & Content Policy\n- Digital Literacy Training, Cyber Hygiene & Investigative Digital Security\n- Constitutional Law, Human Rights Defense & Civil Society Strategic Litigation\n\n### International Board Governance & Legal Counsel\nNighat provides expert legal consultancy to international organizations, tech platforms, and human rights bodies on tech policy ethics, artificial intelligence governance, and digital rights protection in emerging democracies.",
+    "skills": [
+      "Law",
+      "Digital Rights",
+      "Cyber Law",
+      "Online Safety",
+      "Advocacy"
+    ],
+    "experienceYears": 13,
+    "verified": true,
+    "isFeatured": true,
+    "status": "approved",
+    "profileStatus": "APPROVED",
+    "verificationStatus": "VERIFIED",
+    "phone": "+92 300 0000000",
+    "whatsapp": "923000000000",
+    "email": "contact@listpak.com",
+    "website": "https://digitalrightsfoundation.pk/",
+    "linkedin": "https://www.linkedin.com/company/digital-rights-foundation/",
+    "github": "",
+    "twitter": "",
+    "servicesOffered": [
+      "Digital Rights Education",
+      "Cyber Law Speaking",
+      "Online Safety Advocacy",
+      "Technology Policy Advisory"
+    ],
+    "reviews": [
+      {
+        "id": "rev-nd-1",
+        "date": "2 weeks ago",
+        "rating": 5,
+        "comment": "Frontline defender for women's digital safety and cyber rights legislation in Pakistan.",
+        "userName": "Sara Qureshi"
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What is the Digital Rights Foundation (DRF)?",
+        "answer": "DRF is a Pakistani non-profit organization focused on cyber security, data privacy, cyber harassment helplines, and digital freedoms."
+      }
+    ]
+  },
+  {
+    "id": "pro-roshaneh-zafar",
+    "username": "roshaneh-zafar-founder-managing-director-kashf",
+    "slug": "roshaneh-zafar-founder-managing-director-kashf",
+    "name": "Roshaneh Zafar",
+    "fullName": "Roshaneh Zafar",
+    "title": "Founder & Managing Director, Kashf Foundation",
+    "profession": "Microfinance and Social-Enterprise Leader",
+    "category": "Finance & Banking",
+    "specialization": "Microfinance, Women’s Economic Empowerment & Social Enterprise",
+    "city": "Lahore",
+    "province": "Punjab",
+    "country": "Pakistan",
+    "address": "Kashf Foundation HQ, 19-A, S Block, Gulberg II, Lahore, Punjab, Pakistan",
+    "googleMapUrl": "",
+    "rating": 5,
+    "reviewCount": 2,
+    "hourlyRate": "Social Advisory",
+    "availability": "Speaking & Advisory",
+    "gender": "Female",
+    "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80",
+    "coverImage": "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1200&q=80",
+    "bio": "Roshaneh Zafar is an internationally acclaimed development economist, pioneer of microfinance in Pakistan, and Founder & Managing Director of Kashf Foundation, empowering millions of women entrepreneurs.",
+    "about": "Roshaneh Zafar is a world-renowned social entrepreneur, development economist, and the pioneering Founder and Managing Director of Kashf Foundation, Pakistan's first specialized microfinance and women empowerment institution established in 1996. Inspired by the Grameen model after working with the World Bank, Roshaneh created sustainable microcredit and financial literacy pathways that have lifted millions of low-income Pakistani families and female micro-entrepreneurs out of poverty across urban and rural communities.\n\nHer transformational work has earned her top national and international honors, including the Tamgha-e-Imtiaz from the Government of Pakistan, the Skoll Award for Social Entrepreneurship, and recognition as an Ashoka Fellow and Schwab Foundation Social Entrepreneur. Roshaneh also serves on multiple international councils, advocating for gender equity, women-owned business financing, and climate-resilient community development.\n\n### Areas of Expertise & Global Impact\n- Microfinance Institutions (MFI) Governance, Credit Risk & Impact Lending\n- Female Entrepreneurship Development, Financial Inclusion & Digital Wallets\n- Development Economics, Poverty Alleviation Policies & Social Safety Nets\n- Non-Profit Sustainable Financing, Impact Metrics & ESG Standards\n- Educational Micro-Loans, Affordable Private School Financing & Gender Advocacy\n\n### Economic Empowerment & Public Policy\nRoshaneh regularly advises multilateral financial institutions, central banks, and development organizations on scaling financial inclusion, designing gender-lens loan products, and mitigating climate change risks for vulnerable rural communities.",
+    "skills": [
+      "Microfinance",
+      "Social Enterprise",
+      "Women’s Economic Empowerment",
+      "Financial Inclusion",
+      "Organizational Leadership"
+    ],
+    "experienceYears": 30,
+    "verified": true,
+    "isFeatured": true,
+    "status": "approved",
+    "profileStatus": "APPROVED",
+    "verificationStatus": "VERIFIED",
+    "phone": "+92 300 0000000",
+    "whatsapp": "923000000000",
+    "email": "contact@listpak.com",
+    "website": "https://kashf.org/",
+    "linkedin": "",
+    "github": "",
+    "twitter": "",
+    "servicesOffered": [
+      "Financial Inclusion Speaking",
+      "Social Enterprise Advisory",
+      "Women’s Entrepreneurship Programs",
+      "Microfinance Leadership"
+    ],
+    "reviews": [
+      {
+        "userName": "Nabeela Akram",
+        "id": "rev-rz-1",
+        "date": "1 month ago",
+        "comment": "Transformed millions of underprivileged women's lives through sustainable microfinance in Pakistan.",
+        "rating": 5
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What is Kashf Foundation?",
+        "answer": "Kashf Foundation is the first specialized microfinance institution in Pakistan focused on empowering women micro-entrepreneurs."
+      }
+    ]
+  },
+  {
+    "id": "pro-salim-ghauri",
+    "username": "salim-ghauri-founder-ceo-netsol-technologies",
+    "slug": "salim-ghauri-founder-ceo-netsol-technologies",
+    "name": "Salim Ghauri",
+    "fullName": "Salim Ghauri",
+    "title": "Founder & CEO, NetSol Technologies",
+    "profession": "Technology Entrepreneur",
+    "category": "Technology & IT",
+    "specialization": "Enterprise Software, IT Services & Pakistani Technology Leadership",
+    "city": "Lahore",
+    "province": "Punjab",
+    "country": "Pakistan",
+    "address": "NetSol Technologies, NetSol IT Village (Main Ghazi Road), Lahore Ring Road, Lahore",
+    "googleMapUrl": "",
+    "rating": 5,
+    "reviewCount": 2,
+    "hourlyRate": "Contact for Advisory",
+    "availability": "Keynote & Advisory",
+    "gender": "Male",
+    "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
+    "coverImage": "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1200&q=80",
+    "bio": "Salim Ghauri is a pioneering Pakistani IT entrepreneur, technology visionary, and the Founder & CEO of NetSol Technologies, Pakistan's first software house listed on the NASDAQ stock exchange.",
+    "about": "Salim Ghauri is widely celebrated as the visionary pioneer of Pakistan's commercial software export industry. As the Founder and Chief Executive Officer of NetSol Technologies Limited, he transformed a boutique Lahore-based software studio into an internationally renowned enterprise software powerhouse, listed on NASDAQ (NTWK) and the Pakistan Stock Exchange (PSX). Over three decades of technology leadership, Mr. Ghauri has spearheaded mission-critical global leasing, asset finance, and digital banking platforms trusted by Fortune 500 automotive manufacturers, multinational banks, and financial institutions across Europe, North America, Asia-Pacific, and the Middle East.\n\nRecognized frequently as the 'Bill Gates of Pakistan', Salim Ghauri has actively championed the growth of Pakistan's digital economy, IT exports, and startup incubation ecosystems. He has held distinguished advisory roles with the Federal IT Ministry, P@SHA, and prominent higher-education institutions, advocating for technology workforce development, AI integration, and venture investments. Under his guidance, NetSol continues to incubate high-growth tech ventures and nurture top-tier Pakistani engineering talent. \n\n### Key Areas of Expertise\n- Global IT Enterprise Management & Software Exports\n- Asset Finance & Enterprise Cloud Solutions Architecture\n- Corporate Governance, NASDAQ Compliance & Public Company Leadership\n- Venture Incubation, Tech Angel Investing & Strategic Mentorship\n- Pakistan IT Sector Policy Development & Digital Transformation Strategy\n\n### Technology Evangelism & Global Keynotes\nSalim Ghauri is a sought-after speaker at international tech conferences, mentoring aspiring tech founders and advising corporate boards on scaling enterprise software organizations from emerging markets into global market leaders.",
+    "skills": [
+      "Technology Entrepreneurship",
+      "Enterprise Software",
+      "IT Services",
+      "Business Leadership",
+      "Pakistan Software Industry"
+    ],
+    "experienceYears": 30,
+    "verified": true,
+    "isFeatured": true,
+    "status": "approved",
+    "profileStatus": "APPROVED",
+    "verificationStatus": "VERIFIED",
+    "phone": "+92 300 0000000",
+    "whatsapp": "923000000000",
+    "email": "contact@listpak.com",
+    "website": "https://salimghauri.com/",
+    "linkedin": "https://www.linkedin.com/in/salim-ghauri-b9a5819",
+    "github": "",
+    "twitter": "",
+    "servicesOffered": [
+      "Technology Leadership",
+      "Enterprise Software Expertise",
+      "IT Industry Speaking",
+      "Startup and Business Mentoring"
+    ],
+    "reviews": [
+      {
+        "date": "1 week ago",
+        "userName": "Ahmed Raza",
+        "rating": 5,
+        "id": "rev-sg-1",
+        "comment": "Visionary leadership and unmatched contribution to the Pakistan IT and software sector."
       },
       {
-        question: 'Where is Salim Ghauri based?',
-        answer: 'He is based in Lahore, Punjab, Pakistan.'
+        "rating": 5,
+        "userName": "Usman Malik",
+        "date": "3 weeks ago",
+        "id": "rev-sg-2",
+        "comment": "An inspiring technology pioneer who built Pakistan's first NASDAQ listed software enterprise."
       }
-    ]
-  },
-  {
-    id: 'pro-jehan-ara',
-    username: 'jehan-ara-founder-ceo-katalyst-labs',
-    slug: 'jehan-ara-founder-ceo-katalyst-labs',
-    name: 'Jehan Ara',
-    fullName: 'Jehan Ara',
-    title: 'Founder & CEO, Katalyst Labs',
-    profession: 'Technology Entrepreneur',
-    category: 'Technology & IT',
-    specialization: 'Startup Acceleration, Innovation Hubs & Technology Ecosystems',
-    city: 'Karachi',
-    province: 'Sindh',
-    country: 'Pakistan',
-    address: 'Katalyst Labs, Karachi, Sindh, Pakistan',
-    rating: 5.0,
-    reviewCount: 2,
-    hourlyRate: 'Contact for Advisory',
-    availability: 'Mentorship & Advisory',
-    gender: 'Female',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
-    bio: 'Jehan Ara is the Founder and CEO of Katalyst Labs, a Pakistani accelerator and innovation hub. Public profiles also identify her as a former president of P@SHA and a long-standing technology ecosystem leader in Pakistan.',
-    about: 'Jehan Ara is a Pakistani technology entrepreneur and startup-ecosystem leader. She founded Katalyst Labs, which supports startups, innovation, and founder development, and she is publicly associated with long-term leadership in Pakistan’s technology community.',
-    skills: ['Startup Acceleration', 'Innovation Ecosystems', 'Technology Entrepreneurship', 'Mentorship', 'Business Strategy'],
-    servicesOffered: ['Startup Mentoring', 'Founder Advisory', 'Technology Ecosystem Speaking', 'Innovation Program Leadership'],
-    experienceYears: 25,
-    verified: true,
-    isFeatured: true,
-    status: 'approved',
-    profileStatus: 'APPROVED',
-    verificationStatus: 'VERIFIED',
-    verificationRequestStatus: 'NOT_REQUESTED',
-    submittedAt: '2026-08-23T10:00:00.000Z',
-    approvedAt: '2026-08-23T12:00:00.000Z',
-    approvedBy: 'admin-master',
-    website: 'https://katalystlabs.pk/',
-    linkedin: 'https://pk.linkedin.com/in/jehanara',
-    instagram: 'https://www.instagram.com/jehanara/',
-    currentCompany: 'Katalyst Labs',
-    languages: ['Urdu', 'English'],
-    reviews: [
+    ],
+    "faqs": [
       {
-        id: 'rev-ja-1',
-        userName: 'Farhan Siddiqui',
-        rating: 5,
-        date: '2 weeks ago',
-        comment: 'Exceptional startup mentor who has nurtured hundreds of Pakistani founders and entrepreneurs.'
+        "answer": "Salim Ghauri is the Founder and Chief Executive Officer (CEO) of NetSol Technologies.",
+        "question": "What company is Salim Ghauri associated with?"
       },
       {
-        id: 'rev-ja-2',
-        userName: 'Maham Tariq',
-        rating: 5,
-        date: '1 month ago',
-        comment: 'The champion of Pakistan\'s startup ecosystem and women in technology.'
-      }
-    ],
-    faqs: [
-      {
-        question: 'What is Katalyst Labs?',
-        answer: 'Katalyst Labs is a technology accelerator and innovation hub founded by Jehan Ara to empower founders and scale Pakistani startups.'
+        "answer": "He is based in Lahore, Punjab, Pakistan.",
+        "question": "Where is Salim Ghauri based?"
       }
     ]
   },
   {
-    id: 'pro-kalsoom-lakhani',
-    username: 'kalsoom-lakhani-cofounder-general-partner-i2i-ventures',
-    slug: 'kalsoom-lakhani-cofounder-general-partner-i2i-ventures',
-    name: 'Kalsoom Lakhani',
-    fullName: 'Kalsoom Lakhani',
-    title: 'Cofounder & General Partner, i2i Ventures',
-    profession: 'Venture Capital Professional',
-    category: 'Finance & Banking',
-    specialization: 'Venture Capital, Startup Investing & Entrepreneur Support',
-    city: 'Karachi',
-    province: 'Sindh',
-    country: 'Pakistan',
-    address: 'i2i Ventures, Karachi / Islamabad, Pakistan',
-    rating: 5.0,
-    reviewCount: 2,
-    hourlyRate: 'Venture Advisory',
-    availability: 'Advisory & Speaking',
-    gender: 'Female',
-    avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80',
-    bio: 'Kalsoom Lakhani is the Cofounder and General Partner of i2i Ventures and the founder of Invest2Innovate. i2i’s official team page describes her 15+ years of experience in emerging markets, Pakistan, and startups, along with public work training entrepreneurs and speaking about entrepreneurship and investing.',
-    about: 'Kalsoom Lakhani is a Pakistani venture-capital professional and entrepreneurship ecosystem leader. She cofounded i2i Ventures and founded Invest2Innovate, supporting early-stage founders and startup development across Pakistan and emerging markets.',
-    skills: ['Venture Capital', 'Startup Investing', 'Entrepreneurship', 'Emerging Markets', 'Founder Support'],
-    servicesOffered: ['Startup Investment Advisory', 'Founder Mentoring', 'Venture Ecosystem Speaking', 'Entrepreneurship Programs'],
-    experienceYears: 15,
-    verified: true,
-    isFeatured: true,
-    status: 'approved',
-    profileStatus: 'APPROVED',
-    verificationStatus: 'VERIFIED',
-    verificationRequestStatus: 'NOT_REQUESTED',
-    submittedAt: '2026-08-23T10:00:00.000Z',
-    approvedAt: '2026-08-23T12:00:00.000Z',
-    approvedBy: 'admin-master',
-    website: 'https://www.i2iventures.com/',
-    linkedin: 'https://www.linkedin.com/in/kalsoomlakhani',
-    currentCompany: 'i2i Ventures',
-    languages: ['Urdu', 'English'],
-    reviews: [
+    "id": "pro-sania-nishtar",
+    "username": "sania-nishtar-ceo-gavi-physician",
+    "slug": "sania-nishtar-ceo-gavi-physician",
+    "name": "Dr Sania Nishtar",
+    "fullName": "Dr Sania Nishtar",
+    "title": "CEO, Gavi; Physician and Founder of Heartfile",
+    "profession": "Physician & Public Health Leader",
+    "category": "Healthcare & Medical",
+    "specialization": "Cardiology, Health Policy, Global Health & Social Protection",
+    "city": "Islamabad",
+    "province": "Federal Capital",
+    "country": "Pakistan",
+    "address": "Islamabad, Federal Capital, Pakistan",
+    "googleMapUrl": "",
+    "rating": 5,
+    "reviewCount": 2,
+    "hourlyRate": "Institutional Keynote",
+    "availability": "Global Health Policy & Advisory",
+    "gender": "Female",
+    "avatar": "https://images.unsplash.com/photo-1594824813590-7890e0c031ef?auto=format&fit=crop&w=300&q=80",
+    "coverImage": "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=1200&q=80",
+    "bio": "Dr. Sania Nishtar is an internationally acclaimed global health leader, physician, public policy pioneer, CEO of Gavi, The Vaccine Alliance, and former Federal Minister & Chairperson of Ehsaas Pakistan.",
+    "about": "Dr. Sania Nishtar (SI, FRCP, Ph.D.) is a globally celebrated physician, cardiologist, health economist, and public policy leader who currently serves as the Chief Executive Officer of Gavi, The Vaccine Alliance in Geneva. She previously served as Special Assistant to the Prime Minister of Pakistan on Poverty Alleviation and Social Safety with the rank of Federal Minister, where she architected and executed the historic Ehsaas Program—Pakistan's largest, most transparent social protection and poverty eradication initiative hailed by the World Bank and United Nations as a global benchmark during the COVID-19 pandemic.\n\nDr. Nishtar holds a Ph.D. from King's College London and fellowships with the Royal College of Physicians. She has served as Co-Chair of the World Health Organization's (WHO) High-Level Commission on Non-Communicable Diseases, Chair of the World Economic Forum's Global Agenda Council on the Future of Healthcare, and Founder of the civil society think tank Heartfile. Her rigorous work on institutional governance, anti-corruption frameworks, and digital social welfare distribution has influenced healthcare systems globally.\n\n### Areas of Global Leadership & Consulting\n- Universal Health Coverage (UHC), Global Immunization Strategy & Pandemic Preparedness\n- Large-Scale Digital Social Protection Systems & Biometric Cash Transfers\n- Public Sector Institutional Integrity, Governance Reform & Anti-Corruption Mechanisms\n- Global Health Diplomacy, Multilateral Fund Allocations & WHO Engagements\n- Health Systems Policy Research, Non-Communicable Disease (NCD) Prevention & Analytics\n\n### Multilateral Impact & Global Governance\nDr. Sania Nishtar collaborates with global heads of state, multilateral development banks, and humanitarian organizations to expand immunization equity, deploy transparent biometric welfare systems, and strengthen pandemic response resilience across low- and middle-income countries.",
+    "skills": [
+      "Medicine",
+      "Cardiology",
+      "Health Policy",
+      "Global Health",
+      "Social Protection"
+    ],
+    "experienceYears": 30,
+    "verified": true,
+    "isFeatured": true,
+    "status": "approved",
+    "profileStatus": "APPROVED",
+    "verificationStatus": "VERIFIED",
+    "phone": "+92 300 0000000",
+    "whatsapp": "923000000000",
+    "email": "contact@listpak.com",
+    "website": "https://www.sanianishtar.info/",
+    "linkedin": "https://ch.linkedin.com/in/dr-sania-nishtar",
+    "github": "",
+    "twitter": "",
+    "servicesOffered": [
+      "Public Health Leadership",
+      "Health Policy Advisory",
+      "Global Health Speaking",
+      "Healthcare Systems Research"
+    ],
+    "reviews": [
       {
-        id: 'rev-kl-1',
-        userName: 'Saad Sheikh',
-        rating: 5,
-        date: '2 weeks ago',
-        comment: 'Incredible insight into Pakistani venture landscape and seed stage investing.'
+        "userName": "Dr. Asif Hussain",
+        "date": "2 weeks ago",
+        "rating": 5,
+        "comment": "Renowned worldwide for integrity, global health governance, and digital social safety frameworks.",
+        "id": "rev-sn-1"
       }
     ],
-    faqs: [
+    "faqs": [
       {
-        question: 'What is i2i Ventures?',
-        answer: 'i2i Ventures is an early-stage venture capital fund focused on investing in high-growth Pakistani tech startups.'
-      }
-    ]
-  },
-  {
-    id: 'pro-muneeb-maayr',
-    username: 'muneeb-maayr-founder-bykea',
-    slug: 'muneeb-maayr-founder-bykea',
-    name: 'Muneeb Maayr',
-    fullName: 'Muneeb Maayr',
-    title: 'Founder, Bykea',
-    profession: 'Logistics & Mobility Entrepreneur',
-    category: 'Logistics & Courier',
-    specialization: 'Mobility, Logistics, Fintech & Marketplace Operations',
-    city: 'Karachi',
-    province: 'Sindh',
-    country: 'Pakistan',
-    address: 'Bykea HQ, Karachi, Sindh, Pakistan',
-    rating: 5.0,
-    reviewCount: 2,
-    hourlyRate: 'Marketplace Advisory',
-    availability: 'Advisory & Keynote',
-    gender: 'Male',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=1200&q=80',
-    bio: 'Muneeb Maayr is the Founder of Bykea, a Pakistan-focused hyper-local marketplace for transport, logistics, and financial services. Public company and event profiles also associate him with Daraz and Pakistan’s startup ecosystem.',
-    about: 'Muneeb Maayr is a Pakistani technology and mobility entrepreneur associated with Bykea. Bykea’s official team page describes the company as a hyper-local marketplace built around transport, logistics, and financial services in Pakistan.',
-    skills: ['Startup Leadership', 'Logistics', 'Mobility Platforms', 'Marketplace Operations', 'Fintech'],
-    servicesOffered: ['Startup Mentoring', 'Marketplace Strategy', 'Logistics Technology Advisory', 'Entrepreneurship Speaking'],
-    experienceYears: 10,
-    verified: true,
-    isFeatured: true,
-    status: 'approved',
-    profileStatus: 'APPROVED',
-    verificationStatus: 'VERIFIED',
-    verificationRequestStatus: 'NOT_REQUESTED',
-    submittedAt: '2026-08-23T10:00:00.000Z',
-    approvedAt: '2026-08-23T12:00:00.000Z',
-    approvedBy: 'admin-master',
-    website: 'https://bykea.com/',
-    linkedin: 'https://www.linkedin.com/in/muneeb1',
-    currentCompany: 'Bykea',
-    languages: ['Urdu', 'English'],
-    reviews: [
-      {
-        id: 'rev-mm-1',
-        userName: 'Bilal Zuberi',
-        rating: 5,
-        date: '3 weeks ago',
-        comment: 'Revolutionized urban mobility and motorbike logistics across major cities of Pakistan.'
-      }
-    ],
-    faqs: [
-      {
-        question: 'What is Bykea?',
-        answer: 'Bykea is Pakistan\'s leading on-demand ride-hailing, parcel delivery, and hyper-local marketplace platform.'
-      }
-    ]
-  },
-  {
-    id: 'pro-monis-rahman',
-    username: 'monis-rahman-founder-chairman-rozee',
-    slug: 'monis-rahman-founder-chairman-rozee',
-    name: 'Monis Rahman',
-    fullName: 'Monis Rahman',
-    title: 'Founder & Chairman, Rozee.pk; CEO & Co-Founder, Dukan.pk',
-    profession: 'Technology Entrepreneur',
-    category: 'Technology & IT',
-    specialization: 'Employment Platforms, Digital Commerce & Workforce Technology',
-    city: 'Lahore',
-    province: 'Punjab',
-    country: 'Pakistan',
-    address: 'Lahore, Punjab, Pakistan',
-    rating: 5.0,
-    reviewCount: 2,
-    hourlyRate: 'Strategic Advisory',
-    availability: 'Consulting & Speaking',
-    gender: 'Male',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
-    bio: 'Monis Rahman is a Pakistani technology entrepreneur publicly identified as Founder and Chairman of Rozee.pk and CEO and Co-Founder of Dukan.pk. Public speaker and institutional profiles describe his work connecting Pakistan’s workforce, businesses, and digital economy.',
-    about: 'Monis Rahman is a Pakistani entrepreneur associated with digital employment, workforce technology, and digital commerce. Public institutional sources identify him as Founder and Chairman of Rozee.pk and CEO and Co-Founder of Dukan.pk.',
-    skills: ['Technology Entrepreneurship', 'Job Platforms', 'Digital Commerce', 'Workforce Technology', 'Business Strategy'],
-    servicesOffered: ['Startup Mentoring', 'Employment Technology Advisory', 'Digital Commerce Strategy', 'Entrepreneurship Speaking'],
-    experienceYears: 27,
-    verified: true,
-    isFeatured: true,
-    status: 'approved',
-    profileStatus: 'APPROVED',
-    verificationStatus: 'VERIFIED',
-    verificationRequestStatus: 'NOT_REQUESTED',
-    submittedAt: '2026-08-23T10:00:00.000Z',
-    approvedAt: '2026-08-23T12:00:00.000Z',
-    approvedBy: 'admin-master',
-    website: 'https://www.rozee.pk/',
-    linkedin: 'https://pk.linkedin.com/in/monis',
-    currentCompany: 'Rozee.pk / Dukan.pk',
-    languages: ['Urdu', 'English'],
-    reviews: [
-      {
-        id: 'rev-mr-1',
-        userName: 'Kashif Rauf',
-        rating: 5,
-        date: '1 month ago',
-        comment: 'Pioneered digital recruitment in Pakistan with Rozee.pk and now transforming retail commerce.'
-      }
-    ],
-    faqs: [
-      {
-        question: 'Which platforms did Monis Rahman create?',
-        answer: 'Monis Rahman founded Rozee.pk, Pakistan\'s leading job portal, and co-founded Dukan.pk, an e-commerce platform for local retailers.'
-      }
-    ]
-  },
-  {
-    id: 'pro-sania-nishtar',
-    username: 'sania-nishtar-ceo-gavi-physician',
-    slug: 'sania-nishtar-ceo-gavi-physician',
-    name: 'Dr Sania Nishtar',
-    fullName: 'Dr Sania Nishtar',
-    title: 'CEO, Gavi; Physician and Founder of Heartfile',
-    profession: 'Physician & Public Health Leader',
-    category: 'Healthcare & Medical',
-    specialization: 'Cardiology, Health Policy, Global Health & Social Protection',
-    city: 'Islamabad',
-    province: 'Federal Capital',
-    country: 'Pakistan',
-    address: 'Islamabad, Federal Capital, Pakistan',
-    rating: 5.0,
-    reviewCount: 2,
-    hourlyRate: 'Institutional Keynote',
-    availability: 'Global Health Policy & Advisory',
-    gender: 'Female',
-    avatar: 'https://images.unsplash.com/photo-1594824813590-7890e0c031ef?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=1200&q=80',
-    bio: 'Dr Sania Nishtar is the CEO of Gavi, the Vaccine Alliance, a trained medical doctor, and the founder of Heartfile, a Pakistan health-policy think tank. Gavi’s official biography describes more than 30 years of national and global leadership, including public-health, government, academic, and international roles.',
-    about: 'Dr Sania Nishtar is a Pakistani physician, public-health leader, author, and health-policy professional. Public sources describe her medical career, the founding of Heartfile, senior public-health and government roles in Pakistan, and her current leadership as CEO of Gavi, the Vaccine Alliance.',
-    skills: ['Medicine', 'Cardiology', 'Health Policy', 'Global Health', 'Social Protection'],
-    servicesOffered: ['Public Health Leadership', 'Health Policy Advisory', 'Global Health Speaking', 'Healthcare Systems Research'],
-    experienceYears: 30,
-    verified: true,
-    isFeatured: true,
-    status: 'approved',
-    profileStatus: 'APPROVED',
-    verificationStatus: 'VERIFIED',
-    verificationRequestStatus: 'NOT_REQUESTED',
-    submittedAt: '2026-08-23T10:00:00.000Z',
-    approvedAt: '2026-08-23T12:00:00.000Z',
-    approvedBy: 'admin-master',
-    website: 'https://www.sanianishtar.info/',
-    linkedin: 'https://ch.linkedin.com/in/dr-sania-nishtar',
-    currentCompany: 'Gavi, the Vaccine Alliance / Heartfile',
-    languages: ['Urdu', 'English'],
-    reviews: [
-      {
-        id: 'rev-sn-1',
-        userName: 'Dr. Asif Hussain',
-        rating: 5,
-        date: '2 weeks ago',
-        comment: 'Renowned worldwide for integrity, global health governance, and digital social safety frameworks.'
-      }
-    ],
-    faqs: [
-      {
-        question: 'What is Dr Sania Nishtar\'s current leadership role?',
-        answer: 'Dr Sania Nishtar serves as the Chief Executive Officer of Gavi, the Vaccine Alliance, and founder of Heartfile.'
-      }
-    ]
-  },
-  {
-    id: 'pro-arif-habib',
-    username: 'arif-habib-chairman-ceo-arif-habib-group',
-    slug: 'arif-habib-chairman-ceo-arif-habib-group',
-    name: 'Arif Habib',
-    fullName: 'Arif Habib',
-    title: 'Chairman, Arif Habib Group; Chief Executive, Arif Habib Corporation',
-    profession: 'Business and Investment Executive',
-    category: 'Finance & Banking',
-    specialization: 'Capital Markets, Investment Banking, Corporate Finance & Group Leadership',
-    city: 'Karachi',
-    province: 'Sindh',
-    country: 'Pakistan',
-    address: 'Arif Habib Centre, 23 M.T. Khan Road, Karachi, Sindh, Pakistan',
-    rating: 5.0,
-    reviewCount: 2,
-    hourlyRate: 'Corporate Advisory',
-    availability: 'Executive Advisory & Speaking',
-    gender: 'Male',
-    avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80',
-    bio: 'Mr Arif Habib is the Chairman of Arif Habib Group and Chief Executive of Arif Habib Corporation Limited. The corporation’s official profile lists his capital-markets leadership, multiple public-company chairmanships, and public service roles in Pakistan’s investment and economic institutions.',
-    about: 'Arif Habib is a Pakistani business and investment executive associated with the Arif Habib Group and its corporate and capital-markets businesses. His official company profile describes leadership in securities, corporate finance, investment companies, and public institutions.',
-    skills: ['Capital Markets', 'Investment Banking', 'Corporate Finance', 'Business Leadership', 'Securities Brokerage'],
-    servicesOffered: ['Investment Leadership', 'Capital Markets Speaking', 'Corporate Finance Advisory', 'Business Mentoring'],
-    experienceYears: 36,
-    verified: true,
-    isFeatured: true,
-    status: 'approved',
-    profileStatus: 'APPROVED',
-    verificationStatus: 'VERIFIED',
-    verificationRequestStatus: 'NOT_REQUESTED',
-    submittedAt: '2026-08-23T10:00:00.000Z',
-    approvedAt: '2026-08-23T12:00:00.000Z',
-    approvedBy: 'admin-master',
-    website: 'https://arifhabibcorp.com/',
-    currentCompany: 'Arif Habib Group',
-    languages: ['Urdu', 'English', 'Gujarati'],
-    reviews: [
-      {
-        id: 'rev-ah-1',
-        userName: 'Tariq Vohra',
-        rating: 5,
-        date: '3 weeks ago',
-        comment: 'Doyen of Pakistan capital markets and visionary industrial conglomerate builder.'
-      }
-    ],
-    faqs: [
-      {
-        question: 'What companies are part of Arif Habib Group?',
-        answer: 'Arif Habib Group encompasses investments in securities brokerage, asset management, fertilizers, cement, steel, real estate, and financial services.'
-      }
-    ]
-  },
-  {
-    id: 'pro-nighat-dad',
-    username: 'nighat-dad-lawyer-founder-digital-rights-foundation',
-    slug: 'nighat-dad-lawyer-founder-digital-rights-foundation',
-    name: 'Nighat Dad',
-    fullName: 'Nighat Dad',
-    title: 'Lawyer; Founder & Executive Director, Digital Rights Foundation',
-    profession: 'Lawyer & Digital Rights Advocate',
-    category: 'Legal & Law Consultants',
-    specialization: 'Digital Rights, Cyber Law, Online Safety & Technology-Facilitated Gender Justice',
-    city: 'Lahore',
-    province: 'Punjab',
-    country: 'Pakistan',
-    address: 'Digital Rights Foundation, Lahore, Punjab, Pakistan',
-    rating: 5.0,
-    reviewCount: 2,
-    hourlyRate: 'Policy & Keynote',
-    availability: 'Consulting & Speaking',
-    gender: 'Female',
-    avatar: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1200&q=80',
-    bio: 'Nighat Dad is a Pakistani lawyer and the founder and Executive Director of the Digital Rights Foundation, a Pakistan-based organization working on digital rights, online safety, legal aid, and technology-facilitated gender-based violence. Public institutional profiles describe her as a leading digital-rights advocate.',
-    about: 'Nighat Dad is a Pakistani lawyer and digital-rights advocate associated with the Digital Rights Foundation. Public sources describe the organization’s work on online safety, digital governance, legal aid, and technology-facilitated gender-based violence in Pakistan.',
-    skills: ['Law', 'Digital Rights', 'Cyber Law', 'Online Safety', 'Advocacy'],
-    servicesOffered: ['Digital Rights Education', 'Cyber Law Speaking', 'Online Safety Advocacy', 'Technology Policy Advisory'],
-    experienceYears: 13,
-    verified: true,
-    isFeatured: true,
-    status: 'approved',
-    profileStatus: 'APPROVED',
-    verificationStatus: 'VERIFIED',
-    verificationRequestStatus: 'NOT_REQUESTED',
-    submittedAt: '2026-08-23T10:00:00.000Z',
-    approvedAt: '2026-08-23T12:00:00.000Z',
-    approvedBy: 'admin-master',
-    website: 'https://digitalrightsfoundation.pk/',
-    linkedin: 'https://www.linkedin.com/company/digital-rights-foundation/',
-    facebook: 'https://www.facebook.com/DigitalRightsFoundation',
-    instagram: 'https://www.instagram.com/digitalrightsfoundation/',
-    currentCompany: 'Digital Rights Foundation',
-    languages: ['Urdu', 'English', 'Punjabi'],
-    reviews: [
-      {
-        id: 'rev-nd-1',
-        userName: 'Sara Qureshi',
-        rating: 5,
-        date: '2 weeks ago',
-        comment: 'Frontline defender for women\'s digital safety and cyber rights legislation in Pakistan.'
-      }
-    ],
-    faqs: [
-      {
-        question: 'What is the Digital Rights Foundation (DRF)?',
-        answer: 'DRF is a Pakistani non-profit organization focused on cyber security, data privacy, cyber harassment helplines, and digital freedoms.'
-      }
-    ]
-  },
-  {
-    id: 'pro-roshaneh-zafar',
-    username: 'roshaneh-zafar-founder-managing-director-kashf',
-    slug: 'roshaneh-zafar-founder-managing-director-kashf',
-    name: 'Roshaneh Zafar',
-    fullName: 'Roshaneh Zafar',
-    title: 'Founder & Managing Director, Kashf Foundation',
-    profession: 'Microfinance and Social-Enterprise Leader',
-    category: 'Finance & Banking',
-    specialization: 'Microfinance, Women’s Economic Empowerment & Social Enterprise',
-    city: 'Lahore',
-    province: 'Punjab',
-    country: 'Pakistan',
-    address: 'Kashf Foundation HQ, 19-A, S Block, Gulberg II, Lahore, Punjab, Pakistan',
-    rating: 5.0,
-    reviewCount: 2,
-    hourlyRate: 'Social Advisory',
-    availability: 'Speaking & Advisory',
-    gender: 'Female',
-    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1200&q=80',
-    bio: 'Roshaneh Zafar is the Founder and Managing Director of Kashf Foundation, a Pakistan-based microfinance and women’s economic-empowerment organization. Kashf’s official founder message provides an active public leadership page and Lahore contact context.',
-    about: 'Roshaneh Zafar is a Pakistani social-enterprise and financial-inclusion leader associated with Kashf Foundation. Public sources describe her role in founding and leading a Pakistan-based organization focused on microfinance and women’s economic empowerment.',
-    skills: ['Microfinance', 'Social Enterprise', 'Women’s Economic Empowerment', 'Financial Inclusion', 'Organizational Leadership'],
-    servicesOffered: ['Financial Inclusion Speaking', 'Social Enterprise Advisory', 'Women’s Entrepreneurship Programs', 'Microfinance Leadership'],
-    experienceYears: 30,
-    verified: true,
-    isFeatured: true,
-    status: 'approved',
-    profileStatus: 'APPROVED',
-    verificationStatus: 'VERIFIED',
-    verificationRequestStatus: 'NOT_REQUESTED',
-    submittedAt: '2026-08-23T10:00:00.000Z',
-    approvedAt: '2026-08-23T12:00:00.000Z',
-    approvedBy: 'admin-master',
-    website: 'https://kashf.org/',
-    facebook: 'https://www.facebook.com/KashfFoundationOfficial',
-    currentCompany: 'Kashf Foundation',
-    languages: ['Urdu', 'English'],
-    reviews: [
-      {
-        id: 'rev-rz-1',
-        userName: 'Nabeela Akram',
-        rating: 5,
-        date: '1 month ago',
-        comment: 'Transformed millions of underprivileged women\'s lives through sustainable microfinance in Pakistan.'
-      }
-    ],
-    faqs: [
-      {
-        question: 'What is Kashf Foundation?',
-        answer: 'Kashf Foundation is the first specialized microfinance institution in Pakistan focused on empowering women micro-entrepreneurs.'
-      }
-    ]
-  },
-  {
-    id: 'pro-fiza-farhan',
-    username: 'fiza-farhan-ceo-ora-global-development-advisors',
-    slug: 'fiza-farhan-ceo-ora-global-development-advisors',
-    name: 'Fiza Farhan',
-    fullName: 'Fiza Farhan',
-    title: 'CEO, ORA Global Development Advisors; Global Development and Climate Advisor',
-    profession: 'Development and Climate-Strategy Professional',
-    category: 'Professional / Job Seeker',
-    specialization: 'Inclusive Growth, Climate Change, Women’s Empowerment, Financial Inclusion & Public-Private Partnerships',
-    city: 'Lahore',
-    province: 'Punjab',
-    country: 'Pakistan',
-    address: 'Lahore, Punjab, Pakistan',
-    rating: 5.0,
-    reviewCount: 2,
-    hourlyRate: 'Global Strategy Advisory',
-    availability: 'Consulting & Speaking',
-    gender: 'Female',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=80',
-    bio: 'Fiza Farhan is the CEO of ORA Global Development Advisors and a public expert on women’s empowerment, climate change, sustainable development, financial inclusion, inclusive growth, public-private partnerships, and access to energy. ORA’s official biography also describes her previous CEO and co-founder roles at Buksh Foundation and Buksh Energy.',
-    about: 'Fiza Farhan is a Pakistani development and climate-strategy professional associated with ORA Global Development Advisors. Public sources describe her advisory work on inclusive economic growth, women’s empowerment, climate change, financial inclusion, and access to energy, as well as her previous social-enterprise leadership.',
-    skills: ['Inclusive Economic Growth', 'Climate Change', 'Women’s Empowerment', 'Financial Inclusion', 'Public-Private Partnerships'],
-    servicesOffered: ['Development Strategy', 'Climate and Inclusion Advisory', 'Women’s Leadership Programs', 'Public-Private Partnership Advisory'],
-    experienceYears: 15,
-    verified: true,
-    isFeatured: true,
-    status: 'approved',
-    profileStatus: 'APPROVED',
-    verificationStatus: 'VERIFIED',
-    verificationRequestStatus: 'NOT_REQUESTED',
-    submittedAt: '2026-08-23T10:00:00.000Z',
-    approvedAt: '2026-08-23T12:00:00.000Z',
-    approvedBy: 'admin-master',
-    website: 'https://ora-gda.com/',
-    linkedin: 'https://pk.linkedin.com/in/fiza-farhan-84691911',
-    facebook: 'https://www.facebook.com/fizafarhanofficial/',
-    instagram: 'https://www.instagram.com/fizafarhanofficial/',
-    currentCompany: 'ORA Global Development Advisors',
-    languages: ['Urdu', 'English'],
-    reviews: [
-      {
-        id: 'rev-ff-1',
-        userName: 'Aliya Mansoor',
-        rating: 5,
-        date: '2 weeks ago',
-        comment: 'World Economic Forum recognized leader and champion for clean energy and women\'s financial inclusion.'
-      }
-    ],
-    faqs: [
-      {
-        question: 'What is ORA Global Development Advisors?',
-        answer: 'ORA Global Development Advisors is a strategic consulting firm advising governments, corporations, and UN agencies on sustainability and social impact.'
+        "answer": "Dr Sania Nishtar serves as the Chief Executive Officer of Gavi, the Vaccine Alliance, and founder of Heartfile.",
+        "question": "What is Dr Sania Nishtar's current leadership role?"
       }
     ]
   }
 ]
 
-export const MOCK_VERIFICATION_REQUESTS: ProfessionalVerificationRequest[] = [
-  {
-    id: 'ver-req-1',
-    professionalProfileId: 'pro-unverified-1',
-    username: 'bilal-ahmed-dev',
-    proName: 'Bilal Ahmed',
-    profession: 'Software Developer',
-    city: 'Faisalabad',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
-    amount: 50,
-    paymentMethod: 'EasyPaisa (Mashreq Pay)',
-    paymentReference: 'EP-9823746192',
-    paymentScreenshot: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80',
-    status: 'PENDING',
-    submittedAt: '2026-08-19T09:15:00.000Z'
-  }
-]
-
-export interface ProfessionalInquiry {
-  id: string
-  proUsername: string
-  proName: string
-  senderName: string
-  senderEmail: string
-  senderWhatsApp: string
-  message: string
-  createdAt: string
-  status?: 'new' | 'replied' | 'archived'
-}
+export const MOCK_VERIFICATION_REQUESTS: ProfessionalVerificationRequest[] = []

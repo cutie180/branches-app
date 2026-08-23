@@ -480,7 +480,7 @@ export async function submitVerificationRequest(
     proName: pro?.name || 'Professional Candidate',
     profession: pro?.profession || 'Specialist',
     city: pro?.city || 'Pakistan',
-    avatar: pro?.avatar,
+    avatar: pro?.avatar || '',
     amount: paymentDetails.amount || 50,
     paymentMethod: paymentDetails.paymentMethod || 'EasyPaisa (Mashreq Pay)',
     paymentReference: paymentDetails.transactionRef || 'N/A',
