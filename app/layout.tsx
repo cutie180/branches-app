@@ -48,7 +48,6 @@ export const metadata: Metadata = {
     title: "ListPak — Pakistan Business Directory, Jobs & Professionals",
     description: "Find Pakistani businesses, jobs, professionals, and companies by category and city on ListPak.",
   },
-  alternates: { canonical: 'https://www.listpak.com/' },
   robots: {
     index: true,
     follow: true,

@@ -8,6 +8,13 @@ import { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Cities Directory Pakistan | ListPak Enterprise Hub',
   description: 'Explore business listings, companies, and jobs across 150+ Pakistani cities including Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, and Peshawar.',
+  alternates: { canonical: 'https://www.listpak.com/cities/' },
+  openGraph: {
+    title: 'Cities Directory Pakistan | ListPak Enterprise Hub',
+    description: 'Explore business listings, companies, and jobs across 150+ Pakistani cities including Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, and Peshawar.',
+    url: 'https://www.listpak.com/cities/',
+    type: 'website',
+  },
 }
 
 export default function CitiesIndexPage() {
@@ -40,7 +47,7 @@ export default function CitiesIndexPage() {
             {TOP_CITIES.slice(0, 10).map((city) => (
               <Link
                 key={city}
-                href={`/city/${city.toLowerCase()}`}
+                href={`/city/${city.toLowerCase().replace(/\s+/g, '-')}`}
                 className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:shadow-lg transition-all text-center space-y-2 group"
               >
                 <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mx-auto group-hover:bg-blue-600 group-hover:text-white transition-colors">
@@ -64,7 +71,7 @@ export default function CitiesIndexPage() {
             {CITIES.map((city) => (
               <Link
                 key={city}
-                href={`/city/${city.toLowerCase()}`}
+                href={`/city/${city.toLowerCase().replace(/\s+/g, '-')}`}
                 className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/60 text-slate-700 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 font-semibold transition-colors flex items-center justify-between"
               >
                 <span>{city}</span>

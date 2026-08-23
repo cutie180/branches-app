@@ -40,9 +40,9 @@ export default async function CityDetailPage(props: { params: Promise<{ slug: st
   const allApproved = await getAllBusinesses(false)
   const cityBusinesses = allApproved.filter(
     b => 
-      b.city.toLowerCase() === params.slug.toLowerCase() ||
-      (b.cities && b.cities.some(c => c.toLowerCase() === params.slug.toLowerCase())) ||
-      (b.locations && b.locations.some(l => l.city.toLowerCase() === params.slug.toLowerCase()))
+      b.city.toLowerCase() === cityName.toLowerCase() ||
+      (b.cities && b.cities.some(c => c.toLowerCase() === cityName.toLowerCase())) ||
+      (b.locations && b.locations.some(l => l.city.toLowerCase() === cityName.toLowerCase()))
   )
 
   const allJobs = await getAllJobs(false)
@@ -138,12 +138,12 @@ export default async function CityDetailPage(props: { params: Promise<{ slug: st
               {cityJobs.map((job) => (
                 <div key={job.id} className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs flex justify-between items-center">
                   <div>
-                    <Link href={`/jobs/${job.id}`} className="font-bold text-slate-900 text-base hover:text-blue-600">
+                    <Link href={`/jobs/${job.slug || job.id}`} className="font-bold text-slate-900 text-base hover:text-blue-600">
                       {job.title}
                     </Link>
                     <p className="text-xs text-slate-500 mt-0.5">{job.company} • {job.salary}</p>
                   </div>
-                  <Link href={`/jobs/${job.id}`} className="px-4 py-2 bg-emerald-500 text-white text-xs font-bold rounded-xl">
+                  <Link href={`/jobs/${job.slug || job.id}`} className="px-4 py-2 bg-emerald-500 text-white text-xs font-bold rounded-xl">
                     Apply
                   </Link>
                 </div>

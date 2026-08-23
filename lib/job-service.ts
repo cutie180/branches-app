@@ -7,6 +7,12 @@ import { normalizeSlug } from './db-service'
 
 let memoryJobsCache: JobItem[] = [...MOCK_JOBS]
 
+function isExpiredJob(job: JobItem): boolean {
+  if (!job.deadline || /open until filled/i.test(job.deadline)) return false
+  const deadline = new Date(job.deadline)
+  return !Number.isNaN(deadline.getTime()) && deadline.getTime() < Date.now()
+}
+
 export const getAllJobs = cache(async function getAllJobs(includePending: boolean = false): Promise<JobItem[]> {
   try {
     const snap = await getDocs(collection(db, 'jobs'))
@@ -74,15 +80,16 @@ export const getAllJobs = cache(async function getAllJobs(includePending: boolea
     return memoryJobsCache
   }
 
-  return memoryJobsCache.filter(j => (j.status || 'approved') === 'approved')
+  return memoryJobsCache.filter(j => (j.status || 'approved') === 'approved' && !isExpiredJob(j))
 })
 
 export const getJobBySlug = cache(async function getJobBySlug(idOrSlug: string): Promise<JobItem | null> {
   const normalized = idOrSlug.toLowerCase().trim()
   const cached = memoryJobsCache.find(j => j.id === idOrSlug || j.slug?.toLowerCase() === normalized)
-  if (cached && (cached.status || 'approved') === 'approved') {
+  if (cached && (cached.status || 'approved') === 'approved' && !isExpiredJob(cached)) {
     return cached
   }
+  if (cached && isExpiredJob(cached)) return null
 
   try {
     const q = query(collection(db, 'jobs'), where('slug', '==', normalized), limit(1))
@@ -91,8 +98,10 @@ export const getJobBySlug = cache(async function getJobBySlug(idOrSlug: string):
       const docSnap = snap.docs[0]
       const data = docSnap.data() as JobItem
       if (data.status && data.status !== 'approved') return null
-      memoryJobsCache.push({ ...data, id: docSnap.id })
-      return data
+      const normalizedJob = { ...data, id: docSnap.id } as JobItem
+      if (isExpiredJob(normalizedJob)) return null
+      memoryJobsCache.push(normalizedJob)
+      return normalizedJob
     }
   } catch (err) {
     console.warn('Firestore getJobBySlug error:', err)

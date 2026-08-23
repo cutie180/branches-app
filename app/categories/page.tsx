@@ -8,6 +8,13 @@ import { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Business Categories in Pakistan | ListPak Directory Hub',
   description: 'Explore over 50+ business categories in Pakistan including Restaurants, IT Companies, Healthcare, Real Estate, Construction, Education, and Retail.',
+  alternates: { canonical: 'https://www.listpak.com/categories/' },
+  openGraph: {
+    title: 'Business Categories in Pakistan | ListPak Directory Hub',
+    description: 'Explore over 50+ business categories in Pakistan including Restaurants, IT Companies, Healthcare, Real Estate, Construction, Education, and Retail.',
+    url: 'https://www.listpak.com/categories/',
+    type: 'website',
+  },
 }
 
 export default function CategoriesIndexPage() {

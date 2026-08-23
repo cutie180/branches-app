@@ -65,6 +65,10 @@ export default async function JobDetailPage(props: { params: Promise<{ id: strin
 
   const websiteUrl = job.applicationWebsite || job.applicationUrl || ''
   const datePosted = /^\d{4}-\d{2}-\d{2}/.test(job.postedDate || '') ? job.postedDate : undefined
+  const validThroughDate = job.deadline && !/open until filled/i.test(job.deadline) ? new Date(job.deadline) : null
+  const validThrough = validThroughDate && !Number.isNaN(validThroughDate.getTime())
+    ? validThroughDate.toISOString()
+    : undefined
 
   const jobLocations = (job.cities && job.cities.length > 0)
     ? job.cities.map(c => ({
@@ -94,7 +98,8 @@ export default async function JobDetailPage(props: { params: Promise<{ id: strin
       name: job.company,
       value: job.id
     },
-    datePosted,
+    ...(datePosted ? { datePosted } : {}),
+    ...(validThrough ? { validThrough } : {}),
     employmentType: (job.type || 'FULL_TIME').toUpperCase().replace('-', '_'),
     directApply: true,
     hiringOrganization: {
@@ -113,10 +118,12 @@ export default async function JobDetailPage(props: { params: Promise<{ id: strin
       <BreadcrumbSchema pathname={`/jobs/${idOrSlug}`} />
       <nav aria-label="Breadcrumb" className="max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-5 text-xs text-slate-500"><Link href="/" className="hover:text-blue-700 underline">Home</Link><span className="mx-2">/</span><Link href="/jobs" className="hover:text-blue-700 underline">Jobs</Link><span className="mx-2">/</span><span>{job.title}</span></nav>
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jobSchema) }}
-      />
+      {datePosted && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jobSchema) }}
+        />
+      )}
 
       {/* Header Banner */}
       <section className="bg-slate-900 text-white pt-8 pb-12 px-4 sm:px-6 lg:px-8 border-b border-slate-800">

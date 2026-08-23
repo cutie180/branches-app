@@ -12,10 +12,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.listpak.com'
   const currentDate = new Date()
   const fixedPolicyDate = new Date('2026-08-01T00:00:00.000Z')
+  const canonicalUrl = (path: string) => path === '/' ? `${baseUrl}/` : `${baseUrl}/${path.replace(/^\/+|\/+$/g, '')}/`
 
   // 1. Homepage
   const homepageRoute = {
-    url: `${baseUrl}/`,
+    url: canonicalUrl('/'),
     lastModified: currentDate,
     changeFrequency: 'daily' as const,
     priority: 1.0,
@@ -43,7 +44,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/help-center',
     '/support'
   ].map((route) => ({
-    url: `${baseUrl}${route}`,
+    url: canonicalUrl(route),
     lastModified: currentDate,
     changeFrequency: 'weekly' as const,
     priority: 0.7,
@@ -64,7 +65,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/report-listing',
     '/report-abuse'
   ].map((route) => ({
-    url: `${baseUrl}${route}`,
+    url: canonicalUrl(route),
     lastModified: currentDate,
     changeFrequency: 'yearly' as const,
     priority: 0.3,
@@ -72,7 +73,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // 4. Industry Categories
   const categoryRoutes = CATEGORIES.map((cat) => ({
-    url: `${baseUrl}/category/${cat.id}`,
+    url: canonicalUrl(`/category/${cat.id}`),
     lastModified: currentDate,
     changeFrequency: 'daily' as const,
     priority: 0.9,
@@ -80,7 +81,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // 5. City Hub Pages
   const cityRoutes = CITIES.map((city) => ({
-    url: `${baseUrl}/city/${encodeURIComponent(city.toLowerCase().trim().replace(/\s+/g, '-'))}`,
+    url: canonicalUrl(`/city/${encodeURIComponent(city.toLowerCase().trim().replace(/\s+/g, '-'))}`),
     lastModified: currentDate,
     changeFrequency: 'daily' as const,
     priority: 0.9,
@@ -97,7 +98,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const mockBusinessIds = new Set(MOCK_BUSINESSES.map((business) => business.id))
   const approvedBusinesses = rawBusinesses.filter(b => (b.status || 'approved') === 'approved' && !mockBusinessIds.has(b.id))
   const businessRoutes = approvedBusinesses.map((biz) => ({
-    url: `${baseUrl}/business/${biz.slug}`,
+    url: canonicalUrl(`/business/${biz.slug}`),
     lastModified: currentDate,
     changeFrequency: 'weekly' as const,
     priority: 0.9,
@@ -113,7 +114,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const mockJobIds = new Set(MOCK_JOBS.map((job) => job.id))
   const approvedJobs = rawJobs.filter((job) => (job.status || 'approved') === 'approved' && !mockJobIds.has(job.id))
   const jobRoutes = approvedJobs.map((job) => ({
-    url: `${baseUrl}/jobs/${job.slug || job.id}`,
+    url: canonicalUrl(`/jobs/${job.slug || job.id}`),
     lastModified: currentDate,
     changeFrequency: 'weekly' as const,
     priority: 0.9,
@@ -128,7 +129,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
   const mockCompanyIds = new Set(MOCK_COMPANIES.map((company) => company.id))
   const companyRoutes = rawCompanies.filter((comp) => !mockCompanyIds.has(comp.id) && (comp.status || 'approved') === 'approved').map((comp) => ({
-    url: `${baseUrl}/companies/${comp.slug}`,
+    url: canonicalUrl(`/companies/${comp.slug}`),
     lastModified: currentDate,
     changeFrequency: 'weekly' as const,
     priority: 0.9,
@@ -144,7 +145,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const mockProfessionalIds = new Set(MOCK_PROFESSIONALS.map((pro) => pro.id))
   const approvedPros = rawProfessionals.filter((pro) => (pro.status || 'approved') === 'approved' && !mockProfessionalIds.has(pro.id))
   const professionalRoutes = approvedPros.map((pro) => ({
-    url: `${baseUrl}/professionals/${pro.username}`,
+    url: canonicalUrl(`/professionals/${pro.username}`),
     lastModified: currentDate,
     changeFrequency: 'weekly' as const,
     priority: 0.9,
@@ -160,7 +161,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
   const allBlogPosts = Array.from(blogPostsBySlug.values())
   const blogRoutes = allBlogPosts.map((post) => ({
-    url: `${baseUrl}/blog/${post.slug}`,
+    url: canonicalUrl(`/blog/${post.slug}`),
     lastModified: currentDate,
     changeFrequency: 'weekly' as const,
     priority: 0.8,

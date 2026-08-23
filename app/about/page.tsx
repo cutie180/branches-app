@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: "ListPak is Pakistan's leading free business listing website and free directory platform. Founded in 2024, serving 10,000+ businesses across Karachi, Lahore, Islamabad with 100% free listings forever.",
   keywords: "about ListPak, ListPak company, free business listing website Pakistan, ListPak story, Pakistan business directory company, free directory website founder, ListPak team",
   alternates: {
-    canonical: 'https://www.listpak.com/about-us',
+    canonical: 'https://www.listpak.com/about/',
   },
 }
 
