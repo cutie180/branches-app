@@ -1,85 +1,70 @@
-const INDEXNOW_API_KEY = '2f7faa808792498083543bb6cffb4123';
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.listpak.com';
-const DOMAIN = new URL(SITE_URL).hostname;
-const KEY_LOCATION = `${SITE_URL}/${INDEXNOW_API_KEY}.txt`;
-
-interface IndexNowPayload {
-  host: string;
-  key: string;
-  keyLocation: string;
-  urlList: string[];
-}
-
 /**
- * Submits URLs to the IndexNow API using standard fetch.
- * @param urls Array of URLs to submit.
- * @param retry Whether to retry once on failure.
+ * IndexNow Integration Utility
+ * Automates real-time URL submission to search engines (Bing, Yandex, IndexNow.org)
  */
-export async function submitToIndexNow(urls: string[], retry = true): Promise<{ success: boolean; message: string }> {
-  if (!urls || urls.length === 0) {
-    return { success: true, message: 'No URLs to submit.' };
-  }
 
-  // Remove duplicates and filter out empty strings
-  const uniqueUrls = [...new Set(urls.filter(url => url && url.startsWith('http')))];
+export const INDEXNOW_API_KEY = '40d4228026174b1b8d8e93bd7827fbb6'
+export const INDEXNOW_HOST = 'www.listpak.com'
+export const INDEXNOW_KEY_LOCATION = `https://${INDEXNOW_HOST}/${INDEXNOW_API_KEY}.txt`
+
+export async function submitToIndexNow(urls: string | string[]): Promise<{ success: boolean; status: number; message: string }> {
+  const urlList = Array.isArray(urls) ? urls : [urls]
   
-  if (uniqueUrls.length === 0) {
-    return { success: true, message: 'No valid URLs to submit.' };
+  if (urlList.length === 0) {
+    return { success: true, status: 200, message: 'No URLs to submit.' }
   }
 
-  // IndexNow allows up to 10,000 URLs per request, but we'll batch by 100 as requested.
-  const chunks = [];
-  for (let i = 0; i < uniqueUrls.length; i += 100) {
-    chunks.push(uniqueUrls.slice(i, i + 100));
+  // Format valid URLs with full protocol and hostname
+  const formattedUrls = urlList.map(url => {
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url
+    }
+    const cleanPath = url.startsWith('/') ? url : `/${url}`
+    return `https://${INDEXNOW_HOST}${cleanPath}`
+  })
+
+  const payload = {
+    host: INDEXNOW_HOST,
+    key: INDEXNOW_API_KEY,
+    keyLocation: INDEXNOW_KEY_LOCATION,
+    urlList: formattedUrls
   }
 
-  const results = [];
+  const endpoints = [
+    'https://api.indexnow.org/IndexNow',
+    'https://www.bing.com/IndexNow'
+  ]
 
-  for (const chunk of chunks) {
-    const payload: IndexNowPayload = {
-      host: DOMAIN,
-      key: INDEXNOW_API_KEY,
-      keyLocation: KEY_LOCATION,
-      urlList: chunk,
-    };
+  let lastStatus = 200
+  let lastMessage = 'URLs submitted successfully'
 
+  for (const endpoint of endpoints) {
     try {
-      const response = await fetch('https://api.indexnow.org/indexnow', {
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
         },
         body: JSON.stringify(payload),
-      });
+      })
 
-      if (response.ok || response.status === 202) {
-        console.log(`[IndexNow] Successfully submitted ${chunk.length} URLs.`);
-        results.push({ success: true, chunk: chunk.length });
+      lastStatus = response.status
+      if (response.ok || response.status === 200 || response.status === 202) {
+        console.log(`[IndexNow] Submitted ${formattedUrls.length} URLs to ${endpoint} (Status: ${response.status})`)
       } else {
-        const errorText = await response.text();
-        throw new Error(`Status ${response.status}: ${errorText}`);
+        const text = await response.text().catch(() => '')
+        console.warn(`[IndexNow] Submission to ${endpoint} returned status ${response.status}: ${text}`)
+        lastMessage = `Response status ${response.status}: ${text}`
       }
-    } catch (error: any) {
-      console.error(`[IndexNow] Failed to submit chunk:`, error.message);
-      
-      if (retry) {
-        console.log(`[IndexNow] Retrying chunk...`);
-        // Retry once for this specific chunk
-        const retryResult = await submitToIndexNow(chunk, false);
-        results.push(retryResult);
-      } else {
-        results.push({ success: false, error: error.message });
-      }
+    } catch (err: any) {
+      console.error(`[IndexNow] Failed to submit to ${endpoint}:`, err)
+      lastMessage = err?.message || 'Network error'
     }
   }
 
-  const failed = results.filter(r => !r.success);
-  if (failed.length > 0) {
-    return { 
-      success: false, 
-      message: `Failed to submit some chunks. ${failed.map((f: any) => f.error || f.message || 'Unknown error').join(', ')}` 
-    };
+  return {
+    success: lastStatus === 200 || lastStatus === 202,
+    status: lastStatus,
+    message: lastMessage
   }
-
-  return { success: true, message: `Submitted ${uniqueUrls.length} URLs successfully.` };
 }
