@@ -3,6 +3,7 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { BreadcrumbSchema } from '@/components/seo/breadcrumb-schema'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { getJobBySlug, getAllJobs, getMatchingCandidatesForJob } from '@/lib/job-service'
@@ -43,7 +44,7 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
       siteName: 'ListPak',
       url: `https://www.listpak.com/jobs/${idOrSlug}`,
       locale: 'en_PK',
-      type: 'website',
+      type: 'article',
       images: job?.companyLogo ? [{ url: job.companyLogo, alt: job.company }] : undefined,
     },
   }
@@ -62,7 +63,8 @@ export default async function JobDetailPage(props: { params: Promise<{ id: strin
   const matchingCandidatesRaw = await getMatchingCandidatesForJob(job)
   const matchingCandidates = matchingCandidatesRaw.slice(0, 4)
 
-  const websiteUrl = job.applicationWebsite || job.applicationUrl || `https://${job.companySlug}.pk/careers`
+  const websiteUrl = job.applicationWebsite || job.applicationUrl || ''
+  const datePosted = /^\d{4}-\d{2}-\d{2}/.test(job.postedDate || '') ? job.postedDate : undefined
 
   const jobLocations = (job.cities && job.cities.length > 0)
     ? job.cities.map(c => ({
@@ -92,21 +94,24 @@ export default async function JobDetailPage(props: { params: Promise<{ id: strin
       name: job.company,
       value: job.id
     },
-    datePosted: job.postedDate || '2026-08-01',
+    datePosted,
     employmentType: (job.type || 'FULL_TIME').toUpperCase().replace('-', '_'),
     directApply: true,
     hiringOrganization: {
       '@type': 'Organization',
       name: job.company,
-      sameAs: `https://www.listpak.com/companies/${job.companySlug}`,
+      sameAs: job.applicationWebsite || undefined,
       logo: job.companyLogo
     },
-    jobLocation: jobLocations
+    jobLocation: jobLocations,
+    url: `https://www.listpak.com/jobs/${idOrSlug}`,
   }
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
       <Navbar />
+      <BreadcrumbSchema pathname={`/jobs/${idOrSlug}`} />
+      <nav aria-label="Breadcrumb" className="max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-5 text-xs text-slate-500"><Link href="/" className="hover:text-blue-700 underline">Home</Link><span className="mx-2">/</span><Link href="/jobs" className="hover:text-blue-700 underline">Jobs</Link><span className="mx-2">/</span><span>{job.title}</span></nav>
 
       <script
         type="application/ld+json"

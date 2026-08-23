@@ -19,8 +19,8 @@ const plusJakarta = Plus_Jakarta_Sans({
 })
 
 export const metadata: Metadata = {
-  title: "ListPak — Pakistan's Digital Business & Enterprise Ecosystem",
-  description: "Discover, connect, and grow with Pakistan's largest digital business platform. Explore verified business listings, jobs, professional talent, and enterprise services across Karachi, Lahore, Islamabad, and nationwide.",
+  title: "ListPak — Pakistan Business Directory, Jobs & Professionals",
+  description: "Find Pakistani businesses, jobs, professionals, and companies by category and city on ListPak.",
   metadataBase: new URL('https://www.listpak.com'),
   keywords: [
     'ListPak Pakistan',
@@ -36,13 +36,19 @@ export const metadata: Metadata = {
     apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
   },
   openGraph: {
-    title: "ListPak — Pakistan's Digital Business & Enterprise Ecosystem",
-    description: "Discover, connect, and grow with Pakistan's largest digital business platform. Verified businesses, hiring portal, and professional talent.",
+    title: "ListPak — Pakistan Business Directory, Jobs & Professionals",
+    description: "Find Pakistani businesses, jobs, professionals, and companies by category and city on ListPak.",
     url: 'https://www.listpak.com/',
     siteName: 'ListPak',
     locale: 'en_PK',
     type: 'website',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: "ListPak — Pakistan Business Directory, Jobs & Professionals",
+    description: "Find Pakistani businesses, jobs, professionals, and companies by category and city on ListPak.",
+  },
+  alternates: { canonical: 'https://www.listpak.com/' },
   robots: {
     index: true,
     follow: true,
@@ -58,6 +64,18 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'ListPak',
+    url: 'https://www.listpak.com',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: 'https://www.listpak.com/search?q={search_term_string}',
+      'query-input': 'required name=search_term_string'
+    }
+  }
+
   const organizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -91,7 +109,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify([organizationSchema, websiteSchema]) }}
         />
       </head>
       <body className="font-sans antialiased bg-[#F8FAFC] text-[#0F172A] pb-16 md:pb-0 min-h-screen selection:bg-blue-500 selection:text-white">

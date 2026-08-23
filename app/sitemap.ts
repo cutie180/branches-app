@@ -1,10 +1,9 @@
 import { MetadataRoute } from 'next'
-import { CATEGORIES, CITIES, MOCK_JOBS, MOCK_PROFESSIONALS, BusinessItem, ProfessionalItem, CompanyItem, JobItem } from '@/lib/data'
+import { CATEGORIES, CITIES, MOCK_BUSINESSES, MOCK_COMPANIES, MOCK_JOBS, MOCK_PROFESSIONALS, BusinessItem, ProfessionalItem, CompanyItem, JobItem } from '@/lib/data'
 import { getAllBusinesses } from '@/lib/db-service'
 import { getAllProfessionals } from '@/lib/professional-service'
 import { getAllCompanies } from '@/lib/company-service'
 import { getAllJobs } from '@/lib/job-service'
-import { FEATURED_POSTS, RECENT_POSTS } from '@/app/blog/page'
 import { BLOG_POSTS } from '@/lib/blog-data'
 
 export const revalidate = 3600 // Revalidate sitemap XML every hour
@@ -95,7 +94,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Error fetching businesses for sitemap:', err)
   }
 
-  const approvedBusinesses = rawBusinesses.filter(b => (b.status || 'approved') === 'approved')
+  const mockBusinessIds = new Set(MOCK_BUSINESSES.map((business) => business.id))
+  const approvedBusinesses = rawBusinesses.filter(b => (b.status || 'approved') === 'approved' && !mockBusinessIds.has(b.id))
   const businessRoutes = approvedBusinesses.map((biz) => ({
     url: `${baseUrl}/business/${biz.slug}`,
     lastModified: currentDate,
@@ -110,7 +110,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   } catch (err) {
     console.error('Error fetching jobs for sitemap:', err)
   }
-  const approvedJobs = rawJobs.length > 0 ? rawJobs : MOCK_JOBS
+  const mockJobIds = new Set(MOCK_JOBS.map((job) => job.id))
+  const approvedJobs = rawJobs.filter((job) => (job.status || 'approved') === 'approved' && !mockJobIds.has(job.id))
   const jobRoutes = approvedJobs.map((job) => ({
     url: `${baseUrl}/jobs/${job.slug || job.id}`,
     lastModified: currentDate,
@@ -125,7 +126,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   } catch (err) {
     console.error('Error fetching companies for sitemap:', err)
   }
-  const companyRoutes = rawCompanies.map((comp) => ({
+  const mockCompanyIds = new Set(MOCK_COMPANIES.map((company) => company.id))
+  const companyRoutes = rawCompanies.filter((comp) => !mockCompanyIds.has(comp.id) && (comp.status || 'approved') === 'approved').map((comp) => ({
     url: `${baseUrl}/companies/${comp.slug}`,
     lastModified: currentDate,
     changeFrequency: 'weekly' as const,
@@ -139,7 +141,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   } catch (err) {
     console.error('Error fetching professionals for sitemap:', err)
   }
-  const approvedPros = rawProfessionals.length > 0 ? rawProfessionals : MOCK_PROFESSIONALS
+  const mockProfessionalIds = new Set(MOCK_PROFESSIONALS.map((pro) => pro.id))
+  const approvedPros = rawProfessionals.filter((pro) => (pro.status || 'approved') === 'approved' && !mockProfessionalIds.has(pro.id))
   const professionalRoutes = approvedPros.map((pro) => ({
     url: `${baseUrl}/professionals/${pro.username}`,
     lastModified: currentDate,

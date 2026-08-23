@@ -87,11 +87,11 @@ export const getAllBusinesses = cache(async function getAllBusinesses(includePen
           city: primaryLoc.city || data.city || 'Pakistan',
           cities: docCities,
           province: data.province || 'Pakistan',
-          rating: data.rating || 5.0,
-          reviewCount: data.reviewCount || (data.reviews ? data.reviews.length : 5),
-          verified: data.verified ?? true,
-          isClaimed: data.isClaimed ?? true,
-          isFeatured: data.isFeatured ?? true,
+          rating: Number.isFinite(data.rating) ? data.rating : 0,
+          reviewCount: data.reviewCount || (data.reviews ? data.reviews.length : 0),
+          verified: data.verified === true,
+          isClaimed: data.isClaimed === true,
+          isFeatured: data.isFeatured === true,
           status: itemStatus,
           submittedAt: data.submittedAt || data.createdAt || new Date().toISOString(),
           approvedAt: data.approvedAt,
@@ -110,7 +110,7 @@ export const getAllBusinesses = cache(async function getAllBusinesses(includePen
           services: data.services || ['General Services', 'Customer Support'],
           operatingHours: data.operatingHours || { 'Monday - Saturday': '09:00 AM - 07:00 PM' },
           features: data.features || ['Verified Profile'],
-          reviews: data.reviews && data.reviews.length > 0 ? data.reviews : GENERATE_STARTER_REVIEWS(bName),
+          reviews: data.reviews && data.reviews.length > 0 ? data.reviews : [],
           faqs: data.faqs || []
         })
       })
@@ -196,10 +196,6 @@ export async function getFeaturedBusinesses(limitCount: number = 9): Promise<Bus
 export const getBusinessBySlug = cache(async function getBusinessBySlug(slug: string): Promise<BusinessItem | null> {
   const cached = memoryBusinessesCache.find(b => b.slug === slug)
   if (cached && (cached.status || 'approved') === 'approved') {
-    if (!cached.reviews || cached.reviews.length === 0) {
-      cached.reviews = GENERATE_STARTER_REVIEWS(cached.name)
-      cached.reviewCount = 5
-    }
     return cached
   }
 
@@ -230,11 +226,11 @@ export const getBusinessBySlug = cache(async function getBusinessBySlug(slug: st
         city: primaryLoc.city || data.city || 'Pakistan',
         cities: docCities,
         province: data.province || 'Pakistan',
-        rating: data.rating || 5.0,
+        rating: Number.isFinite(data.rating) ? data.rating : 0,
         reviewCount: data.reviewCount || 5,
-        verified: data.verified ?? true,
-        isClaimed: data.isClaimed ?? true,
-        isFeatured: data.isFeatured ?? true,
+        verified: data.verified === true,
+        isClaimed: data.isClaimed === true,
+        isFeatured: data.isFeatured === true,
         status: data.status || 'approved',
         phone: data.phone || '+92 300 0000000',
         whatsapp: data.whatsapp || '923000000000',
@@ -248,7 +244,7 @@ export const getBusinessBySlug = cache(async function getBusinessBySlug(slug: st
         services: data.services || ['Customer Service', 'Consultation'],
         operatingHours: data.operatingHours || { 'Monday - Saturday': '09:00 AM - 07:00 PM' },
         features: data.features || ['Verified Listing'],
-        reviews: data.reviews && data.reviews.length > 0 ? data.reviews : GENERATE_STARTER_REVIEWS(bName),
+        reviews: data.reviews && data.reviews.length > 0 ? data.reviews : [],
         faqs: data.faqs || []
       }
       memoryBusinessesCache.push(item)
@@ -258,44 +254,7 @@ export const getBusinessBySlug = cache(async function getBusinessBySlug(slug: st
     console.warn('Firestore getBusinessBySlug fallback:', err)
   }
 
-  // Fallback generation for unknown slug
-  const cleanName = slug
-    .split('-')
-    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ')
-
-  const fallbackBiz: BusinessItem = {
-    id: slug,
-    slug,
-    name: cleanName,
-    category: 'Commercial Services',
-    categoryId: 'services',
-    city: 'Lahore',
-    cities: ['Lahore'],
-    locations: [{ city: 'Lahore', address: 'Commercial Hub, Lahore', isPrimary: true }],
-    province: 'Punjab',
-    rating: 5.0,
-    reviewCount: 5,
-    verified: true,
-    isClaimed: false,
-    isFeatured: true,
-    status: 'approved',
-    phone: '+92 300 1234567',
-    whatsapp: '923001234567',
-    email: 'info@' + slug + '.pk',
-    website: 'https://' + slug + '.pk',
-    address: 'Commercial Hub, Lahore',
-    coverImage: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
-    logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
-    description: `${cleanName} is a top-rated verified business listing on ListPak Pakistan directory.`,
-    services: ['General Services', 'Customer Inquiries'],
-    operatingHours: { 'Monday - Saturday': '09:00 AM - 07:00 PM' },
-    features: ['Verified Contact Details'],
-    reviews: GENERATE_STARTER_REVIEWS(cleanName),
-    faqs: []
-  }
-  memoryBusinessesCache.push(fallbackBiz)
-  return fallbackBiz
+  return null
 })
 
 /**
@@ -304,7 +263,6 @@ export const getBusinessBySlug = cache(async function getBusinessBySlug(slug: st
 export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>): Promise<BusinessItem> {
   const name = businessData.name || businessData.name || 'New Business'
   const slug = businessData.slug || normalizeSlug(name)
-  const starterReviews = GENERATE_STARTER_REVIEWS(name)
 
   const inputLocations = businessData.locations && businessData.locations.length > 0
     ? businessData.locations
@@ -325,10 +283,10 @@ export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>
     cities: allCities,
     locations: inputLocations,
     province: businessData.province || 'Pakistan',
-    rating: 5.0,
-    reviewCount: 5,
-    verified: true,
-    isClaimed: true,
+    rating: 0,
+    reviewCount: 0,
+    verified: false,
+    isClaimed: false,
     isFeatured: false,
     status: 'pending', // MANDATORY PENDING WORKFLOW
     submittedAt: new Date().toISOString(),
@@ -343,8 +301,8 @@ export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>
     description: businessData.description || 'Newly registered business on ListPak.',
     services: businessData.services || ['Professional Services'],
     operatingHours: businessData.operatingHours || { 'Monday - Saturday': '09:00 AM - 07:00 PM' },
-    features: ['Verified Listing'],
-    reviews: starterReviews,
+    features: [],
+    reviews: [],
     faqs: []
   }
 

@@ -3,6 +3,7 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { BreadcrumbSchema } from '@/components/seo/breadcrumb-schema'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { getCompanyBySlug, getAllCompanies } from '@/lib/company-service'
@@ -87,6 +88,8 @@ export default async function CompanyDetailPage(props: { params: Promise<{ slug:
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
       <Navbar />
+      <BreadcrumbSchema pathname={`/companies/${slug}`} />
+      <nav aria-label="Breadcrumb" className="max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-5 text-xs text-slate-500"><Link href="/" className="hover:text-blue-700 underline">Home</Link><span className="mx-2">/</span><Link href="/companies" className="hover:text-blue-700 underline">Companies</Link><span className="mx-2">/</span><span>{company.name}</span></nav>
 
       <script
         type="application/ld+json"

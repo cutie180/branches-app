@@ -98,7 +98,7 @@ export const getJobBySlug = cache(async function getJobBySlug(idOrSlug: string):
     console.warn('Firestore getJobBySlug error:', err)
   }
 
-  return cached || memoryJobsCache[0] || null
+  return null
 })
 
 export async function saveJobToDatabase(jobData: Partial<JobItem>): Promise<JobItem> {

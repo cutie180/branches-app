@@ -104,7 +104,7 @@ export const getCompanyBySlug = cache(async function getCompanyBySlug(slug: stri
     console.warn('Firestore getCompanyBySlug error:', err)
   }
 
-  return cached || memoryCompaniesCache[0] || null
+  return null
 })
 
 export async function saveCompanyToDatabase(compData: Partial<CompanyItem>): Promise<CompanyItem> {

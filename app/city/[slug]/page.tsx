@@ -1,29 +1,41 @@
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
-import { MOCK_JOBS, MOCK_PROFESSIONALS } from '@/lib/data'
+import { CITIES } from '@/lib/data'
+import { getAllJobs } from '@/lib/job-service'
 import { getAllBusinesses } from '@/lib/db-service'
 import Link from 'next/link'
 import Image from 'next/image'
 import { MapPin, ShieldCheck, Star, ArrowRight, ArrowLeft, Building2, Briefcase } from 'lucide-react'
 import { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+import { BreadcrumbSchema } from '@/components/seo/breadcrumb-schema'
 
 export const revalidate = 86400 // 24-hour ISR revalidation
+export const dynamicParams = false
+
+export async function generateStaticParams() {
+  return CITIES.map((city) => ({ slug: city.toLowerCase().replace(/\s+/g, '-') }))
+}
 
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const params = await props.params
-  const cityName = params.slug.charAt(0).toUpperCase() + params.slug.slice(1)
+  const cityName = CITIES.find((city) => city.toLowerCase().replace(/\s+/g, '-') === params.slug.toLowerCase())
+  if (!cityName) {
+    return { title: 'City not found | ListPak', robots: { index: false, follow: false } }
+  }
+  const title = `${cityName} Business Directory & Jobs: ListPak`
   return {
-    title: `${cityName} Business Directory & Jobs: ListPak`,
-    description: `Explore top verified businesses, software houses, restaurants, hospitals, job openings, and professionals in ${cityName}, Pakistan.`,
-    alternates: {
-      canonical: `https://www.listpak.com/city/${params.slug.toLowerCase()}`
-    }
+    title,
+    description: `Explore current businesses, services, jobs, and professional discovery in ${cityName}, Pakistan.`,
+    openGraph: { title, description: `Explore current businesses, services, jobs, and professional discovery in ${cityName}, Pakistan.`, url: `https://www.listpak.com/city/${params.slug.toLowerCase()}`, type: 'website' },
+    alternates: { canonical: `https://www.listpak.com/city/${params.slug.toLowerCase()}` },
   }
 }
 
 export default async function CityDetailPage(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params
-  const cityName = params.slug.charAt(0).toUpperCase() + params.slug.slice(1)
+  const cityName = CITIES.find((city) => city.toLowerCase().replace(/\s+/g, '-') === params.slug.toLowerCase())
+  if (!cityName) notFound()
 
   const allApproved = await getAllBusinesses(false)
   const cityBusinesses = allApproved.filter(
@@ -33,16 +45,19 @@ export default async function CityDetailPage(props: { params: Promise<{ slug: st
       (b.locations && b.locations.some(l => l.city.toLowerCase() === params.slug.toLowerCase()))
   )
 
-  const cityJobs = MOCK_JOBS.filter(
-    j => j.city.toLowerCase() === params.slug.toLowerCase()
-  )
+  const allJobs = await getAllJobs(false)
+  const cityJobs = allJobs.filter((job) => job.city.toLowerCase() === cityName.toLowerCase() || job.cities?.some((city) => city.toLowerCase() === cityName.toLowerCase()))
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
       <Navbar />
+      <BreadcrumbSchema pathname={`/city/${params.slug.toLowerCase()}`} />
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ '@context': 'https://schema.org', '@type': 'CollectionPage', name: `${cityName} Business Directory`, description: `Businesses, jobs, and professional discovery in ${cityName}, Pakistan.`, url: `https://www.listpak.com/city/${params.slug.toLowerCase()}` }) }} />
 
       <section className="bg-[#0F172A] text-white py-12 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
         <div className="max-w-7xl mx-auto space-y-4">
+          <nav aria-label="Breadcrumb" className="text-xs text-slate-400"><Link href="/" className="hover:text-white underline">Home</Link><span className="mx-2">/</span><Link href="/cities" className="hover:text-white underline">Cities</Link><span className="mx-2">/</span><span>{cityName}</span></nav>
           <Link href="/cities" className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors">
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>All Pakistani Cities</span>

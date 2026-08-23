@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
-import { getProfessionalByUsername, getAllProfessionals, GENERATE_STARTER_PROFESSIONAL_REVIEWS } from '@/lib/professional-service'
+import { getProfessionalByUsername, getAllProfessionals } from '@/lib/professional-service'
 import { 
   Users, MapPin, ShieldCheck, Star, Mail, Phone, Award, CheckCircle2, ArrowLeft, 
   Globe, Linkedin, Github, Facebook, Twitter, Instagram, Youtube, MessageCircle, ExternalLink, 
@@ -61,7 +61,7 @@ export default async function ProfessionalDetailPage(props: { params: Promise<{ 
 
   const allPros = await getAllProfessionals(false)
   const similarPros = allPros.filter(p => p.username !== pro.username).slice(0, 3)
-  const reviewsList = pro.reviews && pro.reviews.length > 0 ? pro.reviews : GENERATE_STARTER_PROFESSIONAL_REVIEWS(pro.name)
+  const reviewsList = pro.reviews || []
 
   const socialLinks = [
     { label: 'LinkedIn (Primary Profile)', url: pro.linkedin, icon: Linkedin, color: 'text-blue-700 bg-blue-50 border-blue-300 font-extrabold ring-2 ring-blue-500/20' },
@@ -112,6 +112,7 @@ export default async function ProfessionalDetailPage(props: { params: Promise<{ 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
       <Navbar />
+      <nav aria-label="Breadcrumb" className="max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-5 text-xs text-slate-500"><Link href="/" className="hover:text-blue-700 underline">Home</Link><span className="mx-2">/</span><Link href="/professionals" className="hover:text-blue-700 underline">Professionals</Link><span className="mx-2">/</span><span>{pro.name}</span></nav>
 
       <script
         type="application/ld+json"

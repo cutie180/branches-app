@@ -6,8 +6,11 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ShieldCheck, Star, ArrowRight, ArrowLeft } from 'lucide-react'
 import { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+import { BreadcrumbSchema } from '@/components/seo/breadcrumb-schema'
 
 export const revalidate = 86400 // 24-hour ISR revalidation
+export const dynamicParams = false
 
 export async function generateStaticParams() {
   return CATEGORIES.map((cat) => ({
@@ -18,20 +21,29 @@ export async function generateStaticParams() {
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const params = await props.params
   const cat = CATEGORIES.find(c => c.id === params.slug)
-  const title = cat ? `Best ${cat.name} in Pakistan: ListPak Directory` : 'Category: ListPak'
-  const description = cat ? `Find verified ${cat.name} businesses, phone numbers, locations, and customer reviews across Pakistan.` : 'Browse verified Pakistani businesses.'
-  return { 
-    title, 
-    description,
-    alternates: {
-      canonical: `https://www.listpak.com/category/${params.slug}`
+  if (!cat) {
+    return {
+      title: 'Category not found | ListPak',
+      robots: { index: false, follow: false },
     }
+  }
+  return {
+    title: `Best ${cat.name} in Pakistan: ListPak Directory`,
+    description: `Find ${cat.name} businesses, locations, services, and current directory information across Pakistan.`,
+    openGraph: {
+      title: `Best ${cat.name} in Pakistan: ListPak Directory`,
+      description: `Find ${cat.name} businesses, locations, services, and current directory information across Pakistan.`,
+      url: `https://www.listpak.com/category/${cat.id}`,
+      type: 'website',
+    },
+    alternates: { canonical: `https://www.listpak.com/category/${cat.id}` },
   }
 }
 
 export default async function CategoryDetailPage(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params
-  const cat = CATEGORIES.find(c => c.id === params.slug) || CATEGORIES[0]
+  const cat = CATEGORIES.find(c => c.id === params.slug)
+  if (!cat) notFound()
 
   const allApproved = await getAllBusinesses(false)
   const businesses = allApproved.filter(
@@ -43,12 +55,14 @@ export default async function CategoryDetailPage(props: { params: Promise<{ slug
     '@type': 'CollectionPage',
     name: `${cat.name} Businesses in Pakistan`,
     description: cat.desc,
-    url: `https://www.listpak.com/category/${cat.id}`
+    url: `https://www.listpak.com/category/${cat.id}`,
+    isPartOf: { '@type': 'WebSite', name: 'ListPak', url: 'https://www.listpak.com' },
   }
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
       <Navbar />
+      <BreadcrumbSchema pathname={`/category/${cat.id}`} />
 
       <script
         type="application/ld+json"
@@ -57,6 +71,7 @@ export default async function CategoryDetailPage(props: { params: Promise<{ slug
 
       <section className="bg-[#0F172A] text-white py-12 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
         <div className="max-w-7xl mx-auto space-y-4">
+          <nav aria-label="Breadcrumb" className="text-xs text-slate-400"><Link href="/" className="hover:text-white underline">Home</Link><span className="mx-2">/</span><Link href="/categories" className="hover:text-white underline">Categories</Link><span className="mx-2">/</span><span>{cat.name}</span></nav>
           <Link href="/categories" className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors">
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>All Categories</span>

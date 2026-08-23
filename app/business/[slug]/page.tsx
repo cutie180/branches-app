@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation'
 import { Phone, Mail, MapPin, MessageCircle, ShieldCheck, Star, Clock, CheckCircle2 } from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
-import { getAllBusinesses, getBusinessBySlug, GENERATE_STARTER_REVIEWS } from '@/lib/db-service'
+import { getAllBusinesses, getBusinessBySlug } from '@/lib/db-service'
 import LazyMap from '@/components/business/lazy-map'
 import { BusinessHeroActions, BusinessReviewsSection } from './business-interactive-actions'
 
@@ -61,8 +61,7 @@ export default async function BusinessPage(props: { params: Promise<{ slug: stri
     notFound()
   }
 
-  // Ensure starter reviews if reviews empty
-  const reviewsList = biz.reviews && biz.reviews.length > 0 ? biz.reviews : GENERATE_STARTER_REVIEWS(biz.name)
+  const reviewsList = biz.reviews || []
 
   // Ensure multi-location support
   const locationsList = biz.locations && biz.locations.length > 0
@@ -97,11 +96,13 @@ export default async function BusinessPage(props: { params: Promise<{ slug: stri
         addressCountry: 'PK'
       }
     })),
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: biz.rating || 5.0,
-      reviewCount: biz.reviewCount || reviewsList.length,
-    },
+    ...(reviewsList.length > 0 && biz.rating > 0 ? {
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: biz.rating,
+        reviewCount: biz.reviewCount || reviewsList.length,
+      },
+    } : {}),
   }
 
   const breadcrumbSchema = {
@@ -132,6 +133,7 @@ export default async function BusinessPage(props: { params: Promise<{ slug: stri
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
       <Navbar />
+      <nav aria-label="Breadcrumb" className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-5 text-xs text-slate-500"><Link href="/" className="hover:text-blue-700 underline">Home</Link><span className="mx-2">/</span><Link href={`/category/${biz.categoryId || 'services'}`} className="hover:text-blue-700 underline">{biz.category || 'Business Directory'}</Link><span className="mx-2">/</span><span>{biz.name}</span></nav>
 
       <script
         type="application/ld+json"
