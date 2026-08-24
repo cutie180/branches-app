@@ -28,8 +28,8 @@ export async function generateMetadata(props: { params: Promise<{ username: stri
   const pro = await getProfessionalByUsername(username)
 
   const name = pro ? pro.name : username.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
-  const title = `${name} (${pro?.title || 'Professional'}) - Verified Directory | ListPak`
-  const description = pro ? pro.bio : `View profile, skills, credentials, and contact details for ${name} on ListPak professional network.`
+  const title = `${name} (${pro?.title || 'Professional'})${pro?.verified ? ' - Verified Profile' : ''} | ListPak`
+  const description = pro ? `${pro.bio} Explore this ${pro.title || 'professional'} profile${pro.city ? ` in ${pro.city}` : ''} and confirm credentials through the linked public sources.` : `View the profile, skills, credentials, and contact details for ${name} on the ListPak professional directory.`
 
   return {
     title,

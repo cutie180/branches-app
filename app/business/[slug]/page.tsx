@@ -30,8 +30,8 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ')
 
-  const title = `${businessName} - Contact, Reviews & Location | ListPak Pakistan`
-  const description = biz ? biz.description : `Verified details, phone number, location, and contact info for ${businessName} on ListPak business directory.`
+  const title = `${businessName}${biz?.category ? ` – ${biz.category}` : ''}${biz?.city ? ` in ${biz.city}` : ''} | ListPak Pakistan`
+  const description = biz ? `${biz.description} Review the listed category, location, services, and contact details before making a decision.` : `View business details, phone number, location, and contact information for ${businessName} on the ListPak business directory.`
 
   return {
     title,

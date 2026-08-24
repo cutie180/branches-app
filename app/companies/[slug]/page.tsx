@@ -28,8 +28,8 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
   const company = await getCompanyBySlug(slug)
 
   const name = company ? company.name : slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
-  const title = `${name} - Verified Employer & Company Directory | ListPak`
-  const description = company ? company.description : `Explore verified company profile, active job openings, and recruitment contacts for ${name} on ListPak.`
+  const title = `${name}${company?.city ? ` in ${company.city}` : ''} | ListPak Company Directory`
+  const description = company ? `${company.description} Review the employer’s listed location, website, contacts, and current opportunities before applying or engaging.` : `Explore the company profile, location, contacts, and available opportunities for ${name} on the ListPak company directory.`
 
   return {
     title,

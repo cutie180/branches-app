@@ -67,7 +67,7 @@ export const getAllBusinesses = cache(async function getAllBusinesses(includePen
       const firestoreItems: BusinessItem[] = []
       querySnapshot.forEach((docSnap) => {
         const data = docSnap.data()
-        const bName = data.businessName || data.name || 'Verified Business'
+        const bName = data.businessName || data.name || 'Business listing'
         const itemStatus = data.status || 'approved'
         
         const docLocations = data.locations && data.locations.length > 0
@@ -97,19 +97,19 @@ export const getAllBusinesses = cache(async function getAllBusinesses(includePen
           approvedAt: data.approvedAt,
           approvedBy: data.approvedBy,
           rejectionReason: data.rejectionReason,
-          ownerName: data.ownerName || data.fullName || 'Business Representative',
-          phone: data.phone || '+92 300 0000000',
-          whatsapp: data.whatsapp || '923000000000',
-          email: data.email || 'contact@business.pk',
-          website: data.website || data.websiteUrl || 'https://www.listpak.com',
+          ownerName: data.ownerName || data.fullName || '',
+          phone: data.phone || '',
+          whatsapp: data.whatsapp || '',
+          email: data.email || '',
+          website: data.website || data.websiteUrl || '',
           address: primaryLoc.address || data.address || 'Commercial Center, Pakistan',
           locations: docLocations,
           coverImage: data.coverImage || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
           logo: data.logo || data.logoUrl || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
-          description: data.description || 'Verified business listing on ListPak.',
-          services: data.services || ['General Services', 'Customer Support'],
-          operatingHours: data.operatingHours || { 'Monday - Saturday': '09:00 AM - 07:00 PM' },
-          features: data.features || ['Verified Profile'],
+          description: data.description || 'Business listing submitted to ListPak.',
+          services: data.services || [],
+          operatingHours: data.operatingHours || {},
+          features: data.features || [],
           reviews: data.reviews && data.reviews.length > 0 ? data.reviews : [],
           faqs: data.faqs || []
         })
@@ -208,7 +208,7 @@ export const getBusinessBySlug = cache(async function getBusinessBySlug(slug: st
       if (data.status && data.status !== 'approved') {
         return null // Pending/rejected listings are not publicly accessible
       }
-      const bName = data.businessName || data.name || 'Verified Business'
+      const bName = data.businessName || data.name || 'Business listing'
       const docLocations = data.locations && data.locations.length > 0
         ? data.locations
         : [{ city: data.city || 'Pakistan', address: data.address || 'Commercial Center, Pakistan', isPrimary: true }]
@@ -232,18 +232,18 @@ export const getBusinessBySlug = cache(async function getBusinessBySlug(slug: st
         isClaimed: data.isClaimed === true,
         isFeatured: data.isFeatured === true,
         status: data.status || 'approved',
-        phone: data.phone || '+92 300 0000000',
-        whatsapp: data.whatsapp || '923000000000',
-        email: data.email || 'info@business.pk',
-        website: data.website || data.websiteUrl || 'https://www.listpak.com',
+        phone: data.phone || '',
+        whatsapp: data.whatsapp || '',
+        email: data.email || '',
+        website: data.website || data.websiteUrl || '',
         address: primaryLoc.address || data.address || 'Commercial Center, Pakistan',
         locations: docLocations,
         coverImage: data.coverImage || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
         logo: data.logo || data.logoUrl || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
-        description: data.description || 'Verified local business listing on ListPak.',
-        services: data.services || ['Customer Service', 'Consultation'],
-        operatingHours: data.operatingHours || { 'Monday - Saturday': '09:00 AM - 07:00 PM' },
-        features: data.features || ['Verified Listing'],
+        description: data.description || 'Business listing submitted to ListPak.',
+        services: data.services || [],
+        operatingHours: data.operatingHours || {},
+        features: data.features || [],
         reviews: data.reviews && data.reviews.length > 0 ? data.reviews : [],
         faqs: data.faqs || []
       }

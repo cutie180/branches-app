@@ -222,7 +222,7 @@ export default function BlogPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-extrabold text-[#0F172A]">Featured Guides & Must-Read Articles</h2>
-              <p className="mt-3 text-slate-600 max-w-2xl mx-auto">Master free business listings and rank #1 on Google in your city.</p>
+              <p className="mt-3 text-slate-600 max-w-2xl mx-auto">Learn how to create useful business listings and improve local visibility in your city.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

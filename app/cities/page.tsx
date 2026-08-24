@@ -7,11 +7,11 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Cities Directory Pakistan | ListPak Enterprise Hub',
-  description: 'Explore business listings, companies, and jobs across 150+ Pakistani cities including Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, and Peshawar.',
+  description: 'Explore business listings, companies, jobs, services, and professionals across Pakistani cities including Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, and Peshawar.',
   alternates: { canonical: 'https://www.listpak.com/cities/' },
   openGraph: {
     title: 'Cities Directory Pakistan | ListPak Enterprise Hub',
-    description: 'Explore business listings, companies, and jobs across 150+ Pakistani cities including Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, and Peshawar.',
+    description: 'Explore business listings, companies, jobs, services, and professionals across Pakistani cities including Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, and Peshawar.',
     url: 'https://www.listpak.com/cities/',
     type: 'website',
   },
@@ -28,9 +28,9 @@ export default function CitiesIndexPage() {
             <MapPin className="w-3.5 h-3.5" />
             <span>Pakistani Geographic Directory</span>
           </span>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white">Business Ecosystem Across 150+ Cities</h1>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-white">Business and Service Discovery Across Pakistan</h1>
           <p className="text-slate-400 text-sm">
-            Find local stores, services, verified employers, and professionals in every province of Pakistan.
+            Find available businesses, services, employers, jobs, and professionals by city and province in Pakistan.
           </p>
         </div>
       </section>
@@ -56,7 +56,7 @@ export default function CitiesIndexPage() {
                 <h3 className="font-extrabold text-slate-900 text-sm group-hover:text-blue-600 transition-colors">
                   {city}
                 </h3>
-                <span className="text-[11px] font-semibold text-emerald-600 block">Verified Directory</span>
+                <span className="text-[11px] font-semibold text-emerald-600 block">Explore listings</span>
               </Link>
             ))}
           </div>

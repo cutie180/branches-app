@@ -30,7 +30,7 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
   const jobTitle = job ? job.title : 'job openings'
   const jobCity = job ? job.city : 'Pakistan'
   const title = job ? `${job.title} at ${job.company} (${job.city}) | ListPak Jobs` : 'Job Vacancy | ListPak Pakistan'
-  const description = job ? job.description : `Apply for ${jobTitle} in ${jobCity} on ListPak hiring portal.`
+  const description = job ? `${job.description} Confirm the employer, location, deadline, and application route before applying.` : `Review ${jobTitle} opportunities in ${jobCity} on the ListPak jobs directory.`
 
   return {
     title,

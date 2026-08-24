@@ -24,7 +24,7 @@ export default function Footer() {
               />
             </Link>
             <p className="text-xs text-slate-400 max-w-md leading-relaxed">
-              Pakistan's digital business ecosystem connecting local companies, employers, professionals, and customers across all 150+ cities nationwide.
+              Pakistan-focused business discovery connecting companies, employers, professionals, job seekers, and customers through category and city pages.
             </p>
             
             {/* Official NAP Display */}
@@ -43,11 +43,11 @@ export default function Footer() {
           <div className="flex items-center gap-4 flex-wrap">
             <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs font-medium">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>100% Verified Businesses</span>
+              <span>Business profiles</span>
             </div>
             <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs font-medium">
               <MapPin className="w-4 h-4 text-blue-400" />
-              <span>150+ Pakistani Cities</span>
+              <span>City-based discovery</span>
             </div>
             <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs font-medium">
               <Briefcase className="w-4 h-4 text-amber-400" />
@@ -70,7 +70,7 @@ export default function Footer() {
               <li><Link href="/cities" className="hover:text-blue-400 transition-colors">All Cities</Link></li>
               <li><Link href="/search" className="hover:text-blue-400 transition-colors">Business Search</Link></li>
               <li><Link href="/add-business" className="hover:text-blue-400 transition-colors">Add Business</Link></li>
-              <li><Link href="/professionals" className="hover:text-blue-400 transition-colors">Verified Professionals</Link></li>
+              <li><Link href="/professionals" className="hover:text-blue-400 transition-colors">Professional Profiles</Link></li>
               <li><Link href="/jobs" className="hover:text-blue-400 transition-colors">Pakistan Jobs</Link></li>
               <li><Link href="/post-job" className="hover:text-blue-400 transition-colors">Post Job Opening</Link></li>
             </ul>

@@ -309,14 +309,14 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   },
   'local-seo-pakistan-businesses-google-ranking': {
     slug: 'local-seo-pakistan-businesses-google-ranking',
-    title: 'Local SEO for Pakistani Businesses – Rank #1 on Google in Your City',
-    metaTitle: 'Local SEO for Pakistani Businesses – Rank #1 on Google in Your City',
-    metaDescription: 'Discover proven local SEO strategies to rank your business on page 1 of Google across Karachi, Lahore, Islamabad, and nationwide.',
+    title: 'Local SEO for Pakistani Businesses: Improve Visibility in Your City',
+    metaTitle: 'Local SEO for Pakistani Businesses: Improve Visibility in Your City',
+    metaDescription: 'Learn practical local SEO strategies for Pakistani businesses to improve visibility across Karachi, Lahore, Islamabad, and other cities.',
     focusKeyword: 'Local SEO Pakistan',
     category: 'Local SEO Pakistan',
     date: 'July 28, 2026',
     readTime: '12 min read',
-    excerpt: 'Discover proven local SEO strategies to rank your business on page 1 of Google for searches like "best restaurant in Lahore" or "plumber in Karachi". Includes free listing optimization tips.',
+    excerpt: 'Learn practical local SEO strategies for Pakistani businesses targeting searches such as restaurants in Lahore or plumbers in Karachi, with useful listing optimization guidance.',
   },
   'free-job-posting-pakistan-hire-employees': {
     slug: 'free-job-posting-pakistan-hire-employees',

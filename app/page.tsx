@@ -15,13 +15,13 @@ export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: "ListPak: Pakistan Digital Business and Enterprise Ecosystem",
-  description: "Explore verified businesses, post jobs, find employees, and connect with top Pakistani professionals across Karachi, Lahore, Islamabad, and nationwide.",
+  description: "Discover businesses, services, companies, jobs, and professionals across Pakistan by category and city.",
   alternates: {
     canonical: 'https://www.listpak.com/',
   },
   openGraph: {
     title: "ListPak: Pakistan Digital Business Ecosystem",
-    description: "Discover verified companies, local services, active hiring jobs, and talent in Pakistan. 100 percent verified directory.",
+    description: "Discover businesses, local services, companies, active jobs, and professional profiles across Pakistan.",
     url: 'https://www.listpak.com/',
     siteName: 'ListPak',
     locale: 'en_PK',
@@ -32,58 +32,54 @@ export const metadata: Metadata = {
 const FAQS = [
   {
     question: 'What is ListPak Ecosystem?',
-    answer: 'ListPak is Pakistan largest enterprise digital platform connecting verified local businesses, employers, job seekers, and professionals across all 150+ cities nationwide.'
+    answer: 'ListPak is a Pakistan-focused discovery platform connecting businesses, employers, job seekers, and professionals through category and city-based pages.'
   },
   {
     question: 'Is listing a business on ListPak free?',
-    answer: 'Yes, listing your business on ListPak is 100 percent free. You can add contact info, services, operating hours, and receive customer inquiries with zero monthly fees.'
+    answer: 'Businesses can submit a listing through ListPak. Owners should provide accurate contact information, services, operating hours, and other details required during submission.'
   },
   {
     question: 'How do employers post jobs on ListPak?',
-    answer: 'Employers can navigate to Post a Job, enter position details, required experience, and salary range to immediately publish hiring openings.'
+    answer: 'Employers can use the Post a Job flow to provide position details, experience requirements, location, and application information. Publication depends on the site’s current workflow and review requirements.'
   },
   {
     question: 'How does business verification work on ListPak?',
-    answer: 'Business owners can click Claim Business on their profile, submit CNIC or registration documents, and receive a verified green trust badge.'
+    answer: 'Business owners can use the available claim or verification workflow when it is offered for their listing and should submit only accurate supporting information.'
   }
 ]
 
-const TESTIMONIALS = [
+const USE_CASES = [
   {
-    name: 'Tariq Mehmood',
-    role: 'CEO, Tech Solutions Pakistan',
-    city: 'Islamabad',
-    quote: 'Listing our software house on ListPak generated 40+ high-value corporate inquiries in our first month alone. The green verification badge built instant trust.',
-    avatar: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=200&q=80'
+    title: 'Business discovery',
+    body: 'People can explore available businesses and services by category, city, contact details, and public profile information.',
+    link: '/categories',
+    linkLabel: 'Browse categories'
   },
   {
-    name: 'Dr. Ayesha Malik',
-    role: 'Medical Director, Medicare Hospital',
-    city: 'Lahore',
-    quote: 'ListPak directory helps thousands of local patients find our hospital and contact our specialized doctors directly on WhatsApp with ease.',
-    avatar: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=200&q=80'
+    title: 'Professional discovery',
+    body: 'Professionals can present relevant skills and public profile details, while users can review available information before contacting them.',
+    link: '/professionals',
+    linkLabel: 'Browse professionals'
   },
   {
-    name: 'Kamran Akram',
-    role: 'Founder, Karachi Biryani House',
-    city: 'Karachi',
-    quote: 'We hired 5 experienced chefs and restaurant managers through the ListPak Jobs Portal within 48 hours of posting our vacancies!',
-    avatar: 'https://images.unsplash.com/photo-1601597111158-2fceff292cdc?auto=format&fit=crop&w=200&q=80'
+    title: 'Job discovery',
+    body: 'Employers can submit job information and candidates can review current opportunities, employer details, deadlines, and application routes.',
+    link: '/jobs',
+    linkLabel: 'Explore jobs'
   }
 ]
-
-const SUCCESS_STORIES = [
+const RESOURCE_HIGHLIGHTS = [
   {
-    title: 'How Green Valley Organics Scaled to 5 Cities via ListPak Citations',
-    metrics: '350% Growth in Local Inquiries',
-    category: 'Retail & E-commerce',
+    title: 'How to list a business on ListPak',
+    metrics: 'Listing guidance',
+    category: 'Business listings',
+    slug: 'how-to-list-business-free-listpak-guide'
+  },
+  {
+    title: 'How to improve local visibility in Pakistan',
+    metrics: 'Local SEO guidance',
+    category: 'Local search',
     slug: 'local-seo-pakistan-businesses-google-ranking'
-  },
-  {
-    title: 'Overcoming Hiring Bottlenecks: How Habib Software Hired 12 Engineers',
-    metrics: '12 Senior Hires in 14 Days',
-    category: 'IT & Software Hiring',
-    slug: 'free-job-posting-pakistan-hire-employees'
   }
 ]
 
@@ -95,7 +91,7 @@ const BUSINESS_RESOURCES = [
     slug: 'how-to-list-business-free-listpak-guide'
   },
   {
-    title: 'Local SEO for Pakistani Businesses – Rank #1 on Google in Your City',
+    title: 'Local SEO for Pakistani Businesses: Improve Visibility in Your City',
     date: 'July 28, 2026',
     category: 'Local SEO',
     slug: 'local-seo-pakistan-businesses-google-ranking'
@@ -172,7 +168,7 @@ export default async function HomePage() {
               </h1>
 
               <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-medium">
-                Connect with verified companies, top hiring employers, and skilled talent across Karachi, Lahore, Islamabad, and 150+ cities.
+                Discover businesses, companies, jobs, professionals, and local services across Pakistan by category and city.
               </p>
             </div>
 
@@ -239,20 +235,20 @@ export default async function HomePage() {
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                <span className="text-3xl font-extrabold text-slate-900">150,000+</span>
-                <p className="text-xs font-semibold text-slate-500 mt-1">Verified Local Businesses</p>
+                <span className="text-3xl font-extrabold text-slate-900">Business discovery</span>
+                <p className="text-xs font-semibold text-slate-500 mt-1">Search by category and city</p>
               </div>
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                <span className="text-3xl font-extrabold text-emerald-600">150+</span>
-                <p className="text-xs font-semibold text-slate-500 mt-1">Pakistani Cities Covered</p>
+                <span className="text-3xl font-extrabold text-emerald-600">Pakistan-wide</span>
+                <p className="text-xs font-semibold text-slate-500 mt-1">City-based local discovery</p>
               </div>
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                <span className="text-3xl font-extrabold text-blue-600">12,500+</span>
-                <p className="text-xs font-semibold text-slate-500 mt-1">Active Job Openings</p>
+                <span className="text-3xl font-extrabold text-blue-600">Jobs</span>
+                <p className="text-xs font-semibold text-slate-500 mt-1">Explore current opportunities</p>
               </div>
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                <span className="text-3xl font-extrabold text-amber-500">4.9 / 5.0</span>
-                <p className="text-xs font-semibold text-slate-500 mt-1">User & Employer Trust Rating</p>
+                <span className="text-3xl font-extrabold text-amber-500">People & teams</span>
+                <p className="text-xs font-semibold text-slate-500 mt-1">Discover professionals and employers</p>
               </div>
             </div>
           </div>
@@ -287,7 +283,7 @@ export default async function HomePage() {
                   {cat.name}
                 </h3>
                 <p className="text-[11px] font-semibold text-emerald-600">
-                  {cat.count.toLocaleString()} Listings
+                  Browse listings
                 </p>
               </Link>
             ))}
@@ -303,7 +299,7 @@ export default async function HomePage() {
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                   Browse Businesses by City
                 </h2>
-                <p className="text-xs text-slate-400 mt-1">Direct citations across all 150+ commercial cities in Pakistan.</p>
+                <p className="text-xs text-slate-400 mt-1">Explore businesses and services by city across Pakistan.</p>
               </div>
               <Link href="/cities" className="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
                 <span>Explore All Cities</span>
@@ -420,7 +416,7 @@ export default async function HomePage() {
                 </div>
                 <p className="text-xs text-slate-600 line-clamp-2">{biz.description}</p>
                 <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                  <span className="text-emerald-600 font-bold">New Addition</span>
+                  <span className="text-emerald-600 font-bold">{biz.verified ? 'Verified Listing' : 'Business Listing'}</span>
                   <Link href={`/business/${biz.slug}`} className="text-blue-600 font-semibold hover:underline">
                     View Listing &rarr;
                   </Link>
@@ -532,8 +528,8 @@ export default async function HomePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="bg-[#F8FAFC] p-6 rounded-2xl border border-slate-200/80 space-y-3">
                 <ShieldCheck className="w-8 h-8 text-emerald-600" />
-                <h3 className="font-bold text-slate-900 text-base">Verified Citations</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">Telephone and physical NAP verification ensuring 100% genuine Pakistani business information.</p>
+                <h3 className="font-bold text-slate-900 text-base">Clear Business Details</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">Clear business details and structured profiles help people compare local options more easily.</p>
               </div>
 
               <div className="bg-[#F8FAFC] p-6 rounded-2xl border border-slate-200/80 space-y-3">
@@ -544,14 +540,14 @@ export default async function HomePage() {
 
               <div className="bg-[#F8FAFC] p-6 rounded-2xl border border-slate-200/80 space-y-3">
                 <Award className="w-8 h-8 text-amber-600" />
-                <h3 className="font-bold text-slate-900 text-base">Google Page 1 Ranking</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">Optimized schema and canonical tags engineered for fast search engine indexing.</p>
+                <h3 className="font-bold text-slate-900 text-base">Search-Friendly Profiles</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">Structured profile information helps users and search engines understand a listing’s purpose.</p>
               </div>
 
               <div className="bg-[#F8FAFC] p-6 rounded-2xl border border-slate-200/80 space-y-3">
                 <Globe className="w-8 h-8 text-purple-600" />
-                <h3 className="font-bold text-slate-900 text-base">150+ Pakistani Cities</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">Complete digital business ecosystem covering all major metros and rural hubs.</p>
+                <h3 className="font-bold text-slate-900 text-base">City-Based Discovery</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">Browse available businesses, services, companies, jobs, and professionals by location.</p>
               </div>
             </div>
           </div>
@@ -644,24 +640,21 @@ export default async function HomePage() {
         <section className="bg-white py-16 px-4 sm:px-6 lg:px-8 border-y border-slate-200/80">
           <div className="max-w-7xl mx-auto space-y-8">
             <div className="text-center max-w-3xl mx-auto space-y-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-amber-600">Client Reviews</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-amber-600">Platform use cases</span>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                What Pakistani Business Owners Say
+                Ways People Use ListPak
               </h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {TESTIMONIALS.map((item, i) => (
-                <div key={i} className="bg-[#F8FAFC] p-6 rounded-2xl border border-slate-200/80 space-y-4 shadow-xs">
+              {USE_CASES.map((item) => (
+                <div key={item.title} className="bg-[#F8FAFC] p-6 rounded-2xl border border-slate-200/80 space-y-4 shadow-xs">
                   <Quote className="w-8 h-8 text-amber-500 opacity-60" />
-                  <p className="text-xs text-slate-600 italic leading-relaxed">&quot;{item.quote}&quot;</p>
-                  <div className="flex items-center gap-3 pt-2 border-t border-slate-200/80">
-                    <Image src={item.avatar} alt={item.name} width={40} height={40} loading="lazy" sizes="40px" className="w-10 h-10 rounded-full object-cover" />
-                    <div>
-                      <h4 className="font-bold text-slate-900 text-xs">{item.name}</h4>
-                      <p className="text-[11px] text-slate-500">{item.role} • {item.city}</p>
-                    </div>
-                  </div>
+                  <h3 className="font-bold text-slate-900 text-base">{item.title}</h3>
+                  <p className="text-xs text-slate-600 leading-relaxed">{item.body}</p>
+                  <Link href={item.link} className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:underline pt-2">
+                    <span>{item.linkLabel}</span><ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
                 </div>
               ))}
             </div>
@@ -672,9 +665,9 @@ export default async function HomePage() {
         <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-600">Proven Results</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-emerald-600">Guides and next steps</span>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                Business Success Stories
+                Practical Guides for Businesses and Job Seekers
               </h2>
             </div>
             <Link href="/blog" className="text-xs font-bold text-emerald-600 hover:underline">
@@ -683,14 +676,14 @@ export default async function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {SUCCESS_STORIES.map((story, idx) => (
+            {RESOURCE_HIGHLIGHTS.map((story, idx) => (
               <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
                 <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-100">
                   {story.metrics}
                 </span>
                 <h3 className="font-extrabold text-slate-900 text-base">{story.title}</h3>
                 <Link href={`/blog/${story.slug}`} className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:underline pt-2">
-                  <span>Read Full Case Study</span>
+                  <span>Read Guide</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
@@ -780,7 +773,7 @@ export default async function HomePage() {
                 Ready to Grow Your Business or Hire Top Talent in Pakistan?
               </h2>
               <p className="text-blue-100 text-xs sm:text-sm leading-relaxed">
-                Join 150,000+ Pakistani companies reaching new customers in Karachi, Lahore, Islamabad, and nationwide.
+                Share accurate business information and help people discover services, companies, jobs, and professionals across Pakistan.
               </p>
             </div>
 

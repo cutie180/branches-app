@@ -9,6 +9,7 @@ import { MapPin, ShieldCheck, Star, ArrowRight, ArrowLeft, Building2, Briefcase 
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { BreadcrumbSchema } from '@/components/seo/breadcrumb-schema'
+import { getCitySeoCopy } from '@/lib/seo-directory-content'
 
 export const revalidate = 86400 // 24-hour ISR revalidation
 export const dynamicParams = false
@@ -47,6 +48,7 @@ export default async function CityDetailPage(props: { params: Promise<{ slug: st
 
   const allJobs = await getAllJobs(false)
   const cityJobs = allJobs.filter((job) => job.city.toLowerCase() === cityName.toLowerCase() || job.cities?.some((city) => city.toLowerCase() === cityName.toLowerCase()))
+  const seoCopy = getCitySeoCopy(params.slug)
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
@@ -68,13 +70,26 @@ export default async function CityDetailPage(props: { params: Promise<{ slug: st
             </div>
             <div>
               <h1 className="text-3xl font-extrabold text-white tracking-tight">{cityName} Business Ecosystem</h1>
-              <p className="text-slate-400 text-sm">Verified directory, employment center, and talent network in {cityName}.</p>
+              <p className="text-slate-400 text-sm">Explore available businesses, services, jobs, and professional profiles in {cityName}.</p>
             </div>
           </div>
         </div>
       </section>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-10">
+        {seoCopy && (
+          <section className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4">
+            <p className="text-sm text-slate-700 leading-relaxed">{seoCopy.intro}</p>
+            <p className="text-xs text-slate-600 leading-relaxed">{seoCopy.guidance}</p>
+            <nav aria-label="Related ListPak guides" className="flex flex-wrap gap-2">
+              {seoCopy.links.map((link) => (
+                <Link key={link.href} href={link.href} className="rounded-lg bg-blue-50 px-3 py-2 text-xs font-bold text-blue-700 hover:bg-blue-100">
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </section>
+        )}
         
         {/* City Businesses */}
         <div className="space-y-4">
@@ -111,7 +126,7 @@ export default async function CityDetailPage(props: { params: Promise<{ slug: st
                           <p className="text-xs text-slate-500">{biz.category}</p>
                         </div>
                       </div>
-                      <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-lg shrink-0">★ {biz.rating}</span>
+                      <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-lg shrink-0">{biz.reviewCount > 0 && biz.rating > 0 ? `★ ${biz.rating}` : 'No rating yet'}</span>
                     </div>
                     <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">{biz.description}</p>
                   </div>

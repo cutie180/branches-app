@@ -7,11 +7,11 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Business Categories in Pakistan | ListPak Directory Hub',
-  description: 'Explore over 50+ business categories in Pakistan including Restaurants, IT Companies, Healthcare, Real Estate, Construction, Education, and Retail.',
+  description: 'Explore business categories in Pakistan including restaurants, technology, healthcare, real estate, construction, education, retail, and local services.',
   alternates: { canonical: 'https://www.listpak.com/categories/' },
   openGraph: {
     title: 'Business Categories in Pakistan | ListPak Directory Hub',
-    description: 'Explore over 50+ business categories in Pakistan including Restaurants, IT Companies, Healthcare, Real Estate, Construction, Education, and Retail.',
+    description: 'Explore business categories in Pakistan including restaurants, technology, healthcare, real estate, construction, education, retail, and local services.',
     url: 'https://www.listpak.com/categories/',
     type: 'website',
   },
@@ -28,9 +28,9 @@ export default function CategoriesIndexPage() {
             <Sparkles className="w-3.5 h-3.5" />
             <span>Category Taxonomy Hub</span>
           </span>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white">Browse Businesses by Industry</h1>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-white">Browse Businesses, Services & Companies by Category</h1>
           <p className="text-slate-400 text-sm">
-            Discover verified companies, service providers, and stores across 50+ industry classifications nationwide.
+            Explore available businesses, services, employers, and professionals across Pakistan by industry and directory category.
           </p>
         </div>
       </section>
@@ -49,7 +49,7 @@ export default function CategoriesIndexPage() {
                     <Building2 className="w-6 h-6" />
                   </div>
                   <span className="text-xs font-extrabold text-slate-400 bg-slate-100 px-2.5 py-1 rounded-full">
-                    {cat.count.toLocaleString()} Listings
+                    Explore listings
                   </span>
                 </div>
 

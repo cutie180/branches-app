@@ -8,6 +8,7 @@ import { ShieldCheck, Star, ArrowRight, ArrowLeft } from 'lucide-react'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { BreadcrumbSchema } from '@/components/seo/breadcrumb-schema'
+import { getCategorySeoCopy } from '@/lib/seo-directory-content'
 
 export const revalidate = 86400 // 24-hour ISR revalidation
 export const dynamicParams = false
@@ -28,10 +29,10 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
     }
   }
   return {
-    title: `Best ${cat.name} in Pakistan: ListPak Directory`,
+    title: `${cat.name} in Pakistan | ListPak Directory`,
     description: `Find ${cat.name} businesses, locations, services, and current directory information across Pakistan.`,
     openGraph: {
-      title: `Best ${cat.name} in Pakistan: ListPak Directory`,
+      title: `${cat.name} in Pakistan | ListPak Directory`,
       description: `Find ${cat.name} businesses, locations, services, and current directory information across Pakistan.`,
       url: `https://www.listpak.com/category/${cat.id}`,
       type: 'website',
@@ -49,6 +50,7 @@ export default async function CategoryDetailPage(props: { params: Promise<{ slug
   const businesses = allApproved.filter(
     b => b.categoryId === cat.id || b.category.toLowerCase().includes(cat.name.toLowerCase().split(' ')[0])
   )
+  const seoCopy = getCategorySeoCopy(cat.id)
 
   const schema = {
     '@context': 'https://schema.org',
@@ -77,14 +79,28 @@ export default async function CategoryDetailPage(props: { params: Promise<{ slug
             <span>All Categories</span>
           </Link>
           <h1 className="text-3xl font-extrabold text-white tracking-tight">{cat.name} in Pakistan</h1>
-          <p className="text-slate-400 text-sm max-w-2xl">{cat.desc}</p>
+            <p className="text-slate-400 text-sm max-w-2xl">{cat.desc}. Browse available profiles by city, services, and contact details, and verify important information before making a decision.</p>
         </div>
       </section>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-6">
+        {seoCopy && (
+          <section className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4">
+            <p className="text-sm text-slate-700 leading-relaxed">{seoCopy.intro}</p>
+            <p className="text-xs text-slate-600 leading-relaxed">{seoCopy.guidance}</p>
+            <nav aria-label="Related ListPak guides" className="flex flex-wrap gap-2">
+              {seoCopy.links.map((link) => (
+                <Link key={link.href} href={link.href} className="rounded-lg bg-blue-50 px-3 py-2 text-xs font-bold text-blue-700 hover:bg-blue-100">
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </section>
+        )}
+
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-extrabold text-slate-900">
-            Verified {cat.name} Companies ({businesses.length})
+              {cat.name} Businesses and Services ({businesses.length})
           </h2>
           <Link href={`/search?category=${encodeURIComponent(cat.name)}`} className="text-xs font-bold text-blue-600 hover:underline">
             View in Advanced Search &rarr;
@@ -116,7 +132,7 @@ export default async function CategoryDetailPage(props: { params: Promise<{ slug
                     </div>
                     <div className="flex items-center gap-1 text-amber-700 text-xs font-bold bg-amber-50 px-2 py-1 rounded-lg">
                       <Star className="w-3.5 h-3.5 fill-current text-amber-500" />
-                      <span>{biz.rating}</span>
+                      <span>{biz.reviewCount > 0 && biz.rating > 0 ? biz.rating : 'No rating yet'}</span>
                     </div>
                   </div>
                   <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">{biz.description}</p>

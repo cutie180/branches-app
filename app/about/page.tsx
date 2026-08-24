@@ -5,21 +5,21 @@ import Link from 'next/link'
 import { Target, Globe, ShieldCheck, Award, TrendingUp, Users, HeartHandshake, Sparkles, CheckCircle2, ArrowRight, Building2, Code2, Headphones, FileText } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: "About ListPak – Pakistan's #1 Free Business Listing Website & Directory",
-  description: "ListPak is Pakistan's leading free business listing website and free directory platform. Founded in 2024, serving 10,000+ businesses across Karachi, Lahore, Islamabad with 100% free listings forever.",
-  keywords: "about ListPak, ListPak company, free business listing website Pakistan, ListPak story, Pakistan business directory company, free directory website founder, ListPak team",
+  title: "About ListPak – Pakistan Business Listing Website & Directory",
+  description: "Learn about ListPak, a Pakistan-focused business directory and discovery platform for businesses, professionals, employers, and job seekers.",
+  keywords: "about ListPak, Pakistan business directory, business discovery platform Pakistan, professional directory, job discovery Pakistan, ListPak mission",
   alternates: {
     canonical: 'https://www.listpak.com/about/',
   },
 }
 
 const STATS = [
-  { number: "10,000+", label: "Active Business Listings Free" },
-  { number: "150+", label: "Cities Covered Across Pakistan" },
-  { number: "50+", label: "Business Categories" },
-  { number: "50,000+", label: "Registered Users" },
-  { number: "100,000+", label: "Monthly Website Visitors" },
-  { number: "100%", label: "Free Forever – No Hidden Charges" }
+  { number: "Businesses", label: "Discover local listings and services" },
+  { number: "Cities", label: "Browse Pakistan by location" },
+  { number: "Categories", label: "Explore different business sectors" },
+  { number: "Professionals", label: "Find skills and expertise" },
+  { number: "Jobs", label: "Explore current opportunities" },
+  { number: "Free", label: "Submit information through the available listing flow" }
 ]
 
 const CORE_VALUES = [
@@ -28,14 +28,14 @@ const CORE_VALUES = [
   { title: "Transparency", desc: "Honest and clear about our free directory services, policies, and commitment to keeping ListPak free forever.", icon: Sparkles },
   { title: "Continuous Innovation", desc: "We continuously improve our local directory with fast search, responsive UI, and local SEO tools.", icon: TrendingUp },
   { title: "Inclusive Growth", desc: "Serving businesses of all sizes from small shops in rural towns to large tech firms in Karachi, Lahore, and Islamabad.", icon: Users },
-  { title: "Verified Quality", desc: "Manual quality checks on listings to prevent spam, maintain accuracy, and build high customer trust.", icon: CheckCircle2 },
+  { title: "Accuracy and clarity", desc: "We encourage complete, accurate listing information and clear distinctions between submitted, approved, and verified details.", icon: CheckCircle2 },
 ]
 
 const TEAM_MEMBERS = [
-  { name: "ListPak Leadership Team", role: "Co-Founders & Directors", desc: "Experienced Pakistani tech entrepreneurs with backgrounds in software engineering, digital marketing, and business strategy.", icon: Building2 },
-  { name: "Engineering & Product", role: "Software Engineers", desc: "Expert Next.js, React, and cloud engineers building Pakistan's fastest local search directory platform.", icon: Code2 },
-  { name: "Customer Support", role: "Business & Job Portal Support", desc: "Dedicated support team in Lahore, Karachi, and Islamabad fluent in English, Urdu, and regional languages.", icon: Headphones },
-  { name: "Content & SEO Team", role: "SEO & Content Specialists", desc: "SEO experts dedicated to driving page 1 Google rankings for Pakistani businesses listed on ListPak.", icon: FileText },
+  { name: "ListPak Leadership", role: "Platform direction", desc: "The people responsible for shaping ListPak’s directory, professional, and job-discovery experience.", icon: Building2 },
+  { name: "Engineering & Product", role: "Product development", desc: "The product work behind search, profiles, city pages, listings, and the wider ListPak experience.", icon: Code2 },
+  { name: "Customer Support", role: "Business and job support", desc: "Support resources for listing questions, profile updates, job-posting help, and technical issues.", icon: Headphones },
+  { name: "Content & SEO", role: "Guides and discovery content", desc: "Content focused on useful business discovery, local-search education, professional information, and job-search guidance.", icon: FileText },
 ]
 
 const MILESTONES = [
@@ -79,15 +79,15 @@ export default function AboutPage() {
             
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs sm:text-sm font-semibold mb-6">
               <Sparkles className="w-4 h-4 text-emerald-400" />
-              <span>✓ 100% Free Forever Business Directory Pakistan</span>
+              <span>Pakistan business directory and discovery platform</span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
-              About ListPak – Pakistan&apos;s #1 Free Business Directory
+              About ListPak – Pakistan Business Directory and Discovery Platform
             </h1>
 
             <p className="mt-6 text-base sm:text-xl text-slate-300 leading-relaxed font-normal">
-              ListPak is Pakistan&apos;s leading free business listing website and free directory platform, connecting local businesses, employers, and job seekers across Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, Peshawar, Quetta, and 150+ cities nationwide. Founded in 2024 to democratize online visibility, ListPak empowers Pakistani businesses to get discovered without paying expensive directory fees.
+              ListPak is a Pakistan-focused business listing and discovery platform connecting local businesses, employers, job seekers, and professionals through category and city-based pages. The platform is designed to make business information, professional profiles, and job discovery easier to explore online.
             </p>
 
             <div className="mt-10 flex flex-wrap justify-center gap-4">
@@ -137,7 +137,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-2xl font-bold text-[#0F172A] mb-3">Our Mission</h3>
                 <p className="text-sm text-slate-600 leading-relaxed">
-                  To empower every business in Pakistan with free online visibility, enabling them to reach customers, grow revenue, and create jobs – without the barrier of expensive advertising or paid directory listings. We are committed to making ListPak the most accessible, user-friendly, and effective free business listing website in Pakistan.
+                  To make business discovery, professional profiles, and job information easier to explore across Pakistan through clear, useful, and accessible online pages.
                 </p>
               </div>
 
@@ -147,7 +147,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-2xl font-bold text-[#0F172A] mb-3">Our Vision</h3>
                 <p className="text-sm text-slate-600 leading-relaxed">
-                  To become Pakistan&apos;s #1 free business directory platform, connecting 1 million+ businesses with customers by 2030. We envision a Pakistan where every business, regardless of size or budget, can compete online and thrive in the digital economy.
+                  To build a useful Pakistan-wide discovery platform where people can explore businesses, services, companies, professionals, and job opportunities by category and city.
                 </p>
               </div>
             </div>
@@ -195,7 +195,7 @@ export default function AboutPage() {
                     Traditional business directories charged Rs. 5,000 to Rs. 50,000 per year for basic listings – pricing out 90% of Pakistani small businesses. The ListPak team asked a simple question: <strong className="text-[#0F172A]">&quot;What if any business in Pakistan could list for free, forever, with zero hidden charges?&quot;</strong>
                   </p>
                   <p>
-                    Today, ListPak hosts over 10,000 active business listings across 50+ categories and 150+ cities in Pakistan, helping thousands of businesses grow online every day.
+                    The platform continues to develop its category, city, business, professional, job, and guide experiences. Listing information should be kept accurate and reviewed through the available platform workflows.
                   </p>
                 </div>
               </div>
@@ -219,7 +219,7 @@ export default function AboutPage() {
                   </div>
                   <div className="flex justify-between items-center py-2 border-b border-slate-100">
                     <span className="font-semibold text-slate-500">Pricing Model</span>
-                    <span className="font-bold text-[#16A34A] bg-emerald-50 px-2.5 py-0.5 rounded-full">100% Free Forever</span>
+                    <span className="font-bold text-[#16A34A] bg-emerald-50 px-2.5 py-0.5 rounded-full">Free listing flow</span>
                   </div>
                 </div>
 
@@ -279,8 +279,8 @@ export default function AboutPage() {
         {/* FINAL CTA */}
         <section className="py-16 bg-white text-center">
           <div className="max-w-xl mx-auto px-4">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A]">Join 10,000+ Businesses Already Growing on ListPak</h2>
-            <p className="mt-3 text-xs sm:text-sm text-slate-600">ListPak is 100% free forever. No credit card required, no hidden fees.</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A]">Add Your Business to ListPak</h2>
+            <p className="mt-3 text-xs sm:text-sm text-slate-600">Use the available listing flow to share accurate business information with people searching across Pakistan.</p>
             <div className="mt-8 flex justify-center gap-4">
               <Link
                 href="/add-business"

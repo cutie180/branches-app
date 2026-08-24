@@ -49,7 +49,7 @@ export default function ContactPage() {
     '@context': 'https://schema.org',
     '@type': 'ContactPage',
     name: 'Contact ListPak: Free Business Listing Website Pakistan',
-    description: 'Get in touch with ListPak support team for free business listing assistance, job portal help, and technical support',
+    description: 'Contact ListPak support for business listing assistance, professional profile help, job-posting questions, directory support, and technical issues.',
     url: 'https://www.listpak.com/contact',
   }
 
@@ -69,7 +69,7 @@ export default function ContactPage() {
               Contact ListPak: Business Support & Inquiries
             </h1>
             <p className="mt-4 text-base sm:text-lg text-slate-300 max-w-3xl mx-auto leading-relaxed">
-              Need help with your business listing on ListPak? Have questions about posting jobs or finding talent in Pakistan? Our support team is here to assist you 24/7. Headquartered in Islamabad with support nationwide.
+              Need help with a business listing, professional profile, job posting, or directory feature? Contact ListPak support with the relevant details so the team can review your question.
             </p>
           </div>
         </section>
@@ -91,7 +91,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-bold text-[#0F172A] text-lg">Email Support</h3>
-                    <p className="text-xs text-[#64748B]">2 to 4 hours response time</p>
+                    <p className="text-xs text-[#64748B]">For listing and directory questions</p>
                   </div>
                 </div>
                 <ul className="space-y-2 text-xs sm:text-sm text-[#475569] mb-4">
@@ -99,7 +99,7 @@ export default function ContactPage() {
                   <li><strong>Listing Support:</strong> admin@listpak.com</li>
                   <li><strong>Job Portal:</strong> admin@listpak.com</li>
                 </ul>
-                <p className="text-xs text-[#64748B] leading-relaxed">We respond to all emails during business hours (9 AM - 9 PM PKT).</p>
+                <p className="text-xs text-[#64748B] leading-relaxed">Include the page URL, listing name, and a clear description of the issue when relevant.</p>
               </div>
 
               {/* Phone Support */}
@@ -110,12 +110,12 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-bold text-[#0F172A] text-lg">Phone Support</h3>
-                    <p className="text-xs text-[#64748B]">Mon-Sat, 9:00 AM - 9:00 PM</p>
+                    <p className="text-xs text-[#64748B]">For listing and profile assistance</p>
                   </div>
                 </div>
                 <ul className="space-y-2 text-xs sm:text-sm text-[#475569] mb-4">
                   <li><strong>Official Helpline:</strong> +92 334 5636230</li>
-                  <li><strong>HQ Address:</strong> Office 303, Evacuee Trust Complex, F-5/1, Islamabad 44000, Pakistan</li>
+                  <li>                  <strong>Listed address:</strong> Office 303, Evacuee Trust Complex, F-5/1, Islamabad 44000, Pakistan</li>
                 </ul>
                 <p className="text-xs text-[#64748B] leading-relaxed">Assistance with creating free business listings, profile verification, and job postings.</p>
               </div>
@@ -128,7 +128,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-bold text-[#0F172A] text-lg">WhatsApp Support</h3>
-                    <p className="text-xs text-[#64748B]">Fastest response time</p>
+                    <p className="text-xs text-[#64748B]">For quick questions and screenshots</p>
                   </div>
                 </div>
                 <p className="text-xs sm:text-sm text-[#475569] mb-4">
