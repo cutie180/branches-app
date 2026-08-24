@@ -132,7 +132,7 @@ export default function AddCompanyClient() {
     try {
       const createdComp = await saveCompanyToDatabase({
         ...formData,
-        employeeCount: Number(formData.employeeCount) || 10
+        employeeCount: String(formData.employeeCount || '')
       })
       setSubmittedSlug(createdComp.slug)
       toast.success('Hiring Company profile submitted successfully!')

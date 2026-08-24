@@ -360,6 +360,10 @@ export default function AddProfessionalClient() {
     try {
       const createdPro = await saveProfessionalToDatabase({
         ...formData,
+        certifications: formData.certifications
+          .map((cert) => [cert.title, cert.issuer, cert.year].filter(Boolean).join(' — '))
+          .filter(Boolean),
+        customSocialLinks: formData.customSocialLinks.map((link) => ({ platform: link.name, url: link.url })),
         experienceYears: Number(formData.experienceYears) || 0,
         status: 'pending',
         profileStatus: 'PENDING',

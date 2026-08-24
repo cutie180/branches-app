@@ -13,7 +13,7 @@ export const getAllCompanies = cache(async function getAllCompanies(includePendi
       const items: CompanyItem[] = []
       snap.forEach((docSnap) => {
         const data = docSnap.data() as Partial<CompanyItem>
-        const cName = data.name || 'Verified Company'
+        const cName = data.name || 'Company profile'
         const cSlug = data.slug || normalizeSlug(cName)
 
         items.push({
@@ -22,11 +22,11 @@ export const getAllCompanies = cache(async function getAllCompanies(includePendi
           name: cName,
           logo: data.logo || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
           coverImage: data.coverImage || 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
-          description: data.description || 'Verified hiring company profile on ListPak Pakistan.',
+          description: data.description || 'Company profile submitted to ListPak.',
           industry: data.industry || 'Technology & IT',
           category: data.category || 'Hiring Company / HR',
           companySize: data.companySize || '10 - 50 Employees',
-          employeeCount: data.employeeCount || 25,
+          employeeCount: data.employeeCount == null ? '' : String(data.employeeCount),
           establishedYear: data.establishedYear || '2020',
           registrationNumber: data.registrationNumber || '',
           companyType: data.companyType || 'Private',
@@ -39,12 +39,16 @@ export const getAllCompanies = cache(async function getAllCompanies(includePendi
           hrDesignation: data.hrDesignation || 'HR Manager',
           hrEmail: data.hrEmail || '',
           companyEmail: data.companyEmail || '',
+          email: data.companyEmail || data.hrEmail || '',
           phone: data.phone || '',
           whatsapp: data.whatsapp || '',
           address: data.address || '',
           city: data.city || 'Lahore',
           province: data.province || 'Punjab',
           country: data.country || 'Pakistan',
+          rating: data.rating == null ? 0 : Number(data.rating),
+          reviewCount: data.reviewCount == null ? 0 : Number(data.reviewCount),
+          isClaimed: data.isClaimed === true,
           linkedin: data.linkedin || '',
           facebook: data.facebook || '',
           instagram: data.instagram || '',
@@ -61,7 +65,10 @@ export const getAllCompanies = cache(async function getAllCompanies(includePendi
           rejectionReason: data.rejectionReason,
           reviews: data.reviews || [],
           faqs: data.faqs || [],
-          activeJobsCount: data.activeJobsCount || 1
+          services: data.services || [],
+          operatingHours: data.operatingHours || {},
+          features: data.features || [],
+          activeJobsCount: data.activeJobsCount || 0
         })
       })
 
@@ -121,7 +128,7 @@ export async function saveCompanyToDatabase(compData: Partial<CompanyItem>): Pro
     industry: compData.industry || 'Technology & IT',
     category: compData.category || 'Hiring Company / HR',
     companySize: compData.companySize || '10 - 50 Employees',
-    employeeCount: Number(compData.employeeCount) || 20,
+    employeeCount: compData.employeeCount == null ? '' : String(compData.employeeCount),
     establishedYear: compData.establishedYear || '2020',
     registrationNumber: compData.registrationNumber || '',
     companyType: compData.companyType || 'Private',
@@ -135,6 +142,7 @@ export async function saveCompanyToDatabase(compData: Partial<CompanyItem>): Pro
     hrDesignation: compData.hrDesignation || 'HR Lead',
     hrEmail: compData.hrEmail || '',
     companyEmail: compData.companyEmail || '',
+    email: compData.companyEmail || compData.hrEmail || '',
     phone: compData.phone || '',
     whatsapp: compData.whatsapp || '',
     address: compData.address || '',
@@ -150,7 +158,13 @@ export async function saveCompanyToDatabase(compData: Partial<CompanyItem>): Pro
     github: compData.github || '',
     customSocialLinks: compData.customSocialLinks || [],
 
-    verified: true,
+    rating: 0,
+    reviewCount: 0,
+    isClaimed: false,
+    services: compData.services || [],
+    operatingHours: compData.operatingHours || {},
+    features: compData.features || [],
+    verified: false,
     isFeatured: false,
     status: 'pending', // PENDING WORKFLOW
     submittedAt: new Date().toISOString(),

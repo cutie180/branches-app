@@ -12,7 +12,7 @@ The competitor keyword file was treated as a **search-demand dataset**, not as a
 
 A conservative classifier mapped **584 rows to keep/conditional ownership** and placed **292 rows in reject/review**. The eligible group is conditional on actual inventory, truthful entity data, unique content, and user intent. Rejected rows include generic web/e-commerce phrases, foreign-market searches, unrelated topics, named entities without a verified matching ListPak record, ambiguous searches, and duplicate or cannibalizing variants. No rankings, traffic gains, Domain Authority gains, or indexing gains are claimed.
 
-The implementation improved the existing architecture rather than rebuilding it. Changes are code- and content-template based; **no Firestore records, user records, or listing entities were added or modified**.
+The implementation improved the existing architecture rather than rebuilding it. Changes are code- and content-template based; **no Firestore records, user records, or listing entities were added or modified**. A small set of post-rebase type-safety fixes was also applied where the concurrent remote changes exposed existing submission and optional-field mismatches; these fixes preserve the existing workflows and stored data shapes.
 
 ## Dataset and prioritization
 
@@ -103,7 +103,7 @@ The sitemap and canonical behavior should be rechecked after deployment. The sou
 |---|---|
 | Keyword mapping | 876 rows normalized and mapped; full JSON committed. |
 | TypeScript | `npx tsc --noEmit` completed successfully after the final changes. |
-| Production build | `npm run build` completed successfully and generated 397 static pages. |
+| Production build | `npm run build` completed successfully and generated 386 static pages after the final post-rebase changes. |
 | Local route status | Homepage, category, city, blog, business, professional, job, and search representatives returned 200 locally. |
 | Search indexability | Search route remained `noindex` with canonical `/search/`. |
 | New internal links | 45 extracted local paths checked; no 4xx errors. |
@@ -134,7 +134,7 @@ The next technical phase should measure production performance for city hubs, el
 | `app/contact/page.tsx` | Contact/support intent and promise corrections. |
 | `app/categories/page.tsx`, `app/cities/page.tsx` | Category/city hub copy and unsupported-count/verification cleanup. |
 | `app/category/[slug]/page.tsx`, `app/city/[slug]/page.tsx` | Dynamic semantic content and truthful local/category presentation. |
-| `app/business/[slug]/page.tsx`, `app/companies/[slug]/page.tsx`, `app/professionals/[username]/page.tsx`, `app/jobs/[id]/page.tsx` | Data-driven entity metadata improvements. |
+| `app/business/[slug]/page.tsx`, `app/companies/[slug]/page.tsx`, `app/professionals/[username]/page.tsx`, `app/jobs/[id]/page.tsx` | Data-driven entity metadata improvements. |\n| `app/add-company/add-company-client.tsx`, `app/add-professional/add-professional-client.tsx`, `app/companies/page.tsx`, `app/admin/page.tsx`, `lib/company-service.ts` | Post-rebase type-safe normalization and neutral defaults; no database records changed. |
 | `lib/db-service.ts` | Neutral fallback mapping for missing entity fields. |
 | `lib/blog-content.ts`, `lib/blog-data.ts`, `app/blog/page.tsx` | Existing-content improvement, local section, stale-link correction, and factual title language. |
 | `components/footer.tsx` | Sitewide trust and navigation copy corrections. |

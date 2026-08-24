@@ -1096,7 +1096,7 @@ export default function AdminPage() {
                         {req.paymentScreenshot && (
                           <button
                             type="button"
-                            onClick={() => setSelectedScreenshot({ url: req.paymentScreenshot, name: req.proName, ref: req.paymentReference })}
+                            onClick={() => setSelectedScreenshot({ url: req.paymentScreenshot || '', name: req.proName, ref: req.paymentReference })}
                             className="px-4 py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs font-extrabold rounded-xl border border-blue-200 flex items-center gap-2 cursor-pointer w-full sm:w-auto justify-center shadow-2xs transition-all hover:scale-105"
                           >
                             <Eye className="w-4 h-4 text-blue-600" />

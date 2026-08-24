@@ -39,9 +39,10 @@ export default function CompaniesPage() {
 
   const filtered = companies.filter(c => {
     const q = query.toLowerCase().trim()
-    const matchesQuery = !q || c.name.toLowerCase().includes(q) || c.description.toLowerCase().includes(q) || c.industry.toLowerCase().includes(q)
+    const industry = c.industry || ''
+    const matchesQuery = !q || c.name.toLowerCase().includes(q) || c.description.toLowerCase().includes(q) || industry.toLowerCase().includes(q)
     const matchesCity = !selectedCity || c.city.toLowerCase() === selectedCity.toLowerCase()
-    const matchesIndustry = !selectedIndustry || c.industry.toLowerCase().includes(selectedIndustry.toLowerCase())
+    const matchesIndustry = !selectedIndustry || industry.toLowerCase().includes(selectedIndustry.toLowerCase())
     const matchesVerified = !onlyVerified || c.verified
 
     return matchesQuery && matchesCity && matchesIndustry && matchesVerified
@@ -57,13 +58,13 @@ export default function CompaniesPage() {
             <div className="space-y-2">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold border border-blue-500/30">
                 <Building2 className="w-3.5 h-3.5" />
-                <span>Verified Employer & Company Directory</span>
+                <span>Company and Employer Directory</span>
               </span>
               <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
                 Top Hiring Companies & HR Departments
               </h1>
               <p className="text-slate-400 text-xs sm:text-sm max-w-2xl">
-                Discover leading software houses, civil engineering firms, hospitals, financial institutions, and recruitment agencies hiring in Pakistan.
+                Explore available software houses, engineering firms, hospitals, financial institutions, and other employers in Pakistan. Confirm current vacancies and company details before applying.
               </p>
             </div>
 
@@ -151,7 +152,7 @@ export default function CompaniesPage() {
                         </Link>
                         {comp.verified && <ShieldCheck className="w-4.5 h-4.5 text-emerald-500 shrink-0" />}
                       </div>
-                      <p className="text-xs font-bold text-blue-600">{comp.industry}</p>
+                      <p className="text-xs font-bold text-blue-600">{comp.industry || 'Company'}</p>
                       <div className="flex items-center gap-2 text-[11px] text-slate-500">
                         <span>📍 {comp.city}</span>
                         <span>•</span>
@@ -173,7 +174,7 @@ export default function CompaniesPage() {
                       </a>
                     )}
                     <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
-                      {comp.activeJobsCount || 1} Active Job(s)
+                      {comp.activeJobsCount || 0} Active Job(s)
                     </span>
                   </div>
 

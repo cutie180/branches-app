@@ -292,7 +292,7 @@ export default async function ProfessionalDetailPage(props: { params: Promise<{ 
         </div>
 
         {/* Work Experience Timeline */}
-        {pro.previousExperience && pro.previousExperience.length > 0 && (
+        {Array.isArray(pro.previousExperience) && pro.previousExperience.length > 0 && (
           <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4">
             <h2 className="text-lg font-extrabold text-slate-900">Work Experience Timeline</h2>
             <div className="space-y-4">
