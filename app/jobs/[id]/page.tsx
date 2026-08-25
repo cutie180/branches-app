@@ -2,24 +2,27 @@ import React from 'react'
 import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { BreadcrumbSchema } from '@/components/seo/breadcrumb-schema'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { getJobBySlug, getAllJobs, getMatchingCandidatesForJob } from '@/lib/job-service'
 import { 
   Briefcase, MapPin, Building2, Calendar, CheckCircle2, ExternalLink, Mail, 
-  ArrowLeft, ShieldCheck, Globe, Info, Users, Sparkles, UserCheck, Check
+  ArrowLeft, ShieldCheck, Globe, Info, Users, Sparkles, UserCheck, Check, MessageCircle
 } from 'lucide-react'
 import JobInteractiveApply from './job-interactive-apply'
+import { JOB_APPLICATION_WHATSAPP, getPublicJobPath, getPublicJobSlug } from '@/lib/job-url'
 
 export const revalidate = 86400
 
 export async function generateStaticParams() {
   const jobs = await getAllJobs()
-  return jobs.map((j) => ({
-    id: j.slug || j.id,
-  }))
+  return jobs.flatMap((j) => {
+    const storedSlug = j.slug || j.id
+    const publicSlug = getPublicJobSlug(j)
+    return Array.from(new Set([publicSlug, storedSlug])).map((id) => ({ id }))
+  })
 }
 
 export async function generateMetadata(props: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -29,6 +32,7 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
 
   const jobTitle = job ? job.title : 'job openings'
   const jobCity = job ? job.city : 'Pakistan'
+  const publicPath = job ? getPublicJobPath(job) : `/jobs/${idOrSlug}`
   const title = job ? `${job.title} at ${job.company} (${job.city}) | ListPak Jobs` : 'Job Vacancy | ListPak Pakistan'
   const description = job ? `${job.description} Confirm the employer, location, deadline, and application route before applying.` : `Review ${jobTitle} opportunities in ${jobCity} on the ListPak jobs directory.`
 
@@ -36,13 +40,13 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
     title,
     description,
     alternates: {
-      canonical: `https://www.listpak.com/jobs/${idOrSlug}`,
+      canonical: `https://www.listpak.com${publicPath}`,
     },
     openGraph: {
       title,
       description,
       siteName: 'ListPak',
-      url: `https://www.listpak.com/jobs/${idOrSlug}`,
+      url: `https://www.listpak.com${publicPath}`,
       locale: 'en_PK',
       type: 'article',
       images: job?.companyLogo ? [{ url: job.companyLogo, alt: job.company }] : undefined,
@@ -58,6 +62,13 @@ export default async function JobDetailPage(props: { params: Promise<{ id: strin
 
   if (!job) {
     return notFound()
+  }
+
+  const storedSlug = (job.slug || job.id).toLowerCase()
+  const publicJobSlug = getPublicJobSlug(job)
+  const publicJobPath = getPublicJobPath(job)
+  if (publicJobSlug !== storedSlug && idOrSlug.toLowerCase() !== publicJobSlug) {
+    redirect(publicJobPath)
   }
 
   const matchingCandidatesRaw = await getMatchingCandidatesForJob(job)
@@ -109,13 +120,13 @@ export default async function JobDetailPage(props: { params: Promise<{ id: strin
       logo: job.companyLogo
     },
     jobLocation: jobLocations,
-    url: `https://www.listpak.com/jobs/${idOrSlug}`,
+    url: `https://www.listpak.com${publicJobPath}`,
   }
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
       <Navbar />
-      <BreadcrumbSchema pathname={`/jobs/${idOrSlug}`} />
+      <BreadcrumbSchema pathname={publicJobPath} />
       <nav aria-label="Breadcrumb" className="max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-5 text-xs text-slate-500"><Link href="/" className="hover:text-blue-700 underline">Home</Link><span className="mx-2">/</span><Link href="/jobs" className="hover:text-blue-700 underline">Jobs</Link><span className="mx-2">/</span><span>{job.title}</span></nav>
 
       {datePosted && (
@@ -179,6 +190,16 @@ export default async function JobDetailPage(props: { params: Promise<{ id: strin
                 jobTitle={job.title}
                 companyName={job.company}
               />
+
+              <a
+                href={`https://wa.me/${JOB_APPLICATION_WHATSAPP}?text=${encodeURIComponent(`Hello, I would like to apply for ${job.title} at ${job.company}. Job link: https://www.listpak.com${publicJobPath}. I am sending my CV here for consideration.`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-3 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
+              >
+                <MessageCircle className="w-3.5 h-3.5" />
+                <span>Apply on WhatsApp</span>
+              </a>
 
               {websiteUrl && (
                 <a

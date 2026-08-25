@@ -2,6 +2,7 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { CITIES } from '@/lib/data'
 import { getAllJobs } from '@/lib/job-service'
+import { getPublicJobPath } from '@/lib/job-url'
 import { getAllBusinesses } from '@/lib/db-service'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -153,12 +154,12 @@ export default async function CityDetailPage(props: { params: Promise<{ slug: st
               {cityJobs.map((job) => (
                 <div key={job.id} className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs flex justify-between items-center">
                   <div>
-                    <Link href={`/jobs/${job.slug || job.id}`} className="font-bold text-slate-900 text-base hover:text-blue-600">
+                    <Link href={getPublicJobPath(job)} className="font-bold text-slate-900 text-base hover:text-blue-600">
                       {job.title}
                     </Link>
                     <p className="text-xs text-slate-500 mt-0.5">{job.company} • {job.salary}</p>
                   </div>
-                  <Link href={`/jobs/${job.slug || job.id}`} className="px-4 py-2 bg-emerald-500 text-white text-xs font-bold rounded-xl">
+                  <Link href={getPublicJobPath(job)} className="px-4 py-2 bg-emerald-500 text-white text-xs font-bold rounded-xl">
                     Apply
                   </Link>
                 </div>

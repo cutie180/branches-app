@@ -4,6 +4,7 @@ import { getAllBusinesses } from '@/lib/db-service'
 import { getAllProfessionals } from '@/lib/professional-service'
 import { getAllCompanies } from '@/lib/company-service'
 import { getAllJobs } from '@/lib/job-service'
+import { getPublicJobPath } from '@/lib/job-url'
 import { BLOG_POSTS } from '@/lib/blog-data'
 
 export const revalidate = 3600 // Revalidate sitemap XML every hour
@@ -114,7 +115,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const mockJobIds = new Set(MOCK_JOBS.map((job) => job.id))
   const approvedJobs = rawJobs.filter((job) => (job.status || 'approved') === 'approved' && !mockJobIds.has(job.id))
   const jobRoutes = approvedJobs.map((job) => ({
-    url: canonicalUrl(`/jobs/${job.slug || job.id}`),
+    url: canonicalUrl(getPublicJobPath(job)),
     lastModified: currentDate,
     changeFrequency: 'weekly' as const,
     priority: 0.9,

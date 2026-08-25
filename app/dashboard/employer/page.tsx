@@ -6,6 +6,7 @@ import Footer from '@/components/footer'
 import { CompanyItem, JobItem, ProfessionalItem } from '@/lib/data'
 import { getAllCompanies } from '@/lib/company-service'
 import { getAllJobs, getMatchingCandidatesForJob } from '@/lib/job-service'
+import { getPublicJobPath } from '@/lib/job-url'
 import Link from 'next/link'
 import { 
   Building2, Briefcase, Plus, ShieldCheck, MapPin, Users, Sparkles, 
@@ -136,7 +137,7 @@ export default function EmployerDashboardPage() {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <Link href={`/jobs/${job.slug || job.id}`} className="px-3 py-1.5 bg-slate-200 text-slate-800 text-xs font-bold rounded-xl hover:bg-slate-300">
+                    <Link href={getPublicJobPath(job)} className="px-3 py-1.5 bg-slate-200 text-slate-800 text-xs font-bold rounded-xl hover:bg-slate-300">
                       View Job
                     </Link>
                   </div>

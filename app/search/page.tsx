@@ -8,6 +8,7 @@ import Image from 'next/image'
 import SearchFilters from '@/components/search/search-filters'
 import { MOCK_BUSINESSES, MOCK_JOBS, MOCK_PROFESSIONALS, ProfessionalItem } from '@/lib/data'
 import { getAllProfessionals } from '@/lib/professional-service'
+import { getPublicJobPath } from '@/lib/job-url'
 import Link from 'next/link'
 import { Search, MapPin, Building2, Briefcase, Users, ShieldCheck, Star, ArrowRight, Grid, List, Phone, CheckCircle2, Filter } from 'lucide-react'
 
@@ -356,7 +357,7 @@ function SearchContent() {
                           </span>
                           <span className="text-xs text-slate-400 font-medium">{job.postedDate}</span>
                         </div>
-                        <Link href={`/jobs/${job.id}`} className="font-bold text-slate-900 text-base hover:text-blue-600 transition-colors block">
+                        <Link href={getPublicJobPath(job)} className="font-bold text-slate-900 text-base hover:text-blue-600 transition-colors block">
                           {job.title}
                         </Link>
                         <div className="flex items-center gap-4 text-xs text-slate-500">
@@ -369,7 +370,7 @@ function SearchContent() {
                       </div>
 
                       <Link
-                        href={`/jobs/${job.id}`}
+                        href={getPublicJobPath(job)}
                         className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-colors shrink-0"
                       >
                         Apply Now

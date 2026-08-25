@@ -4,6 +4,7 @@ import { getAllProfessionals } from './professional-service'
 import { db } from './firebase'
 import { collection, getDocs, query, where, limit, addDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore'
 import { normalizeSlug } from './db-service'
+import { JOB_SLUG_ALIASES } from './job-url'
 
 let memoryJobsCache: JobItem[] = [...MOCK_JOBS]
 
@@ -85,14 +86,15 @@ export const getAllJobs = cache(async function getAllJobs(includePending: boolea
 
 export const getJobBySlug = cache(async function getJobBySlug(idOrSlug: string): Promise<JobItem | null> {
   const normalized = idOrSlug.toLowerCase().trim()
-  const cached = memoryJobsCache.find(j => j.id === idOrSlug || j.slug?.toLowerCase() === normalized)
+  const lookupSlug = JOB_SLUG_ALIASES[normalized] || normalized
+  const cached = memoryJobsCache.find(j => j.id.toLowerCase() === lookupSlug || j.slug?.toLowerCase() === lookupSlug)
   if (cached && (cached.status || 'approved') === 'approved' && !isExpiredJob(cached)) {
     return cached
   }
   if (cached && isExpiredJob(cached)) return null
 
   try {
-    const q = query(collection(db, 'jobs'), where('slug', '==', normalized), limit(1))
+    const q = query(collection(db, 'jobs'), where('slug', '==', lookupSlug), limit(1))
     const snap = await getDocs(q)
     if (!snap.empty) {
       const docSnap = snap.docs[0]

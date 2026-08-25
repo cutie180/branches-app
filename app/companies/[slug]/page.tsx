@@ -8,6 +8,7 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { getCompanyBySlug, getAllCompanies } from '@/lib/company-service'
 import { getAllJobs } from '@/lib/job-service'
+import { getPublicJobPath } from '@/lib/job-url'
 import { 
   Building2, MapPin, ShieldCheck, Star, Mail, Phone, Award, ArrowLeft, 
   Linkedin, ExternalLink, Briefcase
@@ -206,13 +207,13 @@ export default async function CompanyDetailPage(props: { params: Promise<{ slug:
               {activeJobs.map((job) => (
                 <div key={job.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                   <div>
-                    <Link href={`/jobs/${job.slug || job.id}`} className="font-extrabold text-slate-900 text-sm hover:text-blue-600">
+                    <Link href={getPublicJobPath(job)} className="font-extrabold text-slate-900 text-sm hover:text-blue-600">
                       {job.title}
                     </Link>
                     <p className="text-xs text-slate-500 mt-0.5">📍 {job.city} • {job.type} • {job.salary}</p>
                   </div>
                   <Link
-                    href={`/jobs/${job.slug || job.id}`}
+                    href={getPublicJobPath(job)}
                     className="px-4 py-2 bg-blue-600 text-white font-bold text-xs rounded-xl hover:bg-blue-700 cursor-pointer"
                   >
                     View & Apply

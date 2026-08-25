@@ -6,6 +6,7 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { JobItem } from '@/lib/data'
 import { getAllJobs } from '@/lib/job-service'
+import { getPublicJobPath } from '@/lib/job-url'
 import Link from 'next/link'
 import { Briefcase, MapPin, Search, Filter, Plus, Building2, CheckCircle2, ArrowRight, DollarSign } from 'lucide-react'
 
@@ -156,7 +157,7 @@ export default function JobsPage() {
                       <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 uppercase tracking-wider">
                         {job.type}
                       </span>
-                      <Link href={`/jobs/${job.slug || job.id}`} className="font-extrabold text-slate-900 text-base group-hover:text-blue-600 transition-colors block truncate">
+                      <Link href={getPublicJobPath(job)} className="font-extrabold text-slate-900 text-base group-hover:text-blue-600 transition-colors block truncate">
                         {job.title}
                       </Link>
                       <Link href={`/companies/${job.companySlug}`} className="text-xs font-semibold text-blue-600 hover:underline block truncate">
@@ -188,7 +189,7 @@ export default function JobsPage() {
                 <div className="pt-4 flex items-center justify-between">
                   <span className="text-[11px] text-slate-400">{job.postedDate}</span>
                   <Link
-                    href={`/jobs/${job.slug || job.id}`}
+                    href={getPublicJobPath(job)}
                     className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-colors inline-flex items-center gap-1"
                   >
                     <span>View & Apply</span>

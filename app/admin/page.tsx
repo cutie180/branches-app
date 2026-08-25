@@ -21,6 +21,7 @@ import {
 } from '@/lib/professional-service'
 import { getAllCompanies, approveCompany, rejectCompany } from '@/lib/company-service'
 import { getAllJobs, approveJob, rejectJob } from '@/lib/job-service'
+import { getPublicJobPath } from '@/lib/job-url'
 import { toast } from 'sonner'
 
 export default function AdminPage() {
@@ -1238,7 +1239,7 @@ export default function AdminPage() {
                       <p className="text-xs text-slate-500">{job.company} • {job.city} • {job.salary}</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Link href={`/jobs/${job.slug || job.id}`} target="_blank" className="px-3 py-1.5 bg-slate-200 text-slate-800 text-xs font-bold rounded-xl">
+                      <Link href={getPublicJobPath(job)} target="_blank" className="px-3 py-1.5 bg-slate-200 text-slate-800 text-xs font-bold rounded-xl">
                         View
                       </Link>
                       {job.status === 'pending' && (

@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import { CATEGORIES, TOP_CITIES, MOCK_JOBS, MOCK_PROFESSIONALS } from '@/lib/data'
 import { getAllBusinesses } from '@/lib/db-service'
+import { getPublicJobPath } from '@/lib/job-url'
 
 export const revalidate = 3600
 
@@ -460,7 +461,7 @@ export default async function HomePage() {
                   <p className="text-xs text-slate-300 line-clamp-2">{job.description}</p>
                   <div className="pt-3 border-t border-slate-700 flex items-center justify-between text-xs">
                     <span className="font-bold text-emerald-400">{job.salary}</span>
-                    <Link href={`/jobs/${job.id}`} className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-extrabold rounded-xl transition-colors">
+                    <Link href={getPublicJobPath(job)} className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-extrabold rounded-xl transition-colors">
                       Apply Now
                     </Link>
                   </div>
@@ -505,7 +506,7 @@ export default async function HomePage() {
                 </div>
                 <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
                   <span className="font-bold text-slate-900">{job.salary}</span>
-                  <Link href={`/jobs/${job.id}`} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors">
+                  <Link href={getPublicJobPath(job)} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors">
                     Apply Now
                   </Link>
                 </div>
