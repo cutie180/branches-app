@@ -114,7 +114,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
   const mockJobIds = new Set(MOCK_JOBS.map((job) => job.id))
   const approvedJobs = rawJobs.filter((job) => (job.status || 'approved') === 'approved' && !mockJobIds.has(job.id))
-  const jobRoutes = approvedJobs.map((job) => ({
+  // Preserve the explicitly requested short alias in the sitemap when its active
+  // job resolves through the approved service, even if the legacy mock-cache
+  // exclusion would otherwise omit that aliased public URL.
+  const activeAliasedJobs = rawJobs.filter((job) =>
+    (job.status || 'approved') === 'approved' &&
+    getPublicJobPath(job) !== `/jobs/${job.slug || job.id}`
+  )
+  const sitemapJobs = Array.from(new Map(
+    [...approvedJobs, ...activeAliasedJobs].map((job) => [job.id, job])
+  ).values())
+  const jobRoutes = sitemapJobs.map((job) => ({
     url: canonicalUrl(getPublicJobPath(job)),
     lastModified: currentDate,
     changeFrequency: 'weekly' as const,
