@@ -6,9 +6,9 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { JobItem } from '@/lib/data'
 import { getAllJobs } from '@/lib/job-service'
-import { getPublicJobPath } from '@/lib/job-url'
 import Link from 'next/link'
-import { Briefcase, MapPin, Search, Filter, Plus, Building2, CheckCircle2, ArrowRight, DollarSign } from 'lucide-react'
+import { Briefcase, MapPin, Search, Filter, Plus } from 'lucide-react'
+import JobCardExpandable from '@/components/jobs/job-card-expandable'
 
 export default function JobsPage() {
   const [jobs, setJobs] = useState<JobItem[]>([])
@@ -147,56 +147,9 @@ export default function JobsPage() {
             <p className="text-xs text-slate-500">Try adjusting your keyword, city, or job type filters.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
             {filteredJobs.map((job) => (
-              <div key={job.id} className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xs hover:shadow-xl transition-all space-y-4 flex flex-col justify-between group">
-                <div className="space-y-4">
-                  <div className="flex items-start gap-4">
-                    <Image src={job.companyLogo} alt={job.company} width={48} height={48} loading="lazy" sizes="48px" className="w-12 h-12 rounded-2xl object-cover border border-slate-100 shadow-xs shrink-0" />
-                    <div className="space-y-1 min-w-0 flex-1">
-                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 uppercase tracking-wider">
-                        {job.type}
-                      </span>
-                      <Link href={getPublicJobPath(job)} className="font-extrabold text-slate-900 text-base group-hover:text-blue-600 transition-colors block truncate">
-                        {job.title}
-                      </Link>
-                      <Link href={`/companies/${job.companySlug}`} className="text-xs font-semibold text-blue-600 hover:underline block truncate">
-                        {job.company}
-                      </Link>
-                    </div>
-                  </div>
-
-                  <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
-                    {job.description}
-                  </p>
-
-                  <div className="space-y-2 pt-2 border-t border-slate-100 text-xs text-slate-600">
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-400 font-medium">Salary</span>
-                      <span className="font-extrabold text-slate-900">{job.salary}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-400 font-medium">Location</span>
-                      <span className="font-semibold text-slate-800 truncate max-w-[200px]" title={job.cities ? job.cities.join(', ') : job.city}>
-                        📍 {job.cities && job.cities.length > 1
-                          ? (job.cities.length <= 2 ? job.cities.join(', ') : `${job.cities.slice(0, 2).join(', ')} (+${job.cities.length - 2} cities)`)
-                          : job.city}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-4 flex items-center justify-between">
-                  <span className="text-[11px] text-slate-400">{job.postedDate}</span>
-                  <Link
-                    href={getPublicJobPath(job)}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-colors inline-flex items-center gap-1"
-                  >
-                    <span>View & Apply</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </div>
+              <JobCardExpandable key={job.id} job={job} />
             ))}
           </div>
         )}

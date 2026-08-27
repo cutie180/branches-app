@@ -298,6 +298,25 @@ export interface ProfessionalVerificationRequest {
   reviewedBy?: string
 }
 
+export interface JobApplication {
+  id: string
+  jobId: string
+  jobTitle: string
+  companyName: string
+  applicantEmail: string
+  applicantName?: string
+  applicantPhone?: string
+  applicantProfession?: string
+  applicantUsername?: string
+  applicantAvatar?: string
+  applicantCity?: string
+  isVerifiedProfessional?: boolean
+  coverNote?: string
+  resumeUrl?: string
+  appliedAt: string
+  status: 'new' | 'reviewed' | 'shortlisted' | 'rejected'
+}
+
 export interface ProfessionalInquiry {
   id: string
   proUsername: string

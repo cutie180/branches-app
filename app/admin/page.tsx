@@ -12,7 +12,7 @@ import {
 } from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
-import { BusinessItem, ContactMessage, CATEGORIES, ProfessionalItem, CompanyItem, JobItem, ProfessionalVerificationRequest } from '@/lib/data'
+import { BusinessItem, ContactMessage, CATEGORIES, ProfessionalItem, CompanyItem, JobItem, ProfessionalVerificationRequest, JobApplication } from '@/lib/data'
 import { getAllBusinesses, getPendingBusinesses, approveBusiness, rejectBusiness, getContactMessages, markContactMessageRead, deleteContactMessage } from '@/lib/db-service'
 import { 
   getAllProfessionals, approveProfessional, rejectProfessional, verifyProfessional, 
@@ -21,6 +21,7 @@ import {
 } from '@/lib/professional-service'
 import { getAllCompanies, approveCompany, rejectCompany } from '@/lib/company-service'
 import { getAllJobs, approveJob, rejectJob } from '@/lib/job-service'
+import { getAllJobApplications, updateJobApplicationStatus, deleteJobApplication } from '@/lib/job-application-service'
 import { getPublicJobPath } from '@/lib/job-url'
 import { toast } from 'sonner'
 
@@ -32,18 +33,21 @@ export default function AdminPage() {
   const [loginError, setLoginError] = useState('')
   const [adminUid, setAdminUid] = useState('admin-master')
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'pending' | 'businesses' | 'professionals' | 'verifications' | 'companies' | 'jobs' | 'messages'>('overview')
+  const [activeTab, setActiveTab] = useState<'overview' | 'pending' | 'businesses' | 'professionals' | 'verifications' | 'companies' | 'jobs' | 'applications' | 'messages'>('overview')
 
   const [allBusinesses, setAllBusinesses] = useState<BusinessItem[]>([])
   const [allProfessionals, setAllProfessionals] = useState<ProfessionalItem[]>([])
   const [verificationRequests, setVerificationRequests] = useState<ProfessionalVerificationRequest[]>([])
   const [allCompanies, setAllCompanies] = useState<CompanyItem[]>([])
   const [allJobs, setAllJobs] = useState<JobItem[]>([])
+  const [allJobApplications, setAllJobApplications] = useState<JobApplication[]>([])
   const [contactMessages, setContactMessages] = useState<ContactMessage[]>([])
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedBiz, setSelectedBiz] = useState<BusinessItem | null>(null)
   const [selectedPro, setSelectedPro] = useState<ProfessionalItem | null>(null)
+  const [selectedApp, setSelectedApp] = useState<JobApplication | null>(null)
+  const [appStatusFilter, setAppStatusFilter] = useState<'all' | 'new' | 'reviewed' | 'shortlisted' | 'rejected'>('all')
   const [selectedScreenshot, setSelectedScreenshot] = useState<{ url: string; name: string; ref: string } | null>(null)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
 
@@ -89,12 +93,48 @@ export default function AdminPage() {
       setAllCompanies(compList)
       const jobList = await getAllJobs(true)
       setAllJobs(jobList)
+      const apps = await getAllJobApplications()
+      setAllJobApplications(apps)
       const msgs = await getContactMessages()
       setContactMessages(msgs)
     } catch (err) {
       console.error('Error fetching admin data:', err)
     } finally {
       setLoading(false)
+    }
+  }
+
+  // --- JOB APPLICATION HANDLERS ---
+  const handleUpdateAppStatus = async (id: string, status: 'new' | 'reviewed' | 'shortlisted' | 'rejected') => {
+    setActionLoading(id)
+    try {
+      await updateJobApplicationStatus(id, status)
+      setAllJobApplications(prev => prev.map(a => a.id === id ? { ...a, status } : a))
+      if (selectedApp && selectedApp.id === id) {
+        setSelectedApp({ ...selectedApp, status })
+      }
+      toast.success(`Application status marked as ${status.toUpperCase()}.`)
+    } catch (err) {
+      toast.error('Failed to update application status.')
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
+  const handleDeleteApp = async (id: string, applicantName?: string) => {
+    if (!confirm(`Are you sure you want to delete application from "${applicantName || 'Candidate'}"?`)) return
+    setActionLoading(id)
+    try {
+      await deleteJobApplication(id)
+      setAllJobApplications(prev => prev.filter(a => a.id !== id))
+      if (selectedApp && selectedApp.id === id) {
+        setSelectedApp(null)
+      }
+      toast.success('Application removed from database.')
+    } catch (err) {
+      toast.error('Failed to delete application.')
+    } finally {
+      setActionLoading(null)
     }
   }
 
@@ -420,6 +460,8 @@ export default function AdminPage() {
     unverifiedPros: unverifiedPros.length,
     pendingVerReqs: pendingVerReqs.length,
     totalVerReqs: verificationRequests.length,
+    totalApps: allJobApplications.length,
+    newApps: allJobApplications.filter(a => a.status === 'new').length,
     messages: contactMessages.length,
     unreadMessages: contactMessages.filter(m => m.status === 'unread').length
   }
@@ -617,6 +659,21 @@ export default function AdminPage() {
             </button>
 
             <button
+              onClick={() => setActiveTab('applications')}
+              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 relative cursor-pointer shrink-0 ${
+                activeTab === 'applications' ? 'bg-[#0F172A] text-white shadow-md' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
+              }`}
+            >
+              <FileText className="w-4 h-4 text-indigo-400" />
+              <span>Job Applications ({stats.totalApps})</span>
+              {stats.newApps > 0 && (
+                <span className="px-1.5 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-extrabold animate-pulse">
+                  {stats.newApps} New
+                </span>
+              )}
+            </button>
+
+            <button
               onClick={() => setActiveTab('messages')}
               className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer shrink-0 ${
                 activeTab === 'messages' ? 'bg-[#0F172A] text-white shadow-md' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
@@ -708,6 +765,50 @@ export default function AdminPage() {
                   <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5 shadow-xs space-y-1">
                     <span className="text-xs font-bold text-blue-700 uppercase tracking-wider">Hiring Companies</span>
                     <p className="text-3xl font-extrabold text-blue-700">{allCompanies.length}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Job Vacancies & Incoming Applications Overview Cards */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider">
+                  Jobs &amp; Candidate Applications
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div
+                    onClick={() => setActiveTab('jobs')}
+                    className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs space-y-1 cursor-pointer hover:scale-102 transition-all"
+                  >
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Job Vacancies</span>
+                    <p className="text-3xl font-extrabold text-slate-900">{allJobs.length}</p>
+                    <span className="text-[10px] text-slate-400 font-semibold">Active listings</span>
+                  </div>
+
+                  <div
+                    onClick={() => { setActiveTab('applications'); setAppStatusFilter('new') }}
+                    className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 shadow-xs space-y-1 cursor-pointer hover:scale-102 transition-all"
+                  >
+                    <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider">New Received Applications</span>
+                    <p className="text-3xl font-extrabold text-emerald-700">{stats.newApps}</p>
+                    <span className="text-[10px] text-emerald-600 font-semibold">Click to review candidates</span>
+                  </div>
+
+                  <div
+                    onClick={() => { setActiveTab('applications'); setAppStatusFilter('all') }}
+                    className="bg-indigo-50 border border-indigo-200 rounded-2xl p-5 shadow-xs space-y-1 cursor-pointer hover:scale-102 transition-all"
+                  >
+                    <span className="text-xs font-bold text-indigo-700 uppercase tracking-wider">Total Applications</span>
+                    <p className="text-3xl font-extrabold text-indigo-700">{stats.totalApps}</p>
+                    <span className="text-[10px] text-indigo-600 font-semibold">All submitted candidates</span>
+                  </div>
+
+                  <div
+                    onClick={() => { setActiveTab('applications'); setAppStatusFilter('shortlisted') }}
+                    className="bg-purple-50 border border-purple-200 rounded-2xl p-5 shadow-xs space-y-1 cursor-pointer hover:scale-102 transition-all"
+                  >
+                    <span className="text-xs font-bold text-purple-700 uppercase tracking-wider">Shortlisted Candidates</span>
+                    <p className="text-3xl font-extrabold text-purple-700">{allJobApplications.filter(a => a.status === 'shortlisted').length}</p>
+                    <span className="text-[10px] text-purple-600 font-semibold">Ready for interview</span>
                   </div>
                 </div>
               </div>
@@ -1269,7 +1370,250 @@ export default function AdminPage() {
             </div>
           )}
 
-          {/* TAB 8: MESSAGES */}
+          {/* TAB 8: JOB APPLICATIONS */}
+          {activeTab === 'applications' && (
+            <div className="space-y-6 animate-in fade-in-50">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                  <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-indigo-600" />
+                    <span>Candidate Job Applications ({allJobApplications.length})</span>
+                  </h2>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Applications submitted by verified &amp; registered professionals across Pakistan.
+                  </p>
+                </div>
+
+                {/* Filter Pill Buttons */}
+                <div className="flex flex-wrap items-center gap-1.5 bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200">
+                  <button
+                    onClick={() => setAppStatusFilter('all')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      appStatusFilter === 'all' ? 'bg-white text-slate-900 shadow-2xs font-extrabold' : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    All ({allJobApplications.length})
+                  </button>
+                  <button
+                    onClick={() => setAppStatusFilter('new')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      appStatusFilter === 'new' ? 'bg-emerald-600 text-white shadow-2xs' : 'text-emerald-700 hover:bg-emerald-50'
+                    }`}
+                  >
+                    New ({allJobApplications.filter(a => a.status === 'new').length})
+                  </button>
+                  <button
+                    onClick={() => setAppStatusFilter('reviewed')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      appStatusFilter === 'reviewed' ? 'bg-blue-600 text-white shadow-2xs' : 'text-blue-700 hover:bg-blue-50'
+                    }`}
+                  >
+                    Reviewed ({allJobApplications.filter(a => a.status === 'reviewed').length})
+                  </button>
+                  <button
+                    onClick={() => setAppStatusFilter('shortlisted')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      appStatusFilter === 'shortlisted' ? 'bg-purple-600 text-white shadow-2xs' : 'text-purple-700 hover:bg-purple-50'
+                    }`}
+                  >
+                    Shortlisted ({allJobApplications.filter(a => a.status === 'shortlisted').length})
+                  </button>
+                  <button
+                    onClick={() => setAppStatusFilter('rejected')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      appStatusFilter === 'rejected' ? 'bg-red-600 text-white shadow-2xs' : 'text-red-700 hover:bg-red-50'
+                    }`}
+                  >
+                    Rejected ({allJobApplications.filter(a => a.status === 'rejected').length})
+                  </button>
+                </div>
+              </div>
+
+              {/* Applications List */}
+              {allJobApplications.length === 0 ? (
+                <div className="bg-white rounded-3xl p-12 border border-slate-200 text-center space-y-3 shadow-xs">
+                  <FileText className="w-12 h-12 text-slate-300 mx-auto" />
+                  <h3 className="font-extrabold text-slate-900 text-base">No Applications Received Yet</h3>
+                  <p className="text-xs text-slate-500 max-w-md mx-auto">
+                    When registered professionals apply for jobs through ListPak, their verified profiles and submissions will appear here.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {allJobApplications
+                    .filter(app => {
+                      if (appStatusFilter !== 'all' && app.status !== appStatusFilter) return false
+                      if (searchQuery) {
+                        const q = searchQuery.toLowerCase()
+                        return (
+                          (app.applicantName || '').toLowerCase().includes(q) ||
+                          (app.applicantEmail || '').toLowerCase().includes(q) ||
+                          (app.jobTitle || '').toLowerCase().includes(q) ||
+                          (app.companyName || '').toLowerCase().includes(q)
+                        )
+                      }
+                      return true
+                    })
+                    .map((app) => (
+                      <div
+                        key={app.id}
+                        className={`bg-white rounded-2xl p-5 sm:p-6 border transition-all space-y-4 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ${
+                          app.status === 'new' ? 'border-emerald-300 bg-emerald-50/20 shadow-sm' : 'border-slate-200/90 hover:border-slate-300'
+                        }`}
+                      >
+                        <div className="space-y-3 flex-1 min-w-0">
+                          {/* Candidate & Position Header */}
+                          <div className="flex items-start gap-3.5">
+                            {app.applicantAvatar ? (
+                              <img
+                                src={app.applicantAvatar}
+                                alt={app.applicantName || 'Candidate'}
+                                className="w-12 h-12 rounded-2xl object-cover border border-slate-200 shrink-0"
+                              />
+                            ) : (
+                              <div className="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-extrabold text-base shrink-0">
+                                {(app.applicantName || 'P')[0]}
+                              </div>
+                            )}
+
+                            <div className="space-y-1 min-w-0 flex-1">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${
+                                  app.status === 'new'
+                                    ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                                    : app.status === 'shortlisted'
+                                    ? 'bg-purple-100 text-purple-800'
+                                    : app.status === 'reviewed'
+                                    ? 'bg-blue-100 text-blue-800'
+                                    : 'bg-red-100 text-red-800'
+                                }`}>
+                                  {app.status}
+                                </span>
+
+                                {app.isVerifiedProfessional && (
+                                  <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200 flex items-center gap-1">
+                                    <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                                    <span>Verified Professional</span>
+                                  </span>
+                                )}
+
+                                <span className="text-[11px] text-slate-400 font-medium">
+                                  Applied {new Date(app.appliedAt).toLocaleDateString()} at {new Date(app.appliedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </span>
+                              </div>
+
+                              <div className="flex items-baseline gap-2 flex-wrap">
+                                <h3 className="font-extrabold text-slate-900 text-base">{app.applicantName}</h3>
+                                {app.applicantProfession && (
+                                  <span className="text-xs text-blue-600 font-semibold">({app.applicantProfession})</span>
+                                )}
+                              </div>
+
+                              <div className="text-xs text-slate-700">
+                                <span>Applied for </span>
+                                <strong className="text-slate-900">{app.jobTitle}</strong>
+                                <span> at </span>
+                                <span className="font-bold text-slate-800">{app.companyName}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Candidate Contacts & Cover Note */}
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-slate-100 text-xs text-slate-600">
+                            <div className="flex items-center gap-1.5 truncate">
+                              <Mail className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                              <span className="truncate">{app.applicantEmail}</span>
+                            </div>
+                            {app.applicantPhone && (
+                              <div className="flex items-center gap-1.5">
+                                <Phone className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                                <span>{app.applicantPhone}</span>
+                              </div>
+                            )}
+                            {app.applicantCity && (
+                              <div className="flex items-center gap-1.5">
+                                <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                                <span>{app.applicantCity}</span>
+                              </div>
+                            )}
+                          </div>
+
+                          {app.coverNote && (
+                            <p className="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100 italic line-clamp-2">
+                              &ldquo;{app.coverNote}&rdquo;
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Action Buttons Column */}
+                        <div className="flex flex-col sm:flex-row md:flex-col items-stretch md:items-end gap-2 shrink-0 w-full md:w-auto pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => setSelectedApp(app)}
+                              className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer"
+                            >
+                              <Eye className="w-3.5 h-3.5" />
+                              <span>Details</span>
+                            </button>
+
+                            {app.applicantUsername && (
+                              <Link
+                                href={`/professionals/${app.applicantUsername}`}
+                                target="_blank"
+                                className="px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs rounded-xl border border-indigo-200 flex items-center justify-center gap-1.5"
+                              >
+                                <span>Profile</span>
+                                <ExternalLink className="w-3.5 h-3.5" />
+                              </Link>
+                            )}
+                          </div>
+
+                          {/* Quick Status Select */}
+                          <div className="flex items-center gap-1">
+                            {app.status !== 'shortlisted' && (
+                              <button
+                                onClick={() => handleUpdateAppStatus(app.id, 'shortlisted')}
+                                className="px-2.5 py-1.5 bg-purple-50 hover:bg-purple-100 text-purple-700 text-[11px] font-extrabold rounded-lg border border-purple-200 cursor-pointer"
+                                title="Shortlist Candidate"
+                              >
+                                Shortlist
+                              </button>
+                            )}
+                            {app.status === 'new' && (
+                              <button
+                                onClick={() => handleUpdateAppStatus(app.id, 'reviewed')}
+                                className="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-[11px] font-extrabold rounded-lg border border-blue-200 cursor-pointer"
+                                title="Mark Reviewed"
+                              >
+                                Reviewed
+                              </button>
+                            )}
+                            {app.status !== 'rejected' && (
+                              <button
+                                onClick={() => handleUpdateAppStatus(app.id, 'rejected')}
+                                className="px-2.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 text-[11px] font-extrabold rounded-lg border border-red-200 cursor-pointer"
+                                title="Reject Application"
+                              >
+                                Reject
+                              </button>
+                            )}
+                            <button
+                              onClick={() => handleDeleteApp(app.id, app.applicantName)}
+                              className="p-1.5 text-slate-400 hover:text-red-600 cursor-pointer"
+                              title="Delete Application"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 9: MESSAGES */}
           {activeTab === 'messages' && (
             <div className="space-y-4 animate-in fade-in-50">
               <h2 className="text-xl font-extrabold text-slate-900">Contact Form Messages</h2>
@@ -1292,6 +1636,136 @@ export default function AdminPage() {
           )}
 
         </div>
+
+        {/* MODAL: APPLICATION COMPLETE DETAILS */}
+        {selectedApp && (
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-6 sm:p-7 max-h-[90vh] overflow-y-auto space-y-5 font-sans">
+              <div className="flex justify-between items-start border-b border-slate-200 pb-4">
+                <div>
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-full border border-indigo-200">
+                    Application Details
+                  </span>
+                  <h3 className="text-xl font-extrabold text-slate-900 mt-1">{selectedApp.jobTitle}</h3>
+                  <p className="text-xs text-slate-500">{selectedApp.companyName}</p>
+                </div>
+                <button
+                  onClick={() => setSelectedApp(null)}
+                  className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="space-y-4 text-xs">
+                {/* Candidate Overview Card */}
+                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex items-start gap-4">
+                  {selectedApp.applicantAvatar ? (
+                    <img src={selectedApp.applicantAvatar} alt={selectedApp.applicantName || 'Candidate'} className="w-14 h-14 rounded-2xl object-cover border border-slate-200 shrink-0" />
+                  ) : (
+                    <div className="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-lg shrink-0">
+                      {(selectedApp.applicantName || 'P')[0]}
+                    </div>
+                  )}
+                  <div className="space-y-1 min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-extrabold text-slate-900 text-base">{selectedApp.applicantName}</h4>
+                      {selectedApp.isVerifiedProfessional && (
+                        <span title="Verified Professional">
+                          <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs font-semibold text-blue-600">{selectedApp.applicantProfession || 'Professional Specialist'}</p>
+                    <p className="text-[11px] text-slate-400">
+                      Applied on {new Date(selectedApp.appliedAt).toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Candidate Contacts */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                  <div>
+                    <span className="text-slate-400 font-bold uppercase text-[10px] block">Email</span>
+                    <span className="font-bold text-slate-900">{selectedApp.applicantEmail}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 font-bold uppercase text-[10px] block">Phone</span>
+                    <span className="font-bold text-slate-900">{selectedApp.applicantPhone || 'N/A'}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 font-bold uppercase text-[10px] block">Location</span>
+                    <span className="font-bold text-slate-900">{selectedApp.applicantCity || 'Pakistan'}</span>
+                  </div>
+                </div>
+
+                {/* Cover Note */}
+                {selectedApp.coverNote && (
+                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-1">
+                    <span className="text-slate-400 font-bold uppercase text-[10px] block">Cover Note / Intro Message:</span>
+                    <p className="text-slate-700 leading-relaxed whitespace-pre-line">{selectedApp.coverNote}</p>
+                  </div>
+                )}
+
+                {/* Status & Quick Updates */}
+                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex flex-wrap justify-between items-center gap-3">
+                  <div>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase block">Current Application Status</span>
+                    <span className="text-xs font-extrabold uppercase text-indigo-700">{selectedApp.status}</span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleUpdateAppStatus(selectedApp.id, 'shortlisted')}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer ${
+                        selectedApp.status === 'shortlisted' ? 'bg-purple-600 text-white' : 'bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100'
+                      }`}
+                    >
+                      Shortlist
+                    </button>
+                    <button
+                      onClick={() => handleUpdateAppStatus(selectedApp.id, 'reviewed')}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer ${
+                        selectedApp.status === 'reviewed' ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100'
+                      }`}
+                    >
+                      Mark Reviewed
+                    </button>
+                    <button
+                      onClick={() => handleUpdateAppStatus(selectedApp.id, 'rejected')}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer ${
+                        selectedApp.status === 'rejected' ? 'bg-red-600 text-white' : 'bg-red-50 text-red-700 border border-red-200 hover:bg-red-100'
+                      }`}
+                    >
+                      Reject
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="pt-4 border-t border-slate-200 flex justify-between items-center gap-3">
+                {selectedApp.applicantUsername ? (
+                  <Link
+                    href={`/professionals/${selectedApp.applicantUsername}`}
+                    target="_blank"
+                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs flex items-center gap-1.5"
+                  >
+                    <span>View Public Profile</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </Link>
+                ) : <div />}
+
+                <button
+                  onClick={() => setSelectedApp(null)}
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl cursor-pointer"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* MODAL: PROFESSIONAL COMPLETE DETAILS */}
         {selectedPro && (
