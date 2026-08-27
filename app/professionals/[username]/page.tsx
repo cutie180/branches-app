@@ -13,7 +13,8 @@ import {
 } from 'lucide-react'
 import { ProfessionalHeroActions, ProfessionalReviewsSection, ProfessionalFaqsSection } from './professional-interactive-actions'
 
-export const revalidate = 86400
+export const dynamicParams = true
+export const revalidate = 0
 
 export async function generateStaticParams() {
   const pros = await getAllProfessionals()
@@ -296,16 +297,23 @@ export default async function ProfessionalDetailPage(props: { params: Promise<{ 
           <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4">
             <h2 className="text-lg font-extrabold text-slate-900">Work Experience Timeline</h2>
             <div className="space-y-4">
-              {pro.previousExperience.map((exp, i) => (
-                <div key={i} className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-1">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                    <h3 className="font-extrabold text-slate-900 text-sm">{exp.title}</h3>
-                    <span className="text-xs font-bold text-blue-600">{exp.duration}</span>
+              {pro.previousExperience.map((exp: any, i: number) => {
+                const title = typeof exp === 'string' ? exp : exp.title || 'Professional Role'
+                const duration = typeof exp === 'string' ? '' : exp.duration || ''
+                const company = typeof exp === 'string' ? '' : exp.company || ''
+                const description = typeof exp === 'string' ? '' : exp.description || ''
+
+                return (
+                  <div key={i} className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-1">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                      <h3 className="font-extrabold text-slate-900 text-sm">{title}</h3>
+                      {duration && <span className="text-xs font-bold text-blue-600">{duration}</span>}
+                    </div>
+                    {company && <p className="text-xs font-semibold text-slate-600">{company}</p>}
+                    {description && <p className="text-xs text-slate-500 pt-1 leading-relaxed">{description}</p>}
                   </div>
-                  <p className="text-xs font-semibold text-slate-600">{exp.company}</p>
-                  <p className="text-xs text-slate-500 pt-1 leading-relaxed">{exp.description}</p>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         )}

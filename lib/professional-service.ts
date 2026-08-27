@@ -41,6 +41,93 @@ export const GENERATE_STARTER_PROFESSIONAL_REVIEWS = (proName: string) => [
   }
 ]
 
+export function normalizeProfessionalDoc(docId: string, data: Partial<ProfessionalItem>): ProfessionalItem {
+  const proName = data.fullName || data.name || 'Verified Professional'
+  const proUsername = data.username || data.slug || generateProfessionalSlug(proName, data.title, data.profession)
+  const itemStatus = data.status || 'approved'
+  const itemVerified = data.verified ?? (data.verificationStatus === 'VERIFIED' ? true : false)
+  const itemVerificationStatus = data.verificationStatus || (itemVerified ? 'VERIFIED' : 'UNVERIFIED')
+  const itemProfileStatus = data.profileStatus || (itemStatus === 'approved' ? 'APPROVED' : itemStatus === 'rejected' ? 'REJECTED' : 'PENDING')
+
+  return {
+    id: docId || data.id || 'pro-' + Date.now(),
+    userId: data.userId || '',
+    username: proUsername,
+    slug: proUsername,
+    name: proName,
+    fullName: proName,
+    title: data.title || 'Professional Specialist',
+    profession: data.profession || 'Specialist',
+    category: data.category || 'Professional / Job Seeker',
+    specialization: data.specialization || 'General',
+    city: data.city || 'Pakistan',
+    province: data.province || 'Pakistan',
+    country: data.country || 'Pakistan',
+    address: data.address || '',
+    googleMapUrl: data.googleMapUrl || '',
+    rating: data.rating || 5.0,
+    reviewCount: data.reviewCount || (data.reviews ? data.reviews.length : 2),
+    hourlyRate: data.hourlyRate || 'Contact for Pricing',
+    availability: data.availability || 'Available',
+    gender: data.gender || '',
+    avatar: data.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+    coverImage: data.coverImage || 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1200&q=80',
+    bio: data.bio || data.about || 'Verified professional profile on ListPak Pakistan network.',
+    about: data.about || data.bio || '',
+    skills: data.skills && data.skills.length > 0 ? data.skills : ['Professional Services'],
+    experienceYears: data.experienceYears ?? 3,
+    verified: itemVerified,
+    isFeatured: data.isFeatured ?? false,
+    status: itemStatus,
+    profileStatus: itemProfileStatus,
+    verificationStatus: itemVerificationStatus,
+    verificationRequestStatus: data.verificationRequestStatus || 'NOT_REQUESTED',
+    verificationPaymentDetails: data.verificationPaymentDetails,
+    submittedAt: data.submittedAt || new Date().toISOString(),
+    approvedAt: data.approvedAt,
+    approvedBy: data.approvedBy,
+    verifiedAt: data.verifiedAt,
+    verifiedBy: data.verifiedBy,
+    rejectionReason: data.rejectionReason,
+
+    phone: data.phone || '',
+    email: data.email || '',
+    whatsapp: data.whatsapp || '',
+    website: data.website || '',
+    portfolio: data.portfolio || '',
+    resumeUrl: data.resumeUrl || '',
+    currentCompany: data.currentCompany || '',
+
+    education: data.education || [],
+    certifications: data.certifications || [],
+    languages: data.languages || ['Urdu', 'English'],
+    previousExperience: data.previousExperience || [],
+    servicesOffered: data.servicesOffered || [],
+    reviews: data.reviews && data.reviews.length > 0 ? data.reviews : GENERATE_STARTER_PROFESSIONAL_REVIEWS(proName),
+    faqs: data.faqs || [],
+
+    linkedin: data.linkedin,
+    github: data.github,
+    facebook: data.facebook,
+    instagram: data.instagram,
+    twitter: data.twitter,
+    youtube: data.youtube,
+    behance: data.behance,
+    dribbble: data.dribbble,
+    stackoverflow: data.stackoverflow,
+    medium: data.medium,
+    fiverr: data.fiverr,
+    upwork: data.upwork,
+    freelancer: data.freelancer,
+    kaggle: data.kaggle,
+    researchgate: data.researchgate,
+    orcid: data.orcid,
+    googleScholar: data.googleScholar,
+    customSocialLinks: data.customSocialLinks || [],
+    dynamicFields: data.dynamicFields || {}
+  }
+}
+
 /**
  * Fetch all professionals. If includePending is false, returns ONLY approved profiles.
  */
@@ -50,98 +137,14 @@ export const getAllProfessionals = cache(async function getAllProfessionals(incl
     if (!querySnapshot.empty) {
       const firestoreItems: ProfessionalItem[] = []
       querySnapshot.forEach((docSnap) => {
-        const data = docSnap.data() as Partial<ProfessionalItem>
-        const proName = data.fullName || data.name || 'Verified Professional'
-        const proUsername = data.username || data.slug || generateProfessionalSlug(proName, data.title, data.profession)
-        const itemStatus = data.status || 'approved'
-        const itemVerified = data.verified ?? (data.verificationStatus === 'VERIFIED' ? true : false)
-        const itemVerificationStatus = data.verificationStatus || (itemVerified ? 'VERIFIED' : 'UNVERIFIED')
-        const itemProfileStatus = data.profileStatus || (itemStatus === 'approved' ? 'APPROVED' : itemStatus === 'rejected' ? 'REJECTED' : 'PENDING')
-
-        firestoreItems.push({
-          id: docSnap.id,
-          userId: data.userId,
-          username: proUsername,
-          slug: proUsername,
-          name: proName,
-          fullName: proName,
-          title: data.title || 'Professional Specialist',
-          profession: data.profession || 'Specialist',
-          category: data.category || 'Professional / Job Seeker',
-          specialization: data.specialization || 'General',
-          city: data.city || 'Pakistan',
-          province: data.province || 'Pakistan',
-          country: data.country || 'Pakistan',
-          address: data.address || '',
-          googleMapUrl: data.googleMapUrl || '',
-          rating: data.rating || 5.0,
-          reviewCount: data.reviewCount || (data.reviews ? data.reviews.length : 2),
-          hourlyRate: data.hourlyRate || 'Contact for Pricing',
-          availability: data.availability || 'Available',
-          gender: data.gender || '',
-          avatar: data.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-          coverImage: data.coverImage || 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1200&q=80',
-          bio: data.bio || 'Verified professional profile on ListPak Pakistan network.',
-          about: data.about || data.bio || '',
-          skills: data.skills && data.skills.length > 0 ? data.skills : ['Professional Services'],
-          experienceYears: data.experienceYears ?? 3,
-          verified: itemVerified,
-          isFeatured: data.isFeatured ?? false,
-          status: itemStatus,
-          profileStatus: itemProfileStatus,
-          verificationStatus: itemVerificationStatus,
-          verificationRequestStatus: data.verificationRequestStatus || 'NOT_REQUESTED',
-          verificationPaymentDetails: data.verificationPaymentDetails,
-          submittedAt: data.submittedAt || new Date().toISOString(),
-          approvedAt: data.approvedAt,
-          approvedBy: data.approvedBy,
-          verifiedAt: data.verifiedAt,
-          verifiedBy: data.verifiedBy,
-          rejectionReason: data.rejectionReason,
-
-          phone: data.phone || '',
-          email: data.email || '',
-          whatsapp: data.whatsapp || '',
-          website: data.website || '',
-          portfolio: data.portfolio || '',
-          resumeUrl: data.resumeUrl || '',
-          currentCompany: data.currentCompany || '',
-
-          education: data.education || [],
-          certifications: data.certifications || [],
-          languages: data.languages || ['Urdu', 'English'],
-          previousExperience: data.previousExperience || [],
-          servicesOffered: data.servicesOffered || [],
-          reviews: data.reviews && data.reviews.length > 0 ? data.reviews : GENERATE_STARTER_PROFESSIONAL_REVIEWS(proName),
-          faqs: data.faqs || [],
-
-          linkedin: data.linkedin,
-          github: data.github,
-          facebook: data.facebook,
-          instagram: data.instagram,
-          twitter: data.twitter,
-          youtube: data.youtube,
-          behance: data.behance,
-          dribbble: data.dribbble,
-          stackoverflow: data.stackoverflow,
-          medium: data.medium,
-          fiverr: data.fiverr,
-          upwork: data.upwork,
-          freelancer: data.freelancer,
-          kaggle: data.kaggle,
-          researchgate: data.researchgate,
-          orcid: data.orcid,
-          googleScholar: data.googleScholar,
-          customSocialLinks: data.customSocialLinks || [],
-          dynamicFields: data.dynamicFields || {}
-        })
+        firestoreItems.push(normalizeProfessionalDoc(docSnap.id, docSnap.data()))
       })
 
       // Merge avoiding duplicate usernames and sort newest registrations first
-      const existingUsernames = new Set(firestoreItems.map(p => p.username))
+      const existingUsernames = new Set(firestoreItems.map(p => p.username.toLowerCase()))
       const combined = [
         ...firestoreItems,
-        ...memoryProfessionalsCache.filter(p => !existingUsernames.has(p.username))
+        ...memoryProfessionalsCache.filter(p => !existingUsernames.has(p.username.toLowerCase()))
       ].sort((a, b) => {
         // 1. Pending reviews top priority
         const aPending = (a.status === 'pending' || a.profileStatus === 'PENDING') ? 1 : 0
@@ -172,24 +175,27 @@ export async function getPendingProfessionals(): Promise<ProfessionalItem[]> {
 }
 
 export const getProfessionalByUsername = cache(async function getProfessionalByUsername(username: string): Promise<ProfessionalItem | null> {
-  const normalized = username.toLowerCase().trim()
-  const cached = memoryProfessionalsCache.find(p => p.username.toLowerCase() === normalized || p.slug?.toLowerCase() === normalized)
-  
-  if (cached && (cached.status || 'approved') === 'approved' && (cached.profileStatus || 'APPROVED') === 'APPROVED') {
-    return cached
-  }
+  const rawInput = decodeURIComponent(username || '').trim()
+  const normalized = rawInput.toLowerCase()
+  if (!normalized) return null
 
+  // 1. First check Firestore live to ensure latest approval state is reflected immediately
   try {
+    // Try where username == normalized or original
     const q = query(collection(db, 'professionals'), where('username', '==', normalized), limit(1))
     const snap = await getDocs(q)
     if (!snap.empty) {
       const docSnap = snap.docs[0]
-      const data = docSnap.data() as ProfessionalItem
-      if (data.status && data.status !== 'approved') {
-        return null
+      const item = normalizeProfessionalDoc(docSnap.id, docSnap.data())
+      // Update memory cache
+      memoryProfessionalsCache = [
+        item,
+        ...memoryProfessionalsCache.filter(p => p.username.toLowerCase() !== normalized && p.slug?.toLowerCase() !== normalized && p.id !== item.id)
+      ]
+      if (item.status === 'approved' || item.profileStatus === 'APPROVED') {
+        return item
       }
-      memoryProfessionalsCache.push({ ...data, id: docSnap.id })
-      return data
+      return null
     }
 
     // Secondary fallback: query by 'slug' field
@@ -197,19 +203,39 @@ export const getProfessionalByUsername = cache(async function getProfessionalByU
     const snapSlug = await getDocs(qSlug)
     if (!snapSlug.empty) {
       const docSnap = snapSlug.docs[0]
-      const data = docSnap.data() as ProfessionalItem
-      if (data.status && data.status !== 'approved') {
-        return null
+      const item = normalizeProfessionalDoc(docSnap.id, snapSlug.docs[0].data())
+      memoryProfessionalsCache = [
+        item,
+        ...memoryProfessionalsCache.filter(p => p.username.toLowerCase() !== normalized && p.slug?.toLowerCase() !== normalized && p.id !== item.id)
+      ]
+      if (item.status === 'approved' || item.profileStatus === 'APPROVED') {
+        return item
       }
-      memoryProfessionalsCache.push({ ...data, id: docSnap.id })
-      return data
+      return null
     }
+
+    // Tertiary fallback: query direct by doc ID
+    try {
+      const directDoc = await getDocs(query(collection(db, 'professionals'), where('id', '==', rawInput), limit(1)))
+      if (!directDoc.empty) {
+        const item = normalizeProfessionalDoc(directDoc.docs[0].id, directDoc.docs[0].data())
+        if (item.status === 'approved' || item.profileStatus === 'APPROVED') {
+          return item
+        }
+      }
+    } catch (_) {}
   } catch (err) {
-    console.warn('Firestore getProfessionalByUsername fallback:', err)
+    console.warn('Firestore getProfessionalByUsername query error, falling back to memory:', err)
   }
 
-  // If approved match in memory
-  if (cached && cached.status === 'approved') {
+  // 2. Memory cache fallback
+  const cached = memoryProfessionalsCache.find(p => 
+    p.username.toLowerCase() === normalized || 
+    p.slug?.toLowerCase() === normalized ||
+    p.id?.toLowerCase() === normalized
+  )
+  
+  if (cached && (cached.status || 'approved') === 'approved' && (cached.profileStatus || 'APPROVED') === 'APPROVED') {
     return cached
   }
 
@@ -337,12 +363,45 @@ export async function saveProfessionalToDatabase(proData: Partial<ProfessionalIt
   return newPro
 }
 
+async function updateProfessionalInFirestore(idOrUsername: string, fieldsToUpdate: Record<string, any>): Promise<void> {
+  try {
+    const docRef = doc(db, 'professionals', idOrUsername)
+    await updateDoc(docRef, fieldsToUpdate)
+    return
+  } catch (err) {
+    // If direct doc update failed, search by username, slug, or id field
+    try {
+      const q = query(collection(db, 'professionals'), where('username', '==', idOrUsername), limit(1))
+      const snap = await getDocs(q)
+      if (!snap.empty) {
+        await updateDoc(snap.docs[0].ref, fieldsToUpdate)
+        return
+      }
+      const qSlug = query(collection(db, 'professionals'), where('slug', '==', idOrUsername), limit(1))
+      const snapSlug = await getDocs(qSlug)
+      if (!snapSlug.empty) {
+        await updateDoc(snapSlug.docs[0].ref, fieldsToUpdate)
+        return
+      }
+      const qId = query(collection(db, 'professionals'), where('id', '==', idOrUsername), limit(1))
+      const snapId = await getDocs(qId)
+      if (!snapId.empty) {
+        await updateDoc(snapId.docs[0].ref, fieldsToUpdate)
+        return
+      }
+    } catch (innerErr) {
+      console.warn('Firestore updateProfessionalInFirestore query error:', innerErr)
+    }
+  }
+}
+
 /**
  * Approve a pending professional profile to make it publicly visible.
  * Note: Keeps verificationStatus as UNVERIFIED unless separate verification approval happens.
  */
 export async function approveProfessional(id: string, adminUid: string): Promise<boolean> {
-  const idx = memoryProfessionalsCache.findIndex(p => p.id === id || p.username === id)
+  const norm = id.toLowerCase().trim()
+  const idx = memoryProfessionalsCache.findIndex(p => p.id === id || p.username.toLowerCase() === norm || p.slug?.toLowerCase() === norm)
   if (idx !== -1) {
     memoryProfessionalsCache[idx].status = 'approved'
     memoryProfessionalsCache[idx].profileStatus = 'APPROVED'
@@ -350,39 +409,32 @@ export async function approveProfessional(id: string, adminUid: string): Promise
     memoryProfessionalsCache[idx].approvedBy = adminUid
   }
 
-  try {
-    const docRef = doc(db, 'professionals', id)
-    await updateDoc(docRef, {
-      status: 'approved',
-      profileStatus: 'APPROVED',
-      approvedAt: new Date().toISOString(),
-      approvedBy: adminUid
-    })
-  } catch (err) {
-    console.warn('Firestore approveProfessional error:', err)
-  }
+  await updateProfessionalInFirestore(id, {
+    status: 'approved',
+    profileStatus: 'APPROVED',
+    approvedAt: new Date().toISOString(),
+    approvedBy: adminUid
+  })
+
   return true
 }
 
 export async function rejectProfessional(id: string, reason?: string): Promise<boolean> {
-  const idx = memoryProfessionalsCache.findIndex(p => p.id === id || p.username === id)
+  const norm = id.toLowerCase().trim()
+  const idx = memoryProfessionalsCache.findIndex(p => p.id === id || p.username.toLowerCase() === norm || p.slug?.toLowerCase() === norm)
   if (idx !== -1) {
     memoryProfessionalsCache[idx].status = 'rejected'
     memoryProfessionalsCache[idx].profileStatus = 'REJECTED'
     memoryProfessionalsCache[idx].rejectionReason = reason || 'Professional details could not be validated.'
   }
 
-  try {
-    const docRef = doc(db, 'professionals', id)
-    await updateDoc(docRef, {
-      status: 'rejected',
-      profileStatus: 'REJECTED',
-      rejectedAt: new Date().toISOString(),
-      rejectionReason: reason || 'Professional details could not be validated.'
-    })
-  } catch (err) {
-    console.warn('Firestore rejectProfessional error:', err)
-  }
+  await updateProfessionalInFirestore(id, {
+    status: 'rejected',
+    profileStatus: 'REJECTED',
+    rejectedAt: new Date().toISOString(),
+    rejectionReason: reason || 'Professional details could not be validated.'
+  })
+
   return true
 }
 
@@ -390,7 +442,8 @@ export async function rejectProfessional(id: string, reason?: string): Promise<b
  * Directly mark a professional as Verified (giving green check and unlocking edit access)
  */
 export async function verifyProfessional(idOrUsername: string, adminUid: string): Promise<boolean> {
-  const pro = memoryProfessionalsCache.find(p => p.id === idOrUsername || p.username === idOrUsername)
+  const norm = idOrUsername.toLowerCase().trim()
+  const pro = memoryProfessionalsCache.find(p => p.id === idOrUsername || p.username.toLowerCase() === norm || p.slug?.toLowerCase() === norm)
   const now = new Date().toISOString()
   if (pro) {
     pro.verified = true
@@ -400,18 +453,13 @@ export async function verifyProfessional(idOrUsername: string, adminUid: string)
   }
 
   const docId = pro?.id || idOrUsername
+  await updateProfessionalInFirestore(docId, {
+    verified: true,
+    verificationStatus: 'VERIFIED',
+    verifiedAt: now,
+    verifiedBy: adminUid
+  })
 
-  try {
-    const docRef = doc(db, 'professionals', docId)
-    await updateDoc(docRef, {
-      verified: true,
-      verificationStatus: 'VERIFIED',
-      verifiedAt: now,
-      verifiedBy: adminUid
-    })
-  } catch (err) {
-    console.warn('Firestore verifyProfessional error:', err)
-  }
   return true
 }
 
@@ -419,23 +467,19 @@ export async function verifyProfessional(idOrUsername: string, adminUid: string)
  * Remove verification from a professional (reverting to unverified status and locking editing)
  */
 export async function unverifyProfessional(idOrUsername: string, adminUid: string): Promise<boolean> {
-  const pro = memoryProfessionalsCache.find(p => p.id === idOrUsername || p.username === idOrUsername)
+  const norm = idOrUsername.toLowerCase().trim()
+  const pro = memoryProfessionalsCache.find(p => p.id === idOrUsername || p.username.toLowerCase() === norm || p.slug?.toLowerCase() === norm)
   if (pro) {
     pro.verified = false
     pro.verificationStatus = 'UNVERIFIED'
   }
 
   const docId = pro?.id || idOrUsername
+  await updateProfessionalInFirestore(docId, {
+    verified: false,
+    verificationStatus: 'UNVERIFIED'
+  })
 
-  try {
-    const docRef = doc(db, 'professionals', docId)
-    await updateDoc(docRef, {
-      verified: false,
-      verificationStatus: 'UNVERIFIED'
-    })
-  } catch (err) {
-    console.warn('Firestore unverifyProfessional error:', err)
-  }
   return true
 }
 

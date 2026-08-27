@@ -84,6 +84,7 @@ export const getAllJobs = cache(async function getAllJobs(includePending: boolea
   return memoryJobsCache.filter(j => (j.status || 'approved') === 'approved' && !isExpiredJob(j))
 })
 
+<<<<<<< HEAD
 export const getJobBySlug = cache(async function getJobBySlug(idOrSlug: string): Promise<JobItem | null> {
   const normalized = idOrSlug.toLowerCase().trim()
   const lookupSlug = JOB_SLUG_ALIASES[normalized] || normalized
@@ -92,21 +93,92 @@ export const getJobBySlug = cache(async function getJobBySlug(idOrSlug: string):
     return cached
   }
   if (cached && isExpiredJob(cached)) return null
+=======
+export function normalizeJobDoc(docId: string, data: any): JobItem {
+  const title = data.title || 'Job Opportunity'
+  const company = data.company || 'Company'
+  const itemSlug = data.slug || normalizeSlug(`${title} ${data.city || 'Pakistan'}`)
+>>>>>>> 2ebe296 (feat: enhance add-business with auth gate, PKR 20 payment proof flow, why-fee modal, and live tracking)
 
+  return {
+    id: docId || data.id || 'job-' + Date.now(),
+    slug: itemSlug,
+    title,
+    company,
+    companySlug: data.companySlug || normalizeSlug(company),
+    companyLogo: data.companyLogo || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
+    city: data.city || 'Pakistan',
+    cities: data.cities || [data.city || 'Pakistan'],
+    province: data.province || 'Sindh',
+    country: data.country || 'Pakistan',
+    category: data.category || 'Technology & IT',
+    department: data.department || 'General',
+    type: data.type || 'Full-time',
+    employmentType: data.employmentType || data.type || 'Full-time',
+    salary: data.salary || 'Negotiable',
+    experience: data.experience || '1 - 3 Years',
+    education: data.education || 'Bachelor Degree',
+    skills: data.skills || ['Communication'],
+    vacancies: Number(data.vacancies) || 1,
+    genderPreference: data.genderPreference || 'Any',
+    ageRequirement: data.ageRequirement || 'N/A',
+    deadline: data.deadline || 'Open until filled',
+    joiningDate: data.joiningDate || 'Immediate',
+    workingHours: data.workingHours || '09:00 AM - 06:00 PM',
+    shiftType: data.shiftType || 'Day Shift',
+    benefits: data.benefits || ['Health Insurance', 'Paid Leaves'],
+    postedDate: data.postedDate || 'Recent',
+    description: data.description || `Job opening for ${title} at ${company}.`,
+    responsibilities: data.responsibilities || ['Perform core job responsibilities.'],
+    requirements: data.requirements || ['Relevant experience in field.'],
+    preferredQualifications: data.preferredQualifications || [],
+    applicationWebsite: data.applicationWebsite || '',
+    applicationEmail: data.applicationEmail || '',
+    applicationMethod: data.applicationMethod || 'both',
+    applicationUrl: data.applicationUrl || data.applicationWebsite || '',
+    verified: data.verified ?? true,
+    isFeatured: data.isFeatured ?? false,
+    status: data.status || 'approved'
+  }
+}
+
+export const getJobBySlug = cache(async function getJobBySlug(idOrSlug: string): Promise<JobItem | null> {
+  const raw = decodeURIComponent(idOrSlug || '').trim()
+  const normalized = raw.toLowerCase()
+  if (!normalized) return null
+
+  // 1. Live Firestore check
   try {
-    const q = query(collection(db, 'jobs'), where('slug', '==', lookupSlug), limit(1))
+    const q = query(collection(db, 'jobs'), where('slug', '==', normalized), limit(1))
     const snap = await getDocs(q)
     if (!snap.empty) {
       const docSnap = snap.docs[0]
-      const data = docSnap.data() as JobItem
-      if (data.status && data.status !== 'approved') return null
-      const normalizedJob = { ...data, id: docSnap.id } as JobItem
-      if (isExpiredJob(normalizedJob)) return null
-      memoryJobsCache.push(normalizedJob)
-      return normalizedJob
+      const item = normalizeJobDoc(docSnap.id, docSnap.data())
+      if (item.status === 'approved' && !isExpiredJob(item)) {
+        memoryJobsCache = [
+          item,
+          ...memoryJobsCache.filter(j => j.slug?.toLowerCase() !== normalized && j.id !== item.id)
+        ]
+        return item
+      }
+      return null
     }
+
+    try {
+      const direct = await getDocs(query(collection(db, 'jobs'), where('id', '==', raw), limit(1)))
+      if (!direct.empty) {
+        const item = normalizeJobDoc(direct.docs[0].id, direct.docs[0].data())
+        if (item.status === 'approved' && !isExpiredJob(item)) return item
+      }
+    } catch (_) {}
   } catch (err) {
     console.warn('Firestore getJobBySlug error:', err)
+  }
+
+  // 2. Memory cache check
+  const cached = memoryJobsCache.find(j => j.id === raw || j.slug?.toLowerCase() === normalized)
+  if (cached && (cached.status || 'approved') === 'approved' && !isExpiredJob(cached)) {
+    return cached
   }
 
   return null
@@ -179,33 +251,50 @@ export async function saveJobToDatabase(jobData: Partial<JobItem>): Promise<JobI
   return newJob
 }
 
+async function updateJobInFirestore(idOrSlug: string, fieldsToUpdate: Record<string, any>): Promise<void> {
+  try {
+    const docRef = doc(db, 'jobs', idOrSlug)
+    await updateDoc(docRef, fieldsToUpdate)
+    return
+  } catch (err) {
+    try {
+      const q = query(collection(db, 'jobs'), where('slug', '==', idOrSlug), limit(1))
+      const snap = await getDocs(q)
+      if (!snap.empty) {
+        await updateDoc(snap.docs[0].ref, fieldsToUpdate)
+        return
+      }
+      const qId = query(collection(db, 'jobs'), where('id', '==', idOrSlug), limit(1))
+      const snapId = await getDocs(qId)
+      if (!snapId.empty) {
+        await updateDoc(snapId.docs[0].ref, fieldsToUpdate)
+        return
+      }
+    } catch (innerErr) {
+      console.warn('Firestore updateJobInFirestore error:', innerErr)
+    }
+  }
+}
+
 export async function approveJob(id: string, adminUid: string): Promise<boolean> {
-  const idx = memoryJobsCache.findIndex(j => j.id === id || j.slug === id)
+  const norm = id.toLowerCase().trim()
+  const idx = memoryJobsCache.findIndex(j => j.id === id || j.slug?.toLowerCase() === norm)
   if (idx !== -1) {
     memoryJobsCache[idx].status = 'approved'
   }
 
-  try {
-    const docRef = doc(db, 'jobs', id)
-    await updateDoc(docRef, { status: 'approved' })
-  } catch (err) {
-    console.warn('Firestore approveJob error:', err)
-  }
+  await updateJobInFirestore(id, { status: 'approved' })
   return true
 }
 
 export async function rejectJob(id: string, reason?: string): Promise<boolean> {
-  const idx = memoryJobsCache.findIndex(j => j.id === id || j.slug === id)
+  const norm = id.toLowerCase().trim()
+  const idx = memoryJobsCache.findIndex(j => j.id === id || j.slug?.toLowerCase() === norm)
   if (idx !== -1) {
     memoryJobsCache[idx].status = 'rejected'
   }
 
-  try {
-    const docRef = doc(db, 'jobs', id)
-    await updateDoc(docRef, { status: 'rejected', rejectionReason: reason })
-  } catch (err) {
-    console.warn('Firestore rejectJob error:', err)
-  }
+  await updateJobInFirestore(id, { status: 'rejected', rejectionReason: reason })
   return true
 }
 

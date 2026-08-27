@@ -772,6 +772,21 @@ export default function AdminPage() {
                         <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed">
                           {biz.description}
                         </p>
+
+                        {biz.paymentScreenshot && (
+                          <button
+                            type="button"
+                            onClick={() => setSelectedScreenshot({
+                              url: biz.paymentScreenshot!,
+                              name: biz.name,
+                              ref: biz.paymentDetails?.referenceNumber || 'Listing Fee PKR 20'
+                            })}
+                            className="px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs font-extrabold rounded-xl border border-blue-200 flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                          >
+                            <Eye className="w-4 h-4 text-blue-600" />
+                            <span>See PKR 20 Payment Proof ({biz.paymentDetails?.paymentMethod || 'Proof'})</span>
+                          </button>
+                        )}
                       </div>
 
                       <div className="pt-4 border-t border-slate-200 flex gap-3">
@@ -1097,7 +1112,7 @@ export default function AdminPage() {
                         {req.paymentScreenshot && (
                           <button
                             type="button"
-                            onClick={() => setSelectedScreenshot({ url: req.paymentScreenshot || '', name: req.proName, ref: req.paymentReference })}
+                            onClick={() => setSelectedScreenshot({ url: req.paymentScreenshot!, name: req.proName, ref: req.paymentReference })}
                             className="px-4 py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs font-extrabold rounded-xl border border-blue-200 flex items-center gap-2 cursor-pointer w-full sm:w-auto justify-center shadow-2xs transition-all hover:scale-105"
                           >
                             <Eye className="w-4 h-4 text-blue-600" />
@@ -1498,6 +1513,24 @@ export default function AdminPage() {
                   <div><strong>Website:</strong> {selectedBiz.website}</div>
                   <div className="col-span-2"><strong>Address:</strong> {selectedBiz.address}</div>
                 </div>
+
+                {selectedBiz.paymentScreenshot && (
+                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-between">
+                    <span className="font-bold text-blue-900">PKR 20 Listing Payment Proof Attached:</span>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedScreenshot({
+                        url: selectedBiz.paymentScreenshot!,
+                        name: selectedBiz.name,
+                        ref: selectedBiz.paymentDetails?.referenceNumber || 'Listing Fee PKR 20'
+                      })}
+                      className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer"
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                      <span>View Screenshot</span>
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div className="pt-4 border-t border-slate-200 flex justify-between items-center">

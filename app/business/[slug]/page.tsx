@@ -10,8 +10,8 @@ import { getAllBusinesses, getBusinessBySlug } from '@/lib/db-service'
 import LazyMap from '@/components/business/lazy-map'
 import { BusinessHeroActions, BusinessReviewsSection } from './business-interactive-actions'
 
-// Enable Incremental Static Regeneration (ISR) with 24h revalidation
-export const revalidate = 86400
+export const dynamicParams = true
+export const revalidate = 0
 
 export async function generateStaticParams() {
   const businesses = await getAllBusinesses()

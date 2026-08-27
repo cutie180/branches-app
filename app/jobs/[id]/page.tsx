@@ -14,7 +14,8 @@ import {
 import JobInteractiveApply from './job-interactive-apply'
 import { JOB_APPLICATION_WHATSAPP, getPublicJobPath, getPublicJobSlug } from '@/lib/job-url'
 
-export const revalidate = 86400
+export const dynamicParams = true
+export const revalidate = 0
 
 export async function generateStaticParams() {
   const jobs = await getAllJobs()

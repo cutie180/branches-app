@@ -12,6 +12,7 @@ export const getAllCompanies = cache(async function getAllCompanies(includePendi
     if (!snap.empty) {
       const items: CompanyItem[] = []
       snap.forEach((docSnap) => {
+<<<<<<< HEAD
         const data = docSnap.data() as Partial<CompanyItem>
         const cName = data.name || 'Company profile'
         const cSlug = data.slug || normalizeSlug(cName)
@@ -70,12 +71,15 @@ export const getAllCompanies = cache(async function getAllCompanies(includePendi
           features: data.features || [],
           activeJobsCount: data.activeJobsCount || 0
         })
+=======
+        items.push(normalizeCompanyDoc(docSnap.id, docSnap.data()))
+>>>>>>> 2ebe296 (feat: enhance add-business with auth gate, PKR 20 payment proof flow, why-fee modal, and live tracking)
       })
 
-      const existingSlugs = new Set(items.map(c => c.slug))
+      const existingSlugs = new Set(items.map(c => c.slug.toLowerCase()))
       const combined = [
         ...items,
-        ...memoryCompaniesCache.filter(c => !existingSlugs.has(c.slug))
+        ...memoryCompaniesCache.filter(c => !existingSlugs.has(c.slug.toLowerCase()))
       ]
       memoryCompaniesCache = combined
     }
@@ -90,25 +94,102 @@ export const getAllCompanies = cache(async function getAllCompanies(includePendi
   return memoryCompaniesCache.filter(c => (c.status || 'approved') === 'approved')
 })
 
-export const getCompanyBySlug = cache(async function getCompanyBySlug(slug: string): Promise<CompanyItem | null> {
-  const normalized = slug.toLowerCase().trim()
-  const cached = memoryCompaniesCache.find(c => c.slug.toLowerCase() === normalized || c.id === normalized)
-  if (cached && (cached.status || 'approved') === 'approved') {
-    return cached
-  }
+export function normalizeCompanyDoc(docId: string, data: any): CompanyItem {
+  const cName = data.name || 'Verified Company'
+  const cSlug = data.slug || normalizeSlug(cName)
+  const itemStatus = data.status || 'approved'
 
+  return {
+    id: docId || data.id || 'comp-' + Date.now(),
+    slug: cSlug,
+    name: cName,
+    logo: data.logo || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
+    coverImage: data.coverImage || 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
+    description: data.description || 'Verified hiring company profile on ListPak Pakistan.',
+    industry: data.industry || 'Technology & IT',
+    category: data.category || 'Hiring Company / HR',
+    companySize: data.companySize || '10 - 50 Employees',
+    employeeCount: String(data.employeeCount || '25'),
+    establishedYear: String(data.establishedYear || '2020'),
+    registrationNumber: data.registrationNumber || '',
+    companyType: data.companyType || 'Private',
+    headquarters: data.headquarters || `${data.city || 'Lahore'}, Pakistan`,
+    branchLocations: data.branchLocations || [],
+    website: data.website || '',
+    careersUrl: data.careersUrl || '',
+    googleMapUrl: data.googleMapUrl || '',
+    hrName: data.hrName || 'HR Department',
+    hrDesignation: data.hrDesignation || 'HR Manager',
+    hrEmail: data.hrEmail || '',
+    companyEmail: data.companyEmail || '',
+    phone: data.phone || '',
+    whatsapp: data.whatsapp || '',
+    email: data.companyEmail || data.email || 'contact@company.pk',
+    address: data.address || '',
+    city: data.city || 'Lahore',
+    province: data.province || 'Punjab',
+    country: data.country || 'Pakistan',
+    linkedin: data.linkedin || '',
+    facebook: data.facebook || '',
+    instagram: data.instagram || '',
+    twitter: data.twitter || '',
+    youtube: data.youtube || '',
+    github: data.github || '',
+    customSocialLinks: data.customSocialLinks || [],
+    rating: Number.isFinite(data.rating) ? data.rating : 5.0,
+    reviewCount: data.reviewCount || (data.reviews ? data.reviews.length : 0),
+    verified: data.verified ?? true,
+    isClaimed: data.isClaimed === true,
+    isFeatured: data.isFeatured ?? false,
+    status: itemStatus,
+    submittedAt: data.submittedAt || new Date().toISOString(),
+    approvedAt: data.approvedAt,
+    approvedBy: data.approvedBy,
+    rejectionReason: data.rejectionReason,
+    services: data.services || ['Corporate Hiring', 'Talent Acquisition'],
+    operatingHours: data.operatingHours || { 'Monday - Friday': '09:00 AM - 06:00 PM' },
+    features: data.features || ['Verified Employer'],
+    reviews: data.reviews || [],
+    faqs: data.faqs || [],
+    activeJobsCount: data.activeJobsCount || 1
+  }
+}
+
+export const getCompanyBySlug = cache(async function getCompanyBySlug(slug: string): Promise<CompanyItem | null> {
+  const raw = decodeURIComponent(slug || '').trim()
+  const normalized = raw.toLowerCase()
+  if (!normalized) return null
+
+  // 1. Live Firestore check
   try {
     const q = query(collection(db, 'companies'), where('slug', '==', normalized), limit(1))
     const snap = await getDocs(q)
     if (!snap.empty) {
       const docSnap = snap.docs[0]
-      const data = docSnap.data() as CompanyItem
-      if (data.status && data.status !== 'approved') return null
-      memoryCompaniesCache.push({ ...data, id: docSnap.id })
-      return data
+      const item = normalizeCompanyDoc(docSnap.id, docSnap.data())
+      memoryCompaniesCache = [
+        item,
+        ...memoryCompaniesCache.filter(c => c.slug.toLowerCase() !== normalized && c.id !== item.id)
+      ]
+      if (item.status === 'approved') return item
+      return null
     }
+
+    try {
+      const direct = await getDocs(query(collection(db, 'companies'), where('id', '==', raw), limit(1)))
+      if (!direct.empty) {
+        const item = normalizeCompanyDoc(direct.docs[0].id, direct.docs[0].data())
+        if (item.status === 'approved') return item
+      }
+    } catch (_) {}
   } catch (err) {
     console.warn('Firestore getCompanyBySlug error:', err)
+  }
+
+  // 2. Memory cache check
+  const cached = memoryCompaniesCache.find(c => c.slug.toLowerCase() === normalized || c.id === normalized)
+  if (cached && (cached.status || 'approved') === 'approved') {
+    return cached
   }
 
   return null
@@ -118,60 +199,13 @@ export async function saveCompanyToDatabase(compData: Partial<CompanyItem>): Pro
   const name = compData.name || 'New Hiring Company'
   const slug = compData.slug || normalizeSlug(name) + '-' + Math.floor(Math.random() * 1000)
 
-  const newComp: CompanyItem = {
-    id: 'comp-' + Date.now(),
-    slug,
+  const newComp: CompanyItem = normalizeCompanyDoc('comp-' + Date.now(), {
+    ...compData,
     name,
-    logo: compData.logo || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
-    coverImage: compData.coverImage || 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
-    description: compData.description || `${name} hiring company profile on ListPak.`,
-    industry: compData.industry || 'Technology & IT',
-    category: compData.category || 'Hiring Company / HR',
-    companySize: compData.companySize || '10 - 50 Employees',
-    employeeCount: compData.employeeCount == null ? '' : String(compData.employeeCount),
-    establishedYear: compData.establishedYear || '2020',
-    registrationNumber: compData.registrationNumber || '',
-    companyType: compData.companyType || 'Private',
-    headquarters: compData.headquarters || `${compData.city || 'Lahore'}, Pakistan`,
-    branchLocations: compData.branchLocations || [],
-    website: compData.website || '',
-    careersUrl: compData.careersUrl || '',
-    googleMapUrl: compData.googleMapUrl || '',
-
-    hrName: compData.hrName || 'HR Recruitment Team',
-    hrDesignation: compData.hrDesignation || 'HR Lead',
-    hrEmail: compData.hrEmail || '',
-    companyEmail: compData.companyEmail || '',
-    email: compData.companyEmail || compData.hrEmail || '',
-    phone: compData.phone || '',
-    whatsapp: compData.whatsapp || '',
-    address: compData.address || '',
-    city: compData.city || 'Lahore',
-    province: compData.province || 'Punjab',
-    country: compData.country || 'Pakistan',
-
-    linkedin: compData.linkedin || '',
-    facebook: compData.facebook || '',
-    instagram: compData.instagram || '',
-    twitter: compData.twitter || '',
-    youtube: compData.youtube || '',
-    github: compData.github || '',
-    customSocialLinks: compData.customSocialLinks || [],
-
-    rating: 0,
-    reviewCount: 0,
-    isClaimed: false,
-    services: compData.services || [],
-    operatingHours: compData.operatingHours || {},
-    features: compData.features || [],
-    verified: false,
-    isFeatured: false,
-    status: 'pending', // PENDING WORKFLOW
-    submittedAt: new Date().toISOString(),
-    reviews: [],
-    faqs: [],
-    activeJobsCount: 0
-  }
+    slug,
+    status: 'pending',
+    submittedAt: new Date().toISOString()
+  })
 
   memoryCompaniesCache = [newComp, ...memoryCompaniesCache.filter(c => c.slug !== slug)]
 
@@ -184,36 +218,63 @@ export async function saveCompanyToDatabase(compData: Partial<CompanyItem>): Pro
   return newComp
 }
 
+async function updateCompanyInFirestore(idOrSlug: string, fieldsToUpdate: Record<string, any>): Promise<void> {
+  try {
+    const docRef = doc(db, 'companies', idOrSlug)
+    await updateDoc(docRef, fieldsToUpdate)
+    return
+  } catch (err) {
+    try {
+      const q = query(collection(db, 'companies'), where('slug', '==', idOrSlug), limit(1))
+      const snap = await getDocs(q)
+      if (!snap.empty) {
+        await updateDoc(snap.docs[0].ref, fieldsToUpdate)
+        return
+      }
+      const qId = query(collection(db, 'companies'), where('id', '==', idOrSlug), limit(1))
+      const snapId = await getDocs(qId)
+      if (!snapId.empty) {
+        await updateDoc(snapId.docs[0].ref, fieldsToUpdate)
+        return
+      }
+    } catch (innerErr) {
+      console.warn('Firestore updateCompanyInFirestore error:', innerErr)
+    }
+  }
+}
+
 export async function approveCompany(id: string, adminUid: string): Promise<boolean> {
-  const idx = memoryCompaniesCache.findIndex(c => c.id === id || c.slug === id)
+  const norm = id.toLowerCase().trim()
+  const idx = memoryCompaniesCache.findIndex(c => c.id === id || c.slug.toLowerCase() === norm)
   if (idx !== -1) {
     memoryCompaniesCache[idx].status = 'approved'
     memoryCompaniesCache[idx].approvedAt = new Date().toISOString()
     memoryCompaniesCache[idx].approvedBy = adminUid
   }
 
-  try {
-    const docRef = doc(db, 'companies', id)
-    await updateDoc(docRef, { status: 'approved', approvedAt: new Date().toISOString(), approvedBy: adminUid })
-  } catch (err) {
-    console.warn('Firestore approveCompany error:', err)
-  }
+  await updateCompanyInFirestore(id, {
+    status: 'approved',
+    approvedAt: new Date().toISOString(),
+    approvedBy: adminUid
+  })
+
   return true
 }
 
 export async function rejectCompany(id: string, reason?: string): Promise<boolean> {
-  const idx = memoryCompaniesCache.findIndex(c => c.id === id || c.slug === id)
+  const norm = id.toLowerCase().trim()
+  const idx = memoryCompaniesCache.findIndex(c => c.id === id || c.slug.toLowerCase() === norm)
   if (idx !== -1) {
     memoryCompaniesCache[idx].status = 'rejected'
     memoryCompaniesCache[idx].rejectionReason = reason
   }
 
-  try {
-    const docRef = doc(db, 'companies', id)
-    await updateDoc(docRef, { status: 'rejected', rejectedAt: new Date().toISOString(), rejectionReason: reason })
-  } catch (err) {
-    console.warn('Firestore rejectCompany error:', err)
-  }
+  await updateCompanyInFirestore(id, {
+    status: 'rejected',
+    rejectedAt: new Date().toISOString(),
+    rejectionReason: reason
+  })
+
   return true
 }
 

@@ -89,8 +89,24 @@ export interface BusinessLocation {
   lng?: number
 }
 
+export interface BusinessPaymentDetails {
+  method?: string
+  paymentMethod?: string
+  accountNumber?: string
+  accountTitle?: string
+  referenceNumber?: string
+  transactionRef?: string
+  amount: number
+  screenshotUrl?: string
+  paymentScreenshot?: string
+  paymentDate?: string
+  verifiedAt?: string
+  verifiedBy?: string
+}
+
 export interface BusinessItem {
   id: string
+  userId?: string
   slug: string
   name: string
   category: string
@@ -121,6 +137,9 @@ export interface BusinessItem {
   services: string[]
   operatingHours: { [key: string]: string }
   features: string[]
+  paymentDetails?: BusinessPaymentDetails
+  paymentScreenshot?: string
+  paymentStatus?: 'UNPAID' | 'PENDING' | 'VERIFIED' | 'REJECTED'
   reviews: {
     id: string
     userName: string
@@ -356,9 +375,9 @@ export interface ProfessionalItem {
   googleScholar?: string
   resumeUrl?: string
   education?: string | any[]
-  certifications?: string[]
+  certifications?: string[] | any[]
   previousExperience?: string | any[]
-  customSocialLinks?: { platform: string; url: string }[]
+  customSocialLinks?: { platform?: string; name?: string; url: string }[] | any[]
   dynamicFields?: Record<string, any>
   servicesOffered?: string[]
   experienceList?: {

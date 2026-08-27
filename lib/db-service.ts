@@ -57,6 +57,66 @@ export const GENERATE_STARTER_REVIEWS = (businessName: string) => [
   }
 ]
 
+export function normalizeBusinessDoc(docId: string, data: any): BusinessItem {
+  const bName = data.businessName || data.name || 'Verified Business'
+  const itemStatus = data.status || 'approved'
+  const itemSlug = data.slug || normalizeSlug(bName)
+  
+  const docLocations = data.locations && data.locations.length > 0
+    ? data.locations
+    : [{ city: data.city || 'Pakistan', address: data.address || 'Commercial Center, Pakistan', isPrimary: true }]
+  const docCities = data.cities && data.cities.length > 0
+    ? data.cities
+    : Array.from(new Set(docLocations.map((l: { city: string }) => l.city)))
+  const primaryLoc = docLocations.find((l: { isPrimary?: boolean }) => l.isPrimary) || docLocations[0]
+
+  return {
+    id: docId || data.id || 'biz-' + Date.now(),
+    userId: data.userId || '',
+    slug: itemSlug,
+    name: bName,
+    category: data.category || 'Services',
+    categoryId: data.categoryId || data.category || 'services',
+    city: primaryLoc.city || data.city || 'Pakistan',
+    cities: docCities,
+    province: data.province || 'Pakistan',
+    rating: Number.isFinite(data.rating) ? data.rating : 0,
+    reviewCount: data.reviewCount || (data.reviews ? data.reviews.length : 0),
+    verified: data.verified === true,
+    isClaimed: data.isClaimed === true,
+    isFeatured: data.isFeatured === true,
+    status: itemStatus,
+    submittedAt: data.submittedAt || data.createdAt || new Date().toISOString(),
+    approvedAt: data.approvedAt,
+    approvedBy: data.approvedBy,
+    rejectionReason: data.rejectionReason,
+    ownerName: data.ownerName || data.fullName || 'Business Representative',
+    phone: data.phone || '+92 300 0000000',
+    whatsapp: data.whatsapp || '923000000000',
+    email: data.email || 'contact@business.pk',
+    website: data.website || data.websiteUrl || 'https://www.listpak.com',
+    address: primaryLoc.address || data.address || 'Commercial Center, Pakistan',
+    locations: docLocations,
+    coverImage: data.coverImage || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
+    logo: data.logo || data.logoUrl || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
+    description: data.description || 'Verified business listing on ListPak.',
+    services: data.services || ['General Services', 'Customer Support'],
+    operatingHours: data.operatingHours || { 'Monday - Saturday': '09:00 AM - 07:00 PM' },
+    features: data.features || ['Verified Profile'],
+    paymentDetails: data.paymentDetails || (data.paymentScreenshot ? {
+      paymentMethod: data.paymentMethod || data.paymentDetails?.paymentMethod || 'Easypaisa',
+      referenceNumber: data.paymentReference || data.referenceNumber || '',
+      paymentScreenshot: data.paymentScreenshot,
+      amount: 20,
+      paymentDate: data.paymentDate || data.submittedAt || new Date().toISOString()
+    } : undefined),
+    paymentScreenshot: data.paymentScreenshot || data.paymentDetails?.paymentScreenshot || '',
+    paymentStatus: data.paymentStatus || (data.paymentScreenshot || data.paymentDetails ? 'PENDING' : (itemStatus === 'approved' ? 'VERIFIED' : 'UNPAID')),
+    reviews: data.reviews && data.reviews.length > 0 ? data.reviews : [],
+    faqs: data.faqs || []
+  }
+}
+
 /**
  * Fetch all businesses. If includePending is false (default), returns ONLY approved businesses.
  */
@@ -66,6 +126,7 @@ export const getAllBusinesses = cache(async function getAllBusinesses(includePen
     if (!querySnapshot.empty) {
       const firestoreItems: BusinessItem[] = []
       querySnapshot.forEach((docSnap) => {
+<<<<<<< HEAD
         const data = docSnap.data()
         const bName = data.businessName || data.name || 'Business listing'
         const itemStatus = data.status || 'approved'
@@ -113,13 +174,16 @@ export const getAllBusinesses = cache(async function getAllBusinesses(includePen
           reviews: data.reviews && data.reviews.length > 0 ? data.reviews : [],
           faqs: data.faqs || []
         })
+=======
+        firestoreItems.push(normalizeBusinessDoc(docSnap.id, docSnap.data()))
+>>>>>>> 2ebe296 (feat: enhance add-business with auth gate, PKR 20 payment proof flow, why-fee modal, and live tracking)
       })
 
       // Merge avoiding duplicate slugs
-      const existingSlugs = new Set(firestoreItems.map(b => b.slug))
+      const existingSlugs = new Set(firestoreItems.map(b => b.slug.toLowerCase()))
       const combined = [
         ...firestoreItems,
-        ...memoryBusinessesCache.filter(b => !existingSlugs.has(b.slug))
+        ...memoryBusinessesCache.filter(b => !existingSlugs.has(b.slug.toLowerCase()))
       ]
       memoryBusinessesCache = combined
     }
@@ -140,50 +204,65 @@ export async function getPendingBusinesses(): Promise<BusinessItem[]> {
   return all.filter(b => b.status === 'pending')
 }
 
+async function updateBusinessInFirestore(idOrSlug: string, fieldsToUpdate: Record<string, any>): Promise<void> {
+  try {
+    const docRef = doc(db, 'businesses', idOrSlug)
+    await updateDoc(docRef, fieldsToUpdate)
+    return
+  } catch (err) {
+    try {
+      const q = query(collection(db, 'businesses'), where('slug', '==', idOrSlug), limit(1))
+      const snap = await getDocs(q)
+      if (!snap.empty) {
+        await updateDoc(snap.docs[0].ref, fieldsToUpdate)
+        return
+      }
+      const qId = query(collection(db, 'businesses'), where('id', '==', idOrSlug), limit(1))
+      const snapId = await getDocs(qId)
+      if (!snapId.empty) {
+        await updateDoc(snapId.docs[0].ref, fieldsToUpdate)
+        return
+      }
+    } catch (innerErr) {
+      console.warn('Firestore updateBusinessInFirestore error:', innerErr)
+    }
+  }
+}
+
 export async function approveBusiness(id: string, adminUid: string): Promise<boolean> {
-  // Update memory cache
-  const idx = memoryBusinessesCache.findIndex(b => b.id === id)
+  const norm = id.toLowerCase().trim()
+  const idx = memoryBusinessesCache.findIndex(b => b.id === id || b.slug.toLowerCase() === norm)
   if (idx !== -1) {
     memoryBusinessesCache[idx].status = 'approved'
+    memoryBusinessesCache[idx].paymentStatus = 'VERIFIED'
     memoryBusinessesCache[idx].approvedAt = new Date().toISOString()
     memoryBusinessesCache[idx].approvedBy = adminUid
   }
 
-  // Update Firestore
-  try {
-    const docRef = doc(db, 'businesses', id)
-    await updateDoc(docRef, {
-      status: 'approved',
-      approvedAt: new Date().toISOString(),
-      approvedBy: adminUid
-    })
-    return true
-  } catch (err) {
-    console.warn('Firestore approveBusiness error:', err)
-  }
+  await updateBusinessInFirestore(id, {
+    status: 'approved',
+    paymentStatus: 'VERIFIED',
+    approvedAt: new Date().toISOString(),
+    approvedBy: adminUid
+  })
+
   return true
 }
 
 export async function rejectBusiness(id: string, reason?: string): Promise<boolean> {
-  // Update memory cache
-  const idx = memoryBusinessesCache.findIndex(b => b.id === id)
+  const norm = id.toLowerCase().trim()
+  const idx = memoryBusinessesCache.findIndex(b => b.id === id || b.slug.toLowerCase() === norm)
   if (idx !== -1) {
     memoryBusinessesCache[idx].status = 'rejected'
     memoryBusinessesCache[idx].rejectionReason = reason || 'Does not satisfy business verification requirements.'
   }
 
-  // Update Firestore
-  try {
-    const docRef = doc(db, 'businesses', id)
-    await updateDoc(docRef, {
-      status: 'rejected',
-      rejectedAt: new Date().toISOString(),
-      rejectionReason: reason || 'Does not satisfy business verification requirements.'
-    })
-    return true
-  } catch (err) {
-    console.warn('Firestore rejectBusiness error:', err)
-  }
+  await updateBusinessInFirestore(id, {
+    status: 'rejected',
+    rejectedAt: new Date().toISOString(),
+    rejectionReason: reason || 'Does not satisfy business verification requirements.'
+  })
+
   return true
 }
 
@@ -194,64 +273,45 @@ export async function getFeaturedBusinesses(limitCount: number = 9): Promise<Bus
 }
 
 export const getBusinessBySlug = cache(async function getBusinessBySlug(slug: string): Promise<BusinessItem | null> {
-  const cached = memoryBusinessesCache.find(b => b.slug === slug)
-  if (cached && (cached.status || 'approved') === 'approved') {
-    return cached
-  }
+  const raw = decodeURIComponent(slug || '').trim()
+  const normalized = raw.toLowerCase()
+  if (!normalized) return null
 
+  // 1. Live Firestore check for real-time approved status
   try {
-    const q = query(collection(db, 'businesses'), where('slug', '==', slug), limit(1))
-    const querySnapshot = await getDocs(q)
-    if (!querySnapshot.empty) {
-      const docSnap = querySnapshot.docs[0]
-      const data = docSnap.data()
-      if (data.status && data.status !== 'approved') {
-        return null // Pending/rejected listings are not publicly accessible
+    const q = query(collection(db, 'businesses'), where('slug', '==', normalized), limit(1))
+    const snap = await getDocs(q)
+    if (!snap.empty) {
+      const docSnap = snap.docs[0]
+      const item = normalizeBusinessDoc(docSnap.id, docSnap.data())
+      memoryBusinessesCache = [
+        item,
+        ...memoryBusinessesCache.filter(b => b.slug.toLowerCase() !== normalized && b.id !== item.id)
+      ]
+      if (item.status === 'approved') {
+        return item
       }
-      const bName = data.businessName || data.name || 'Business listing'
-      const docLocations = data.locations && data.locations.length > 0
-        ? data.locations
-        : [{ city: data.city || 'Pakistan', address: data.address || 'Commercial Center, Pakistan', isPrimary: true }]
-      const docCities = data.cities && data.cities.length > 0
-        ? data.cities
-        : Array.from(new Set(docLocations.map((l: { city: string }) => l.city)))
-      const primaryLoc = docLocations.find((l: { isPrimary?: boolean }) => l.isPrimary) || docLocations[0]
-
-      const item: BusinessItem = {
-        id: docSnap.id,
-        slug: data.slug || slug,
-        name: bName,
-        category: data.category || 'Services',
-        categoryId: data.categoryId || data.category || 'services',
-        city: primaryLoc.city || data.city || 'Pakistan',
-        cities: docCities,
-        province: data.province || 'Pakistan',
-        rating: Number.isFinite(data.rating) ? data.rating : 0,
-        reviewCount: data.reviewCount || 5,
-        verified: data.verified === true,
-        isClaimed: data.isClaimed === true,
-        isFeatured: data.isFeatured === true,
-        status: data.status || 'approved',
-        phone: data.phone || '',
-        whatsapp: data.whatsapp || '',
-        email: data.email || '',
-        website: data.website || data.websiteUrl || '',
-        address: primaryLoc.address || data.address || 'Commercial Center, Pakistan',
-        locations: docLocations,
-        coverImage: data.coverImage || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
-        logo: data.logo || data.logoUrl || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
-        description: data.description || 'Business listing submitted to ListPak.',
-        services: data.services || [],
-        operatingHours: data.operatingHours || {},
-        features: data.features || [],
-        reviews: data.reviews && data.reviews.length > 0 ? data.reviews : [],
-        faqs: data.faqs || []
-      }
-      memoryBusinessesCache.push(item)
-      return item
+      return null
     }
+
+    // Direct doc lookup by ID
+    try {
+      const direct = await getDocs(query(collection(db, 'businesses'), where('id', '==', raw), limit(1)))
+      if (!direct.empty) {
+        const item = normalizeBusinessDoc(direct.docs[0].id, direct.docs[0].data())
+        if (item.status === 'approved') {
+          return item
+        }
+      }
+    } catch (_) {}
   } catch (err) {
     console.warn('Firestore getBusinessBySlug fallback:', err)
+  }
+
+  // 2. Memory cache check
+  const cached = memoryBusinessesCache.find(b => b.slug.toLowerCase() === normalized || b.id.toLowerCase() === normalized)
+  if (cached && (cached.status || 'approved') === 'approved') {
+    return cached
   }
 
   return null
@@ -275,6 +335,7 @@ export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>
 
   const newBiz: BusinessItem = {
     id: 'biz-' + Date.now(),
+    userId: businessData.userId || '',
     slug,
     name,
     category: businessData.category || 'Services',
@@ -289,6 +350,9 @@ export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>
     isClaimed: false,
     isFeatured: false,
     status: 'pending', // MANDATORY PENDING WORKFLOW
+    paymentStatus: businessData.paymentStatus || (businessData.paymentScreenshot ? 'PENDING' : 'UNPAID'),
+    paymentScreenshot: businessData.paymentScreenshot || '',
+    paymentDetails: businessData.paymentDetails,
     submittedAt: new Date().toISOString(),
     ownerName: businessData.ownerName || 'Business Representative',
     phone: businessData.phone || '+92 300 0000000',
@@ -322,6 +386,57 @@ export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>
   }
 
   return newBiz
+}
+
+export async function updateBusinessPaymentProof(
+  idOrSlug: string,
+  payment: {
+    paymentMethod: string
+    referenceNumber?: string
+    paymentScreenshot: string
+    amount?: number
+  }
+): Promise<boolean> {
+  const norm = idOrSlug.toLowerCase().trim()
+  const paymentDetails = {
+    paymentMethod: payment.paymentMethod,
+    referenceNumber: payment.referenceNumber || '',
+    paymentScreenshot: payment.paymentScreenshot,
+    amount: payment.amount || 20,
+    paymentDate: new Date().toISOString()
+  }
+
+  const idx = memoryBusinessesCache.findIndex(b => b.id === idOrSlug || b.slug.toLowerCase() === norm)
+  if (idx !== -1) {
+    memoryBusinessesCache[idx].paymentScreenshot = payment.paymentScreenshot
+    memoryBusinessesCache[idx].paymentDetails = paymentDetails
+    memoryBusinessesCache[idx].paymentStatus = 'PENDING'
+  }
+
+  await updateBusinessInFirestore(idOrSlug, {
+    paymentScreenshot: payment.paymentScreenshot,
+    paymentDetails,
+    paymentStatus: 'PENDING'
+  })
+
+  return true
+}
+
+export async function getUserBusinesses(emailOrUid: string): Promise<BusinessItem[]> {
+  const norm = (emailOrUid || '').trim().toLowerCase()
+  if (!norm) return []
+
+  try {
+    const all = await getAllBusinesses(true)
+    return all.filter(b => 
+      (b.email && b.email.toLowerCase().trim() === norm) ||
+      (b.ownerName && b.ownerName.toLowerCase().trim() === norm) ||
+      (b.userId && b.userId.toLowerCase().trim() === norm)
+    )
+  } catch (err) {
+    console.warn('getUserBusinesses error:', err)
+    return []
+  }
 }
 
 /**

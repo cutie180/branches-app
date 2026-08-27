@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   },
 }
 
-export const FEATURED_POSTS = [
+const FEATURED_POSTS = [
   {
     slug: 'restaurants-in-karachi',
     title: 'Restaurants in Karachi 2026: Food, Cuisines, Areas & Dining Guide',
@@ -97,7 +97,7 @@ export const FEATURED_POSTS = [
   }
 ]
 
-export const RECENT_POSTS = [
+const RECENT_POSTS = [
   {
     slug: 'best-software-houses-pakistan-2026',
     title: 'Best Software Houses in Pakistan 2026: How to Compare IT Companies',

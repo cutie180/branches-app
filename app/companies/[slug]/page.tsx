@@ -14,7 +14,8 @@ import {
   Linkedin, ExternalLink, Briefcase
 } from 'lucide-react'
 
-export const revalidate = 86400
+export const dynamicParams = true
+export const revalidate = 0
 
 export async function generateStaticParams() {
   const companies = await getAllCompanies()
