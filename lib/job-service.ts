@@ -84,21 +84,10 @@ export const getAllJobs = cache(async function getAllJobs(includePending: boolea
   return memoryJobsCache.filter(j => (j.status || 'approved') === 'approved' && !isExpiredJob(j))
 })
 
-<<<<<<< HEAD
-export const getJobBySlug = cache(async function getJobBySlug(idOrSlug: string): Promise<JobItem | null> {
-  const normalized = idOrSlug.toLowerCase().trim()
-  const lookupSlug = JOB_SLUG_ALIASES[normalized] || normalized
-  const cached = memoryJobsCache.find(j => j.id.toLowerCase() === lookupSlug || j.slug?.toLowerCase() === lookupSlug)
-  if (cached && (cached.status || 'approved') === 'approved' && !isExpiredJob(cached)) {
-    return cached
-  }
-  if (cached && isExpiredJob(cached)) return null
-=======
 export function normalizeJobDoc(docId: string, data: any): JobItem {
   const title = data.title || 'Job Opportunity'
   const company = data.company || 'Company'
   const itemSlug = data.slug || normalizeSlug(`${title} ${data.city || 'Pakistan'}`)
->>>>>>> 2ebe296 (feat: enhance add-business with auth gate, PKR 20 payment proof flow, why-fee modal, and live tracking)
 
   return {
     id: docId || data.id || 'job-' + Date.now(),

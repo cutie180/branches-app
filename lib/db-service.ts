@@ -126,57 +126,7 @@ export const getAllBusinesses = cache(async function getAllBusinesses(includePen
     if (!querySnapshot.empty) {
       const firestoreItems: BusinessItem[] = []
       querySnapshot.forEach((docSnap) => {
-<<<<<<< HEAD
-        const data = docSnap.data()
-        const bName = data.businessName || data.name || 'Business listing'
-        const itemStatus = data.status || 'approved'
-        
-        const docLocations = data.locations && data.locations.length > 0
-          ? data.locations
-          : [{ city: data.city || 'Pakistan', address: data.address || 'Commercial Center, Pakistan', isPrimary: true }]
-        const docCities = data.cities && data.cities.length > 0
-          ? data.cities
-          : Array.from(new Set(docLocations.map((l: { city: string }) => l.city)))
-        const primaryLoc = docLocations.find((l: { isPrimary?: boolean }) => l.isPrimary) || docLocations[0]
-
-        firestoreItems.push({
-          id: docSnap.id,
-          slug: data.slug || normalizeSlug(bName),
-          name: bName,
-          category: data.category || 'Services',
-          categoryId: data.categoryId || data.category || 'services',
-          city: primaryLoc.city || data.city || 'Pakistan',
-          cities: docCities,
-          province: data.province || 'Pakistan',
-          rating: Number.isFinite(data.rating) ? data.rating : 0,
-          reviewCount: data.reviewCount || (data.reviews ? data.reviews.length : 0),
-          verified: data.verified === true,
-          isClaimed: data.isClaimed === true,
-          isFeatured: data.isFeatured === true,
-          status: itemStatus,
-          submittedAt: data.submittedAt || data.createdAt || new Date().toISOString(),
-          approvedAt: data.approvedAt,
-          approvedBy: data.approvedBy,
-          rejectionReason: data.rejectionReason,
-          ownerName: data.ownerName || data.fullName || '',
-          phone: data.phone || '',
-          whatsapp: data.whatsapp || '',
-          email: data.email || '',
-          website: data.website || data.websiteUrl || '',
-          address: primaryLoc.address || data.address || 'Commercial Center, Pakistan',
-          locations: docLocations,
-          coverImage: data.coverImage || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
-          logo: data.logo || data.logoUrl || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
-          description: data.description || 'Business listing submitted to ListPak.',
-          services: data.services || [],
-          operatingHours: data.operatingHours || {},
-          features: data.features || [],
-          reviews: data.reviews && data.reviews.length > 0 ? data.reviews : [],
-          faqs: data.faqs || []
-        })
-=======
         firestoreItems.push(normalizeBusinessDoc(docSnap.id, docSnap.data()))
->>>>>>> 2ebe296 (feat: enhance add-business with auth gate, PKR 20 payment proof flow, why-fee modal, and live tracking)
       })
 
       // Merge avoiding duplicate slugs

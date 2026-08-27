@@ -12,68 +12,7 @@ export const getAllCompanies = cache(async function getAllCompanies(includePendi
     if (!snap.empty) {
       const items: CompanyItem[] = []
       snap.forEach((docSnap) => {
-<<<<<<< HEAD
-        const data = docSnap.data() as Partial<CompanyItem>
-        const cName = data.name || 'Company profile'
-        const cSlug = data.slug || normalizeSlug(cName)
-
-        items.push({
-          id: docSnap.id,
-          slug: cSlug,
-          name: cName,
-          logo: data.logo || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
-          coverImage: data.coverImage || 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
-          description: data.description || 'Company profile submitted to ListPak.',
-          industry: data.industry || 'Technology & IT',
-          category: data.category || 'Hiring Company / HR',
-          companySize: data.companySize || '10 - 50 Employees',
-          employeeCount: data.employeeCount == null ? '' : String(data.employeeCount),
-          establishedYear: data.establishedYear || '2020',
-          registrationNumber: data.registrationNumber || '',
-          companyType: data.companyType || 'Private',
-          headquarters: data.headquarters || 'Lahore, Pakistan',
-          branchLocations: data.branchLocations || [],
-          website: data.website || '',
-          careersUrl: data.careersUrl || '',
-          googleMapUrl: data.googleMapUrl || '',
-          hrName: data.hrName || 'HR Department',
-          hrDesignation: data.hrDesignation || 'HR Manager',
-          hrEmail: data.hrEmail || '',
-          companyEmail: data.companyEmail || '',
-          email: data.companyEmail || data.hrEmail || '',
-          phone: data.phone || '',
-          whatsapp: data.whatsapp || '',
-          address: data.address || '',
-          city: data.city || 'Lahore',
-          province: data.province || 'Punjab',
-          country: data.country || 'Pakistan',
-          rating: data.rating == null ? 0 : Number(data.rating),
-          reviewCount: data.reviewCount == null ? 0 : Number(data.reviewCount),
-          isClaimed: data.isClaimed === true,
-          linkedin: data.linkedin || '',
-          facebook: data.facebook || '',
-          instagram: data.instagram || '',
-          twitter: data.twitter || '',
-          youtube: data.youtube || '',
-          github: data.github || '',
-          customSocialLinks: data.customSocialLinks || [],
-          verified: data.verified ?? true,
-          isFeatured: data.isFeatured ?? false,
-          status: data.status || 'approved',
-          submittedAt: data.submittedAt || new Date().toISOString(),
-          approvedAt: data.approvedAt,
-          approvedBy: data.approvedBy,
-          rejectionReason: data.rejectionReason,
-          reviews: data.reviews || [],
-          faqs: data.faqs || [],
-          services: data.services || [],
-          operatingHours: data.operatingHours || {},
-          features: data.features || [],
-          activeJobsCount: data.activeJobsCount || 0
-        })
-=======
         items.push(normalizeCompanyDoc(docSnap.id, docSnap.data()))
->>>>>>> 2ebe296 (feat: enhance add-business with auth gate, PKR 20 payment proof flow, why-fee modal, and live tracking)
       })
 
       const existingSlugs = new Set(items.map(c => c.slug.toLowerCase()))
