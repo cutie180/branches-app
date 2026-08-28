@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { CATEGORIES, CITIES, MOCK_BUSINESSES, MOCK_COMPANIES, MOCK_JOBS, MOCK_PROFESSIONALS, BusinessItem, ProfessionalItem, CompanyItem, JobItem } from '@/lib/data'
+import { CATEGORIES, CITIES, BusinessItem, ProfessionalItem, CompanyItem, JobItem } from '@/lib/data'
 import { getAllBusinesses } from '@/lib/db-service'
 import { getAllProfessionals } from '@/lib/professional-service'
 import { getAllCompanies } from '@/lib/company-service'
@@ -9,10 +9,15 @@ import { BLOG_POSTS } from '@/lib/blog-data'
 
 export const revalidate = 3600 // Revalidate sitemap XML every hour
 
+function safeDate(input?: string | null, fallback: Date = new Date()): Date {
+  if (!input) return fallback
+  const d = new Date(input)
+  return isNaN(d.getTime()) ? fallback : d
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.listpak.com'
   const currentDate = new Date()
-  const fixedPolicyDate = new Date('2026-08-01T00:00:00.000Z')
   const canonicalUrl = (path: string) => path === '/' ? `${baseUrl}/` : `${baseUrl}/${path.replace(/^\/+|\/+$/g, '')}/`
 
   // 1. Homepage
@@ -88,7 +93,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.9,
   }))
 
-  // 6. Business Pages
+  // 6. All Approved Business Pages
   let rawBusinesses: BusinessItem[] = []
   try {
     rawBusinesses = await getAllBusinesses(false)
@@ -96,73 +101,73 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Error fetching businesses for sitemap:', err)
   }
 
-  const mockBusinessIds = new Set(MOCK_BUSINESSES.map((business) => business.id))
-  const approvedBusinesses = rawBusinesses.filter(b => (b.status || 'approved') === 'approved' && !mockBusinessIds.has(b.id))
+  const approvedBusinesses = rawBusinesses.filter(b => 
+    (b.status || 'approved') === 'approved' && 
+    Boolean(b.slug && b.slug.trim())
+  )
   const businessRoutes = approvedBusinesses.map((biz) => ({
     url: canonicalUrl(`/business/${biz.slug}`),
-    lastModified: currentDate,
+    lastModified: safeDate(biz.approvedAt || biz.submittedAt, currentDate),
     changeFrequency: 'weekly' as const,
     priority: 0.9,
   }))
 
-  // 7. Dynamic Job Openings
+  // 7. All Approved Job Openings
   let rawJobs: JobItem[] = []
   try {
     rawJobs = await getAllJobs(false)
   } catch (err) {
     console.error('Error fetching jobs for sitemap:', err)
   }
-  const mockJobIds = new Set(MOCK_JOBS.map((job) => job.id))
-  const approvedJobs = rawJobs.filter((job) => (job.status || 'approved') === 'approved' && !mockJobIds.has(job.id))
-  // Preserve the explicitly requested short alias in the sitemap when its active
-  // job resolves through the approved service, even if the legacy mock-cache
-  // exclusion would otherwise omit that aliased public URL.
-  const activeAliasedJobs = rawJobs.filter((job) =>
-    (job.status || 'approved') === 'approved' &&
-    getPublicJobPath(job) !== `/jobs/${job.slug || job.id}`
+  const approvedJobs = rawJobs.filter((job) => 
+    (job.status || 'approved') === 'approved' && 
+    Boolean(job.slug || job.id)
   )
-  const sitemapJobs = Array.from(new Map(
-    [...approvedJobs, ...activeAliasedJobs].map((job) => [job.id, job])
-  ).values())
-  const jobRoutes = sitemapJobs.map((job) => ({
+  const jobRoutes = approvedJobs.map((job) => ({
     url: canonicalUrl(getPublicJobPath(job)),
-    lastModified: currentDate,
+    lastModified: safeDate(job.postedDate || job.postedAt, currentDate),
     changeFrequency: 'weekly' as const,
     priority: 0.9,
   }))
 
-  // 8. Dynamic Companies
+  // 8. All Approved Companies
   let rawCompanies: CompanyItem[] = []
   try {
     rawCompanies = await getAllCompanies(false)
   } catch (err) {
     console.error('Error fetching companies for sitemap:', err)
   }
-  const mockCompanyIds = new Set(MOCK_COMPANIES.map((company) => company.id))
-  const companyRoutes = rawCompanies.filter((comp) => !mockCompanyIds.has(comp.id) && (comp.status || 'approved') === 'approved').map((comp) => ({
+  const approvedCompanies = rawCompanies.filter((comp) => 
+    (comp.status || 'approved') === 'approved' && 
+    Boolean(comp.slug && comp.slug.trim())
+  )
+  const companyRoutes = approvedCompanies.map((comp) => ({
     url: canonicalUrl(`/companies/${comp.slug}`),
     lastModified: currentDate,
     changeFrequency: 'weekly' as const,
     priority: 0.9,
   }))
 
-  // 9. Dynamic Professional Profiles
+  // 9. All Approved Professional Profiles
   let rawProfessionals: ProfessionalItem[] = []
   try {
     rawProfessionals = await getAllProfessionals(false)
   } catch (err) {
     console.error('Error fetching professionals for sitemap:', err)
   }
-  const mockProfessionalIds = new Set(MOCK_PROFESSIONALS.map((pro) => pro.id))
-  const approvedPros = rawProfessionals.filter((pro) => (pro.status || 'approved') === 'approved' && !mockProfessionalIds.has(pro.id))
+  const approvedPros = rawProfessionals.filter((pro) => 
+    (pro.status || 'approved') === 'approved' && 
+    (pro.profileStatus || 'APPROVED') === 'APPROVED' && 
+    Boolean(pro.username || pro.slug)
+  )
   const professionalRoutes = approvedPros.map((pro) => ({
-    url: canonicalUrl(`/professionals/${pro.username}`),
-    lastModified: currentDate,
+    url: canonicalUrl(`/professionals/${pro.username || pro.slug}`),
+    lastModified: safeDate(pro.approvedAt || pro.submittedAt || pro.verifiedAt, currentDate),
     changeFrequency: 'weekly' as const,
     priority: 0.9,
   }))
 
-  // 10. Blog Post Pages (Priority: 0.8, Frequency: weekly)
+  // 10. Blog Post Pages
   const rawPostsList = Object.values(BLOG_POSTS)
   const blogPostsBySlug = new Map<string, { slug: string; date: string }>()
   for (const post of rawPostsList) {
@@ -173,7 +178,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const allBlogPosts = Array.from(blogPostsBySlug.values())
   const blogRoutes = allBlogPosts.map((post) => ({
     url: canonicalUrl(`/blog/${post.slug}`),
-    lastModified: currentDate,
+    lastModified: safeDate(post.date, currentDate),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
   }))
