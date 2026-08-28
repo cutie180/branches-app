@@ -28,7 +28,7 @@ const PAYMENT_ACCOUNTS = {
   easypaisa: {
     name: 'Easypaisa',
     accountNumber: '03105694507',
-    accountTitle: 'Muhammad Imran',
+    accountTitle: 'Mutahira Nisa',
     amount: 20
   },
   mashreq: {
@@ -61,7 +61,7 @@ const FAQS = [
   },
   {
     q: 'How can I pay the PKR 20 listing fee?',
-    a: 'You can easily transfer Rs. 20 via Easypaisa (03105694507 - Muhammad Imran) or Mashreq Bank (089200179683 - Muhammad Imran) and upload a payment screenshot directly in this portal.'
+    a: 'You can easily transfer Rs. 20 via Easypaisa (03105694507 - Mutahira Nisa) or Mashreq Bank (089200179683 - Muhammad Imran) and upload a payment screenshot directly in this portal.'
   },
   {
     q: 'How long does it take for my business to be approved after payment?',
@@ -1272,7 +1272,7 @@ export default function AddBusinessClient() {
                             </div>
                             <div className="flex justify-between text-slate-600 text-[11px]">
                               <span>Account Title:</span>
-                              <span className="font-bold text-slate-800">Muhammad Imran</span>
+                              <span className="font-bold text-slate-800">Mutahira Nisa</span>
                             </div>
                           </div>
                         </div>

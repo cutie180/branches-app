@@ -188,8 +188,15 @@ export default async function JobDetailPage(props: { params: Promise<{ id: strin
             {/* Application CTA */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
               <JobInteractiveApply
+                jobId={job.id}
                 jobTitle={job.title}
                 companyName={job.company}
+                companyLogo={job.companyLogo}
+                city={job.city}
+                salary={job.salary}
+                type={job.type}
+                applicationWebsite={websiteUrl}
+                publicJobPath={publicJobPath}
               />
 
               <a

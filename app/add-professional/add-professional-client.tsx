@@ -470,19 +470,43 @@ export default function AddProfessionalClient() {
               </div>
             </div>
 
-            <div className="pt-4 flex flex-col sm:flex-row gap-4 justify-center">
+            {/* Verification Promotion Card */}
+            <div className="p-5 bg-gradient-to-br from-emerald-50 via-teal-50 to-blue-50 rounded-2xl border border-emerald-200 text-left space-y-3 max-w-md mx-auto">
+              <div className="flex items-start gap-3">
+                <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                  <ShieldCheck className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm">Next Step: Verify Your Profile (Rs. 50)</h4>
+                  <p className="text-[11px] text-slate-600 leading-relaxed mt-0.5">
+                    Unlock the official <strong>Green Verified Badge</strong>, priority search ranking, and eligibility to <strong>apply directly for jobs on ListPak</strong>.
+                  </p>
+                </div>
+              </div>
+
+              <Link
+                href="/dashboard/professional/verify"
+                className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <ShieldCheck className="w-4 h-4" />
+                <span>Verify Profile Now (Rs. 50)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+
+            <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 href="/dashboard/professional"
-                className="px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Go to Dashboard</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
-                href="/professionals"
-                className="px-6 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl transition-colors cursor-pointer"
+                href="/jobs"
+                className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl transition-colors cursor-pointer"
               >
-                Explore Professionals Network
+                Browse Job Vacancies
               </Link>
             </div>
           </div>

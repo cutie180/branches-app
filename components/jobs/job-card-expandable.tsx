@@ -25,6 +25,7 @@ export default function JobCardExpandable({ job }: JobCardExpandableProps) {
   const [coverNote, setCoverNote] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [profileNotFound, setProfileNotFound] = useState(false)
+  const [profileUnverified, setProfileUnverified] = useState(false)
   const [applicationSubmitted, setApplicationSubmitted] = useState(false)
   const [submittedCandidateName, setSubmittedCandidateName] = useState('')
 
@@ -38,6 +39,7 @@ export default function JobCardExpandable({ job }: JobCardExpandableProps) {
   const handleListpakApply = async (e: React.FormEvent) => {
     e.preventDefault()
     setProfileNotFound(false)
+    setProfileUnverified(false)
 
     const cleanEmail = applicantEmail.trim()
     if (!cleanEmail) {
@@ -67,9 +69,14 @@ export default function JobCardExpandable({ job }: JobCardExpandableProps) {
         setSubmittedCandidateName(data.application?.applicantName || 'Professional Candidate')
         toast.success(`Application successfully submitted to ${job.company}!`)
       } else {
-        if (data.code === 'PROFILE_NOT_FOUND' || response.status === 404) {
+        if (data.code === 'PROFILE_NOT_FOUND') {
           setProfileNotFound(true)
-          toast.error('No registered professional profile found for this email.')
+          setProfileUnverified(false)
+          toast.error('You are not registered on ListPak. Please create your profile first.')
+        } else if (data.code === 'PROFILE_UNVERIFIED') {
+          setProfileUnverified(true)
+          setProfileNotFound(false)
+          toast.error('Your profile is not verified yet. Please verify to apply.')
         } else {
           toast.error(data.message || 'Failed to submit application.')
         }
@@ -84,6 +91,7 @@ export default function JobCardExpandable({ job }: JobCardExpandableProps) {
   const resetModalState = () => {
     setShowApplyModal(false)
     setProfileNotFound(false)
+    setProfileUnverified(false)
     setApplicationSubmitted(false)
     setCoverNote('')
   }
@@ -275,6 +283,7 @@ export default function JobCardExpandable({ job }: JobCardExpandableProps) {
           <button
             onClick={() => {
               setProfileNotFound(false)
+              setProfileUnverified(false)
               setApplicationSubmitted(false)
               setShowApplyModal(true)
             }}
@@ -387,6 +396,7 @@ export default function JobCardExpandable({ job }: JobCardExpandableProps) {
                         onChange={(e) => {
                           setApplicantEmail(e.target.value)
                           if (profileNotFound) setProfileNotFound(false)
+                          if (profileUnverified) setProfileUnverified(false)
                         }}
                         placeholder="e.g. yourname@example.com"
                         className="w-full pl-9 pr-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-emerald-500"
@@ -407,33 +417,52 @@ export default function JobCardExpandable({ job }: JobCardExpandableProps) {
                     />
                   </div>
 
-                  {/* NOT FOUND IN DATABASE WARNING & GUIDANCE */}
+                  {/* CASE 1: NOT REGISTERED ON LISTPAK */}
                   {profileNotFound && (
-                    <div className="p-3.5 bg-amber-50 rounded-2xl border border-amber-200 text-xs space-y-2.5 animate-in fade-in-50">
-                      <div className="flex items-start gap-2 text-amber-900">
+                    <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 text-xs space-y-3 animate-in fade-in-50">
+                      <div className="flex items-start gap-2.5 text-amber-900">
                         <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                         <div>
-                          <strong className="block font-bold">No Professional Profile Found</strong>
-                          <p className="text-[11px] text-amber-800 mt-0.5">
-                            We couldn&apos;t find a professional profile associated with <code className="font-bold text-amber-900 bg-amber-100 px-1 rounded">{applicantEmail}</code>. You must create and verify your profile first to apply through ListPak.
+                          <strong className="block font-bold">You are not registered on ListPak</strong>
+                          <p className="text-[11px] text-amber-800 mt-0.5 leading-relaxed">
+                            No professional profile was found for <code className="font-bold text-amber-900 bg-amber-100 px-1 py-0.5 rounded">{applicantEmail}</code>. Please create your free professional profile first to apply for jobs.
                           </p>
                         </div>
                       </div>
 
-                      <div className="flex flex-wrap gap-2 pt-1">
+                      <div>
                         <Link
                           href="/add-professional"
-                          className="px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-2xs"
+                          className="w-full px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-extrabold flex items-center justify-center gap-2 shadow-xs transition-all"
                         >
-                          <UserPlus className="w-3.5 h-3.5" />
-                          <span>1. Create Professional Profile</span>
+                          <UserPlus className="w-4 h-4" />
+                          <span>Create Free Professional Profile</span>
                         </Link>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* CASE 2: REGISTERED BUT UNVERIFIED */}
+                  {profileUnverified && (
+                    <div className="p-4 bg-blue-50 rounded-2xl border border-blue-200 text-xs space-y-3 animate-in fade-in-50">
+                      <div className="flex items-start gap-2.5 text-blue-900">
+                        <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                        <div>
+                          <strong className="block font-bold">Profile Verification Required</strong>
+                          <p className="text-[11px] text-blue-800 mt-0.5 leading-relaxed">
+                            Your profile has been created, but it is not verified yet. Please verify your profile to activate verified job applications and send your credentials to hiring employers.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div>
                         <Link
                           href="/dashboard/professional/verify"
-                          className="px-3 py-2 bg-white hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-xl text-xs font-bold flex items-center gap-1.5"
+                          className="w-full px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-extrabold flex items-center justify-center gap-2 shadow-xs transition-all"
                         >
-                          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                          <span>2. Verify Profile (Rs. 50)</span>
+                          <ShieldCheck className="w-4 h-4" />
+                          <span>Verify Profile Now (Rs. 50)</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
                         </Link>
                       </div>
                     </div>

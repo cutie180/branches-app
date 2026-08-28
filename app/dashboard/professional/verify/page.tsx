@@ -30,15 +30,50 @@ export default function ProfessionalVerificationPage() {
   const [copiedField, setCopiedField] = useState<string | null>(null)
   const [previewModalImage, setPreviewModalImage] = useState<string | null>(null)
 
-  const handleCopyAccount = (e: React.MouseEvent, text: string, fieldKey: string) => {
+  const handleCopyAccount = (e: React.MouseEvent | React.TouchEvent, text: string, fieldKey: string) => {
     e.stopPropagation()
     const cleanNum = text.replace(/\s+/g, '')
-    navigator.clipboard.writeText(cleanNum)
-    setCopiedField(fieldKey)
-    toast.success(`Account number (${text}) copied to clipboard!`)
-    setTimeout(() => {
-      setCopiedField(null)
-    }, 2000)
+
+    const onCopied = () => {
+      setCopiedField(fieldKey)
+      toast.success(`Account number (${text}) copied to clipboard!`)
+      setTimeout(() => {
+        setCopiedField(null)
+      }, 2500)
+    }
+
+    if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(cleanNum).then(onCopied).catch(() => {
+        fallbackCopy(cleanNum, onCopied)
+      })
+    } else {
+      fallbackCopy(cleanNum, onCopied)
+    }
+  }
+
+  const fallbackCopy = (textToCopy: string, callback: () => void) => {
+    try {
+      const textArea = document.createElement('textarea')
+      textArea.value = textToCopy
+      textArea.style.position = 'fixed'
+      textArea.style.top = '0'
+      textArea.style.left = '0'
+      textArea.style.width = '2em'
+      textArea.style.height = '2em'
+      textArea.style.padding = '0'
+      textArea.style.border = 'none'
+      textArea.style.outline = 'none'
+      textArea.style.boxShadow = 'none'
+      textArea.style.background = 'transparent'
+      document.body.appendChild(textArea)
+      textArea.focus()
+      textArea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textArea)
+      callback()
+    } catch (err) {
+      toast.error('Could not auto-copy. Please copy manually.')
+    }
   }
 
   useEffect(() => {
@@ -363,7 +398,7 @@ export default function ProfessionalVerificationPage() {
                       <div className="w-7 h-7 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
                         <Smartphone className="w-4 h-4" />
                       </div>
-                      <span>EasyPaisa Mobile</span>
+                      <span>EasyPaisa Mobile Account</span>
                     </div>
                     {paymentMethod === 'EasyPaisa' ? (
                       <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-full">
@@ -375,23 +410,26 @@ export default function ProfessionalVerificationPage() {
                     )}
                   </div>
 
-                  <div className="p-3 bg-white rounded-xl border border-slate-200/90 space-y-1">
-                    <span className="text-[10px] text-slate-500 font-bold uppercase block tracking-wider">
-                      EasyPaisa Account Number
-                    </span>
+                  <div className="p-3.5 bg-white rounded-xl border border-slate-200/90 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                        EasyPaisa Account Number
+                      </span>
+                      <span className="text-[11px] font-bold text-slate-900">Rs. 50</span>
+                    </div>
                     <div className="flex items-center justify-between gap-2">
                       <span className="font-mono text-sm sm:text-base font-extrabold text-slate-900 select-all tracking-wider">
-                        0340 2885226
+                        03105694507
                       </span>
                       <button
                         type="button"
-                        onClick={(e) => handleCopyAccount(e, '0340 2885226', 'easypaisa')}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer ${
+                        onClick={(e) => handleCopyAccount(e, '03105694507', 'easypaisa')}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer active:scale-95 ${
                           copiedField === 'easypaisa'
                             ? 'bg-emerald-600 text-white'
-                            : 'bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border border-emerald-300/80 active:scale-95'
+                            : 'bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border border-emerald-300/80'
                         }`}
-                        title="Copy EasyPaisa Number"
+                        title="Copy EasyPaisa Account Number"
                       >
                         {copiedField === 'easypaisa' ? (
                           <>
@@ -401,14 +439,18 @@ export default function ProfessionalVerificationPage() {
                         ) : (
                           <>
                             <Copy className="w-3.5 h-3.5 text-emerald-700" />
-                            <span>Copy Number</span>
+                            <span>Copy Account Number</span>
                           </>
                         )}
                       </button>
                     </div>
+                    <div className="flex justify-between items-center text-[11px] text-slate-600 pt-1 border-t border-slate-100">
+                      <span>Account Title:</span>
+                      <span className="font-bold text-slate-900">Mutahira Nisa</span>
+                    </div>
                   </div>
 
-                  <span className="text-[11px] text-slate-500 block font-medium">Title: EasyPaisa Transfer Desk</span>
+                  <span className="text-[11px] text-slate-500 block font-medium">Channel: EasyPaisa App / Retailer / Mobile Banking</span>
                 </div>
 
                 {/* Method 2: Mashreq Bank */}
@@ -437,10 +479,13 @@ export default function ProfessionalVerificationPage() {
                     )}
                   </div>
 
-                  <div className="p-3 bg-white rounded-xl border border-slate-200/90 space-y-1">
-                    <span className="text-[10px] text-slate-500 font-bold uppercase block tracking-wider">
-                      Mashreq Account Number
-                    </span>
+                  <div className="p-3.5 bg-white rounded-xl border border-slate-200/90 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                        Mashreq Account Number
+                      </span>
+                      <span className="text-[11px] font-bold text-slate-900">Rs. 50</span>
+                    </div>
                     <div className="flex items-center justify-between gap-2">
                       <span className="font-mono text-sm sm:text-base font-extrabold text-slate-900 select-all tracking-wider">
                         089200179683
@@ -448,10 +493,10 @@ export default function ProfessionalVerificationPage() {
                       <button
                         type="button"
                         onClick={(e) => handleCopyAccount(e, '089200179683', 'mashreq')}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer ${
+                        className={`px-3 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer active:scale-95 ${
                           copiedField === 'mashreq'
                             ? 'bg-blue-600 text-white'
-                            : 'bg-blue-100 hover:bg-blue-200 text-blue-900 border border-blue-300/80 active:scale-95'
+                            : 'bg-blue-100 hover:bg-blue-200 text-blue-900 border border-blue-300/80'
                         }`}
                         title="Copy Mashreq Account Number"
                       >
@@ -463,14 +508,64 @@ export default function ProfessionalVerificationPage() {
                         ) : (
                           <>
                             <Copy className="w-3.5 h-3.5 text-blue-700" />
-                            <span>Copy Number</span>
+                            <span>Copy Account Number</span>
                           </>
                         )}
                       </button>
                     </div>
+                    <div className="flex justify-between items-center text-[11px] text-slate-600 pt-1 border-t border-slate-100">
+                      <span>Account Title:</span>
+                      <span className="font-bold text-slate-900">Muhammad Imran</span>
+                    </div>
                   </div>
 
-                  <span className="text-[11px] text-slate-500 block font-medium">Bank: Mashreq Bank Pakistan</span>
+                  <span className="text-[11px] text-slate-500 block font-medium">Bank: Mashreq Bank Pakistan / 1Link Interbank</span>
+                </div>
+              </div>
+
+              {/* SELECTED ACCOUNT HIGHLIGHT BOX */}
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2 text-xs">
+                <div className="flex justify-between items-center border-b border-slate-200/60 pb-2">
+                  <span className="font-bold text-slate-600">Selected Payment Method:</span>
+                  <span className="font-extrabold text-slate-900">
+                    {paymentMethod === 'EasyPaisa' ? 'EasyPaisa Mobile Account' : 'Mashreq Bank Pakistan'}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center border-b border-slate-200/60 pb-2">
+                  <span className="font-bold text-slate-600">Account Number:</span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono font-extrabold text-slate-900 text-sm">
+                      {paymentMethod === 'EasyPaisa' ? '03105694507' : '089200179683'}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={(e) => handleCopyAccount(e, paymentMethod === 'EasyPaisa' ? '03105694507' : '089200179683', 'selected-acc')}
+                      className="px-2.5 py-1 bg-white hover:bg-slate-100 text-blue-600 border border-slate-200 rounded-lg text-[11px] font-bold flex items-center gap-1 transition shadow-2xs"
+                      title="Copy Account Number"
+                    >
+                      {copiedField === 'selected-acc' ? (
+                        <>
+                          <Check className="w-3 h-3 text-emerald-600" />
+                          <span className="text-emerald-700">Copied</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3 h-3 text-blue-600" />
+                          <span>Copy</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center border-b border-slate-200/60 pb-2">
+                  <span className="font-bold text-slate-600">Account Title:</span>
+                  <span className="font-bold text-slate-900">
+                    {paymentMethod === 'EasyPaisa' ? 'Mutahira Nisa' : 'Muhammad Imran'}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center text-emerald-800 font-extrabold">
+                  <span>Total Payable Amount:</span>
+                  <span className="text-sm">PKR 50 Only</span>
                 </div>
               </div>
 

@@ -72,7 +72,7 @@ export async function submitJobApplication(params: {
   coverNote?: string
 }): Promise<{
   success: boolean
-  code?: 'PROFILE_NOT_FOUND' | 'SUBMITTED' | 'ERROR'
+  code?: 'PROFILE_NOT_FOUND' | 'PROFILE_UNVERIFIED' | 'SUBMITTED' | 'ERROR'
   application?: JobApplication
   professional?: ProfessionalItem
   message: string
@@ -83,7 +83,16 @@ export async function submitJobApplication(params: {
     return {
       success: false,
       code: 'PROFILE_NOT_FOUND',
-      message: 'No professional profile found for this email. You must first create a professional profile on ListPak and verify it to apply.'
+      message: 'No registered professional profile found for this email. Please create your profile first.'
+    }
+  }
+
+  if (!checkResult.isVerified) {
+    return {
+      success: false,
+      code: 'PROFILE_UNVERIFIED',
+      professional: checkResult.professional,
+      message: 'Your profile has been found, but it is not verified yet. Please verify your profile to apply for jobs on ListPak.'
     }
   }
 
