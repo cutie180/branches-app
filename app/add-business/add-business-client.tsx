@@ -158,6 +158,10 @@ export default function AddBusinessClient() {
     proofDoc: ''
   })
 
+  // Account Password for guest users
+  const [accountPassword, setAccountPassword] = useState('')
+  const [showAccountPassword, setShowAccountPassword] = useState(false)
+
   // Errors State
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -515,6 +519,14 @@ export default function AddBusinessClient() {
         })
       }
       if (!formData.phone.trim()) errs.phone = 'Phone number is required'
+      if (!currentUser) {
+        if (!formData.email.trim() || !formData.email.includes('@')) {
+          errs.email = 'Valid business email is required for account creation'
+        }
+        if (!accountPassword || accountPassword.length < 6) {
+          errs.accountPassword = 'Password must be at least 6 characters for your dashboard account'
+        }
+      }
     } else if (step === 3) {
       const wordCount = formData.description.trim() ? formData.description.trim().split(/\s+/).filter(Boolean).length : 0
       if (wordCount < 250) {
@@ -550,6 +562,36 @@ export default function AddBusinessClient() {
 
     setIsSubmitting(true)
     try {
+      let resolvedUserId = currentUser?.uid || ''
+      if (!currentUser && formData.email && accountPassword) {
+        try {
+          const cred = await createUserWithEmailAndPassword(auth, formData.email.trim(), accountPassword)
+          if (cred.user) {
+            await updateProfile(cred.user, { displayName: formData.ownerName || formData.businessName })
+            resolvedUserId = cred.user.uid
+            const sessionUser: UserSessionData = {
+              uid: cred.user.uid,
+              name: formData.ownerName || formData.businessName,
+              email: formData.email.trim().toLowerCase(),
+              role: 'business'
+            }
+            setCurrentUser(sessionUser)
+            sessionStorage.setItem('listpak_user_session', JSON.stringify(sessionUser))
+            localStorage.setItem('listpak_user_session', JSON.stringify(sessionUser))
+          }
+        } catch (authErr: any) {
+          console.warn('Registration auth notice:', authErr?.message)
+          const sessionUser: UserSessionData = {
+            name: formData.ownerName || formData.businessName,
+            email: formData.email.trim().toLowerCase(),
+            role: 'business'
+          }
+          setCurrentUser(sessionUser)
+          sessionStorage.setItem('listpak_user_session', JSON.stringify(sessionUser))
+          localStorage.setItem('listpak_user_session', JSON.stringify(sessionUser))
+        }
+      }
+
       const primaryLoc = formData.locations.find(l => l.isPrimary) || formData.locations[0] || { city: 'Karachi', address: 'Pakistan' }
 
       const saved = await saveBusinessToDatabase({
@@ -565,7 +607,7 @@ export default function AddBusinessClient() {
         })),
         cities: Array.from(new Set(formData.locations.map(l => l.city))),
         ownerName: formData.ownerName || currentUser?.name || 'Business Representative',
-        userId: currentUser?.uid || '',
+        userId: resolvedUserId,
         phone: formData.phone,
         whatsapp: formData.whatsapp || formData.phone.replace(/[^0-9]/g, ''),
         email: formData.email || currentUser?.email || 'contact@business.pk',
@@ -580,8 +622,9 @@ export default function AddBusinessClient() {
       setActivePaymentBiz(saved)
       
       // Refresh user businesses
-      if (currentUser?.email || currentUser?.uid) {
-        fetchUserBusinesses(currentUser.email || currentUser.uid || '')
+      const targetEmail = formData.email || currentUser?.email || ''
+      if (targetEmail || resolvedUserId) {
+        fetchUserBusinesses(targetEmail || resolvedUserId)
       }
 
       toast.success('Listing registered! Please upload PKR 20 payment proof to complete verification.')
@@ -1524,17 +1567,13 @@ export default function AddBusinessClient() {
                     </div>
 
                     <div className="flex flex-wrap justify-center gap-3 pt-4">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setActiveView('my-businesses');
-                          if (currentUser.email || currentUser.uid) fetchUserBusinesses(currentUser.email || currentUser.uid || '');
-                        }}
-                        className="px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-2 cursor-pointer"
+                      <Link
+                        href="/dashboard"
+                        className="px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-2"
                       >
                         <Eye className="w-4 h-4" />
-                        <span>Track My Submitted Businesses</span>
-                      </button>
+                        <span>Go to Business Dashboard</span>
+                      </Link>
 
                       <button
                         type="button"
@@ -1921,6 +1960,46 @@ export default function AddBusinessClient() {
                               </div>
                             </div>
                           </div>
+
+                          {/* Account Password Setup for Guests */}
+                          {!currentUser && (
+                            <div className="p-5 bg-gradient-to-r from-blue-50/90 to-indigo-50/70 rounded-2xl border border-blue-200 space-y-3">
+                              <div className="flex items-center gap-2 text-blue-900">
+                                <Lock className="w-4 h-4 text-blue-600" />
+                                <h4 className="font-extrabold text-xs">Create Dashboard Password (Required)</h4>
+                              </div>
+                              <p className="text-[11px] text-slate-600">
+                                Set a secure password for your email (<strong>{formData.email || 'your email'}</strong>) so you can log into your Business Dashboard anytime to check approval status, upload receipts, and manage listings.
+                              </p>
+                              <div>
+                                <label className="block text-xs font-bold text-slate-700 mb-1">Account Password *</label>
+                                <div className="relative">
+                                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                  <input
+                                    type={showAccountPassword ? 'text' : 'password'}
+                                    value={accountPassword}
+                                    onChange={(e) => setAccountPassword(e.target.value)}
+                                    placeholder="At least 6 characters"
+                                    className={`w-full pl-10 pr-10 py-2.5 bg-white border rounded-xl text-xs focus:ring-2 focus:ring-blue-500 ${
+                                      errors.accountPassword ? 'border-red-500' : 'border-slate-200'
+                                    }`}
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => setShowAccountPassword(!showAccountPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 p-1"
+                                  >
+                                    {showAccountPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                  </button>
+                                </div>
+                                {errors.accountPassword && (
+                                  <span className="text-[11px] font-semibold text-red-500 mt-1 block">
+                                    {errors.accountPassword}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )}
 
@@ -1993,7 +2072,7 @@ export default function AddBusinessClient() {
                             </div>
                             <div className="flex justify-between border-b border-slate-200/60 pb-2">
                               <span className="font-bold text-slate-500">Account Owner:</span>
-                              <span className="font-semibold text-slate-800">{currentUser.name} ({currentUser.email})</span>
+                              <span className="font-semibold text-slate-800">{currentUser?.name || formData.ownerName || formData.businessName} ({currentUser?.email || formData.email})</span>
                             </div>
                             <div className="flex justify-between border-b border-slate-200/60 pb-2">
                               <span className="font-bold text-slate-500">Category & Locations:</span>

@@ -74,6 +74,15 @@ export default function Navbar() {
             </Link>
 
             <Link
+              href="/dashboard"
+              className="px-3.5 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/70 transition-colors flex items-center gap-1.5 text-sm font-medium"
+              title="Business & Profile Dashboard"
+            >
+              <Building2 className="w-4 h-4 text-blue-400" />
+              <span>Dashboard</span>
+            </Link>
+
+            <Link
               href="/add-business"
               className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-sm font-bold shadow-md hover:shadow-orange-500/20 transition-all duration-200 inline-flex items-center gap-2"
             >
@@ -132,6 +141,15 @@ export default function Navbar() {
           })}
           
           <div className="pt-3 border-t border-slate-800 flex flex-col gap-2">
+            <Link
+              href="/dashboard"
+              onClick={() => setOpen(false)}
+              className="text-sm font-semibold py-3 px-4 rounded-xl text-slate-300 hover:bg-slate-800 flex items-center gap-3"
+            >
+              <Building2 className="w-4 h-4 text-blue-400" />
+              <span>Business Dashboard</span>
+            </Link>
+
             <Link
               href="/post-job"
               onClick={() => setOpen(false)}

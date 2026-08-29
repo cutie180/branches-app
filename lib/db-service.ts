@@ -93,15 +93,13 @@ export function normalizeBusinessDoc(docId: string, data: any): BusinessItem {
   } : undefined)
 
   // Determine normalized status:
-  // If explicitly 'pending' or 'pending_approval' or rawPaymentStatus is PENDING
+  // User-submitted listings (with userId or submittedAt/createdAt) are pending unless explicitly approved
   let itemStatus: 'pending' | 'approved' | 'rejected' = 'approved'
-  if (rawStatus === 'pending' || rawStatus === 'pending_approval' || (rawStatus !== 'approved' && rawStatus !== 'rejected' && (rawPaymentStatus === 'PENDING' || screenshot))) {
-    itemStatus = 'pending'
-  } else if (rawStatus === 'rejected') {
+  if (rawStatus === 'rejected') {
     itemStatus = 'rejected'
-  } else if (rawStatus === 'approved') {
+  } else if (rawStatus === 'approved' || (data.approvedAt && rawStatus !== 'pending')) {
     itemStatus = 'approved'
-  } else if (data.createdAt && !data.approvedAt) {
+  } else if (rawStatus === 'pending' || rawStatus === 'pending_approval' || data.submittedAt || data.userId || (data.createdAt && !data.approvedAt) || screenshot || rawPaymentStatus === 'PENDING') {
     itemStatus = 'pending'
   }
 
@@ -200,22 +198,25 @@ async function updateBusinessInFirestore(idOrSlug: string, fieldsToUpdate: Recor
   const norm = (idOrSlug || '').trim()
   if (!norm) return
 
+  // Strip all undefined fields to prevent Firestore serialization errors
+  const cleanFields = JSON.parse(JSON.stringify(fieldsToUpdate))
+
   try {
     const docRef = doc(db, 'businesses', norm)
-    await updateDoc(docRef, fieldsToUpdate)
+    await updateDoc(docRef, cleanFields)
     return
   } catch (err) {
     try {
       const q = query(collection(db, 'businesses'), where('slug', '==', norm.toLowerCase()), limit(1))
       const snap = await getDocs(q)
       if (!snap.empty) {
-        await updateDoc(snap.docs[0].ref, fieldsToUpdate)
+        await updateDoc(snap.docs[0].ref, cleanFields)
         return
       }
       const qId = query(collection(db, 'businesses'), where('id', '==', norm), limit(1))
       const snapId = await getDocs(qId)
       if (!snapId.empty) {
-        await updateDoc(snapId.docs[0].ref, fieldsToUpdate)
+        await updateDoc(snapId.docs[0].ref, cleanFields)
         return
       }
     } catch (innerErr) {
@@ -369,24 +370,22 @@ export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>
   // Update memory cache
   memoryBusinessesCache = [newBiz, ...memoryBusinessesCache.filter(b => b.slug !== slug && b.id !== bizId)]
 
+  // Clean all undefined fields before sending to Firestore
+  const cleanPayload = JSON.parse(JSON.stringify({
+    ...newBiz,
+    businessName: newBiz.name,
+    createdAt: new Date().toISOString(),
+    status: 'pending'
+  }))
+
   // Persist to Firestore with explicit ID using setDoc
   try {
     const docRef = doc(db, 'businesses', bizId)
-    await setDoc(docRef, {
-      ...newBiz,
-      businessName: newBiz.name,
-      createdAt: new Date().toISOString(),
-      status: 'pending'
-    })
+    await setDoc(docRef, cleanPayload)
   } catch (err) {
     console.warn('Firestore setDoc save fallback, trying addDoc:', err)
     try {
-      const addedDoc = await addDoc(collection(db, 'businesses'), {
-        ...newBiz,
-        businessName: newBiz.name,
-        createdAt: new Date().toISOString(),
-        status: 'pending'
-      })
+      const addedDoc = await addDoc(collection(db, 'businesses'), cleanPayload)
       newBiz.id = addedDoc.id
     } catch (innerErr) {
       console.warn('Firestore addDoc fallback error:', innerErr)
@@ -440,14 +439,24 @@ export async function updateBusinessPaymentProof(
 export async function getUserBusinesses(emailOrUid: string): Promise<BusinessItem[]> {
   const norm = (emailOrUid || '').trim().toLowerCase()
   if (!norm) return []
+  const normCleanDigits = norm.replace(/[^0-9]/g, '')
 
   try {
     const all = await getAllBusinesses(true)
-    return all.filter(b => 
-      (b.email && b.email.toLowerCase().trim() === norm) ||
-      (b.ownerName && b.ownerName.toLowerCase().trim() === norm) ||
-      (b.userId && b.userId.toLowerCase().trim() === norm)
-    )
+    return all.filter(b => {
+      const bEmail = (b.email || '').toLowerCase().trim()
+      const bUid = (b.userId || '').toLowerCase().trim()
+      const bOwner = (b.ownerName || '').toLowerCase().trim()
+      const bPhone = (b.phone || '').replace(/[^0-9]/g, '')
+      const bWhatsApp = (b.whatsapp || '').replace(/[^0-9]/g, '')
+
+      return (
+        bEmail === norm ||
+        bUid === norm ||
+        bOwner === norm ||
+        (normCleanDigits.length >= 7 && (bPhone.includes(normCleanDigits) || bWhatsApp.includes(normCleanDigits)))
+      )
+    })
   } catch (err) {
     console.warn('getUserBusinesses error:', err)
     return []

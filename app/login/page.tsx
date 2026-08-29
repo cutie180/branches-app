@@ -63,10 +63,16 @@ function LoginForm() {
           router.push('/dashboard/professional')
         }, 500)
       } else {
-        sessionStorage.setItem('listpak_user_session', JSON.stringify({
+        const fbUid = auth.currentUser?.uid || ''
+        const sessionPayload = {
           email: email.trim(),
+          name: auth.currentUser?.displayName || email.split('@')[0],
+          uid: fbUid,
+          userId: fbUid,
           role: 'business'
-        }))
+        }
+        sessionStorage.setItem('listpak_user_session', JSON.stringify(sessionPayload))
+        localStorage.setItem('listpak_user_session', JSON.stringify(sessionPayload))
         toast.success('Successfully logged into ListPak Business Portal.')
         setTimeout(() => {
           router.push('/dashboard')
