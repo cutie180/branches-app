@@ -24,6 +24,7 @@ export default function ProfessionalDashboardPage() {
   const [isSaving, setIsSaving] = useState(false)
   const [copiedLink, setCopiedLink] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [showVerifySideAlert, setShowVerifySideAlert] = useState(true)
   const [inquiries, setInquiries] = useState<ProfessionalInquiry[]>([])
   const [loadingInquiries, setLoadingInquiries] = useState(false)
   const [skillInput, setSkillInput] = useState('')
@@ -211,6 +212,7 @@ export default function ProfessionalDashboardPage() {
   }
 
   const handleSave = async () => {
+    if (!profile) return
     if (!isVerified) {
       toast.error('Profile editing is available only to verified professionals. Please complete verification to unlock profile editing.')
       return
@@ -256,23 +258,169 @@ export default function ProfessionalDashboardPage() {
   }
 
   const addSkill = () => {
+    if (!profile) return
     if (!isVerified) {
       toast.error('Profile editing is locked for unverified profiles.')
       return
     }
     if (skillInput.trim() && !profile.skills.includes(skillInput.trim())) {
-      setProfile(p => ({ ...p, skills: [...p.skills, skillInput.trim()] }))
+      setProfile(p => p ? ({ ...p, skills: [...p.skills, skillInput.trim()] }) : null)
       setSkillInput('')
     }
   }
 
   const removeSkill = (sk: string) => {
+    if (!profile) return
     if (!isVerified) {
       toast.error('Profile editing is locked for unverified profiles.')
       return
     }
-    setProfile(p => ({ ...p, skills: p.skills.filter(s => s !== sk) }))
+    setProfile(p => p ? ({ ...p, skills: p.skills.filter(s => s !== sk) }) : null)
   }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
+        <Navbar />
+        <main className="max-w-6xl mx-auto px-4 py-16 flex-1 flex flex-col items-center justify-center text-center space-y-4">
+          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <h2 className="text-lg font-bold text-slate-800">Loading Your Professional Dashboard...</h2>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
+
+  // State A: User is not logged in
+  if (!userSession && !auth.currentUser) {
+    return (
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
+        <Navbar />
+        <main className="max-w-md mx-auto px-4 py-16 flex-1 flex flex-col items-center justify-center w-full">
+          <div className="w-full bg-white border border-slate-200 rounded-3xl p-8 shadow-xl space-y-6 animate-in zoom-in-95">
+            <div className="text-center space-y-2">
+              <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto shadow-inner">
+                <LogIn className="w-7 h-7" />
+              </div>
+              <h1 className="text-2xl font-extrabold text-slate-900">Professional Dashboard Login</h1>
+              <p className="text-xs text-slate-500">
+                Log in to check your profile approval status, view client inquiries, and manage your public portfolio.
+              </p>
+            </div>
+
+            {loginError && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+                <span>{loginError}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleInlineLogin} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="email"
+                    required
+                    value={loginEmail}
+                    onChange={(e) => setLoginEmail(e.target.value)}
+                    placeholder="e.g. ali@professional.pk"
+                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Password</label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type={showLoginPassword ? 'text' : 'password'}
+                    required
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowLoginPassword(!showLoginPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 p-1"
+                  >
+                    {showLoginPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoggingIn}
+                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              >
+                {isLoggingIn ? <span>Signing In...</span> : <><span>Sign In to Dashboard</span><ArrowRight className="w-4 h-4" /></>}
+              </button>
+            </form>
+
+            <div className="pt-4 border-t border-slate-100 text-center space-y-2">
+              <p className="text-xs text-slate-500">
+                Don&apos;t have a professional profile yet?
+              </p>
+              <Link
+                href="/add-professional"
+                className="inline-flex items-center gap-1 text-xs text-blue-600 font-extrabold hover:underline"
+              >
+                <span>Register Professional Profile Free</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
+
+  // State B: User is logged in, but has not created a professional profile yet
+  if (!profile) {
+    return (
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
+        <Navbar />
+        <main className="max-w-2xl mx-auto px-4 py-16 flex-1 flex flex-col items-center justify-center text-center space-y-6">
+          <div className="bg-white border border-slate-200 rounded-3xl p-8 sm:p-12 shadow-xl space-y-6 w-full text-center">
+            <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto shadow-inner">
+              <User className="w-8 h-8" />
+            </div>
+            <div className="space-y-2">
+              <h1 className="text-2xl font-extrabold text-slate-900">No Professional Profile Linked Yet</h1>
+              <p className="text-xs text-slate-500 max-w-md mx-auto">
+                Logged in as <strong>{userSession?.email || auth.currentUser?.email}</strong>. You have not submitted your professional portfolio profile yet.
+              </p>
+            </div>
+
+            <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
+                href="/add-professional"
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl shadow-md flex items-center justify-center gap-2"
+              >
+                <span>Create Professional Profile Now</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition"
+              >
+                Sign Out
+              </button>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
+
+  const pro = profile
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
@@ -282,16 +430,86 @@ export default function ProfessionalDashboardPage() {
       <section className="bg-white border-b border-slate-200/90 pt-8 pb-10 px-4 sm:px-6 lg:px-8 shadow-xs">
         <div className="max-w-6xl mx-auto space-y-6">
 
+          {/* Top Real-Time Approval & Verification Status Banner */}
+          {isPending && (
+            <div className="p-4 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-300 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm animate-in fade-in-50">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
+                  <Clock className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider bg-amber-200/80 text-amber-900 px-2 py-0.5 rounded-md">
+                      Profile Status: Pending Moderation
+                    </span>
+                  </div>
+                  <h3 className="text-sm font-extrabold text-amber-950 mt-0.5">
+                    Your Professional Profile is Under Review (1–2 Hours)
+                  </h3>
+                  <p className="text-xs text-amber-800 leading-relaxed">
+                    Our team is reviewing your profile details. Once approved by the admin, your profile will go live at <span className="font-mono font-bold">/professionals/{pro.username}</span> and become searchable across Pakistan.
+                  </p>
+                </div>
+              </div>
+              <Link
+                href="/dashboard/professional/verify"
+                className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-xs rounded-xl shrink-0 shadow-xs flex items-center gap-1.5 cursor-pointer"
+              >
+                <ShieldCheck className="w-4 h-4" />
+                <span>Verify Profile (Rs. 50)</span>
+              </Link>
+            </div>
+          )}
+
+          {isApproved && (
+            <div className="p-4 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-300 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm animate-in fade-in-50">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-200/80 text-emerald-900 px-2 py-0.5 rounded-md">
+                    Profile Status: Approved &amp; Live
+                  </span>
+                  <h3 className="text-sm font-extrabold text-emerald-950 mt-0.5">
+                    Your Profile is Live on ListPak!
+                  </h3>
+                  <p className="text-xs text-emerald-800">
+                    Your profile is published and indexed for employers, clients, and patients across Pakistan.
+                  </p>
+                </div>
+              </div>
+              <Link
+                href={`/professionals/${pro.username}`}
+                target="_blank"
+                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shrink-0 shadow-xs flex items-center gap-1.5"
+              >
+                <Eye className="w-4 h-4" />
+                <span>View Public Profile</span>
+              </Link>
+            </div>
+          )}
+
+          {isRejected && (
+            <div className="p-4 bg-red-50 border border-red-300 rounded-2xl flex items-center gap-3 text-red-900 shadow-sm animate-in fade-in-50">
+              <AlertCircle className="w-6 h-6 text-red-600 shrink-0" />
+              <div className="text-xs">
+                <h3 className="font-extrabold text-sm text-red-950">Profile Modification Needed</h3>
+                <p>Please update your details to meet directory guidelines and contact support for approval.</p>
+              </div>
+            </div>
+          )}
+
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div className="flex items-center gap-4">
               <img
-                src={profile.avatar}
-                alt={profile.name}
+                src={pro.avatar}
+                alt={pro.name}
                 className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover border-2 border-white shadow-md ring-1 ring-slate-200"
               />
               <div className="space-y-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">{profile.name}</h1>
+                  <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">{pro.name}</h1>
                   {isVerified ? (
                     <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200">
                       <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
@@ -491,7 +709,7 @@ export default function ProfessionalDashboardPage() {
         )}
 
         {/* 🌐 FREE PORTFOLIO WEBSITE NOTIFICATION BANNER */}
-        {(!profile.website || !profile.portfolio || isVerified) && (
+        {(!pro.website || !pro.portfolio || isVerified) && (
           <div className="bg-gradient-to-r from-blue-900 via-slate-900 to-indigo-950 border border-blue-400/40 rounded-3xl p-6 shadow-xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 text-white relative overflow-hidden">
             <div className="absolute top-0 right-0 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
 
@@ -552,7 +770,7 @@ export default function ProfessionalDashboardPage() {
             { id: 'profile', label: isVerified ? 'Edit Profile & Details' : 'View Profile Details (Read Only)' },
             { id: 'experience', label: isVerified ? 'Skills & Credentials' : 'Skills & Credentials (Locked)' },
             { id: 'socials', label: isVerified ? 'Social & Portfolio Links' : 'Social & Portfolio Links (Locked)' },
-            { id: 'reviews', label: 'Client Reviews (' + (profile.reviews?.length || 0) + ')' },
+            { id: 'reviews', label: 'Client Reviews (' + (pro.reviews?.length || 0) + ')' },
             { id: 'inquiries', label: '💬 Client Inquiries (' + inquiries.length + ')' }
           ].map((tab: any) => (
             <button
@@ -560,7 +778,7 @@ export default function ProfessionalDashboardPage() {
               onClick={() => {
                 setActiveTab(tab.id)
                 if (tab.id === 'inquiries') {
-                  fetchInquiries(profile.username)
+                  fetchInquiries(pro.username)
                 }
               }}
               className={`px-4 py-2.5 rounded-xl transition-all cursor-pointer shrink-0 ${activeTab === tab.id
@@ -597,8 +815,8 @@ export default function ProfessionalDashboardPage() {
                 <input
                   type="text"
                   disabled={!isVerified}
-                  value={profile.name}
-                  onChange={(e) => setProfile(p => ({ ...p, name: e.target.value, fullName: e.target.value }))}
+                  value={pro.name}
+                  onChange={(e) => setProfile(p => p ? ({ ...p, name: e.target.value, fullName: e.target.value }) : null)}
                   className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl disabled:bg-slate-100 disabled:text-slate-600 disabled:cursor-not-allowed"
                 />
               </div>
@@ -608,8 +826,8 @@ export default function ProfessionalDashboardPage() {
                 <input
                   type="text"
                   disabled={!isVerified}
-                  value={profile.title}
-                  onChange={(e) => setProfile(p => ({ ...p, title: e.target.value }))}
+                  value={pro.title}
+                  onChange={(e) => setProfile(p => p ? ({ ...p, title: e.target.value }) : null)}
                   className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl disabled:bg-slate-100 disabled:text-slate-600 disabled:cursor-not-allowed"
                 />
               </div>
@@ -619,8 +837,8 @@ export default function ProfessionalDashboardPage() {
                 <input
                   type="text"
                   disabled={!isVerified}
-                  value={profile.city}
-                  onChange={(e) => setProfile(p => ({ ...p, city: e.target.value }))}
+                  value={pro.city}
+                  onChange={(e) => setProfile(p => p ? ({ ...p, city: e.target.value }) : null)}
                   className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl disabled:bg-slate-100 disabled:text-slate-600 disabled:cursor-not-allowed"
                 />
               </div>
@@ -629,8 +847,8 @@ export default function ProfessionalDashboardPage() {
                 <label className="block font-bold text-slate-700 mb-1">Gender</label>
                 <select
                   disabled={!isVerified}
-                  value={profile.gender || 'Male'}
-                  onChange={(e) => setProfile(p => ({ ...p, gender: e.target.value }))}
+                  value={pro.gender || 'Male'}
+                  onChange={(e) => setProfile(p => p ? ({ ...p, gender: e.target.value }) : null)}
                   className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl disabled:bg-slate-100 disabled:text-slate-600 disabled:cursor-not-allowed font-bold"
                 >
                   <option value="Male">Male 👨</option>
@@ -643,8 +861,8 @@ export default function ProfessionalDashboardPage() {
                 <input
                   type="url"
                   disabled={!isVerified}
-                  value={profile.avatar}
-                  onChange={(e) => setProfile(p => ({ ...p, avatar: e.target.value }))}
+                  value={pro.avatar}
+                  onChange={(e) => setProfile(p => p ? ({ ...p, avatar: e.target.value }) : null)}
                   placeholder="https://..."
                   className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl disabled:bg-slate-100 disabled:text-slate-600 disabled:cursor-not-allowed"
                 />
@@ -655,8 +873,8 @@ export default function ProfessionalDashboardPage() {
                 <input
                   type="text"
                   disabled={!isVerified}
-                  value={profile.availability || ''}
-                  onChange={(e) => setProfile(p => ({ ...p, availability: e.target.value }))}
+                  value={pro.availability || ''}
+                  onChange={(e) => setProfile(p => p ? ({ ...p, availability: e.target.value }) : null)}
                   className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl disabled:bg-slate-100 disabled:text-slate-600 disabled:cursor-not-allowed"
                 />
               </div>
@@ -666,8 +884,8 @@ export default function ProfessionalDashboardPage() {
                 <input
                   type="tel"
                   disabled={!isVerified}
-                  value={profile.phone || ''}
-                  onChange={(e) => setProfile(p => ({ ...p, phone: e.target.value }))}
+                  value={pro.phone || ''}
+                  onChange={(e) => setProfile(p => p ? ({ ...p, phone: e.target.value }) : null)}
                   className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl disabled:bg-slate-100 disabled:text-slate-600 disabled:cursor-not-allowed"
                 />
               </div>
@@ -677,8 +895,8 @@ export default function ProfessionalDashboardPage() {
                 <input
                   type="tel"
                   disabled={!isVerified}
-                  value={profile.whatsapp || ''}
-                  onChange={(e) => setProfile(p => ({ ...p, whatsapp: e.target.value }))}
+                  value={pro.whatsapp || ''}
+                  onChange={(e) => setProfile(p => p ? ({ ...p, whatsapp: e.target.value }) : null)}
                   className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl disabled:bg-slate-100 disabled:text-slate-600 disabled:cursor-not-allowed"
                 />
               </div>
@@ -689,8 +907,8 @@ export default function ProfessionalDashboardPage() {
               <textarea
                 rows={3}
                 disabled={!isVerified}
-                value={profile.bio}
-                onChange={(e) => setProfile(p => ({ ...p, bio: e.target.value }))}
+                value={pro.bio}
+                onChange={(e) => setProfile(p => p ? ({ ...p, bio: e.target.value }) : null)}
                 className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs disabled:bg-slate-100 disabled:text-slate-600 disabled:cursor-not-allowed"
               />
             </div>
@@ -700,8 +918,8 @@ export default function ProfessionalDashboardPage() {
               <textarea
                 rows={5}
                 disabled={!isVerified}
-                value={profile.about || ''}
-                onChange={(e) => setProfile(p => ({ ...p, about: e.target.value }))}
+                value={pro.about || ''}
+                onChange={(e) => setProfile(p => p ? ({ ...p, about: e.target.value }) : null)}
                 className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs disabled:bg-slate-100 disabled:text-slate-600 disabled:cursor-not-allowed"
               />
             </div>
@@ -747,7 +965,7 @@ export default function ProfessionalDashboardPage() {
             <div>
               <span className="block font-bold text-slate-700 text-xs mb-2">Current Skills List</span>
               <div className="flex flex-wrap gap-2">
-                {profile.skills.map((s) => (
+                {pro.skills.map((s) => (
                   <span key={s} className="px-3 py-1 bg-slate-100 text-slate-800 rounded-lg text-xs font-semibold flex items-center gap-1.5 border border-slate-200">
                     <span>{s}</span>
                     {isVerified && (
@@ -785,8 +1003,8 @@ export default function ProfessionalDashboardPage() {
               <input
                 type="url"
                 disabled={!isVerified}
-                value={profile.linkedin || ''}
-                onChange={(e) => setProfile(p => ({ ...p, linkedin: e.target.value }))}
+                value={pro.linkedin || ''}
+                onChange={(e) => setProfile(p => p ? ({ ...p, linkedin: e.target.value }) : null)}
                 className="w-full px-4 py-2 bg-white border border-blue-300 rounded-xl text-xs disabled:bg-slate-100 disabled:cursor-not-allowed"
               />
             </div>
@@ -797,8 +1015,8 @@ export default function ProfessionalDashboardPage() {
                 <input
                   type="url"
                   disabled={!isVerified}
-                  value={profile.github || ''}
-                  onChange={(e) => setProfile(p => ({ ...p, github: e.target.value }))}
+                  value={pro.github || ''}
+                  onChange={(e) => setProfile(p => p ? ({ ...p, github: e.target.value }) : null)}
                   className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl disabled:bg-slate-100 disabled:cursor-not-allowed"
                 />
               </div>
@@ -808,8 +1026,8 @@ export default function ProfessionalDashboardPage() {
                 <input
                   type="url"
                   disabled={!isVerified}
-                  value={profile.portfolio || ''}
-                  onChange={(e) => setProfile(p => ({ ...p, portfolio: e.target.value }))}
+                  value={pro.portfolio || ''}
+                  onChange={(e) => setProfile(p => p ? ({ ...p, portfolio: e.target.value }) : null)}
                   placeholder="https://yourportfolio.com"
                   className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl disabled:bg-slate-100 disabled:cursor-not-allowed text-xs"
                 />
@@ -817,7 +1035,7 @@ export default function ProfessionalDashboardPage() {
             </div>
 
             {/* Free Website Callout in Tab */}
-            {(!profile.portfolio || !profile.website) && (
+            {(!pro.portfolio || !pro.website) && (
               <div className="p-4 rounded-2xl bg-blue-50/80 border border-blue-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                 <div className="flex items-start gap-2.5">
                   <Globe className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
@@ -858,8 +1076,8 @@ export default function ProfessionalDashboardPage() {
           <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs space-y-4">
             <h2 className="text-lg font-extrabold text-slate-900">Client Reviews</h2>
             <div className="space-y-3">
-              {profile.reviews && profile.reviews.length > 0 ? (
-                profile.reviews.map(r => (
+              {pro.reviews && pro.reviews.length > 0 ? (
+                pro.reviews.map(r => (
                   <div key={r.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-xs space-y-1">
                     <div className="flex justify-between font-bold text-slate-900">
                       <span>{r.userName}</span>
@@ -890,7 +1108,7 @@ export default function ProfessionalDashboardPage() {
               </div>
 
               <button
-                onClick={() => fetchInquiries(profile.username)}
+                onClick={() => fetchInquiries(pro.username)}
                 disabled={loadingInquiries}
                 className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl flex items-center gap-1.5 cursor-pointer transition-colors"
               >
@@ -910,7 +1128,7 @@ export default function ProfessionalDashboardPage() {
                 </p>
                 <div className="pt-2">
                   <Link
-                    href={`/professionals/${profile.username}`}
+                    href={`/professionals/${pro.username}`}
                     target="_blank"
                     className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-xs"
                   >
@@ -964,7 +1182,7 @@ export default function ProfessionalDashboardPage() {
 
                         <div className="flex items-center gap-2">
                           <a
-                            href={`mailto:${inq.senderEmail}?subject=Re: Project Inquiry on ListPak - ${encodeURIComponent(profile.name)}&body=Hi ${encodeURIComponent(inq.senderName)},%0D%0A%0D%0AThank you for reaching out regarding your project inquiry on ListPak.`}
+                            href={`mailto:${inq.senderEmail}?subject=Re: Project Inquiry on ListPak - ${encodeURIComponent(pro.name)}&body=Hi ${encodeURIComponent(inq.senderName)},%0D%0A%0D%0AThank you for reaching out regarding your project inquiry on ListPak.`}
                             className="px-3.5 py-2 bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 flex items-center gap-1.5 transition-colors cursor-pointer"
                           >
                             <Mail className="w-3.5 h-3.5 text-slate-500" />

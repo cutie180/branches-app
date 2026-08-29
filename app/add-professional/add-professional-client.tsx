@@ -8,7 +8,7 @@ import {
   Sparkles, ArrowRight, ArrowLeft, Star, ChevronDown, ChevronUp, Lock, Award, 
   Linkedin, Github, Facebook, Instagram, Twitter, Youtube, Plus, Trash2, Check,
   FileText, ExternalLink, MessageCircle, AlertCircle, Building2, Stethoscope,
-  Code, Palette, GraduationCap, Wrench, Scale, Calculator
+  Code, Palette, GraduationCap, Wrench, Scale, Calculator, Eye, EyeOff
 } from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
