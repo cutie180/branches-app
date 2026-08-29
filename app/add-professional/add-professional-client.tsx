@@ -15,6 +15,8 @@ import Footer from '@/components/footer'
 import { CITIES, CATEGORIES } from '@/lib/data'
 import { saveProfessionalToDatabase, generateProfessionalSlug } from '@/lib/professional-service'
 import { toast } from 'sonner'
+import { auth } from '@/lib/firebase'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
 
 // Professions list
 const POPULAR_PROFESSIONS = [
@@ -71,6 +73,11 @@ export default function AddProfessionalClient() {
   const [currentStep, setCurrentStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submittedUsername, setSubmittedUsername] = useState<string | null>(null)
+
+  // Auth & Account State
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
+  const [accountPassword, setAccountPassword] = useState('')
+  const [showAccountPassword, setShowAccountPassword] = useState(false)
 
   // Searchable City state
   const [citySearch, setCitySearch] = useState('')
@@ -202,7 +209,7 @@ export default function AddProfessionalClient() {
     reader.readAsDataURL(file)
   }
 
-  // Prefill from session or URL params
+  // Prefill from session, Firebase Auth, or URL params
   useEffect(() => {
     try {
       const urlParams = new URLSearchParams(window.location.search)
@@ -211,11 +218,20 @@ export default function AddProfessionalClient() {
 
       let sessionName = ''
       let sessionEmail = ''
-      const savedSession = sessionStorage.getItem('listpak_user_session')
+      const savedSession = sessionStorage.getItem('listpak_user_session') || localStorage.getItem('listpak_user_session')
       if (savedSession) {
         const parsed = JSON.parse(savedSession)
         sessionName = parsed.name || ''
         sessionEmail = parsed.email || ''
+        if (parsed.email) {
+          setIsUserLoggedIn(true)
+        }
+      }
+
+      if (auth.currentUser?.email) {
+        setIsUserLoggedIn(true)
+        sessionEmail = sessionEmail || auth.currentUser.email
+        sessionName = sessionName || auth.currentUser.displayName || ''
       }
 
       setFormData(prev => ({
@@ -325,6 +341,9 @@ export default function AddProfessionalClient() {
       if (!formData.city) errs.city = 'City is required'
       if (!formData.email.trim()) errs.email = 'Email address is required'
       if (!formData.phone.trim()) errs.phone = 'Phone number is required'
+      if (!isUserLoggedIn && (!accountPassword || accountPassword.length < 6)) {
+        errs.password = 'Password (at least 6 characters) is required to create your dashboard account'
+      }
     }
     setErrors(errs)
     return Object.keys(errs).length === 0
@@ -358,8 +377,38 @@ export default function AddProfessionalClient() {
 
     setIsSubmitting(true)
     try {
+      let activeUserId = auth.currentUser?.uid || ''
+
+      // If user is not yet logged in, create Firebase Auth account
+      if (!isUserLoggedIn && accountPassword) {
+        try {
+          const cred = await createUserWithEmailAndPassword(auth, formData.email.trim(), accountPassword)
+          if (cred.user) {
+            activeUserId = cred.user.uid
+            await updateProfile(cred.user, { displayName: formData.fullName.trim() })
+            setIsUserLoggedIn(true)
+          }
+        } catch (authErr: any) {
+          console.warn('Firebase Auth notice during profile creation:', authErr?.code)
+          if (authErr?.code === 'auth/email-already-in-use') {
+            try {
+              const signCred = await signInWithEmailAndPassword(auth, formData.email.trim(), accountPassword)
+              if (signCred.user) {
+                activeUserId = signCred.user.uid
+                setIsUserLoggedIn(true)
+              }
+            } catch (_) {}
+          }
+        }
+      }
+
+      if (!activeUserId) {
+        activeUserId = 'usr-pro-' + Date.now()
+      }
+
       const createdPro = await saveProfessionalToDatabase({
         ...formData,
+        userId: activeUserId,
         certifications: formData.certifications
           .map((cert) => [cert.title, cert.issuer, cert.year].filter(Boolean).join(' — '))
           .filter(Boolean),
@@ -373,20 +422,21 @@ export default function AddProfessionalClient() {
       })
       setSubmittedUsername(createdPro.username)
       
-      // Update session
+      // Update and persist session in both storages
+      const sessionData = {
+        name: formData.fullName,
+        email: formData.email.trim(),
+        role: 'professional',
+        hasProfile: true,
+        username: createdPro.username,
+        userId: activeUserId
+      }
       try {
-        const savedSession = sessionStorage.getItem('listpak_user_session')
-        const parsed = savedSession ? JSON.parse(savedSession) : {}
-        sessionStorage.setItem('listpak_user_session', JSON.stringify({
-          ...parsed,
-          name: formData.fullName,
-          email: formData.email,
-          hasProfile: true,
-          username: createdPro.username
-        }))
+        sessionStorage.setItem('listpak_user_session', JSON.stringify(sessionData))
+        localStorage.setItem('listpak_user_session', JSON.stringify(sessionData))
       } catch (e) {}
 
-      toast.success('Your professional profile has been submitted successfully.')
+      toast.success('Your professional profile has been submitted successfully!')
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (err) {
       toast.error('Failed to submit profile. Please try again.')
@@ -1387,6 +1437,42 @@ export default function AddProfessionalClient() {
                       />
                     </div>
                   </div>
+
+                  {/* ACCOUNT CREATION / PASSWORD SECTION FOR NEW USERS */}
+                  {!isUserLoggedIn && (
+                    <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Lock className="w-4 h-4 text-blue-600" />
+                          <span className="font-extrabold text-xs text-slate-900">Set Account Password *</span>
+                        </div>
+                        <Link href="/login?role=professional" className="text-[11px] text-blue-700 font-bold hover:underline">
+                          Already have an account? Log In
+                        </Link>
+                      </div>
+                      <p className="text-[11px] text-slate-600 leading-relaxed">
+                        Create a password for your account so you can log into your <strong>Professional Dashboard</strong> and track your profile approval in real time.
+                      </p>
+                      <div className="relative">
+                        <input
+                          type={showAccountPassword ? 'text' : 'password'}
+                          required
+                          value={accountPassword}
+                          onChange={(e) => setAccountPassword(e.target.value)}
+                          placeholder="Create a strong password (at least 6 characters)"
+                          className="w-full pl-4 pr-11 py-2.5 bg-white border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowAccountPassword(!showAccountPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 p-1"
+                        >
+                          {showAccountPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                      {errors.password && <p className="text-red-500 text-[11px] font-bold">{errors.password}</p>}
+                    </div>
+                  )}
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>

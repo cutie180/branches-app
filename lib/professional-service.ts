@@ -245,17 +245,17 @@ export const getProfessionalByUsername = cache(async function getProfessionalByU
 export async function getProfessionalForDashboard(idOrUsernameOrEmail?: string): Promise<ProfessionalItem | null> {
   const all = await getAllProfessionals(true)
   if (!idOrUsernameOrEmail) {
-    return all[0] || null
+    return null
   }
   const normalized = idOrUsernameOrEmail.toLowerCase().trim()
   const found = all.find(p => 
-    p.id?.toLowerCase() === normalized || 
-    p.username.toLowerCase() === normalized || 
-    p.slug?.toLowerCase() === normalized ||
-    p.email?.toLowerCase() === normalized ||
-    p.userId?.toLowerCase() === normalized
+    (p.id && p.id.toLowerCase() === normalized) || 
+    (p.username && p.username.toLowerCase() === normalized) || 
+    (p.slug && p.slug.toLowerCase() === normalized) || 
+    (p.email && p.email.toLowerCase().trim() === normalized) || 
+    (p.userId && p.userId.toLowerCase().trim() === normalized)
   )
-  return found || all[0] || null
+  return found || null
 }
 
 export async function saveProfessionalToDatabase(proData: Partial<ProfessionalItem>): Promise<ProfessionalItem> {
@@ -278,8 +278,11 @@ export async function saveProfessionalToDatabase(proData: Partial<ProfessionalIt
     counter++
   }
 
+  const newProId = proData.id || ('pro-' + Date.now())
+  const nowIso = new Date().toISOString()
+
   const newPro: ProfessionalItem = {
-    id: 'pro-' + Date.now(),
+    id: newProId,
     userId: proData.userId || '',
     username,
     slug: username,
@@ -311,7 +314,7 @@ export async function saveProfessionalToDatabase(proData: Partial<ProfessionalIt
     profileStatus: 'PENDING',
     verificationStatus: 'UNVERIFIED',
     verificationRequestStatus: 'NOT_REQUESTED',
-    submittedAt: new Date().toISOString(),
+    submittedAt: nowIso,
     
     phone: proData.phone || '',
     email: proData.email || '',
@@ -351,13 +354,25 @@ export async function saveProfessionalToDatabase(proData: Partial<ProfessionalIt
   }
 
   // Update memory cache
-  memoryProfessionalsCache = [newPro, ...memoryProfessionalsCache.filter(p => p.username !== username)]
+  memoryProfessionalsCache = [newPro, ...memoryProfessionalsCache.filter(p => p.username !== username && p.id !== newProId)]
 
-  // Persist to Firestore
+  // Persist to Firestore with explicit document ID using setDoc
   try {
-    await addDoc(collection(db, 'professionals'), newPro)
+    const docRef = doc(db, 'professionals', newProId)
+    await setDoc(docRef, {
+      ...newPro,
+      createdAt: nowIso
+    })
   } catch (err) {
-    console.warn('Firestore saveProfessionalToDatabase error:', err)
+    console.warn('Firestore saveProfessionalToDatabase error, attempting addDoc fallback:', err)
+    try {
+      await addDoc(collection(db, 'professionals'), {
+        ...newPro,
+        createdAt: nowIso
+      })
+    } catch (innerErr) {
+      console.warn('Firestore fallback addDoc failed:', innerErr)
+    }
   }
 
   return newPro

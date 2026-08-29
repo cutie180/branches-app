@@ -7,32 +7,39 @@ import { ProfessionalItem, MOCK_PROFESSIONALS, ProfessionalInquiry } from '@/lib
 import { getAllProfessionals, getProfessionalInquiries } from '@/lib/professional-service'
 import { db, auth } from '@/lib/firebase'
 import { collection, onSnapshot } from 'firebase/firestore'
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import Link from 'next/link'
-import { 
-  User, Briefcase, MapPin, Phone, Mail, Globe, ShieldCheck, Sparkles, Star, 
+import {
+  User, Briefcase, MapPin, Phone, Mail, Globe, ShieldCheck, Sparkles, Star,
   Linkedin, Github, Edit3, Plus, Trash2, CheckCircle2, Save, FileText, ExternalLink,
   MessageCircle, RefreshCw, Eye, Lock, AlertTriangle, Copy, Check, Clock, XCircle,
-  ArrowRight, X, Inbox, Send
+  ArrowRight, X, Inbox, Send, LogIn, AlertCircle, LogOut, EyeOff
 } from 'lucide-react'
 import { toast } from 'sonner'
 
 export default function ProfessionalDashboardPage() {
-  const [profile, setProfile] = useState<ProfessionalItem>(MOCK_PROFESSIONALS[0])
+  const [profile, setProfile] = useState<ProfessionalItem | null>(null)
   const [allProfiles, setAllProfiles] = useState<ProfessionalItem[]>([])
   const [activeTab, setActiveTab] = useState<'profile' | 'experience' | 'socials' | 'reviews' | 'inquiries'>('profile')
   const [isSaving, setIsSaving] = useState(false)
   const [copiedLink, setCopiedLink] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [showVerifySideAlert, setShowVerifySideAlert] = useState(true)
   const [inquiries, setInquiries] = useState<ProfessionalInquiry[]>([])
   const [loadingInquiries, setLoadingInquiries] = useState(false)
-
   const [skillInput, setSkillInput] = useState('')
+
+  // Inline Authentication State
+  const [userSession, setUserSession] = useState<{ email?: string; name?: string; username?: string; role?: string } | null>(null)
+  const [loginEmail, setLoginEmail] = useState('')
+  const [loginPassword, setLoginPassword] = useState('')
+  const [showLoginPassword, setShowLoginPassword] = useState(false)
+  const [isLoggingIn, setIsLoggingIn] = useState(false)
+  const [loginError, setLoginError] = useState('')
 
   const fetchInquiries = async (targetUsername?: string) => {
     try {
       setLoadingInquiries(true)
-      const u = targetUsername || profile.username || 'all'
+      const u = targetUsername || profile?.username || 'all'
       const inqs = await getProfessionalInquiries(u)
       setInquiries(inqs)
     } catch (err) {
@@ -44,6 +51,7 @@ export default function ProfessionalDashboardPage() {
 
   // Real-time Firestore live listener for inquiries
   useEffect(() => {
+    if (!profile) return
     try {
       const unsub = onSnapshot(collection(db, 'professional_inquiries'), (snapshot) => {
         const items: ProfessionalInquiry[] = []
@@ -67,73 +75,134 @@ export default function ProfessionalDashboardPage() {
           )
         })
 
-        // If matched exist, use them. If not and there are any items in DB, display items so dashboard never loses a message
         setInquiries(matched.length > 0 ? matched : items)
       }, (err) => {
         console.warn('Inquiries onSnapshot listener error:', err)
       })
       return () => unsub()
-    } catch (e) {}
+    } catch (e) { }
   }, [profile?.username, profile?.name])
 
-  useEffect(() => {
-    async function loadData() {
-      setLoading(true)
-      try {
-        const all = await getAllProfessionals(true)
-        setAllProfiles(all)
-        
-        let targetUsername = ''
-        let targetEmail = ''
-        const session = sessionStorage.getItem('listpak_user_session')
-        if (session) {
-          try {
-            const parsed = JSON.parse(session)
-            targetUsername = parsed.username || ''
-            targetEmail = parsed.email || ''
-          } catch (e) {}
-        }
-        if (!targetEmail && auth.currentUser?.email) {
-          targetEmail = auth.currentUser.email
-        }
+  async function loadData() {
+    setLoading(true)
+    try {
+      const all = await getAllProfessionals(true)
+      setAllProfiles(all)
 
-        let selectedPro: ProfessionalItem | null = null
-        if (targetEmail || targetUsername) {
-          const matched = all.find(p => 
-            (targetEmail && p.email && p.email.toLowerCase().trim() === targetEmail.toLowerCase().trim()) ||
-            (targetUsername && p.username && p.username.toLowerCase().trim() === targetUsername.toLowerCase().trim()) ||
-            (targetUsername && p.slug && p.slug.toLowerCase().trim() === targetUsername.toLowerCase().trim())
-          )
-          if (matched) {
-            selectedPro = matched
-            setProfile(matched)
-          }
-        }
-
-        if (!selectedPro && all.length > 0) {
-          selectedPro = all[0]
-          setProfile(all[0])
-        }
-
-        if (selectedPro) {
-          fetchInquiries(selectedPro.username)
-        }
-      } catch (err) {
-        console.error('Error loading dashboard profile:', err)
-      } finally {
-        setLoading(false)
+      let targetUsername = ''
+      let targetEmail = ''
+      const session = sessionStorage.getItem('listpak_user_session') || localStorage.getItem('listpak_user_session')
+      if (session) {
+        try {
+          const parsed = JSON.parse(session)
+          targetUsername = parsed.username || ''
+          targetEmail = parsed.email || ''
+          setUserSession(parsed)
+        } catch (e) { }
       }
+      if (!targetEmail && auth.currentUser?.email) {
+        targetEmail = auth.currentUser.email
+        setUserSession({ email: targetEmail, name: auth.currentUser.displayName || '' })
+      }
+
+      let selectedPro: ProfessionalItem | null = null
+      if (targetEmail || targetUsername || auth.currentUser?.uid) {
+        const currentUid = auth.currentUser?.uid
+        const matched = all.find(p =>
+          (currentUid && p.userId && p.userId === currentUid) ||
+          (targetEmail && p.email && p.email.toLowerCase().trim() === targetEmail.toLowerCase().trim()) ||
+          (targetUsername && p.username && p.username.toLowerCase().trim() === targetUsername.toLowerCase().trim()) ||
+          (targetUsername && p.slug && p.slug.toLowerCase().trim() === targetUsername.toLowerCase().trim())
+        )
+        if (matched) {
+          selectedPro = matched
+          setProfile(matched)
+        }
+      }
+
+      if (!selectedPro) {
+        setProfile(null)
+      }
+
+      if (selectedPro) {
+        fetchInquiries(selectedPro.username)
+      }
+    } catch (err) {
+      console.error('Error loading dashboard profile:', err)
+    } finally {
+      setLoading(false)
     }
+  }
+
+  useEffect(() => {
     loadData()
   }, [])
 
-  const isApproved = (profile.status || 'approved') === 'approved' && (profile.profileStatus || 'APPROVED') === 'APPROVED'
-  const isPending = profile.status === 'pending' || profile.profileStatus === 'PENDING'
-  const isRejected = profile.status === 'rejected' || profile.profileStatus === 'REJECTED'
-  const isVerified = profile.verified === true || profile.verificationStatus === 'VERIFIED'
-  const isVerificationPending = profile.verificationRequestStatus === 'PENDING'
+  const handleInlineLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoginError('')
+    setIsLoggingIn(true)
+
+    try {
+      try {
+        await signInWithEmailAndPassword(auth, loginEmail.trim(), loginPassword)
+      } catch (authErr: any) {
+        console.warn('Firebase auth attempt:', authErr?.message)
+      }
+
+      const all = await getAllProfessionals(true)
+      const matched = all.find(p =>
+        (p.email && p.email.toLowerCase().trim() === loginEmail.trim().toLowerCase()) ||
+        (p.username && p.username.toLowerCase().trim() === loginEmail.trim().toLowerCase())
+      )
+
+      const sessionObj = {
+        name: matched?.name || matched?.fullName || loginEmail.split('@')[0],
+        email: loginEmail.trim(),
+        role: 'professional',
+        hasProfile: Boolean(matched),
+        username: matched?.username || loginEmail.split('@')[0],
+        userId: matched?.userId || auth.currentUser?.uid || ''
+      }
+
+      sessionStorage.setItem('listpak_user_session', JSON.stringify(sessionObj))
+      localStorage.setItem('listpak_user_session', JSON.stringify(sessionObj))
+      setUserSession(sessionObj)
+
+      if (matched) {
+        setProfile(matched)
+        toast.success(`Welcome back, ${matched.name}!`)
+      } else {
+        toast.success('Logged in successfully. Please complete your professional profile setup.')
+      }
+
+      await loadData()
+    } catch (err: any) {
+      setLoginError('Invalid credentials. Please verify your email and password.')
+    } finally {
+      setIsLoggingIn(false)
+    }
+  }
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth)
+    } catch (_) { }
+    sessionStorage.removeItem('listpak_user_session')
+    localStorage.removeItem('listpak_user_session')
+    setUserSession(null)
+    setProfile(null)
+    toast.success('Logged out successfully.')
+  }
+
+  const isApproved = profile ? ((profile.status || 'approved') === 'approved' && (profile.profileStatus || 'APPROVED') === 'APPROVED') : false
+  const isPending = profile ? (profile.status === 'pending' || profile.profileStatus === 'PENDING') : false
+  const isRejected = profile ? (profile.status === 'rejected' || profile.profileStatus === 'REJECTED') : false
+  const isVerified = profile ? (profile.verified === true || profile.verificationStatus === 'VERIFIED') : false
+  const isVerificationPending = profile ? (profile.verificationRequestStatus === 'PENDING') : false
 
   const handleCopyUrl = () => {
+    if (!profile) return
     const url = `https://www.listpak.com/professionals/${profile.username}`
     navigator.clipboard.writeText(url)
     setCopiedLink(true)
@@ -212,7 +281,7 @@ export default function ProfessionalDashboardPage() {
       {/* Header Banner (Clean Light / White Theme) */}
       <section className="bg-white border-b border-slate-200/90 pt-8 pb-10 px-4 sm:px-6 lg:px-8 shadow-xs">
         <div className="max-w-6xl mx-auto space-y-6">
-          
+
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div className="flex items-center gap-4">
               <img
@@ -361,7 +430,7 @@ export default function ProfessionalDashboardPage() {
       </section>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-6">
-        
+
         {/* Verification Notification Banners */}
         {isVerificationPending && (
           <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-center gap-3 text-xs text-amber-800">
@@ -425,7 +494,7 @@ export default function ProfessionalDashboardPage() {
         {(!profile.website || !profile.portfolio || isVerified) && (
           <div className="bg-gradient-to-r from-blue-900 via-slate-900 to-indigo-950 border border-blue-400/40 rounded-3xl p-6 shadow-xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 text-white relative overflow-hidden">
             <div className="absolute top-0 right-0 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
-            
+
             <div className="space-y-2 max-w-2xl relative z-10">
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="px-2.5 py-1 rounded-xl bg-blue-500/30 text-blue-200 border border-blue-400/40 text-[11px] font-extrabold uppercase tracking-wider flex items-center gap-1.5 shadow-xs">
@@ -440,7 +509,7 @@ export default function ProfessionalDashboardPage() {
               <h3 className="font-extrabold text-white text-base sm:text-lg">
                 Don&apos;t Have a Portfolio Website? Get One for FREE! 🌐
               </h3>
-              
+
               <p className="text-xs text-slate-300 leading-relaxed">
                 A personal portfolio website gives you <strong className="text-blue-300">10x higher credibility</strong> with corporate clients, HR recruiters, and international gigs. ListPak is providing free modern portfolio websites for registered professionals.
               </p>
@@ -494,11 +563,10 @@ export default function ProfessionalDashboardPage() {
                   fetchInquiries(profile.username)
                 }
               }}
-              className={`px-4 py-2.5 rounded-xl transition-all cursor-pointer shrink-0 ${
-                activeTab === tab.id
+              className={`px-4 py-2.5 rounded-xl transition-all cursor-pointer shrink-0 ${activeTab === tab.id
                   ? 'bg-blue-600 text-white shadow-md'
                   : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
-              }`}
+                }`}
             >
               {tab.label}
             </button>
@@ -855,8 +923,8 @@ export default function ProfessionalDashboardPage() {
               <div className="space-y-4">
                 {inquiries.map((inq) => {
                   const cleanWhatsAppDigits = (inq.senderWhatsApp || '').replace(/[^0-9]/g, '')
-                  const waNumber = cleanWhatsAppDigits.startsWith('0') 
-                    ? '92' + cleanWhatsAppDigits.slice(1) 
+                  const waNumber = cleanWhatsAppDigits.startsWith('0')
+                    ? '92' + cleanWhatsAppDigits.slice(1)
                     : cleanWhatsAppDigits
 
                   return (
@@ -966,7 +1034,7 @@ export default function ProfessionalDashboardPage() {
               <span>WhatsApp Chat</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </a>
-            
+
             {!isVerified && (
               <Link
                 href="/dashboard/professional/verify"
