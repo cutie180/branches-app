@@ -1,7 +1,7 @@
 import { cache } from 'react'
 import { MOCK_BUSINESSES, BusinessItem, ContactMessage } from './data'
 import { db } from './firebase'
-import { collection, getDocs, query, where, limit, addDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore'
+import { collection, getDocs, query, where, limit, addDoc, doc, updateDoc, deleteDoc, setDoc } from 'firebase/firestore'
 
 // Memory cache store for super fast reads and SSG generation
 let memoryBusinessesCache: BusinessItem[] = [...MOCK_BUSINESSES]
@@ -59,7 +59,54 @@ export const GENERATE_STARTER_REVIEWS = (businessName: string) => [
 
 export function normalizeBusinessDoc(docId: string, data: any): BusinessItem {
   const bName = data.businessName || data.name || 'Verified Business'
-  const itemStatus = data.status || 'approved'
+  const rawStatus = (data.status || '').toString().toLowerCase().trim()
+  const rawPaymentStatus = (data.paymentStatus || '').toString().toUpperCase().trim()
+  
+  // Extract payment screenshot from all possible fields
+  const screenshot = data.paymentScreenshot || 
+    data.paymentProof || 
+    data.screenshotUrl || 
+    data.proofDoc || 
+    data.paymentDetails?.paymentScreenshot || 
+    data.paymentDetails?.screenshot || 
+    data.paymentDetails?.paymentProof || 
+    ''
+
+  const paymentMethod = data.paymentMethod || 
+    data.paymentDetails?.paymentMethod || 
+    'Easypaisa'
+
+  const refNumber = data.paymentReference || 
+    data.referenceNumber || 
+    data.transactionRef || 
+    data.transactionId || 
+    data.paymentDetails?.referenceNumber || 
+    data.paymentDetails?.transactionRef || 
+    ''
+
+  const paymentDetails = data.paymentDetails || (screenshot ? {
+    paymentMethod,
+    referenceNumber: refNumber,
+    paymentScreenshot: screenshot,
+    amount: Number(data.amount || data.paymentDetails?.amount || 20),
+    paymentDate: data.paymentDate || data.submittedAt || data.createdAt || new Date().toISOString()
+  } : undefined)
+
+  // Determine normalized status:
+  // If explicitly 'pending' or 'pending_approval' or rawPaymentStatus is PENDING
+  let itemStatus: 'pending' | 'approved' | 'rejected' = 'approved'
+  if (rawStatus === 'pending' || rawStatus === 'pending_approval' || (rawStatus !== 'approved' && rawStatus !== 'rejected' && (rawPaymentStatus === 'PENDING' || screenshot))) {
+    itemStatus = 'pending'
+  } else if (rawStatus === 'rejected') {
+    itemStatus = 'rejected'
+  } else if (rawStatus === 'approved') {
+    itemStatus = 'approved'
+  } else if (data.createdAt && !data.approvedAt) {
+    itemStatus = 'pending'
+  }
+
+  const paymentStatus = rawPaymentStatus || (screenshot || paymentDetails ? 'PENDING' : (itemStatus === 'approved' ? 'VERIFIED' : 'UNPAID'))
+
   const itemSlug = data.slug || normalizeSlug(bName)
   
   const docLocations = data.locations && data.locations.length > 0
@@ -103,15 +150,9 @@ export function normalizeBusinessDoc(docId: string, data: any): BusinessItem {
     services: data.services || ['General Services', 'Customer Support'],
     operatingHours: data.operatingHours || { 'Monday - Saturday': '09:00 AM - 07:00 PM' },
     features: data.features || ['Verified Profile'],
-    paymentDetails: data.paymentDetails || (data.paymentScreenshot ? {
-      paymentMethod: data.paymentMethod || data.paymentDetails?.paymentMethod || 'Easypaisa',
-      referenceNumber: data.paymentReference || data.referenceNumber || '',
-      paymentScreenshot: data.paymentScreenshot,
-      amount: 20,
-      paymentDate: data.paymentDate || data.submittedAt || new Date().toISOString()
-    } : undefined),
-    paymentScreenshot: data.paymentScreenshot || data.paymentDetails?.paymentScreenshot || '',
-    paymentStatus: data.paymentStatus || (data.paymentScreenshot || data.paymentDetails ? 'PENDING' : (itemStatus === 'approved' ? 'VERIFIED' : 'UNPAID')),
+    paymentDetails,
+    paymentScreenshot: screenshot,
+    paymentStatus,
     reviews: data.reviews && data.reviews.length > 0 ? data.reviews : [],
     faqs: data.faqs || []
   }
@@ -120,7 +161,7 @@ export function normalizeBusinessDoc(docId: string, data: any): BusinessItem {
 /**
  * Fetch all businesses. If includePending is false (default), returns ONLY approved businesses.
  */
-export const getAllBusinesses = cache(async function getAllBusinesses(includePending: boolean = false): Promise<BusinessItem[]> {
+export async function getAllBusinesses(includePending: boolean = false): Promise<BusinessItem[]> {
   try {
     const querySnapshot = await getDocs(collection(db, 'businesses'))
     if (!querySnapshot.empty) {
@@ -129,13 +170,14 @@ export const getAllBusinesses = cache(async function getAllBusinesses(includePen
         firestoreItems.push(normalizeBusinessDoc(docSnap.id, docSnap.data()))
       })
 
-      // Merge avoiding duplicate slugs
-      const existingSlugs = new Set(firestoreItems.map(b => b.slug.toLowerCase()))
-      const combined = [
-        ...firestoreItems,
-        ...memoryBusinessesCache.filter(b => !existingSlugs.has(b.slug.toLowerCase()))
-      ]
-      memoryBusinessesCache = combined
+      // Merge avoiding duplicate slugs/ids: Firestore items have priority
+      const firestoreSlugs = new Set(firestoreItems.map(b => b.slug.toLowerCase()))
+      const firestoreIds = new Set(firestoreItems.map(b => b.id.toLowerCase()))
+      
+      const nonDuplicateMocks = memoryBusinessesCache.filter(
+        b => !firestoreSlugs.has(b.slug.toLowerCase()) && !firestoreIds.has(b.id.toLowerCase())
+      )
+      memoryBusinessesCache = [...firestoreItems, ...nonDuplicateMocks]
     }
   } catch (err) {
     console.warn('Firestore getAllBusinesses fallback to memory cache:', err)
@@ -146,28 +188,31 @@ export const getAllBusinesses = cache(async function getAllBusinesses(includePen
   }
   
   // Public filter: only return approved items
-  return memoryBusinessesCache.filter(b => (b.status || 'approved') === 'approved')
-})
+  return memoryBusinessesCache.filter(b => b.status === 'approved')
+}
 
 export async function getPendingBusinesses(): Promise<BusinessItem[]> {
   const all = await getAllBusinesses(true)
-  return all.filter(b => b.status === 'pending')
+  return all.filter(b => b.status === 'pending' || b.paymentStatus === 'PENDING')
 }
 
 async function updateBusinessInFirestore(idOrSlug: string, fieldsToUpdate: Record<string, any>): Promise<void> {
+  const norm = (idOrSlug || '').trim()
+  if (!norm) return
+
   try {
-    const docRef = doc(db, 'businesses', idOrSlug)
+    const docRef = doc(db, 'businesses', norm)
     await updateDoc(docRef, fieldsToUpdate)
     return
   } catch (err) {
     try {
-      const q = query(collection(db, 'businesses'), where('slug', '==', idOrSlug), limit(1))
+      const q = query(collection(db, 'businesses'), where('slug', '==', norm.toLowerCase()), limit(1))
       const snap = await getDocs(q)
       if (!snap.empty) {
         await updateDoc(snap.docs[0].ref, fieldsToUpdate)
         return
       }
-      const qId = query(collection(db, 'businesses'), where('id', '==', idOrSlug), limit(1))
+      const qId = query(collection(db, 'businesses'), where('id', '==', norm), limit(1))
       const snapId = await getDocs(qId)
       if (!snapId.empty) {
         await updateDoc(snapId.docs[0].ref, fieldsToUpdate)
@@ -271,8 +316,9 @@ export const getBusinessBySlug = cache(async function getBusinessBySlug(slug: st
  * Save new business with status: "pending" by default
  */
 export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>): Promise<BusinessItem> {
-  const name = businessData.name || businessData.name || 'New Business'
+  const name = businessData.name || 'New Business'
   const slug = businessData.slug || normalizeSlug(name)
+  const bizId = businessData.id || ('biz-' + Date.now())
 
   const inputLocations = businessData.locations && businessData.locations.length > 0
     ? businessData.locations
@@ -284,7 +330,7 @@ export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>
   const allCities = Array.from(new Set(inputLocations.map(l => l.city)))
 
   const newBiz: BusinessItem = {
-    id: 'biz-' + Date.now(),
+    id: bizId,
     userId: businessData.userId || '',
     slug,
     name,
@@ -321,18 +367,30 @@ export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>
   }
 
   // Update memory cache
-  memoryBusinessesCache = [newBiz, ...memoryBusinessesCache.filter(b => b.slug !== slug)]
+  memoryBusinessesCache = [newBiz, ...memoryBusinessesCache.filter(b => b.slug !== slug && b.id !== bizId)]
 
-  // Persist to Firestore
+  // Persist to Firestore with explicit ID using setDoc
   try {
-    await addDoc(collection(db, 'businesses'), {
+    const docRef = doc(db, 'businesses', bizId)
+    await setDoc(docRef, {
       ...newBiz,
       businessName: newBiz.name,
       createdAt: new Date().toISOString(),
       status: 'pending'
     })
   } catch (err) {
-    console.warn('Firestore save fallback:', err)
+    console.warn('Firestore setDoc save fallback, trying addDoc:', err)
+    try {
+      const addedDoc = await addDoc(collection(db, 'businesses'), {
+        ...newBiz,
+        businessName: newBiz.name,
+        createdAt: new Date().toISOString(),
+        status: 'pending'
+      })
+      newBiz.id = addedDoc.id
+    } catch (innerErr) {
+      console.warn('Firestore addDoc fallback error:', innerErr)
+    }
   }
 
   return newBiz
@@ -348,25 +406,32 @@ export async function updateBusinessPaymentProof(
   }
 ): Promise<boolean> {
   const norm = idOrSlug.toLowerCase().trim()
+  const nowIso = new Date().toISOString()
   const paymentDetails = {
     paymentMethod: payment.paymentMethod,
     referenceNumber: payment.referenceNumber || '',
     paymentScreenshot: payment.paymentScreenshot,
     amount: payment.amount || 20,
-    paymentDate: new Date().toISOString()
+    paymentDate: nowIso
   }
 
-  const idx = memoryBusinessesCache.findIndex(b => b.id === idOrSlug || b.slug.toLowerCase() === norm)
+  const idx = memoryBusinessesCache.findIndex(b => b.id === idOrSlug || b.slug.toLowerCase() === norm || b.name.toLowerCase() === norm)
   if (idx !== -1) {
     memoryBusinessesCache[idx].paymentScreenshot = payment.paymentScreenshot
     memoryBusinessesCache[idx].paymentDetails = paymentDetails
     memoryBusinessesCache[idx].paymentStatus = 'PENDING'
+    memoryBusinessesCache[idx].status = 'pending'
+    memoryBusinessesCache[idx].submittedAt = nowIso
+    ;(memoryBusinessesCache[idx] as any).lastRequestedAt = nowIso
   }
 
   await updateBusinessInFirestore(idOrSlug, {
     paymentScreenshot: payment.paymentScreenshot,
     paymentDetails,
-    paymentStatus: 'PENDING'
+    paymentStatus: 'PENDING',
+    status: 'pending',
+    submittedAt: nowIso,
+    lastRequestedAt: nowIso
   })
 
   return true

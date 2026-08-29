@@ -593,7 +593,7 @@ export default function AddBusinessClient() {
     }
   }
 
-  // Handle Screenshot File Selection
+  // Handle Screenshot File Selection with Auto Canvas Compression (guarantees < 100KB base64 for Firestore)
   const handleScreenshotFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -603,14 +603,48 @@ export default function AddBusinessClient() {
       return
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('Screenshot file size must be less than 5MB.')
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('Screenshot file size must be less than 10MB.')
       return
     }
 
     const reader = new FileReader()
-    reader.onload = () => {
-      setPaymentScreenshotBase64(reader.result as string)
+    reader.onload = (event) => {
+      const rawBase64 = event.target?.result as string
+      try {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          let width = img.width
+          let height = img.height
+          const maxDim = 1200
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width)
+              width = maxDim
+            } else {
+              width = Math.round((width * maxDim) / height)
+              height = maxDim
+            }
+          }
+          canvas.width = width
+          canvas.height = height
+          const ctx = canvas.getContext('2d')
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height)
+            const compressed = canvas.toDataURL('image/jpeg', 0.8)
+            setPaymentScreenshotBase64(compressed)
+          } else {
+            setPaymentScreenshotBase64(rawBase64)
+          }
+        }
+        img.onerror = () => {
+          setPaymentScreenshotBase64(rawBase64)
+        }
+        img.src = rawBase64
+      } catch (_) {
+        setPaymentScreenshotBase64(rawBase64)
+      }
     }
     reader.readAsDataURL(file)
   }
@@ -628,12 +662,17 @@ export default function AddBusinessClient() {
     setIsUploadingPayment(true)
     try {
       const selectedAccount = PAYMENT_ACCOUNTS[selectedPaymentMethod]
-      await updateBusinessPaymentProof(activePaymentBiz.id || activePaymentBiz.slug, {
+      const targetId = activePaymentBiz.id || activePaymentBiz.slug
+      const success = await updateBusinessPaymentProof(targetId, {
         paymentMethod: selectedAccount.name,
         referenceNumber: paymentRefNumber.trim() || 'N/A',
         paymentScreenshot: paymentScreenshotBase64,
         amount: 20
       })
+
+      if (!success) {
+        throw new Error('Database update returned false')
+      }
 
       setSubmittedSlug(activePaymentBiz.slug)
       setSubmittedBizName(activePaymentBiz.name)
@@ -642,7 +681,7 @@ export default function AddBusinessClient() {
       setPaymentRefNumber('')
 
       if (currentUser?.email || currentUser?.uid) {
-        fetchUserBusinesses(currentUser.email || currentUser.uid || '')
+        await fetchUserBusinesses(currentUser.email || currentUser.uid || '')
       }
 
       toast.success('Payment proof uploaded successfully! Your business is queued for 1-2h approval.')
@@ -1114,11 +1153,11 @@ export default function AddBusinessClient() {
 
                             {/* UNPAID NOTICE BANNER: SHOWN ONLY UNTIL APPROVED AND WHILE PROOF IS MISSING */}
                             {!isApproved && !hasPaymentProof && (
-                              <div className="p-3.5 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 text-xs space-y-2">
+                              <div className="p-3.5 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 text-xs space-y-2.5">
                                 <div className="flex items-start justify-between gap-1">
                                   <div className="flex items-center gap-1.5 font-bold text-amber-900">
                                     <Zap className="w-4 h-4 text-amber-600 shrink-0" />
-                                    <span>Approve Your Business Now</span>
+                                    <span>Approval Pending (Rs. 20 Listing Fee)</span>
                                   </div>
                                   <button
                                     type="button"
@@ -1130,26 +1169,37 @@ export default function AddBusinessClient() {
                                   </button>
                                 </div>
                                 <p className="text-[11px] text-amber-800 leading-relaxed">
-                                  Pay standard <strong>PKR 20</strong> listing fee to verify your profile and get published within 1–2 hours.
+                                  Submit your PKR 20 payment transfer screenshot to put your listing at the top of the admin approval queue.
                                 </p>
                                 <button
                                   type="button"
                                   onClick={() => setActivePaymentBiz(biz)}
-                                  className="w-full py-2 bg-amber-600 hover:bg-amber-700 text-white font-extrabold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                                  className="w-full py-2.5 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-extrabold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                                 >
                                   <CreditCard className="w-3.5 h-3.5" />
-                                  <span>Pay Rs. 20 & Upload Proof</span>
+                                  <span>Request Approval &amp; Upload Screenshot</span>
                                 </button>
                               </div>
                             )}
 
                             {/* PENDING PAYMENT PROOF VERIFICATION BANNER */}
                             {!isApproved && hasPaymentProof && (
-                              <div className="p-3 rounded-2xl bg-blue-50 border border-blue-200 text-xs flex items-center gap-2 text-blue-900">
-                                <Clock className="w-4 h-4 text-blue-600 shrink-0" />
-                                <span className="text-[11px] leading-tight">
-                                  Payment proof attached (Rs. 20). Admin approval is in progress (1–2 hours).
-                                </span>
+                              <div className="p-3.5 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 text-xs space-y-2">
+                                <div className="flex items-center gap-1.5 font-bold text-blue-950">
+                                  <Clock className="w-4 h-4 text-blue-600 shrink-0" />
+                                  <span>Payment Proof Attached (Under 1–2h Review)</span>
+                                </div>
+                                <p className="text-[11px] text-blue-800 leading-tight">
+                                  Your payment screenshot is queued for administrative approval. You can update or re-upload your receipt anytime.
+                                </p>
+                                <button
+                                  type="button"
+                                  onClick={() => setActivePaymentBiz(biz)}
+                                  className="w-full py-2 bg-blue-100 hover:bg-blue-200 text-blue-900 font-extrabold text-[11px] rounded-xl border border-blue-300 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                                >
+                                  <Upload className="w-3.5 h-3.5 text-blue-700" />
+                                  <span>Update Payment Screenshot / Re-submit</span>
+                                </button>
                               </div>
                             )}
 
@@ -1197,9 +1247,13 @@ export default function AddBusinessClient() {
                               <button
                                 type="button"
                                 onClick={() => setActivePaymentBiz(biz)}
-                                className="flex-1 px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold rounded-xl border border-amber-200 text-center flex items-center justify-center gap-1 cursor-pointer"
+                                className={`flex-1 px-3 py-2 text-xs font-bold rounded-xl border text-center flex items-center justify-center gap-1 cursor-pointer transition-all ${
+                                  hasPaymentProof
+                                    ? 'bg-blue-50 hover:bg-blue-100 text-blue-800 border-blue-200'
+                                    : 'bg-amber-600 hover:bg-amber-700 text-white border-amber-600 shadow-xs'
+                                }`}
                               >
-                                <span>{hasPaymentProof ? 'Proof Sent' : 'Pay Rs. 20'}</span>
+                                <span>{hasPaymentProof ? 'Edit / Update Proof' : 'Request Approval'}</span>
                               </button>
                             )}
                           </div>
@@ -1218,13 +1272,13 @@ export default function AddBusinessClient() {
                     <div className="flex justify-between items-start border-b border-slate-100 pb-4">
                       <div>
                         <span className="text-xs font-extrabold uppercase tracking-wider text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
-                          Step 5: Listing Verification Fee
+                          Step 5: Request Approval &amp; Payment Proof
                         </span>
                         <h2 className="text-2xl font-extrabold text-slate-900 mt-2">
-                          Pay Standard Listing Fee: PKR 20
+                          Request Approval: PKR 20 Listing Fee
                         </h2>
                         <p className="text-xs text-slate-500 mt-0.5">
-                          Listing: <strong className="text-slate-900">{activePaymentBiz.name}</strong>
+                          Listing: <strong className="text-slate-900">{activePaymentBiz.name}</strong> • Submitting proof places your listing at the top of the admin approval queue.
                         </p>
                       </div>
 
@@ -1410,7 +1464,7 @@ export default function AddBusinessClient() {
                           className="flex-1 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:opacity-50 text-white font-extrabold text-sm rounded-2xl shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
                         >
                           <CheckCircle2 className="w-4 h-4" />
-                          <span>{isUploadingPayment ? 'Submitting Proof...' : 'Submit PKR 20 Payment Proof'}</span>
+                          <span>{isUploadingPayment ? 'Submitting Proof...' : 'Submit Proof & Request Fast Approval'}</span>
                         </button>
 
                         <button
@@ -1421,7 +1475,7 @@ export default function AddBusinessClient() {
                           }}
                           className="px-5 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-2xl transition cursor-pointer"
                         >
-                          Pay Later from Dashboard
+                          ← Back to Dashboard
                         </button>
                       </div>
                     </form>

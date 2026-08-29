@@ -44,6 +44,8 @@ export default function AdminPage() {
   const [contactMessages, setContactMessages] = useState<ContactMessage[]>([])
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [bizSearchQuery, setBizSearchQuery] = useState('')
+  const [bizStatusFilter, setBizStatusFilter] = useState<'all' | 'pending' | 'approved' | 'rejected' | 'with_proof'>('all')
   const [selectedBiz, setSelectedBiz] = useState<BusinessItem | null>(null)
   const [selectedPro, setSelectedPro] = useState<ProfessionalItem | null>(null)
   const [selectedApp, setSelectedApp] = useState<JobApplication | null>(null)
@@ -434,9 +436,25 @@ export default function AdminPage() {
     toast.success('Message deleted.')
   }
 
-  const pendingListings = allBusinesses.filter(b => b.status === 'pending')
-  const approvedListings = allBusinesses.filter(b => (b.status || 'approved') === 'approved')
-  const rejectedListings = allBusinesses.filter(b => b.status === 'rejected')
+  const pendingListings = allBusinesses
+    .filter(b => {
+      const s = (b.status || '').toLowerCase().trim()
+      const ps = (b.paymentStatus || '').toUpperCase().trim()
+      return s === 'pending' || s === 'pending_approval' || (ps === 'PENDING' && s !== 'rejected')
+    })
+    .sort((a, b) => {
+      // 1. Listings with payment screenshot proof attached first
+      const aHasProof = Boolean(a.paymentScreenshot || (a.paymentDetails && a.paymentDetails.paymentScreenshot)) ? 1 : 0
+      const bHasProof = Boolean(b.paymentScreenshot || (b.paymentDetails && b.paymentDetails.paymentScreenshot)) ? 1 : 0
+      if (bHasProof !== aHasProof) return bHasProof - aHasProof
+
+      // 2. Newest submission / re-request timestamp first
+      const aTime = new Date((a as any).lastRequestedAt || a.submittedAt || (a as any).createdAt || 0).getTime() || 0
+      const bTime = new Date((b as any).lastRequestedAt || b.submittedAt || (b as any).createdAt || 0).getTime() || 0
+      return bTime - aTime
+    })
+  const approvedListings = allBusinesses.filter(b => (b.status || 'approved').toLowerCase().trim() === 'approved')
+  const rejectedListings = allBusinesses.filter(b => (b.status || '').toLowerCase().trim() === 'rejected')
   const featuredListings = allBusinesses.filter(b => b.isFeatured)
 
   const pendingPros = allProfessionals.filter(p => p.status === 'pending' || p.profileStatus === 'PENDING')
@@ -450,6 +468,7 @@ export default function AdminPage() {
     totalBiz: allBusinesses.length,
     pendingBiz: pendingListings.length,
     approvedBiz: approvedListings.length,
+    rejectedBiz: rejectedListings.length,
     featuredBiz: featuredListings.length,
     categories: CATEGORIES.length,
     totalPros: allProfessionals.length,
@@ -835,8 +854,13 @@ export default function AdminPage() {
           {/* TAB 2: PENDING BUSINESS QUEUE */}
           {activeTab === 'pending' && (
             <div className="space-y-6 animate-in fade-in-50">
-              <div className="flex justify-between items-center">
-                <h2 className="text-xl font-extrabold text-slate-900">Pending Business Submissions</h2>
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                  <h2 className="text-xl font-extrabold text-slate-900">Pending Business Submissions</h2>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Review user-submitted business listings, locations, and PKR 20 payment screenshots.
+                  </p>
+                </div>
                 <span className="text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full">
                   {pendingListings.length} Awaiting Administrative Review
                 </span>
@@ -850,66 +874,127 @@ export default function AdminPage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {pendingListings.map((biz) => (
-                    <div key={biz.id} className="bg-white rounded-2xl p-6 border border-amber-200 shadow-sm space-y-4 flex flex-col justify-between">
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
-                              Pending Approval
-                            </span>
-                            <h3 className="font-extrabold text-slate-900 text-lg mt-1">{biz.name}</h3>
-                            <p className="text-xs text-slate-500">{biz.category} • {biz.city}</p>
+                  {pendingListings.map((biz) => {
+                    const hasProof = Boolean(biz.paymentScreenshot || (biz.paymentDetails && biz.paymentDetails.paymentScreenshot))
+                    const paymentMethod = biz.paymentDetails?.paymentMethod || 'Easypaisa'
+                    const refNumber = biz.paymentDetails?.referenceNumber || ''
+
+                    return (
+                      <div key={biz.id} className="bg-white rounded-2xl p-6 border border-amber-200 shadow-sm space-y-4 flex flex-col justify-between">
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                                  Pending Approval
+                                </span>
+                                {hasProof ? (
+                                  <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1">
+                                    <Check className="w-3 h-3 text-emerald-600" />
+                                    <span>Proof Attached</span>
+                                  </span>
+                                ) : (
+                                  <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
+                                    Awaiting Fee
+                                  </span>
+                                )}
+                              </div>
+                              <h3 className="font-extrabold text-slate-900 text-lg mt-1.5">{biz.name}</h3>
+                              <p className="text-xs text-slate-500">{biz.category} • {biz.city}</p>
+                            </div>
+                            <button
+                              onClick={() => setSelectedBiz(biz)}
+                              className="p-2 text-slate-400 hover:text-blue-600 cursor-pointer"
+                              title="View Full Profile"
+                            >
+                              <Eye className="w-5 h-5" />
+                            </button>
                           </div>
-                          <button
-                            onClick={() => setSelectedBiz(biz)}
-                            className="p-2 text-slate-400 hover:text-blue-600 cursor-pointer"
-                            title="View Full Profile"
-                          >
-                            <Eye className="w-5 h-5" />
-                          </button>
+
+                          {/* Contact Details */}
+                          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 grid grid-cols-2 gap-2 text-xs text-slate-700">
+                            <div>
+                              <span className="text-[10px] text-slate-400 font-bold uppercase block">Owner</span>
+                              <span className="font-semibold truncate block">{biz.ownerName || 'Business Owner'}</span>
+                            </div>
+                            <div>
+                              <span className="text-[10px] text-slate-400 font-bold uppercase block">Phone / WA</span>
+                              <span className="font-semibold block">{biz.phone}</span>
+                            </div>
+                            <div className="col-span-2">
+                              <span className="text-[10px] text-slate-400 font-bold uppercase block">Email</span>
+                              <span className="font-semibold truncate block">{biz.email}</span>
+                            </div>
+                          </div>
+
+                          <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed">
+                            {biz.description}
+                          </p>
+
+                          {/* Payment Proof Section */}
+                          {hasProof ? (
+                            <div className="p-3 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl space-y-2">
+                              <div className="flex items-center justify-between text-xs">
+                                <span className="font-bold text-blue-950 flex items-center gap-1.5">
+                                  <ShieldCheck className="w-4 h-4 text-blue-600" />
+                                  <span>Rs. 20 Fee Transfer ({paymentMethod})</span>
+                                </span>
+                                {refNumber && (
+                                  <span className="font-mono text-[11px] font-bold text-blue-800 bg-white px-2 py-0.5 rounded border border-blue-200">
+                                    Ref: {refNumber}
+                                  </span>
+                                )}
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => setSelectedScreenshot({
+                                  url: biz.paymentScreenshot || biz.paymentDetails?.paymentScreenshot!,
+                                  name: biz.name,
+                                  ref: refNumber || biz.id
+                                })}
+                                className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold rounded-xl shadow-xs flex items-center justify-center gap-1.5 cursor-pointer transition-all"
+                              >
+                                <Eye className="w-4 h-4" />
+                                <span>See PKR 20 Payment Screenshot Proof</span>
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="p-2.5 bg-amber-50 border border-amber-200/80 rounded-xl text-xs text-amber-800 flex items-center gap-2">
+                              <Clock className="w-4 h-4 text-amber-600 shrink-0" />
+                              <span>User registered business draft without uploading payment screenshot yet.</span>
+                            </div>
+                          )}
                         </div>
 
-                        <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed">
-                          {biz.description}
-                        </p>
-
-                        {biz.paymentScreenshot && (
+                        <div className="pt-4 border-t border-slate-200 flex gap-2">
                           <button
-                            type="button"
-                            onClick={() => setSelectedScreenshot({
-                              url: biz.paymentScreenshot!,
-                              name: biz.name,
-                              ref: biz.paymentDetails?.referenceNumber || 'Listing Fee PKR 20'
-                            })}
-                            className="px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs font-extrabold rounded-xl border border-blue-200 flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                            onClick={() => handleApprove(biz.id, biz.name)}
+                            disabled={actionLoading === biz.id}
+                            className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
                           >
-                            <Eye className="w-4 h-4 text-blue-600" />
-                            <span>See PKR 20 Payment Proof ({biz.paymentDetails?.paymentMethod || 'Proof'})</span>
+                            <CheckCircle2 className="w-4 h-4" />
+                            <span>Approve & Publish</span>
                           </button>
-                        )}
+                          <button
+                            onClick={() => handleReject(biz.id, biz.name)}
+                            disabled={actionLoading === biz.id}
+                            className="px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer"
+                          >
+                            <XCircle className="w-4 h-4" />
+                            <span>Reject</span>
+                          </button>
+                          <button
+                            onClick={() => handleDeleteBusiness(biz.id, biz.name)}
+                            disabled={actionLoading === biz.id}
+                            className="p-2.5 text-slate-400 hover:text-red-600 hover:bg-red-50 border border-slate-200 rounded-xl cursor-pointer"
+                            title="Delete permanently"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
-
-                      <div className="pt-4 border-t border-slate-200 flex gap-3">
-                        <button
-                          onClick={() => handleApprove(biz.id, biz.name)}
-                          disabled={actionLoading === biz.id}
-                          className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
-                        >
-                          <CheckCircle2 className="w-4 h-4" />
-                          <span>Approve & Publish</span>
-                        </button>
-                        <button
-                          onClick={() => handleReject(biz.id, biz.name)}
-                          disabled={actionLoading === biz.id}
-                          className="flex-1 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer"
-                        >
-                          <XCircle className="w-4 h-4" />
-                          <span>Reject</span>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               )}
             </div>
@@ -1252,60 +1337,170 @@ export default function AdminPage() {
           {/* TAB 5: ALL BUSINESSES DIRECTORY */}
           {activeTab === 'businesses' && (
             <div className="space-y-6 animate-in fade-in-50">
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-100 pb-4">
+                  <div>
+                    <h2 className="text-xl font-extrabold text-slate-900">All Businesses Directory</h2>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      Search and manage all business listings across Pakistan ({allBusinesses.length} total).
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+                    <div className="relative flex-1 sm:flex-initial">
+                      <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                      <input
+                        type="text"
+                        placeholder="Search name, category, city, owner..."
+                        value={bizSearchQuery}
+                        onChange={(e) => setBizSearchQuery(e.target.value)}
+                        className="pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs w-full sm:w-64"
+                      />
+                    </div>
+
+                    <select
+                      value={bizStatusFilter}
+                      onChange={(e) => setBizStatusFilter(e.target.value as any)}
+                      className="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700"
+                    >
+                      <option value="all">Status: All ({allBusinesses.length})</option>
+                      <option value="pending">Status: Pending ({stats.pendingBiz})</option>
+                      <option value="approved">Status: Approved ({stats.approvedBiz})</option>
+                      <option value="rejected">Status: Rejected ({stats.rejectedBiz || 0})</option>
+                      <option value="with_proof">With Payment Proof</option>
+                    </select>
+                  </div>
+                </div>
+
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
                       <tr className="bg-slate-50 border-b border-slate-200 text-slate-900 font-bold uppercase tracking-wider">
                         <th className="py-4 px-4">Business Name & Category</th>
-                        <th className="py-4 px-4">City</th>
-                        <th className="py-4 px-4">Contact Details</th>
-                        <th className="py-4 px-4">Status</th>
+                        <th className="py-4 px-4">City & Locations</th>
+                        <th className="py-4 px-4">Owner & Contact</th>
+                        <th className="py-4 px-4">Status & Fee Proof</th>
                         <th className="py-4 px-4 text-right">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-200">
-                      {allBusinesses.map((biz) => (
-                        <tr key={biz.id} className="hover:bg-slate-50 transition-colors">
-                          <td className="py-4 px-4">
-                            <div className="font-extrabold text-slate-900 text-sm">{biz.name}</div>
-                            <div className="text-[11px] text-slate-500">{biz.category}</div>
-                          </td>
-                          <td className="py-4 px-4 font-semibold text-slate-700">{biz.city}</td>
-                          <td className="py-4 px-4 text-slate-600 space-y-0.5">
-                            <div>{biz.phone}</div>
-                            <div className="text-[11px] text-slate-400">{biz.email}</div>
-                          </td>
-                          <td className="py-4 px-4">
-                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${
-                              (biz.status || 'approved') === 'approved' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'
-                            }`}>
-                              {biz.status || 'approved'}
-                            </span>
-                          </td>
-                          <td className="py-4 px-4 text-right space-x-2">
-                            <Link
-                              href={`/business/${biz.slug}`}
-                              target="_blank"
-                              className="px-2.5 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-xs font-bold"
-                            >
-                              Live
-                            </Link>
-                            <button
-                              onClick={() => setSelectedBiz(biz)}
-                              className="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold"
-                            >
-                              Details
-                            </button>
-                            <button
-                              onClick={() => handleDeleteBusiness(biz.id, biz.name)}
-                              className="px-3 py-1.5 bg-red-600 text-white rounded-lg text-xs font-bold"
-                            >
-                              Delete
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
+                      {allBusinesses
+                        .filter(b => {
+                          const q = bizSearchQuery.toLowerCase().trim()
+                          const matchesQuery = !q || 
+                            b.name.toLowerCase().includes(q) || 
+                            b.category.toLowerCase().includes(q) || 
+                            b.city.toLowerCase().includes(q) || 
+                            (b.ownerName && b.ownerName.toLowerCase().includes(q)) || 
+                            (b.phone && b.phone.includes(q)) ||
+                            (b.email && b.email.toLowerCase().includes(q))
+                          
+                          const status = (b.status || 'approved').toLowerCase()
+                          const hasProof = Boolean(b.paymentScreenshot || (b.paymentDetails && b.paymentDetails.paymentScreenshot))
+                          
+                          let matchesStatus = true
+                          if (bizStatusFilter === 'pending') {
+                            matchesStatus = status === 'pending' || b.paymentStatus === 'PENDING'
+                          } else if (bizStatusFilter === 'approved') {
+                            matchesStatus = status === 'approved'
+                          } else if (bizStatusFilter === 'rejected') {
+                            matchesStatus = status === 'rejected'
+                          } else if (bizStatusFilter === 'with_proof') {
+                            matchesStatus = hasProof
+                          }
+
+                          return matchesQuery && matchesStatus
+                        })
+                        .map((biz) => {
+                          const isApproved = (biz.status || 'approved') === 'approved'
+                          const isPending = biz.status === 'pending' || biz.paymentStatus === 'PENDING'
+                          const isRejected = biz.status === 'rejected'
+                          const hasProof = Boolean(biz.paymentScreenshot || (biz.paymentDetails && biz.paymentDetails.paymentScreenshot))
+                          const proofUrl = biz.paymentScreenshot || biz.paymentDetails?.paymentScreenshot
+
+                          return (
+                            <tr key={biz.id} className="hover:bg-slate-50 transition-colors">
+                              <td className="py-4 px-4">
+                                <div className="font-extrabold text-slate-900 text-sm">{biz.name}</div>
+                                <div className="text-[11px] text-slate-500">{biz.category}</div>
+                              </td>
+                              <td className="py-4 px-4 font-semibold text-slate-700">
+                                <div>{biz.city}</div>
+                                {biz.locations && biz.locations.length > 1 && (
+                                  <div className="text-[10px] text-blue-600 font-bold">
+                                    +{biz.locations.length - 1} more branch{biz.locations.length > 2 ? 'es' : ''}
+                                  </div>
+                                )}
+                              </td>
+                              <td className="py-4 px-4 text-slate-600 space-y-0.5">
+                                <div className="font-semibold text-slate-800">{biz.ownerName || 'Representative'}</div>
+                                <div>{biz.phone}</div>
+                                <div className="text-[11px] text-slate-400">{biz.email}</div>
+                              </td>
+                              <td className="py-4 px-4 space-y-1">
+                                <div>
+                                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${
+                                    isApproved 
+                                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                                      : isRejected 
+                                      ? 'bg-red-50 text-red-700 border border-red-200' 
+                                      : 'bg-amber-50 text-amber-700 border border-amber-200'
+                                  }`}>
+                                    {isApproved ? 'Approved & Live' : isRejected ? 'Rejected' : 'Pending Review'}
+                                  </span>
+                                </div>
+                                {hasProof && proofUrl && (
+                                  <button
+                                    type="button"
+                                    onClick={() => setSelectedScreenshot({
+                                      url: proofUrl,
+                                      name: biz.name,
+                                      ref: biz.paymentDetails?.referenceNumber || biz.id
+                                    })}
+                                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-bold hover:bg-blue-100 cursor-pointer"
+                                  >
+                                    <Eye className="w-3 h-3 text-blue-600" />
+                                    <span>Proof Attached</span>
+                                  </button>
+                                )}
+                              </td>
+                              <td className="py-4 px-4 text-right space-x-1.5">
+                                {isApproved && (
+                                  <Link
+                                    href={`/business/${biz.slug}`}
+                                    target="_blank"
+                                    className="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-bold inline-flex items-center gap-1"
+                                  >
+                                    <span>Live</span>
+                                    <ExternalLink className="w-3 h-3" />
+                                  </Link>
+                                )}
+                                {isPending && (
+                                  <button
+                                    onClick={() => handleApprove(biz.id, biz.name)}
+                                    disabled={actionLoading === biz.id}
+                                    className="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold cursor-pointer"
+                                  >
+                                    Approve
+                                  </button>
+                                )}
+                                <button
+                                  onClick={() => setSelectedBiz(biz)}
+                                  className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold cursor-pointer"
+                                >
+                                  Details
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteBusiness(biz.id, biz.name)}
+                                  disabled={actionLoading === biz.id}
+                                  className="px-2.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg text-xs font-bold cursor-pointer"
+                                >
+                                  Delete
+                                </button>
+                              </td>
+                            </tr>
+                          )
+                        })}
                     </tbody>
                   </table>
                 </div>
@@ -1931,19 +2126,43 @@ export default function AdminPage() {
                 </a>
 
                 <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-                  <button
-                    onClick={() => {
-                      const matchedPro = allProfessionals.find(p => p.name === selectedScreenshot.name || p.username === selectedScreenshot.ref)
-                      if (matchedPro) {
-                        handleVerifyPro(matchedPro.id || matchedPro.username, matchedPro.name)
-                      }
-                      setSelectedScreenshot(null)
-                    }}
-                    className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-md flex items-center gap-1.5 cursor-pointer transition-all hover:scale-105"
-                  >
-                    <CheckCircle2 className="w-4 h-4" />
-                    <span>Verify &amp; Award Badge</span>
-                  </button>
+                  {(() => {
+                    const matchedBiz = allBusinesses.find(b => b.name === selectedScreenshot.name || b.id === selectedScreenshot.ref || b.slug === selectedScreenshot.ref)
+                    const matchedPro = allProfessionals.find(p => p.name === selectedScreenshot.name || p.username === selectedScreenshot.ref)
+
+                    if (matchedBiz) {
+                      const isPending = matchedBiz.status === 'pending' || matchedBiz.paymentStatus === 'PENDING'
+                      return isPending ? (
+                        <button
+                          onClick={() => {
+                            handleApprove(matchedBiz.id, matchedBiz.name)
+                            setSelectedScreenshot(null)
+                          }}
+                          className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-md flex items-center gap-1.5 cursor-pointer transition-all hover:scale-105"
+                        >
+                          <CheckCircle2 className="w-4 h-4" />
+                          <span>Approve &amp; Publish Business</span>
+                        </button>
+                      ) : null
+                    }
+
+                    if (matchedPro) {
+                      return (
+                        <button
+                          onClick={() => {
+                            handleVerifyPro(matchedPro.id || matchedPro.username, matchedPro.name)
+                            setSelectedScreenshot(null)
+                          }}
+                          className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-md flex items-center gap-1.5 cursor-pointer transition-all hover:scale-105"
+                        >
+                          <CheckCircle2 className="w-4 h-4" />
+                          <span>Verify &amp; Award Badge</span>
+                        </button>
+                      )
+                    }
+
+                    return null
+                  })()}
 
                   <button
                     onClick={() => setSelectedScreenshot(null)}
