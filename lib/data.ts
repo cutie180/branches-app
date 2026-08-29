@@ -123,7 +123,9 @@ export interface BusinessItem {
   submittedAt?: string
   approvedAt?: string
   approvedBy?: string
+  rejectedAt?: string
   rejectionReason?: string
+  lastRequestedAt?: string
   ownerName?: string
   phone: string
   whatsapp: string
@@ -426,6 +428,79 @@ export interface ProfessionalItem {
 }
 
 export const MOCK_BUSINESSES: BusinessItem[] = [
+  {
+    "id": "shadab-group-real-estate-builders",
+    "slug": "shadab-group-real-estate-builders",
+    "name": "Shadab Group Real Estate & Builders",
+    "category": "Real Estate & Property",
+    "categoryId": "real-estate",
+    "city": "Sargodha",
+    "cities": [
+      "Sargodha",
+      "Lahore",
+      "Islamabad"
+    ],
+    "province": "Punjab",
+    "rating": 5,
+    "reviewCount": 18,
+    "verified": true,
+    "isClaimed": true,
+    "isFeatured": true,
+    "status": "approved",
+    "phone": "+92 305 7860084",
+    "whatsapp": "923057860084",
+    "email": "shadabgrouprealestate@gmail.com",
+    "website": "https://www.listpak.com/business/shadab-group-real-estate-builders/",
+    "address": "shadab real estate shop #10#11 , opposite community office ,gulberg city, Sargodha",
+    "locations": [
+      {
+        "address": "shadab real estate shop #10#11 , opposite community office ,gulberg city, Sargodha",
+        "city": "Sargodha",
+        "isPrimary": true
+      }
+    ],
+    "coverImage": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80",
+    "logo": "/shadab-group-logo.png",
+    "description": "Established in 1990, Shadab Group has built a strong name in construction and real estate across Sargodha, with a proven track record ranging from government infrastructure to private residential and commercial developments. We provide property buying, selling, renting, investment consultancy, and construction services along with the complete guidance and documentation help. We are authorized dealers of Shalimar, handling projects including Shalimar Smart City, Gulberg City, Canal Palms, and Sargodha Enclave. Our construction portfolio includes Sargodha Civil Hospital, Govt Buildings, and road networks. Our real estate division holds GOLD Agency recognition on Jaageer.com, along with awards for the highest property sales in Sargodha.",
+    "services": [
+      "Real Estate Development & Construction",
+      "Residential & Commercial Property Sales",
+      "Investment Consultancy & Plot Booking",
+      "Turnkey Project Management",
+      "Documentation & Legal Approvals"
+    ],
+    "operatingHours": {
+      "Monday - Saturday": "09:00 AM - 07:00 PM"
+    },
+    "features": [
+      "Verified Listing",
+      "Government Approved Projects",
+      "Prime Commercial Locations",
+      "Experienced Engineering Team"
+    ],
+    "reviews": [
+      {
+        "id": "rev-shadab-1",
+        "userName": "Hamza Ali",
+        "rating": 5,
+        "date": "1 day ago",
+        "comment": "Outstanding real estate and construction services by Shadab Group. Very transparent and highly professional team."
+      },
+      {
+        "id": "rev-shadab-2",
+        "userName": "Farhan Tariq",
+        "rating": 5,
+        "date": "3 days ago",
+        "comment": "Best builders and property consultants in Lahore. Highly recommended for commercial and residential investments."
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What real estate services does Shadab Group offer?",
+        "answer": "Shadab Group offers comprehensive real estate development, architectural construction, commercial leasing, residential property sales, and verified investment consultancy."
+      }
+    ]
+  },
   {
     "id": "1hhe5gCFlU8VU4RsROWN",
     "slug": "multan-blue-pottery-emporium-multan",
@@ -6988,8 +7063,8 @@ export const MOCK_JOBS: JobItem[] = [
 export const MOCK_PROFESSIONALS: ProfessionalItem[] = [
   {
     "id": "pro-arif-habib",
-    "username": "arif-habib-chairman-ceo-arif-habib-group",
-    "slug": "arif-habib-chairman-ceo-arif-habib-group",
+    "username": "arif-habib-karachi",
+    "slug": "arif-habib-karachi",
     "name": "Arif Habib",
     "fullName": "Arif Habib",
     "title": "Chairman, Arif Habib Group; Chief Executive, Arif Habib Corporation",
@@ -7054,8 +7129,8 @@ export const MOCK_PROFESSIONALS: ProfessionalItem[] = [
   },
   {
     "id": "pro-fiza-farhan",
-    "username": "fiza-farhan-ceo-ora-global-development-advisors",
-    "slug": "fiza-farhan-ceo-ora-global-development-advisors",
+    "username": "fiza-farhan-lahore",
+    "slug": "fiza-farhan-lahore",
     "name": "Fiza Farhan",
     "fullName": "Fiza Farhan",
     "title": "CEO, ORA Global Development Advisors; Global Development and Climate Advisor",
@@ -7120,8 +7195,8 @@ export const MOCK_PROFESSIONALS: ProfessionalItem[] = [
   },
   {
     "id": "pro-jehan-ara",
-    "username": "jehan-ara-founder-ceo-katalyst-labs",
-    "slug": "jehan-ara-founder-ceo-katalyst-labs",
+    "username": "jehan-ara-karachi",
+    "slug": "jehan-ara-karachi",
     "name": "Jehan Ara",
     "fullName": "Jehan Ara",
     "title": "Founder & CEO, Katalyst Labs",
@@ -7193,8 +7268,8 @@ export const MOCK_PROFESSIONALS: ProfessionalItem[] = [
   },
   {
     "id": "pro-kalsoom-lakhani",
-    "username": "kalsoom-lakhani-cofounder-general-partner-i2i-ventures",
-    "slug": "kalsoom-lakhani-cofounder-general-partner-i2i-ventures",
+    "username": "kalsoom-lakhani-karachi",
+    "slug": "kalsoom-lakhani-karachi",
     "name": "Kalsoom Lakhani",
     "fullName": "Kalsoom Lakhani",
     "title": "Cofounder & General Partner, i2i Ventures",
@@ -7259,8 +7334,8 @@ export const MOCK_PROFESSIONALS: ProfessionalItem[] = [
   },
   {
     "id": "pro-monis-rahman",
-    "username": "monis-rahman-founder-chairman-rozee",
-    "slug": "monis-rahman-founder-chairman-rozee",
+    "username": "monis-rahman-lahore",
+    "slug": "monis-rahman-lahore",
     "name": "Monis Rahman",
     "fullName": "Monis Rahman",
     "title": "Founder & Chairman, Rozee.pk; CEO & Co-Founder, Dukan.pk",
@@ -7325,8 +7400,8 @@ export const MOCK_PROFESSIONALS: ProfessionalItem[] = [
   },
   {
     "id": "pro-muneeb-maayr",
-    "username": "muneeb-maayr-founder-bykea",
-    "slug": "muneeb-maayr-founder-bykea",
+    "username": "muneeb-maayr-karachi",
+    "slug": "muneeb-maayr-karachi",
     "name": "Muneeb Maayr",
     "fullName": "Muneeb Maayr",
     "title": "Founder, Bykea",
@@ -7391,8 +7466,8 @@ export const MOCK_PROFESSIONALS: ProfessionalItem[] = [
   },
   {
     "id": "pro-nighat-dad",
-    "username": "nighat-dad-lawyer-founder-digital-rights-foundation",
-    "slug": "nighat-dad-lawyer-founder-digital-rights-foundation",
+    "username": "nighat-dad-lahore",
+    "slug": "nighat-dad-lahore",
     "name": "Nighat Dad",
     "fullName": "Nighat Dad",
     "title": "Lawyer; Founder & Executive Director, Digital Rights Foundation",
@@ -7457,8 +7532,8 @@ export const MOCK_PROFESSIONALS: ProfessionalItem[] = [
   },
   {
     "id": "pro-roshaneh-zafar",
-    "username": "roshaneh-zafar-founder-managing-director-kashf",
-    "slug": "roshaneh-zafar-founder-managing-director-kashf",
+    "username": "roshaneh-zafar-lahore",
+    "slug": "roshaneh-zafar-lahore",
     "name": "Roshaneh Zafar",
     "fullName": "Roshaneh Zafar",
     "title": "Founder & Managing Director, Kashf Foundation",
@@ -7523,8 +7598,8 @@ export const MOCK_PROFESSIONALS: ProfessionalItem[] = [
   },
   {
     "id": "pro-salim-ghauri",
-    "username": "salim-ghauri-founder-ceo-netsol-technologies",
-    "slug": "salim-ghauri-founder-ceo-netsol-technologies",
+    "username": "salim-ghauri-lahore",
+    "slug": "salim-ghauri-lahore",
     "name": "Salim Ghauri",
     "fullName": "Salim Ghauri",
     "title": "Founder & CEO, NetSol Technologies",
@@ -7600,8 +7675,8 @@ export const MOCK_PROFESSIONALS: ProfessionalItem[] = [
   },
   {
     "id": "pro-sania-nishtar",
-    "username": "sania-nishtar-ceo-gavi-physician",
-    "slug": "sania-nishtar-ceo-gavi-physician",
+    "username": "dr-sania-nishtar-islamabad",
+    "slug": "dr-sania-nishtar-islamabad",
     "name": "Dr Sania Nishtar",
     "fullName": "Dr Sania Nishtar",
     "title": "CEO, Gavi; Physician and Founder of Heartfile",

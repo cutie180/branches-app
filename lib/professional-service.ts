@@ -5,18 +5,69 @@ import { collection, getDocs, query, where, limit, addDoc, doc, updateDoc, delet
 import { normalizeSlug } from './db-service'
 
 /**
- * Generate clean SEO friendly slug incorporating professional's name and professional title
- * e.g. Name: "Muhammad Ali", Title: "Frontend Developer" -> "muhammad-ali-frontend-developer"
+ * Generate clean SEO friendly slug for professionals.
+ * - ONLY the professional / business name.
+ * - If exactly 1 unique city is selected: appends the city name (e.g. "web-developer-multan" or "shadab-group-real-estate-builders-sargodha")
+ * - If 2 or more cities are selected: NO city name in route link, ONLY the name (e.g. "web-developer" or "shadab-group-real-estate-builders")
+ * - Avoids repetitive keywords and duplicate city tokens in the URL.
  */
-export function generateProfessionalSlug(name: string, title?: string, profession?: string): string {
+export function generateProfessionalSlug(
+  name: string,
+  titleOrCities?: string | string[],
+  professionOrCities?: string | string[],
+  citiesParam?: string[] | string
+): string {
   const cleanName = (name || '').trim()
-  const cleanTitle = (title || '').trim()
-  const cleanProfession = (profession || '').trim()
 
-  const rolePart = cleanTitle || cleanProfession
-  const combined = rolePart ? `${cleanName} ${rolePart}` : cleanName
-  const slug = normalizeSlug(combined)
-  return slug || normalizeSlug(cleanName) || 'professional'
+  // Collect cities from whichever parameter position was provided
+  let rawCities: string[] | string | undefined = citiesParam
+  if (!rawCities && Array.isArray(professionOrCities)) {
+    rawCities = professionOrCities
+  } else if (!rawCities && Array.isArray(titleOrCities)) {
+    rawCities = titleOrCities
+  } else if (!rawCities && typeof professionOrCities === 'string' && professionOrCities.includes(',')) {
+    rawCities = professionOrCities.split(',')
+  } else if (!rawCities && typeof titleOrCities === 'string' && titleOrCities.includes(',')) {
+    rawCities = titleOrCities.split(',')
+  }
+
+  const cityList = Array.isArray(rawCities)
+    ? Array.from(new Set(rawCities.map(c => (c || '').trim()).filter(Boolean)))
+    : (rawCities ? [rawCities.trim()] : [])
+
+  const validCities = cityList.filter(c => {
+    const lc = c.toLowerCase()
+    return lc !== 'pakistan' && lc !== 'all cities' && lc !== 'all pakistan' && lc !== 'nationwide'
+  })
+
+  let nameNorm = normalizeSlug(cleanName)
+
+  // If exactly 1 unique city is selected: append that single city
+  if (validCities.length === 1) {
+    const cityNorm = normalizeSlug(validCities[0])
+    if (cityNorm) {
+      if (nameNorm.endsWith(`-in-${cityNorm}`)) {
+        nameNorm = nameNorm.slice(0, -(4 + cityNorm.length)).replace(/-+$/, '')
+      } else if (nameNorm.endsWith(`-${cityNorm}`)) {
+        nameNorm = nameNorm.slice(0, -(1 + cityNorm.length)).replace(/-+$/, '')
+      }
+      return `${nameNorm || normalizeSlug(cleanName)}-${cityNorm}`
+    }
+  }
+
+  // If 2 or more cities (or 0 valid cities): NO city in route slug, ONLY the name
+  for (const c of validCities) {
+    const cNorm = normalizeSlug(c)
+    if (cNorm) {
+      if (nameNorm.endsWith(`-in-${cNorm}`)) {
+        nameNorm = nameNorm.slice(0, -(4 + cNorm.length)).replace(/-+$/, '')
+      } else if (nameNorm.endsWith(`-${cNorm}`)) {
+        nameNorm = nameNorm.slice(0, -(1 + cNorm.length)).replace(/-+$/, '')
+      }
+    }
+  }
+
+  return nameNorm || normalizeSlug(cleanName) || 'professional'
 }
 
 // In-memory cache for fast reads & server rendering
@@ -43,7 +94,8 @@ export const GENERATE_STARTER_PROFESSIONAL_REVIEWS = (proName: string) => [
 
 export function normalizeProfessionalDoc(docId: string, data: Partial<ProfessionalItem>): ProfessionalItem {
   const proName = data.fullName || data.name || 'Verified Professional'
-  const proUsername = data.username || data.slug || generateProfessionalSlug(proName, data.title, data.profession)
+  const proCities = (data as any).cities || (data.city ? [data.city] : [])
+  const proUsername = data.username || data.slug || generateProfessionalSlug(proName, data.title, data.profession, proCities)
   const itemStatus = data.status || 'approved'
   const itemVerified = data.verified ?? (data.verificationStatus === 'VERIFIED' ? true : false)
   const itemVerificationStatus = data.verificationStatus || (itemVerified ? 'VERIFIED' : 'UNVERIFIED')
@@ -229,11 +281,30 @@ export const getProfessionalByUsername = cache(async function getProfessionalByU
   }
 
   // 2. Memory cache fallback
-  const cached = memoryProfessionalsCache.find(p => 
-    p.username.toLowerCase() === normalized || 
-    p.slug?.toLowerCase() === normalized ||
-    p.id?.toLowerCase() === normalized
-  )
+  const cached = memoryProfessionalsCache.find(p => {
+    const pUser = (p.username || '').toLowerCase()
+    const pSlug = (p.slug || '').toLowerCase()
+    const pId = (p.id || '').toLowerCase()
+    const pNameNorm = normalizeSlug(p.fullName || p.name || '')
+    const pCityNorm = normalizeSlug(p.city || '')
+    const pNameCity = pCityNorm ? `${pNameNorm}-${pCityNorm}` : pNameNorm
+    const pGenSlug = generateProfessionalSlug(p.fullName || p.name || '', undefined, undefined, (p as any).cities || (p.city ? [p.city] : [])).toLowerCase()
+
+    return (
+      pUser === normalized || 
+      pSlug === normalized || 
+      pId === normalized ||
+      pNameNorm === normalized ||
+      pNameCity === normalized ||
+      pGenSlug === normalized ||
+      (pUser && normalized.startsWith(pUser)) ||
+      (pSlug && normalized.startsWith(pSlug)) ||
+      (pNameNorm && normalized.startsWith(pNameNorm)) ||
+      (pGenSlug && normalized.startsWith(pGenSlug)) ||
+      (normalized && pUser.startsWith(normalized)) ||
+      (normalized && pSlug.startsWith(normalized))
+    )
+  })
   
   if (cached && (cached.status || 'approved') === 'approved' && (cached.profileStatus || 'APPROVED') === 'APPROVED') {
     return cached
@@ -262,12 +333,12 @@ export async function saveProfessionalToDatabase(proData: Partial<ProfessionalIt
   const name = proData.fullName || proData.name || 'New Professional'
   const title = proData.title || ''
   const profession = proData.profession || ''
+  const proCities = (proData as any).cities || (proData.city ? [proData.city] : [])
   
-  // Generate unique SEO username/slug combining Name and Professional Title
-  // e.g. "Muhammad Ali" + "Frontend Developer" -> "muhammad-ali-frontend-developer"
+  // Generate unique SEO username/slug combining Name and Professional Title with 1-city vs multi-city rules
   let baseSlug = proData.slug || proData.username || ''
   if (!baseSlug) {
-    baseSlug = generateProfessionalSlug(name, title, profession)
+    baseSlug = generateProfessionalSlug(name, title, profession, proCities)
   }
 
   // Ensure unique username/slug: use baseSlug directly, or append number suffix if identical slug exists

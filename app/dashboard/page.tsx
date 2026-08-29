@@ -37,9 +37,36 @@ const PAYMENT_ACCOUNTS = {
   }
 }
 
+import { useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
+
 export default function BusinessDashboardPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
+        <Navbar />
+        <div className="flex-1 flex items-center justify-center py-24">
+          <div className="flex items-center gap-3 text-sm font-bold text-slate-600">
+            <RefreshCw className="w-5 h-5 animate-spin text-blue-600" />
+            <span>Loading Business Dashboard...</span>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    }>
+      <DashboardContent />
+    </Suspense>
+  )
+}
+
+function DashboardContent() {
   const router = useRouter()
-  const [currentUser, setCurrentUser] = useState<{ uid?: string; name?: string; email?: string } | null>(null)
+  const searchParams = useSearchParams()
+  const isSubmittedParam = searchParams.get('submitted') === 'true'
+  const submittedBizName = searchParams.get('name') || ''
+  const [showSubmittedAlert, setShowSubmittedAlert] = useState(isSubmittedParam)
+
+  const [currentUser, setCurrentUser] = useState<{ uid?: string; name?: string; email?: string; role?: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const [userBusinesses, setUserBusinesses] = useState<BusinessItem[]>([])
   const [isLoadingBusinesses, setIsLoadingBusinesses] = useState(false)
@@ -69,14 +96,40 @@ export default function BusinessDashboardPage() {
   const [selectedBizModal, setSelectedBizModal] = useState<BusinessItem | null>(null)
 
   useEffect(() => {
-    // Check session in storage
+    // 1. Immediately read session from storage so Ctrl+R refresh is instant
+    let sessionFound = false
     const rawSession = sessionStorage.getItem('listpak_user_session') || localStorage.getItem('listpak_user_session')
     if (rawSession) {
       try {
         const parsed = JSON.parse(rawSession)
-        if (parsed.email) {
+        if (parsed && (parsed.email || parsed.name || parsed.uid)) {
+          sessionFound = true
           setCurrentUser(parsed)
           fetchBusinesses(parsed.email, parsed.uid || parsed.userId)
+        }
+      } catch (_) {}
+    }
+    
+    // Fallback: If no explicit session but custom businesses exist in localStorage, hydrate automatically
+    if (!sessionFound) {
+      try {
+        const custom = localStorage.getItem('listpak_custom_businesses')
+        if (custom) {
+          const parsedCustom = JSON.parse(custom)
+          if (Array.isArray(parsedCustom) && parsedCustom.length > 0) {
+            const latest = parsedCustom[0]
+            const autoUser = {
+              name: latest.ownerName || latest.name || 'Business Owner',
+              email: latest.email || 'business@listpak.pk',
+              uid: latest.userId || 'local-biz-owner',
+              role: 'business'
+            }
+            setCurrentUser(autoUser)
+            sessionStorage.setItem('listpak_user_session', JSON.stringify(autoUser))
+            localStorage.setItem('listpak_user_session', JSON.stringify(autoUser))
+            setUserBusinesses(parsedCustom)
+            sessionFound = true
+          }
         }
       } catch (_) {}
     }
@@ -86,12 +139,13 @@ export default function BusinessDashboardPage() {
         const userObj = {
           uid: fbUser.uid,
           name: fbUser.displayName || fbUser.email?.split('@')[0] || 'Business Owner',
-          email: fbUser.email || ''
+          email: fbUser.email || '',
+          role: 'business'
         }
         setCurrentUser(userObj)
         fetchBusinesses(userObj.email, userObj.uid)
-        sessionStorage.setItem('listpak_user_session', JSON.stringify({ ...userObj, role: 'business' }))
-        localStorage.setItem('listpak_user_session', JSON.stringify({ ...userObj, role: 'business' }))
+        sessionStorage.setItem('listpak_user_session', JSON.stringify(userObj))
+        localStorage.setItem('listpak_user_session', JSON.stringify(userObj))
       }
       setLoading(false)
     })
@@ -581,6 +635,36 @@ export default function BusinessDashboardPage() {
       {/* MAIN LISTINGS CONTENT */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-6">
         
+        {/* SUBMISSION CONFIRMATION ALERT (IF REDIRECTED FROM ADD BUSINESS) */}
+        {showSubmittedAlert && (
+          <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-emerald-500/10 via-blue-500/10 to-teal-500/10 border border-emerald-300 shadow-sm flex items-start gap-4 animate-in fade-in-50">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 shadow-xs">
+              <CheckCircle2 className="w-6 h-6" />
+            </div>
+            <div className="space-y-1 flex-1">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                  Profile Created &amp; Queued
+                </span>
+              </div>
+              <h3 className="text-sm sm:text-base font-extrabold text-slate-900">
+                🎉 Your Business Has Been Successfully Submitted!
+              </h3>
+              <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                {submittedBizName ? <>Your listing for <strong className="text-slate-900">{submittedBizName}</strong> has been registered. </> : 'Your new business profile is now active on your dashboard. '}
+                Our compliance team reviews and approves listings within <strong>1 to 2 hours</strong>. Track your verification status in the cards below.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowSubmittedAlert(false)}
+              className="text-slate-400 hover:text-slate-700 p-1.5 rounded-xl hover:bg-slate-100 transition cursor-pointer"
+              title="Dismiss notification"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
         {userBusinesses.length === 0 ? (
           <div className="bg-white rounded-3xl p-12 border border-slate-200 text-center space-y-5 max-w-2xl mx-auto shadow-sm">
             <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto shadow-inner">
@@ -648,13 +732,26 @@ export default function BusinessDashboardPage() {
                         )}
                       </div>
 
-                      {/* Business Title & Location */}
-                      <div>
-                        <h3 className="text-lg font-extrabold text-slate-900">{biz.name}</h3>
-                        <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
-                          <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                          <span>{biz.city || 'Pakistan'} • {biz.address || 'Commercial Center'}</span>
-                        </p>
+                      {/* Business Logo, Title & Location */}
+                      <div className="flex items-start gap-3.5">
+                        {biz.logo ? (
+                          <img
+                            src={biz.logo}
+                            alt={biz.name}
+                            className="w-12 h-12 rounded-2xl object-cover border border-slate-200 shrink-0 shadow-2xs"
+                          />
+                        ) : (
+                          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-extrabold text-lg flex items-center justify-center shrink-0 shadow-xs">
+                            {biz.name ? biz.name.charAt(0).toUpperCase() : 'B'}
+                          </div>
+                        )}
+                        <div className="min-w-0 flex-1">
+                          <h3 className="text-lg font-extrabold text-slate-900 truncate">{biz.name}</h3>
+                          <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+                            <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                            <span>{biz.city || 'Pakistan'} • {biz.address || 'Commercial Center'}</span>
+                          </p>
+                        </div>
                       </div>
 
                       {/* Moderation & Verification Notice Banner */}

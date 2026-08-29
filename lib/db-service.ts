@@ -17,6 +17,54 @@ export function normalizeSlug(name: string): string {
 }
 
 /**
+ * Generate clean SEO friendly business slug.
+ * - ONLY the business name.
+ * - If exactly 1 unique city is selected: appends the city name (e.g. "shadab-group-real-estate-builders-sargodha")
+ * - If 2 or more cities are selected: NO city in slug, only business name (e.g. "shadab-group-real-estate-builders")
+ * - Prevents repetitive keywords and prevents duplicate city tokens.
+ */
+export function generateBusinessSlug(name: string, cities?: string[] | string): string {
+  const cleanName = (name || '').trim()
+  const cityList = Array.isArray(cities)
+    ? Array.from(new Set(cities.map(c => (c || '').trim()).filter(Boolean)))
+    : (cities ? [cities.trim()] : [])
+
+  const validCities = cityList.filter(c => {
+    const lc = c.toLowerCase()
+    return lc !== 'pakistan' && lc !== 'all cities' && lc !== 'all pakistan' && lc !== 'nationwide'
+  })
+
+  let nameNorm = normalizeSlug(cleanName)
+
+  // If exactly 1 unique city is selected: append that single city
+  if (validCities.length === 1) {
+    const cityNorm = normalizeSlug(validCities[0])
+    if (cityNorm) {
+      if (nameNorm.endsWith(`-in-${cityNorm}`)) {
+        nameNorm = nameNorm.slice(0, -(4 + cityNorm.length)).replace(/-+$/, '')
+      } else if (nameNorm.endsWith(`-${cityNorm}`)) {
+        nameNorm = nameNorm.slice(0, -(1 + cityNorm.length)).replace(/-+$/, '')
+      }
+      return `${nameNorm || normalizeSlug(cleanName)}-${cityNorm}`
+    }
+  }
+
+  // If 2 or more cities (or 0 valid cities): NO city in route slug, ONLY the name
+  for (const c of validCities) {
+    const cNorm = normalizeSlug(c)
+    if (cNorm) {
+      if (nameNorm.endsWith(`-in-${cNorm}`)) {
+        nameNorm = nameNorm.slice(0, -(4 + cNorm.length)).replace(/-+$/, '')
+      } else if (nameNorm.endsWith(`-${cNorm}`)) {
+        nameNorm = nameNorm.slice(0, -(1 + cNorm.length)).replace(/-+$/, '')
+      }
+    }
+  }
+
+  return nameNorm || normalizeSlug(cleanName) || 'business'
+}
+
+/**
  * Generates 5 realistic starter reviews for new business listings
  */
 export const GENERATE_STARTER_REVIEWS = (businessName: string) => [
@@ -143,7 +191,9 @@ export function normalizeBusinessDoc(docId: string, data: any): BusinessItem {
     address: primaryLoc.address || data.address || 'Commercial Center, Pakistan',
     locations: docLocations,
     coverImage: data.coverImage || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
-    logo: data.logo || data.logoUrl || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
+    logo: (itemSlug === 'shadab-group-real-estate-builders' && (!data.logo || data.logo.includes('unsplash') || data.logo.includes('placeholder')))
+      ? '/shadab-group-logo.png'
+      : (data.logo || data.logoUrl || (itemSlug === 'shadab-group-real-estate-builders' ? '/shadab-group-logo.png' : 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80')),
     description: data.description || 'Verified business listing on ListPak.',
     services: data.services || ['General Services', 'Customer Support'],
     operatingHours: data.operatingHours || { 'Monday - Saturday': '09:00 AM - 07:00 PM' },
@@ -156,10 +206,62 @@ export function normalizeBusinessDoc(docId: string, data: any): BusinessItem {
   }
 }
 
+// Local storage keys for browser client persistence
+const LOCAL_CUSTOM_BIZ_KEY = 'listpak_custom_businesses'
+const LOCAL_USER_BIZ_IDS_KEY = 'listpak_user_business_ids'
+
+function getStoredCustomBusinesses(): BusinessItem[] {
+  if (typeof window === 'undefined') return []
+  try {
+    const raw = localStorage.getItem(LOCAL_CUSTOM_BIZ_KEY)
+    if (!raw) return []
+    const parsed = JSON.parse(raw)
+    return Array.isArray(parsed) ? parsed : []
+  } catch (_) {
+    return []
+  }
+}
+
+function saveStoredCustomBusiness(biz: BusinessItem) {
+  if (typeof window === 'undefined') return
+  try {
+    const current = getStoredCustomBusinesses()
+    const updated = [biz, ...current.filter(b => b.id !== biz.id && b.slug.toLowerCase() !== biz.slug.toLowerCase())]
+    localStorage.setItem(LOCAL_CUSTOM_BIZ_KEY, JSON.stringify(updated))
+
+    // Also register to user's local business ID list if applicable
+    if (biz.userId || biz.email) {
+      const rawIds = localStorage.getItem(LOCAL_USER_BIZ_IDS_KEY)
+      const ids: string[] = rawIds ? JSON.parse(rawIds) : []
+      if (!ids.includes(biz.id)) {
+        ids.push(biz.id)
+        localStorage.setItem(LOCAL_USER_BIZ_IDS_KEY, JSON.stringify(ids))
+      }
+    }
+  } catch (_) {}
+}
+
+function updateStoredCustomBusiness(idOrSlug: string, updates: Partial<BusinessItem>) {
+  if (typeof window === 'undefined') return
+  try {
+    const current = getStoredCustomBusinesses()
+    const norm = idOrSlug.toLowerCase().trim()
+    const updated = current.map(b => {
+      if (b.id === idOrSlug || b.slug.toLowerCase() === norm || b.name.toLowerCase() === norm) {
+        return { ...b, ...updates }
+      }
+      return b
+    })
+    localStorage.setItem(LOCAL_CUSTOM_BIZ_KEY, JSON.stringify(updated))
+  } catch (_) {}
+}
+
 /**
  * Fetch all businesses. If includePending is false (default), returns ONLY approved businesses.
  */
 export async function getAllBusinesses(includePending: boolean = false): Promise<BusinessItem[]> {
+  const localItems = getStoredCustomBusinesses()
+
   try {
     const querySnapshot = await getDocs(collection(db, 'businesses'))
     if (!querySnapshot.empty) {
@@ -168,17 +270,40 @@ export async function getAllBusinesses(includePending: boolean = false): Promise
         firestoreItems.push(normalizeBusinessDoc(docSnap.id, docSnap.data()))
       })
 
-      // Merge avoiding duplicate slugs/ids: Firestore items have priority
+      // Merge avoiding duplicate slugs/ids: Firestore items have priority, then local custom items, then mock data
       const firestoreSlugs = new Set(firestoreItems.map(b => b.slug.toLowerCase()))
       const firestoreIds = new Set(firestoreItems.map(b => b.id.toLowerCase()))
       
-      const nonDuplicateMocks = memoryBusinessesCache.filter(
+      const nonDuplicateLocal = localItems.filter(
         b => !firestoreSlugs.has(b.slug.toLowerCase()) && !firestoreIds.has(b.id.toLowerCase())
       )
-      memoryBusinessesCache = [...firestoreItems, ...nonDuplicateMocks]
+
+      const usedSlugs = new Set([...firestoreSlugs, ...nonDuplicateLocal.map(b => b.slug.toLowerCase())])
+      const usedIds = new Set([...firestoreIds, ...nonDuplicateLocal.map(b => b.id.toLowerCase())])
+
+      const nonDuplicateMocks = memoryBusinessesCache.filter(
+        b => !usedSlugs.has(b.slug.toLowerCase()) && !usedIds.has(b.id.toLowerCase())
+      )
+
+      memoryBusinessesCache = [...firestoreItems, ...nonDuplicateLocal, ...nonDuplicateMocks]
+    } else if (localItems.length > 0) {
+      const localSlugs = new Set(localItems.map(b => b.slug.toLowerCase()))
+      const localIds = new Set(localItems.map(b => b.id.toLowerCase()))
+      const nonDuplicateMocks = memoryBusinessesCache.filter(
+        b => !localSlugs.has(b.slug.toLowerCase()) && !localIds.has(b.id.toLowerCase())
+      )
+      memoryBusinessesCache = [...localItems, ...nonDuplicateMocks]
     }
   } catch (err) {
-    console.warn('Firestore getAllBusinesses fallback to memory cache:', err)
+    console.warn('Firestore getAllBusinesses fallback to memory cache & local items:', err)
+    if (localItems.length > 0) {
+      const localSlugs = new Set(localItems.map(b => b.slug.toLowerCase()))
+      const localIds = new Set(localItems.map(b => b.id.toLowerCase()))
+      const nonDuplicateMocks = memoryBusinessesCache.filter(
+        b => !localSlugs.has(b.slug.toLowerCase()) && !localIds.has(b.id.toLowerCase())
+      )
+      memoryBusinessesCache = [...localItems, ...nonDuplicateMocks]
+    }
   }
 
   if (includePending) {
@@ -235,6 +360,13 @@ export async function approveBusiness(id: string, adminUid: string): Promise<boo
     memoryBusinessesCache[idx].approvedBy = adminUid
   }
 
+  updateStoredCustomBusiness(id, {
+    status: 'approved',
+    paymentStatus: 'VERIFIED',
+    approvedAt: new Date().toISOString(),
+    approvedBy: adminUid
+  })
+
   await updateBusinessInFirestore(id, {
     status: 'approved',
     paymentStatus: 'VERIFIED',
@@ -252,6 +384,12 @@ export async function rejectBusiness(id: string, reason?: string): Promise<boole
     memoryBusinessesCache[idx].status = 'rejected'
     memoryBusinessesCache[idx].rejectionReason = reason || 'Does not satisfy business verification requirements.'
   }
+
+  updateStoredCustomBusiness(id, {
+    status: 'rejected',
+    rejectedAt: new Date().toISOString(),
+    rejectionReason: reason || 'Does not satisfy business verification requirements.'
+  })
 
   await updateBusinessInFirestore(id, {
     status: 'rejected',
@@ -304,8 +442,25 @@ export const getBusinessBySlug = cache(async function getBusinessBySlug(slug: st
     console.warn('Firestore getBusinessBySlug fallback:', err)
   }
 
-  // 2. Memory cache check
-  const cached = memoryBusinessesCache.find(b => b.slug.toLowerCase() === normalized || b.id.toLowerCase() === normalized)
+  // 2. Local storage check
+  const localItems = getStoredCustomBusinesses()
+  const localFound = localItems.find(b => 
+    b.slug.toLowerCase() === normalized || 
+    b.id.toLowerCase() === normalized ||
+    normalizeSlug(b.name) === normalized ||
+    (b.city && `${normalizeSlug(b.name)}-${normalizeSlug(b.city)}` === normalized)
+  )
+  if (localFound && (localFound.status || 'approved') === 'approved') {
+    return localFound
+  }
+
+  // 3. Memory cache check (with city suffix fallback matching)
+  const cached = memoryBusinessesCache.find(b => 
+    b.slug.toLowerCase() === normalized || 
+    b.id.toLowerCase() === normalized ||
+    normalizeSlug(b.name) === normalized ||
+    (b.city && `${normalizeSlug(b.name)}-${normalizeSlug(b.city)}` === normalized)
+  )
   if (cached && (cached.status || 'approved') === 'approved') {
     return cached
   }
@@ -318,9 +473,6 @@ export const getBusinessBySlug = cache(async function getBusinessBySlug(slug: st
  */
 export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>): Promise<BusinessItem> {
   const name = businessData.name || 'New Business'
-  const slug = businessData.slug || normalizeSlug(name)
-  const bizId = businessData.id || ('biz-' + Date.now())
-
   const inputLocations = businessData.locations && businessData.locations.length > 0
     ? businessData.locations
     : [{ city: businessData.city || 'Karachi', address: businessData.address || 'Pakistan', isPrimary: true }]
@@ -328,7 +480,10 @@ export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>
   const primaryLoc = inputLocations.find(l => l.isPrimary) || inputLocations[0]
   const summaryCity = primaryLoc.city || businessData.city || 'Karachi'
   const summaryAddress = primaryLoc.address || businessData.address || 'Pakistan'
-  const allCities = Array.from(new Set(inputLocations.map(l => l.city)))
+  const allCities = Array.from(new Set(inputLocations.map(l => l.city).filter(Boolean)))
+
+  const slug = businessData.slug || generateBusinessSlug(name, allCities)
+  const bizId = businessData.id || ('biz-' + Date.now())
 
   const newBiz: BusinessItem = {
     id: bizId,
@@ -370,6 +525,9 @@ export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>
   // Update memory cache
   memoryBusinessesCache = [newBiz, ...memoryBusinessesCache.filter(b => b.slug !== slug && b.id !== bizId)]
 
+  // Persist immediately to localStorage so Ctrl+R refresh always preserves newly added businesses
+  saveStoredCustomBusiness(newBiz)
+
   // Clean all undefined fields before sending to Firestore
   const cleanPayload = JSON.parse(JSON.stringify({
     ...newBiz,
@@ -387,6 +545,7 @@ export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>
     try {
       const addedDoc = await addDoc(collection(db, 'businesses'), cleanPayload)
       newBiz.id = addedDoc.id
+      saveStoredCustomBusiness(newBiz)
     } catch (innerErr) {
       console.warn('Firestore addDoc fallback error:', innerErr)
     }
@@ -424,6 +583,15 @@ export async function updateBusinessPaymentProof(
     ;(memoryBusinessesCache[idx] as any).lastRequestedAt = nowIso
   }
 
+  updateStoredCustomBusiness(idOrSlug, {
+    paymentScreenshot: payment.paymentScreenshot,
+    paymentDetails,
+    paymentStatus: 'PENDING',
+    status: 'pending',
+    submittedAt: nowIso,
+    lastRequestedAt: nowIso
+  } as any)
+
   await updateBusinessInFirestore(idOrSlug, {
     paymentScreenshot: payment.paymentScreenshot,
     paymentDetails,
@@ -443,6 +611,16 @@ export async function getUserBusinesses(emailOrUid: string): Promise<BusinessIte
 
   try {
     const all = await getAllBusinesses(true)
+    
+    // Also get registered user business IDs
+    let userRegisteredIds: string[] = []
+    if (typeof window !== 'undefined') {
+      try {
+        const rawIds = localStorage.getItem(LOCAL_USER_BIZ_IDS_KEY)
+        if (rawIds) userRegisteredIds = JSON.parse(rawIds)
+      } catch (_) {}
+    }
+
     return all.filter(b => {
       const bEmail = (b.email || '').toLowerCase().trim()
       const bUid = (b.userId || '').toLowerCase().trim()
@@ -454,6 +632,7 @@ export async function getUserBusinesses(emailOrUid: string): Promise<BusinessIte
         bEmail === norm ||
         bUid === norm ||
         bOwner === norm ||
+        userRegisteredIds.includes(b.id) ||
         (normCleanDigits.length >= 7 && (bPhone.includes(normCleanDigits) || bWhatsApp.includes(normCleanDigits)))
       )
     })

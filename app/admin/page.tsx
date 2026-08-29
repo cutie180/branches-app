@@ -899,8 +899,23 @@ export default function AdminPage() {
                                   </span>
                                 )}
                               </div>
-                              <h3 className="font-extrabold text-slate-900 text-lg mt-1.5">{biz.name}</h3>
-                              <p className="text-xs text-slate-500">{biz.category} • {biz.city}</p>
+                              <div className="flex items-center gap-3 mt-2">
+                                {biz.logo ? (
+                                  <img
+                                    src={biz.logo}
+                                    alt={biz.name}
+                                    className="w-10 h-10 rounded-xl object-cover border border-slate-200 shrink-0 shadow-2xs"
+                                  />
+                                ) : (
+                                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white font-bold text-sm flex items-center justify-center shrink-0">
+                                    {biz.name ? biz.name.charAt(0).toUpperCase() : 'B'}
+                                  </div>
+                                )}
+                                <div>
+                                  <h3 className="font-extrabold text-slate-900 text-lg leading-tight">{biz.name}</h3>
+                                  <p className="text-xs text-slate-500">{biz.category} • {biz.city}</p>
+                                </div>
+                              </div>
                             </div>
                             <button
                               onClick={() => setSelectedBiz(biz)}

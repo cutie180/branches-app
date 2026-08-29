@@ -145,6 +145,7 @@ export default function AddBusinessClient() {
     businessName: '',
     category: '',
     subcategory: '',
+    logo: '',
     locations: [
       { city: '', address: '', isPrimary: true, citySearchQuery: '', isCityDropdownOpen: false }
     ] as FormLocation[],
@@ -598,6 +599,7 @@ export default function AddBusinessClient() {
         name: formData.businessName,
         category: formData.category,
         categoryId: formData.category.toLowerCase().split(' ')[0],
+        logo: formData.logo || logoPreview || undefined,
         city: primaryLoc.city || 'Karachi',
         address: primaryLoc.address || 'Pakistan',
         locations: formData.locations.map(l => ({
@@ -634,6 +636,80 @@ export default function AddBusinessClient() {
       setIsSubmitting(false)
       toast.error('An error occurred while saving your listing. Please try again.')
     }
+  }
+
+  // Handle Logo File Selection with Auto Canvas Compression (guarantees < 50KB base64)
+  const handleLogoFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please upload an image file (PNG, JPG, JPEG, WEBP).')
+      return
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('Logo file size must be less than 10MB.')
+      return
+    }
+
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      const rawBase64 = event.target?.result as string
+      try {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          let width = img.width
+          let height = img.height
+          const maxDim = 400
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width)
+              width = maxDim
+            } else {
+              width = Math.round((width * maxDim) / height)
+              height = maxDim
+            }
+          }
+          canvas.width = width
+          canvas.height = height
+          const ctx = canvas.getContext('2d')
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height)
+            const compressed = canvas.toDataURL('image/jpeg', 0.85)
+            setLogoPreview(compressed)
+            setFormData(prev => ({ ...prev, logo: compressed }))
+          } else {
+            setLogoPreview(rawBase64)
+            setFormData(prev => ({ ...prev, logo: rawBase64 }))
+          }
+          toast.success('Business logo uploaded!')
+        }
+        img.onerror = () => {
+          setLogoPreview(rawBase64)
+          setFormData(prev => ({ ...prev, logo: rawBase64 }))
+        }
+        img.src = rawBase64
+      } catch (_) {
+        setLogoPreview(rawBase64)
+        setFormData(prev => ({ ...prev, logo: rawBase64 }))
+      }
+    }
+    reader.readAsDataURL(file)
+  }
+
+  const handleLogoUrlChange = (url: string) => {
+    const trimmed = url.trim()
+    const driveMatch = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/)
+    const finalUrl = (driveMatch && driveMatch[1]) ? `https://lh3.googleusercontent.com/d/${driveMatch[1]}` : trimmed
+    setLogoPreview(finalUrl || null)
+    setFormData(prev => ({ ...prev, logo: finalUrl }))
+  }
+
+  const handleRemoveLogo = () => {
+    setLogoPreview(null)
+    setFormData(prev => ({ ...prev, logo: '' }))
   }
 
   // Handle Screenshot File Selection with Auto Canvas Compression (guarantees < 100KB base64 for Firestore)
@@ -743,11 +819,13 @@ export default function AddBusinessClient() {
     setActivePaymentBiz(null)
     setPaymentScreenshotBase64(null)
     setPaymentRefNumber('')
+    setLogoPreview(null)
     setCurrentStep(1)
     setFormData({
       businessName: '',
       category: '',
       subcategory: '',
+      logo: '',
       locations: [
         { city: '', address: '', isPrimary: true, citySearchQuery: '', isCityDropdownOpen: false }
       ],
@@ -1568,7 +1646,7 @@ export default function AddBusinessClient() {
 
                     <div className="flex flex-wrap justify-center gap-3 pt-4">
                       <Link
-                        href="/dashboard"
+                        href={`/business/dashboard?submitted=true&name=${encodeURIComponent(submittedBizName || formData.businessName)}&slug=${encodeURIComponent(submittedSlug || '')}`}
                         className="px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-2"
                       >
                         <Eye className="w-4 h-4" />
@@ -1714,6 +1792,71 @@ export default function AddBusinessClient() {
                                   placeholder="e.g. Fast Food, Web Apps"
                                   className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                                 />
+                              </div>
+                            </div>
+
+                            {/* BUSINESS LOGO UPLOAD SECTION */}
+                            <div className="p-4 sm:p-5 bg-gradient-to-r from-slate-50 to-blue-50/40 rounded-2xl border border-slate-200/90 space-y-3">
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <label className="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                                    <ImageIcon className="w-4 h-4 text-blue-600" />
+                                    <span>Business Logo / Brand Icon (Optional)</span>
+                                  </label>
+                                  <p className="text-[11px] text-slate-500 mt-0.5">
+                                    Upload your official logo or brand mark to make your listing stand out on Google &amp; ListPak.
+                                  </p>
+                                </div>
+                                {logoPreview && (
+                                  <button
+                                    type="button"
+                                    onClick={handleRemoveLogo}
+                                    className="text-[11px] text-red-600 hover:text-red-700 font-bold flex items-center gap-1 cursor-pointer"
+                                  >
+                                    <X className="w-3.5 h-3.5" />
+                                    <span>Remove</span>
+                                  </button>
+                                )}
+                              </div>
+
+                              <div className="flex flex-col sm:flex-row items-center gap-4">
+                                {/* Preview Avatar Box */}
+                                <div className="relative w-16 h-16 rounded-2xl bg-white border-2 border-dashed border-blue-300 flex items-center justify-center overflow-hidden shrink-0 shadow-xs group">
+                                  {logoPreview ? (
+                                    <img src={logoPreview} alt="Logo Preview" className="w-full h-full object-cover" />
+                                  ) : (
+                                    <div className="flex flex-col items-center justify-center text-slate-400">
+                                      <Building2 className="w-6 h-6 text-slate-400" />
+                                      <span className="text-[9px] font-bold mt-0.5 text-slate-400">No Logo</span>
+                                    </div>
+                                  )}
+                                </div>
+
+                                {/* File Input & URL Input */}
+                                <div className="flex-1 w-full space-y-2">
+                                  <div className="flex items-center gap-2">
+                                    <label className="px-4 py-2.5 bg-white hover:bg-blue-50 text-blue-700 border border-blue-200 font-bold text-xs rounded-xl cursor-pointer transition shadow-2xs flex items-center gap-2 hover:border-blue-300">
+                                      <Upload className="w-3.5 h-3.5 text-blue-600" />
+                                      <span>{logoPreview ? 'Change Logo Image' : 'Choose Logo File (PNG, JPG, WebP)'}</span>
+                                      <input
+                                        type="file"
+                                        accept="image/png,image/jpeg,image/jpg,image/webp"
+                                        onChange={handleLogoFileChange}
+                                        className="hidden"
+                                      />
+                                    </label>
+                                  </div>
+
+                                  <div className="relative">
+                                    <input
+                                      type="url"
+                                      value={formData.logo || ''}
+                                      onChange={(e) => handleLogoUrlChange(e.target.value)}
+                                      placeholder="Or paste direct image URL / Google Drive link"
+                                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-700"
+                                    />
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
