@@ -9,10 +9,10 @@ import Footer from '@/components/footer'
 import { getJobBySlug, getAllJobs, getMatchingCandidatesForJob } from '@/lib/job-service'
 import { 
   Briefcase, MapPin, Building2, Calendar, CheckCircle2, ExternalLink, Mail, 
-  ArrowLeft, ShieldCheck, Globe, Info, Users, Sparkles, UserCheck, Check, MessageCircle
+  ArrowLeft, ShieldCheck, Globe, Info, Users, Sparkles, UserCheck, Check
 } from 'lucide-react'
 import JobInteractiveApply from './job-interactive-apply'
-import { JOB_APPLICATION_WHATSAPP, getPublicJobPath, getPublicJobSlug } from '@/lib/job-url'
+import { getPublicJobPath, getPublicJobSlug } from '@/lib/job-url'
 
 export const dynamicParams = true
 export const revalidate = 0
@@ -198,16 +198,6 @@ export default async function JobDetailPage(props: { params: Promise<{ id: strin
                 applicationWebsite={websiteUrl}
                 publicJobPath={publicJobPath}
               />
-
-              <a
-                href={`https://wa.me/${JOB_APPLICATION_WHATSAPP}?text=${encodeURIComponent(`Hello, I would like to apply for ${job.title} at ${job.company}. Job link: https://www.listpak.com${publicJobPath}. I am sending my CV here for consideration.`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-5 py-3 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
-              >
-                <MessageCircle className="w-3.5 h-3.5" />
-                <span>Apply on WhatsApp</span>
-              </a>
 
               {websiteUrl && (
                 <a

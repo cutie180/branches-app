@@ -5,11 +5,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { 
   Briefcase, MapPin, Building2, ChevronDown, ChevronUp, Check, 
-  Sparkles, ExternalLink, MessageCircle, ShieldCheck, Mail, AlertTriangle, 
+  Sparkles, ExternalLink, ShieldCheck, Mail, AlertTriangle, 
   CheckCircle2, X, ArrowRight, UserPlus, Clock, DollarSign, Award
 } from 'lucide-react'
 import { JobItem } from '@/lib/data'
-import { JOB_APPLICATION_WHATSAPP } from '@/lib/job-url'
 import { toast } from 'sonner'
 
 interface JobCardExpandableProps {
@@ -30,11 +29,6 @@ export default function JobCardExpandable({ job }: JobCardExpandableProps) {
   const [submittedCandidateName, setSubmittedCandidateName] = useState('')
 
   const careerSiteUrl = job.applicationWebsite || job.applicationUrl || ''
-
-  const whatsappMessage = encodeURIComponent(
-    `Hello ListPak Recruitment Team, I would like to apply for the position: "${job.title}" at "${job.company}".\n\nJob Details: ${job.city} • ${job.type} (${job.salary})\n\nI am attaching my CV / Resume and details here for your review.`
-  )
-  const whatsappUrl = `https://wa.me/${JOB_APPLICATION_WHATSAPP}?text=${whatsappMessage}`
 
   const handleListpakApply = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -257,7 +251,7 @@ export default function JobCardExpandable({ job }: JobCardExpandableProps) {
               </div>
               <div>
                 <span className="text-slate-400 block font-medium">Application Route</span>
-                <span className="font-bold text-emerald-700">Direct / ListPak / WA</span>
+                <span className="font-bold text-emerald-700">Careers Site / ListPak (Recommended)</span>
               </div>
             </div>
 
@@ -297,7 +291,7 @@ export default function JobCardExpandable({ job }: JobCardExpandableProps) {
       </div>
 
       {/* ========================================================================= */}
-      {/* 3-WAY APPLICATION POPUP / MODAL                                          */}
+      {/* APPLICATION POPUP / MODAL                                                 */}
       {/* ========================================================================= */}
       {showApplyModal && (
         <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in-50">
@@ -346,22 +340,22 @@ export default function JobCardExpandable({ job }: JobCardExpandableProps) {
               </div>
             )}
 
-            {/* OPTION 2: APPLY ON LISTPAK (PROFESSIONAL EMAIL VERIFICATION) */}
+            {/* OPTION 2: APPLY ON LISTPAK (PROFESSIONAL EMAIL VERIFICATION) - RECOMMENDED */}
             <div className="p-5 bg-gradient-to-br from-emerald-50/70 via-white to-teal-50/70 rounded-2xl border border-emerald-200 shadow-xs space-y-4">
               
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
                   <ShieldCheck className="w-4.5 h-4.5" />
                 </div>
-                <div>
-                  <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm flex items-center gap-1.5">
+                <div className="flex-1">
+                  <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm flex items-center gap-1.5 flex-wrap">
                     <span>Apply via Verified ListPak Profile</span>
-                    <span className="text-[10px] font-bold px-2 py-0.2 rounded-full bg-emerald-100 text-emerald-800">
-                      Automated Match
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-600 text-white shadow-2xs">
+                      Recommended
                     </span>
                   </h4>
                   <p className="text-[11px] text-slate-600 leading-relaxed mt-0.5">
-                    Enter your email to verify your professional profile and send your CV &amp; credentials to our admin dashboard.
+                    Enter your email to verify your professional profile and send your CV &amp; credentials to our recruitment dashboard.
                   </p>
                 </div>
               </div>
@@ -479,31 +473,6 @@ export default function JobCardExpandable({ job }: JobCardExpandableProps) {
                 </form>
               )}
 
-            </div>
-
-            {/* OPTION 3: APPLY DIRECTLY ON WHATSAPP (03345636230) */}
-            <div className="p-4 bg-green-50/80 rounded-2xl border border-green-200/90 space-y-3">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-xl bg-green-600 text-white flex items-center justify-center shrink-0 shadow-xs">
-                  <MessageCircle className="w-4.5 h-4.5" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm">Apply via WhatsApp (03345636230)</h4>
-                  <p className="text-[11px] text-slate-600 leading-relaxed">
-                    Directly chat with the recruitment team and attach your CV / Resume along with your cover message.
-                  </p>
-                </div>
-              </div>
-
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>Send CV on WhatsApp (03345636230)</span>
-              </a>
             </div>
 
           </div>

@@ -5,10 +5,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { 
   CheckCircle2, ShieldCheck, AlertTriangle, UserPlus, 
-  ExternalLink, MessageCircle, Mail, X, ArrowRight, 
+  ExternalLink, Mail, X, ArrowRight, 
   Sparkles, Building2, MapPin, Check, Briefcase, FileText, Lock
 } from 'lucide-react'
-import { JOB_APPLICATION_WHATSAPP } from '@/lib/job-url'
 import { auth } from '@/lib/firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import { toast } from 'sonner'
@@ -59,13 +58,6 @@ export default function JobInteractiveApply({
   const [profileUnverified, setProfileUnverified] = useState(false)
   const [applicationSubmitted, setApplicationSubmitted] = useState(false)
   const [submittedCandidateName, setSubmittedCandidateName] = useState('')
-
-  // WhatsApp template
-  const jobLink = publicJobPath ? `https://www.listpak.com${publicJobPath}` : 'https://www.listpak.com/jobs'
-  const whatsappMessage = encodeURIComponent(
-    `Hello ListPak Recruitment Team, I would like to apply for "${jobTitle}" at "${companyName}".\n\nJob Details: ${city} ${type ? `• ${type}` : ''} ${salary ? `(${salary})` : ''}\nJob Link: ${jobLink}\n\nI am sending my CV and professional details here for consideration.`
-  )
-  const whatsappUrl = `https://wa.me/${JOB_APPLICATION_WHATSAPP}?text=${whatsappMessage}`
 
   // Check auth state on mount
   useEffect(() => {
@@ -193,7 +185,7 @@ export default function JobInteractiveApply({
         className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-lg hover:shadow-emerald-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
       >
         <ShieldCheck className="w-4 h-4 text-emerald-100" />
-        <span>Apply on ListPak</span>
+        <span>Apply on ListPak <span className="text-emerald-200 font-medium">(Recommended)</span></span>
       </button>
 
       {/* Application Modal */}
@@ -246,7 +238,7 @@ export default function JobInteractiveApply({
               </div>
             )}
 
-            {/* OPTION 2: APPLY VIA VERIFIED LISTPAK PROFESSIONAL PROFILE */}
+            {/* OPTION 2: APPLY VIA VERIFIED LISTPAK PROFESSIONAL PROFILE (RECOMMENDED) */}
             <div className="p-5 bg-gradient-to-br from-emerald-50/80 via-white to-teal-50/80 rounded-2xl border border-emerald-200 shadow-xs space-y-4">
               
               <div className="flex items-start gap-3">
@@ -254,10 +246,10 @@ export default function JobInteractiveApply({
                   <ShieldCheck className="w-4.5 h-4.5" />
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm flex items-center gap-1.5">
+                  <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm flex items-center gap-1.5 flex-wrap">
                     <span>Apply with ListPak Professional Profile</span>
-                    <span className="text-[10px] font-bold px-2 py-0.2 rounded-full bg-emerald-100 text-emerald-800">
-                      Verified Match
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-600 text-white shadow-2xs">
+                      Recommended
                     </span>
                   </h4>
                   <p className="text-[11px] text-slate-600 leading-relaxed mt-0.5">
@@ -462,31 +454,6 @@ export default function JobInteractiveApply({
                 </form>
               )}
 
-            </div>
-
-            {/* OPTION 3: APPLY DIRECTLY ON WHATSAPP */}
-            <div className="p-4 bg-green-50/80 rounded-2xl border border-green-200/90 space-y-3">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-xl bg-green-600 text-white flex items-center justify-center shrink-0 shadow-xs">
-                  <MessageCircle className="w-4.5 h-4.5" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm">Apply via WhatsApp (03345636230)</h4>
-                  <p className="text-[11px] text-slate-600 leading-relaxed">
-                    Directly chat with our recruitment team and attach your CV / Resume along with your message.
-                  </p>
-                </div>
-              </div>
-
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white font-extrabold text-xs rounded-xl shadow-md hover:shadow-green-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>Send CV on WhatsApp (03345636230)</span>
-              </a>
             </div>
 
           </div>
