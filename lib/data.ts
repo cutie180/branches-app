@@ -104,13 +104,36 @@ export interface BusinessPaymentDetails {
   verifiedBy?: string
 }
 
+export interface BusinessDetailedService {
+  title: string
+  description: string
+}
+
+export interface BusinessCustomSection {
+  heading: string
+  level?: 'h2' | 'h3'
+  content?: string
+  items?: string[]
+  subSections?: {
+    heading: string
+    content?: string
+    items?: string[]
+  }[]
+}
+
 export interface BusinessItem {
   id: string
   userId?: string
   slug: string
   name: string
+  metaTitle?: string
+  metaDescription?: string
+  canonical?: string
+  introduction?: string
   category: string
   categoryId: string
+  secondaryCategories?: string[]
+  schemaType?: string | string[]
   city: string
   cities?: string[]
   province: string
@@ -137,6 +160,8 @@ export interface BusinessItem {
   logo: string
   description: string
   services: string[]
+  detailedServices?: BusinessDetailedService[]
+  sections?: BusinessCustomSection[]
   operatingHours: { [key: string]: string }
   features: string[]
   paymentDetails?: BusinessPaymentDetails
@@ -432,17 +457,31 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "id": "shadab-group-real-estate-builders",
     "slug": "shadab-group-real-estate-builders",
     "name": "Shadab Group Real Estate & Builders",
-    "category": "Real Estate & Property",
+    "metaTitle": "Shadab Group Real Estate & Builders | Real Estate Agent in Sargodha | ListPak",
+    "metaDescription": "Shadab Group Real Estate & Builders is a real estate and construction company in Sargodha offering property buying, selling, renting, investment and construction services.",
+    "canonical": "https://www.listpak.com/business/shadab-group-real-estate-builders/",
+    "introduction": "Shadab Group Real Estate & Builders is a real estate agency and construction company in Sargodha, Pakistan, providing property buying, selling, rental, investment consultancy, and construction services. Established in 1990, the company serves residential and commercial property clients across Sargodha.",
+    "category": "Real Estate Agency",
     "categoryId": "real-estate",
+    "secondaryCategories": [
+      "Real Estate Consultant",
+      "Property Management",
+      "Construction Company",
+      "Builder",
+      "Property Investment Consultant"
+    ],
+    "schemaType": [
+      "RealEstateAgent",
+      "GeneralContractor",
+      "LocalBusiness"
+    ],
     "city": "Sargodha",
     "cities": [
-      "Sargodha",
-      "Lahore",
-      "Islamabad"
+      "Sargodha"
     ],
     "province": "Punjab",
-    "rating": 5,
-    "reviewCount": 18,
+    "rating": 0,
+    "reviewCount": 0,
     "verified": true,
     "isClaimed": true,
     "isFeatured": true,
@@ -451,26 +490,112 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "whatsapp": "923057860084",
     "email": "shadabgrouprealestate@gmail.com",
     "website": "https://www.listpak.com/business/shadab-group-real-estate-builders/",
-    "address": "shadab real estate shop #10#11 , opposite community office ,gulberg city, Sargodha",
+    "address": "Shop #10–11, Shadab Real Estate, Opposite Community Office, Gulberg City, Sargodha, Punjab, Pakistan",
     "locations": [
       {
-        "address": "shadab real estate shop #10#11 , opposite community office ,gulberg city, Sargodha",
+        "address": "Shop #10–11, Shadab Real Estate, Opposite Community Office, Gulberg City, Sargodha, Punjab, Pakistan",
         "city": "Sargodha",
         "isPrimary": true
       }
     ],
     "coverImage": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80",
     "logo": "/shadab-group-logo.png",
-    "description": "Established in 1990, Shadab Group has built a strong name in construction and real estate across Sargodha, with a proven track record ranging from government infrastructure to private residential and commercial developments. We provide property buying, selling, renting, investment consultancy, and construction services along with the complete guidance and documentation help. We are authorized dealers of Shalimar, handling projects including Shalimar Smart City, Gulberg City, Canal Palms, and Sargodha Enclave. Our construction portfolio includes Sargodha Civil Hospital, Govt Buildings, and road networks. Our real estate division holds GOLD Agency recognition on Jaageer.com, along with awards for the highest property sales in Sargodha.",
+    "description": "Established in 1990, Shadab Group Real Estate & Builders is a real estate and construction company serving clients in Sargodha, Pakistan. The company provides property buying, selling, renting, real estate investment consultancy, and construction services for residential and commercial requirements.\n\nShadab Group assists clients throughout the property process, including property selection, buying and selling guidance, rental assistance, investment consultation, and documentation support. The company is also an authorized dealer for Shalimar projects and has been involved with developments including Shalimar Smart City, Gulberg City, Canal Palms, and Sargodha Enclave.\n\nIn addition to real estate services, Shadab Group has experience in construction and infrastructure projects. Its stated construction portfolio includes Sargodha Civil Hospital, government buildings, and road networks.\n\nLocated at Shop #10–11, Shadab Real Estate, opposite Community Office, Gulberg City, Sargodha, the company provides local property and construction assistance to customers in the Sargodha area.\n\nCustomers can contact Shadab Group for real estate agency services, property buying and selling, property rental, investment consultancy, property documentation assistance, and construction services.",
     "services": [
-      "Real Estate Development & Construction",
-      "Residential & Commercial Property Sales",
-      "Investment Consultancy & Plot Booking",
-      "Turnkey Project Management",
-      "Documentation & Legal Approvals"
+      "Real Estate Advisory / Consultancy",
+      "Construction Services (Home Renovation, General Contracting, etc.)",
+      "Commercial Construction",
+      "Property Investment Consultancy (All in One Stop)"
+    ],
+    "detailedServices": [
+      {
+        "title": "Real Estate Advisory / Consultancy",
+        "description": "Expert real estate advisory, buying and selling guidance, verified plot sales, and rental consultancy in Sargodha."
+      },
+      {
+        "title": "Construction Services",
+        "description": "Comprehensive residential construction, home renovation, structural remodeling, architectural planning, and general contracting."
+      },
+      {
+        "title": "Commercial Construction",
+        "description": "Commercial plazas, corporate offices, civil infrastructure, and turnkey project development."
+      },
+      {
+        "title": "Property Investment Consultancy",
+        "description": "All-in-one stop investment consulting for authorized housing societies, high-growth commercial corridors, and secure land bookings."
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Real Estate Services in Sargodha",
+        "content": "Shadab Group Real Estate & Builders provides a range of real estate services for customers in Sargodha, including:",
+        "items": [
+          "Property buying and selling",
+          "Residential property services",
+          "Commercial property services",
+          "Property rental assistance",
+          "Real estate investment consultancy",
+          "Property documentation guidance",
+          "Property development assistance",
+          "Real estate consultation"
+        ],
+        "subSections": [
+          {
+            "heading": "Property Buying & Selling",
+            "content": "Professional guidance for clients looking to purchase or sell residential plots, houses, and commercial property with complete verification in Sargodha."
+          },
+          {
+            "heading": "Property Rental Services",
+            "content": "Comprehensive property rental and leasing solutions for both landlords and tenants across prime residential and commercial zones."
+          },
+          {
+            "heading": "Real Estate Investment Consultancy",
+            "content": "Strategic investment consultation for high-growth property portfolios, authorized Shalimar developments, and emerging urban corridors."
+          },
+          {
+            "heading": "Property Documentation Assistance",
+            "content": "Complete documentation, society registry, legal verification, and transfer support ensuring secure real estate transactions."
+          }
+        ]
+      },
+      {
+        "heading": "Construction Company in Sargodha",
+        "content": "Shadab Group Real Estate & Builders also provides construction and development services in Sargodha. The company has experience across residential, commercial, government and infrastructure-related projects.\n\nIts stated project experience includes Sargodha Civil Hospital, government buildings and road networks. Customers can contact the company for construction-related consultation and project requirements in Sargodha.",
+        "subSections": [
+          {
+            "heading": "Construction & Development Services",
+            "content": "Turnkey civil construction, grey structure building, modern architectural execution, and infrastructure development delivered with high engineering standards."
+          }
+        ]
+      },
+      {
+        "heading": "Projects & Development Experience",
+        "content": "With established expertise dating back to 1990, Shadab Group has contributed to landmark developments across Sargodha:",
+        "items": [
+          "Shalimar Smart City – Authorized dealer and official project partner",
+          "Gulberg City Sargodha – Prime branch presence and local property development",
+          "Canal Palms & Sargodha Enclave – Project sales and investment facilitation",
+          "Sargodha Civil Hospital – Stated major construction and infrastructure execution",
+          "Government Buildings & Road Networks – Public-sector structural civil works"
+        ]
+      },
+      {
+        "heading": "Why Contact Shadab Group?",
+        "items": [
+          "Established in 1990",
+          "Real estate and construction services",
+          "Property buying and selling assistance",
+          "Property rental services",
+          "Real estate investment consultancy",
+          "Construction and development experience",
+          "Property documentation guidance",
+          "Located in Gulberg City, Sargodha",
+          "Direct phone and WhatsApp contact available"
+        ]
+      }
     ],
     "operatingHours": {
-      "Monday - Saturday": "09:00 AM - 07:00 PM"
+      "Monday - Saturday": "10:00 AM - 09:00 PM"
     },
     "features": [
       "Verified Listing",
@@ -478,26 +603,19 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
       "Prime Commercial Locations",
       "Experienced Engineering Team"
     ],
-    "reviews": [
-      {
-        "id": "rev-shadab-1",
-        "userName": "Hamza Ali",
-        "rating": 5,
-        "date": "1 day ago",
-        "comment": "Outstanding real estate and construction services by Shadab Group. Very transparent and highly professional team."
-      },
-      {
-        "id": "rev-shadab-2",
-        "userName": "Farhan Tariq",
-        "rating": 5,
-        "date": "3 days ago",
-        "comment": "Best builders and property consultants in Lahore. Highly recommended for commercial and residential investments."
-      }
-    ],
+    "reviews": [],
     "faqs": [
       {
-        "question": "What real estate services does Shadab Group offer?",
-        "answer": "Shadab Group offers comprehensive real estate development, architectural construction, commercial leasing, residential property sales, and verified investment consultancy."
+        "question": "What real estate services does Shadab Group offer in Sargodha?",
+        "answer": "Shadab Group offers property buying and selling, rental assistance, real estate investment consultancy, property documentation guidance, and comprehensive residential and commercial construction services in Sargodha."
+      },
+      {
+        "question": "Where is Shadab Group located in Sargodha?",
+        "answer": "Shadab Group is located at Shop #10–11, Shadab Real Estate, Opposite Community Office, Gulberg City, Sargodha, Punjab, Pakistan."
+      },
+      {
+        "question": "How can I contact Shadab Group Real Estate & Builders?",
+        "answer": "You can reach Shadab Group directly by phone at +92 305 7860084, via WhatsApp at +92 305 7860084, or by email at shadabgrouprealestate@gmail.com."
       }
     ]
   },

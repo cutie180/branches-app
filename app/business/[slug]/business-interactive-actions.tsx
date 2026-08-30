@@ -121,15 +121,25 @@ export function BusinessReviewsSection({
       <div id="reviews-interactive-section" className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-6 w-full">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b border-slate-100 gap-4">
           <div>
-            <h2 className="text-xl font-extrabold text-slate-900">Database Customer Reviews</h2>
+            <h2 className="text-xl font-extrabold text-slate-900">Customer Reviews</h2>
             <div className="flex items-center gap-2 mt-1">
-              <span className="text-2xl font-extrabold text-slate-900">{rating}</span>
-              <div className="flex text-amber-400">
-                {[1, 2, 3, 4, 5].map((s) => (
-                  <Star key={s} className="w-4 h-4 fill-current" />
-                ))}
-              </div>
-              <span className="text-xs text-slate-500 font-medium">({reviewCount || sortedReviews.length} total reviews)</span>
+              {reviewCount > 0 ? (
+                <>
+                  <span className="text-2xl font-extrabold text-slate-900">{rating}</span>
+                  <div className="flex text-amber-400">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star key={s} className={`w-4 h-4 ${s <= Math.round(rating) ? 'fill-current' : 'text-slate-300'}`} />
+                    ))}
+                  </div>
+                  <span className="text-xs text-slate-500 font-medium">({reviewCount} total reviews)</span>
+                </>
+              ) : (
+                <div className="flex items-center gap-1.5 text-slate-500 text-xs font-medium">
+                  <Star className="w-4 h-4 text-slate-300" />
+                  <span>0 customer reviews</span>
+                  <span className="text-slate-400">• Be the first to review</span>
+                </div>
+              )}
             </div>
           </div>
 
