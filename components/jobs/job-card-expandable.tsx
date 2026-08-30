@@ -72,13 +72,13 @@ export default function JobCardExpandable({ job }: JobCardExpandableProps) {
         if (data.code === 'PROFILE_NOT_FOUND') {
           setProfileNotFound(true)
           setProfileUnverified(false)
-          toast.error('You are not registered on ListPak. Please create your profile first.')
+          toast.error('Account Not Found: You are not registered on ListPak. Please create your free profile first to apply.', { duration: 5000 })
         } else if (data.code === 'PROFILE_UNVERIFIED') {
           setProfileUnverified(true)
           setProfileNotFound(false)
-          toast.error('Your profile is not verified yet. Please verify to apply.')
+          toast.error('Profile Unverified: Your profile is not verified yet. Please verify your profile to apply for jobs.', { duration: 5000 })
         } else {
-          toast.error(data.message || 'Failed to submit application.')
+          toast.error(data.message || 'Failed to submit application.', { duration: 5000 })
         }
       }
     } catch (err) {

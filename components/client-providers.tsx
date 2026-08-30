@@ -9,7 +9,17 @@ export default function ClientProviders() {
   return (
     <>
       <BottomNav />
-      <Toaster position="top-right" richColors />
+      <Toaster 
+        position="top-center"
+        duration={5000}
+        closeButton={true}
+        richColors={true}
+        expand={true}
+        toastOptions={{
+          duration: 5000,
+          className: 'listpak-popup-toast',
+        }}
+      />
       <SpeedInsights />
       <Analytics />
     </>
