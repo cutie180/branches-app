@@ -14,6 +14,7 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { CATEGORIES, CITIES, BusinessItem } from '@/lib/data'
 import { saveBusinessToDatabase, getUserBusinesses, updateBusinessPaymentProof, normalizeSlug } from '@/lib/db-service'
+import StickyWebsiteBanner from '@/components/business/sticky-website-banner'
 import { auth } from '@/lib/firebase'
 import { 
   signInWithEmailAndPassword, 
@@ -880,7 +881,10 @@ export default function AddBusinessClient() {
       </section>
 
       {/* MAIN CONTAINER */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-8">
+
+        {/* STICKY NOTIFICATION BANNER: FREE WEBSITE ASSISTANCE */}
+        <StickyWebsiteBanner businessName={formData.businessName} />
 
         {/* AUTHENTICATION GATE: IF USER IS NOT LOGGED IN */}
         {!currentUser ? (
@@ -2101,6 +2105,23 @@ export default function AddBusinessClient() {
                                   className="w-full pl-10 pr-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                                 />
                               </div>
+                              <div className="mt-2 p-2.5 bg-emerald-50/80 border border-emerald-200/80 rounded-xl flex items-center justify-between gap-2 text-[11px] text-emerald-950">
+                                <span className="flex items-center gap-1.5 font-medium">
+                                  <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                                  <span>No website? Get a free consultation &amp; custom website.</span>
+                                </span>
+                                <a
+                                  href={`https://wa.me/923345636230?text=${encodeURIComponent(
+                                    `Hello ListPak Team, I don't have a website for my business ${formData.businessName ? `"${formData.businessName}"` : ''} and I want to get one built / free website consultation.`
+                                  )}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="font-extrabold text-emerald-700 hover:text-emerald-900 flex items-center gap-1 shrink-0 bg-emerald-100/80 hover:bg-emerald-200/80 px-2 py-1 rounded-lg transition"
+                                >
+                                  <MessageCircle className="w-3 h-3 fill-current" />
+                                  <span>WhatsApp (03345636230)</span>
+                                </a>
+                              </div>
                             </div>
                           </div>
 
@@ -2361,6 +2382,42 @@ export default function AddBusinessClient() {
                             <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
                             <span>Instant Google Search Indexing</span>
                           </div>
+                        </div>
+                      </div>
+
+                      {/* STICKY SIDEBAR WEBSITE ASSISTANCE CARD */}
+                      <div className="bg-gradient-to-br from-slate-900 via-slate-950 to-indigo-950 text-white rounded-3xl p-5 sm:p-6 border border-blue-500/30 shadow-xl shadow-slate-950/20 space-y-3.5">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center shrink-0 shadow-md">
+                            <Globe className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400">
+                              Free Consultation
+                            </span>
+                            <h4 className="text-sm font-extrabold text-white">Need a Business Website?</h4>
+                          </div>
+                        </div>
+
+                        <p className="text-xs text-slate-300 leading-relaxed">
+                          Does your business have no website or need a modern redesign? Our web team can build high-speed, mobile-friendly websites that boost local sales.
+                        </p>
+
+                        <a
+                          href={`https://wa.me/923345636230?text=${encodeURIComponent(
+                            `Hello ListPak Team, I am creating my business listing${formData.businessName ? ` for "${formData.businessName}"` : ''} on ListPak and I need a website / free website consultation for my business.`
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs rounded-2xl shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02]"
+                        >
+                          <MessageCircle className="w-4 h-4 fill-current" />
+                          <span>Chat on WhatsApp (03345636230)</span>
+                        </a>
+
+                        <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] text-slate-400">
+                          <span>Direct Support</span>
+                          <span className="text-emerald-400 font-bold">Available 7 Days</span>
                         </div>
                       </div>
 

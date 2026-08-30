@@ -275,7 +275,7 @@ export const getProfessionalByUsername = cache(async function getProfessionalByU
           return item
         }
       }
-    } catch (_) {}
+    } catch (_) { }
   } catch (err) {
     console.warn('Firestore getProfessionalByUsername query error, falling back to memory:', err)
   }
@@ -291,8 +291,8 @@ export const getProfessionalByUsername = cache(async function getProfessionalByU
     const pGenSlug = generateProfessionalSlug(p.fullName || p.name || '', undefined, undefined, (p as any).cities || (p.city ? [p.city] : [])).toLowerCase()
 
     return (
-      pUser === normalized || 
-      pSlug === normalized || 
+      pUser === normalized ||
+      pSlug === normalized ||
       pId === normalized ||
       pNameNorm === normalized ||
       pNameCity === normalized ||
@@ -305,7 +305,7 @@ export const getProfessionalByUsername = cache(async function getProfessionalByU
       (normalized && pSlug.startsWith(normalized))
     )
   })
-  
+
   if (cached && (cached.status || 'approved') === 'approved' && (cached.profileStatus || 'APPROVED') === 'APPROVED') {
     return cached
   }
@@ -319,11 +319,11 @@ export async function getProfessionalForDashboard(idOrUsernameOrEmail?: string):
     return null
   }
   const normalized = idOrUsernameOrEmail.toLowerCase().trim()
-  const found = all.find(p => 
-    (p.id && p.id.toLowerCase() === normalized) || 
-    (p.username && p.username.toLowerCase() === normalized) || 
-    (p.slug && p.slug.toLowerCase() === normalized) || 
-    (p.email && p.email.toLowerCase().trim() === normalized) || 
+  const found = all.find(p =>
+    (p.id && p.id.toLowerCase() === normalized) ||
+    (p.username && p.username.toLowerCase() === normalized) ||
+    (p.slug && p.slug.toLowerCase() === normalized) ||
+    (p.email && p.email.toLowerCase().trim() === normalized) ||
     (p.userId && p.userId.toLowerCase().trim() === normalized)
   )
   return found || null
@@ -334,7 +334,7 @@ export async function saveProfessionalToDatabase(proData: Partial<ProfessionalIt
   const title = proData.title || ''
   const profession = proData.profession || ''
   const proCities = (proData as any).cities || (proData.city ? [proData.city] : [])
-  
+
   // Generate unique SEO username/slug combining Name and Professional Title with 1-city vs multi-city rules
   let baseSlug = proData.slug || proData.username || ''
   if (!baseSlug) {
@@ -386,7 +386,7 @@ export async function saveProfessionalToDatabase(proData: Partial<ProfessionalIt
     verificationStatus: 'UNVERIFIED',
     verificationRequestStatus: 'NOT_REQUESTED',
     submittedAt: nowIso,
-    
+
     phone: proData.phone || '',
     email: proData.email || '',
     whatsapp: proData.whatsapp || '',
@@ -621,7 +621,7 @@ export async function submitVerificationRequest(
 
   // Update memory cache
   memoryVerificationRequestsCache = [newRequest, ...memoryVerificationRequestsCache.filter(r => r.id !== reqId)]
-  
+
   if (pro) {
     pro.verificationRequestStatus = 'PENDING'
     pro.verificationPaymentDetails = paymentDetails
@@ -746,7 +746,7 @@ export async function updateProfessionalProfileSecure(
   isAdmin: boolean = false
 ): Promise<{ success: boolean; message: string; data?: ProfessionalItem }> {
   const pro = memoryProfessionalsCache.find(p => p.id === idOrUsername || p.username === idOrUsername)
-  
+
   if (!pro) {
     return { success: false, message: 'Professional profile not found.' }
   }

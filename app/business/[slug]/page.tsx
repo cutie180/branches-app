@@ -37,6 +37,10 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
   return {
     title,
     description,
+    robots: {
+      index: true,
+      follow: true,
+    },
     alternates: {
       canonical: canonicalUrl,
     },
@@ -114,6 +118,22 @@ export default async function BusinessPage(props: { params: Promise<{ slug: stri
         reviewCount: biz.reviewCount || reviewsList.length,
       },
     } : {}),
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: [
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday',
+          'Sunday'
+        ],
+        opens: '10:00',
+        closes: '21:00'
+      }
+    ],
     ...(biz.services && biz.services.length > 0 ? {
       hasOfferCatalog: {
         '@type': 'OfferCatalog',

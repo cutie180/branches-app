@@ -194,17 +194,17 @@ export function normalizeBusinessDoc(docId: string, data: any): BusinessItem {
     logo: (itemSlug === 'shadab-group-real-estate-builders' && (!data.logo || data.logo.includes('unsplash') || data.logo.includes('placeholder')))
       ? '/shadab-group-logo.png'
       : (data.logo || data.logoUrl || (itemSlug === 'shadab-group-real-estate-builders' ? '/shadab-group-logo.png' : 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80')),
-    description: data.description || 'Verified business listing on ListPak.',
+    description: data.description || data.aboutText || 'Verified business listing on ListPak.',
     metaTitle: data.metaTitle,
     metaDescription: data.metaDescription,
     canonical: data.canonical,
-    introduction: data.introduction,
+    introduction: data.introduction || data.shortIntro,
     secondaryCategories: data.secondaryCategories,
     schemaType: data.schemaType,
     services: data.services || ['General Services', 'Customer Support'],
     detailedServices: data.detailedServices,
     sections: data.sections,
-    operatingHours: data.operatingHours || { 'Monday - Saturday': '09:00 AM - 07:00 PM' },
+    operatingHours: data.operatingHours || { 'Monday - Sunday': '10:00 AM - 09:00 PM' },
     features: data.features || ['Verified Profile'],
     paymentDetails,
     paymentScreenshot: screenshot,
@@ -471,6 +471,17 @@ export const getBusinessBySlug = cache(async function getBusinessBySlug(slug: st
   )
   if (cached && (cached.status || 'approved') === 'approved') {
     return cached
+  }
+
+  // 4. Mock businesses check
+  const mockFound = MOCK_BUSINESSES.find(b => 
+    b.slug.toLowerCase() === normalized || 
+    b.id.toLowerCase() === normalized ||
+    normalizeSlug(b.name) === normalized ||
+    (b.city && `${normalizeSlug(b.name)}-${normalizeSlug(b.city)}` === normalized)
+  )
+  if (mockFound && (mockFound.status || 'approved') === 'approved') {
+    return mockFound
   }
 
   return null

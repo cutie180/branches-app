@@ -11,6 +11,7 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { CITIES } from '@/lib/data'
 import { saveCompanyToDatabase } from '@/lib/company-service'
+import StickyWebsiteBanner from '@/components/business/sticky-website-banner'
 import { toast } from 'sonner'
 
 const COMPANY_TYPES = [
@@ -209,7 +210,8 @@ export default function AddCompanyClient() {
             </div>
           </div>
         ) : (
-          <div className="space-y-8">
+          <div className="space-y-6">
+            <StickyWebsiteBanner businessName={formData.name} />
             <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs grid grid-cols-4 gap-2 text-center text-xs">
               {[
                 { num: 1, label: 'Company Info' },
