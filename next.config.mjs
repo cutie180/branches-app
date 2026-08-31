@@ -85,6 +85,19 @@ const nextConfig = {
       },
     ]
   },
+
+  async rewrites() {
+    return [
+      {
+        source: '/prayer-times-:slug-today/',
+        destination: '/prayer-times/:slug-today/',
+      },
+      {
+        source: '/prayer-times-:slug/',
+        destination: '/prayer-times/:slug-today/',
+      },
+    ]
+  },
 }
 
 export default nextConfig

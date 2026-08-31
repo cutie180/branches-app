@@ -33,6 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/search',
     '/categories',
     '/cities',
+    '/prayer-times-pakistan',
     '/jobs',
     '/post-job',
     '/companies',
@@ -183,6 +184,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
+  // 11. City Prayer Times Pages (SEO Target)
+  const prayerCityRoutes = CITIES.map((city) => ({
+    url: canonicalUrl(`/prayer-times-${city.toLowerCase().replace(/\s+/g, '-')}-today`),
+    lastModified: currentDate,
+    changeFrequency: 'daily' as const,
+    priority: 0.8,
+  }))
+
   // Combine all routes
   const allRoutes = [
     homepageRoute,
@@ -190,6 +199,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...policyPages,
     ...categoryRoutes,
     ...cityRoutes,
+    ...prayerCityRoutes,
     ...businessRoutes,
     ...jobRoutes,
     ...companyRoutes,

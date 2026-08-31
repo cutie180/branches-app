@@ -72,6 +72,7 @@ export default function Footer() {
               <li><Link href="/add-business" className="hover:text-blue-400 transition-colors">Add Business</Link></li>
               <li><Link href="/professionals" className="hover:text-blue-400 transition-colors">Professional Profiles</Link></li>
               <li><Link href="/jobs" className="hover:text-blue-400 transition-colors">Pakistan Jobs</Link></li>
+              <li><Link href="/prayer-times-pakistan" className="hover:text-blue-400 transition-colors">Prayer Times Pakistan</Link></li>
               <li><Link href="/post-job" className="hover:text-blue-400 transition-colors">Post Job Opening</Link></li>
             </ul>
           </div>
