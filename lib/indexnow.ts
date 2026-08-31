@@ -3,7 +3,7 @@
  * Automates real-time URL submission to search engines (Bing, Yandex, IndexNow.org)
  */
 
-export const INDEXNOW_API_KEY = '40d4228026174b1b8d8e93bd7827fbb6'
+export const INDEXNOW_API_KEY = '43b9d5f2de814afe8a49c2551466070d'
 export const INDEXNOW_HOST = 'www.listpak.com'
 export const INDEXNOW_KEY_LOCATION = `https://${INDEXNOW_HOST}/${INDEXNOW_API_KEY}.txt`
 

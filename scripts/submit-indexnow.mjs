@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const INDEXNOW_API_KEY = '40d4228026174b1b8d8e93bd7827fbb6';
+const INDEXNOW_API_KEY = '43b9d5f2de814afe8a49c2551466070d';
 const HOST = 'www.listpak.com';
 const KEY_LOCATION = `https://${HOST}/${INDEXNOW_API_KEY}.txt`;
 
@@ -10,15 +10,31 @@ async function runIndexNowSubmission() {
   
   const urls = new Set([
     `https://${HOST}`,
+    `https://${HOST}/prayer-times-pakistan`,
+    `https://${HOST}/prayer-times-lahore-today`,
+    `https://${HOST}/prayer-times-karachi-today`,
+    `https://${HOST}/prayer-times-islamabad-today`,
+    `https://${HOST}/prayer-times-rawalpindi-today`,
+    `https://${HOST}/prayer-times-faisalabad-today`,
+    `https://${HOST}/prayer-times-multan-today`,
+    `https://${HOST}/prayer-times-peshawar-today`,
+    `https://${HOST}/prayer-times-quetta-today`,
+    `https://${HOST}/prayer-times-bahawalpur-today`,
+    `https://${HOST}/prayer-times-gujranwala-today`,
+    `https://${HOST}/prayer-times-sialkot-today`,
+    `https://${HOST}/prayer-times-hyderabad-today`,
+    `https://${HOST}/prayer-times-sargodha-today`,
+    `https://${HOST}/prayer-times-sukkur-today`,
+    `https://${HOST}/prayer-times-abbottabad-today`,
     `https://${HOST}/categories`,
     `https://${HOST}/cities`,
     `https://${HOST}/professionals`,
     `https://${HOST}/jobs`,
     `https://${HOST}/blog`,
     `https://${HOST}/contact`,
-    `https://${HOST}/about-us`,
+    `https://${HOST}/about`,
     `https://${HOST}/terms`,
-    `https://${HOST}/privacy-policy`,
+    `https://${HOST}/privacy`,
     `https://${HOST}/add-business`,
     `https://${HOST}/add-professional`,
   ]);
