@@ -56,6 +56,7 @@ export const metadata: Metadata = {
     google: 'L_LW7Dtxekn-M81A11zjxYVWGI7LGGoI-bJw02chIc8',
     other: {
       'msvalidate.01': '32107703ABE97F472472231CBA07F2E5',
+      'google-adsense-account': 'ca-pub-3836871693569517',
     },
   },
 }
@@ -102,6 +103,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${plusJakarta.variable}`}>
       <head>
+        <meta name="google-adsense-account" content="ca-pub-3836871693569517" />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3836871693569517"
+          crossOrigin="anonymous"
+        />
         <meta name="msvalidate.01" content="32107703ABE97F472472231CBA07F2E5" />
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://firebasestorage.googleapis.com" crossOrigin="anonymous" />

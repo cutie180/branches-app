@@ -7,7 +7,7 @@ export const revalidate = 86400
 
 export async function GET() {
   const filePath = path.join(process.cwd(), 'public', 'ads.txt')
-  let content = '# ListPak Authorized Digital Sellers (ads.txt)\n# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0\n'
+  let content = '# ListPak Authorized Digital Sellers (ads.txt)\ngoogle.com, pub-3836871693569517, DIRECT, f08c47fec0942fa0\n'
 
   try {
     if (fs.existsSync(filePath)) {
