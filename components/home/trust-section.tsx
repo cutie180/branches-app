@@ -3,21 +3,21 @@ import { CheckCircle2, ShieldCheck, Zap, Users } from 'lucide-react'
 const features = [
   {
     title: "Verified Listings",
-    description: "Our team manually reviews and verifies business contact details and addresses to ensure accuracy.",
+    description: "Our administrative team reviews business contact details, addresses, and phone numbers to confirm authenticity.",
     icon: <CheckCircle2 className="w-8 h-8 text-emerald-500" />
   },
   {
-    title: "Trusted by Thousands",
-    description: "Join over 15,000 businesses and thousands of daily users who trust PakBizBranches for local search.",
+    title: "Nationwide Reach",
+    description: "Explore businesses, verified professionals, and job opportunities across 150+ Pakistani cities on ListPak.",
     icon: <Users className="w-8 h-8 text-blue-500" />
   },
   {
-    title: "Secure & Private",
-    description: "We protect your data and ensure that all business communications are secure and legitimate.",
+    title: "Direct Contact",
+    description: "Connect directly via phone, WhatsApp, and email without registration walls or hidden paywalls.",
     icon: <ShieldCheck className="w-8 h-8 text-purple-500" />
   },
   {
-    title: "Lightning Fast",
+    title: "Fast & Mobile First",
     description: "Search and discover local businesses in seconds with our optimized mobile-first directory.",
     icon: <Zap className="w-8 h-8 text-amber-500" />
   }
@@ -28,10 +28,10 @@ export default function TrustSection() {
     <section className="py-20 bg-[#f8fafc]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-[#0f2b3d] mb-4">Why Trust PakBizBranches?</h2>
+          <h2 className="text-3xl font-bold text-[#0f2b3d] mb-4">Why Trust ListPak?</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            We are dedicated to building a Pakistan free business directory that is reliable, transparent, and verified, 
-            connecting customers with verified local services every day.
+            We are dedicated to building a transparent and verified Pakistan business directory, 
+            connecting customers with verified local services and job opportunities every day.
           </p>
         </div>
 
@@ -52,19 +52,18 @@ export default function TrustSection() {
           ))}
         </div>
 
-        <div className="mt-16 flex flex-wrap justify-center items-center gap-8 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-          {/* Mock Trust Badges */}
-          <div className="flex items-center gap-2 font-bold text-gray-400">
-            <span className="text-2xl">🛡️</span> SECP Verified
+        <div className="mt-16 flex flex-wrap justify-center items-center gap-8 opacity-70 transition-all duration-500">
+          <div className="flex items-center gap-2 font-bold text-gray-500 text-sm">
+            <span className="text-xl">✅</span> 100% Free Listing
           </div>
-          <div className="flex items-center gap-2 font-bold text-gray-400">
-            <span className="text-2xl">✅</span> 100% Free
+          <div className="flex items-center gap-2 font-bold text-gray-500 text-sm">
+            <span className="text-xl">🛡️</span> Verified Contact Details
           </div>
-          <div className="flex items-center gap-2 font-bold text-gray-400">
-            <span className="text-2xl">📍</span> Local Support
+          <div className="flex items-center gap-2 font-bold text-gray-500 text-sm">
+            <span className="text-xl">📍</span> 150+ Pakistani Cities
           </div>
-          <div className="flex items-center gap-2 font-bold text-gray-400">
-            <span className="text-2xl">⭐</span> Top Rated
+          <div className="flex items-center gap-2 font-bold text-gray-500 text-sm">
+            <span className="text-xl">🤝</span> Direct WhatsApp Connect
           </div>
         </div>
       </div>

@@ -187,7 +187,7 @@ ${city} is ${info.description}, located in the ${info.province} province. With a
 
 ### Why Discover Businesses in ${city}?
 
-Finding the right service provider can save you time, money, and effort. With PakBizBranches, you get access to a verified and up-to-date directory covering every major category, including restaurants, retail stores, healthcare providers, and technology companies. Get local phone numbers and instant WhatsApp connect options without any registration. Our listings include complete contact details, addresses, and digital presence links so you can connect instantly.
+Finding the right service provider can save you time, money, and effort. With ListPak, you get access to a verified and up-to-date directory covering every major category, including restaurants, retail stores, healthcare providers, and technology companies. Get local phone numbers and instant WhatsApp connect options without any registration. Our listings include complete contact details, addresses, and digital presence links so you can connect instantly.
 
 ### Top Business Sectors in ${city}
 
@@ -197,7 +197,7 @@ The ${info.province} government has also invested significantly in supporting co
 
 ### How to Find Businesses in ${city}
 
-Use PakBizBranches to browse businesses in ${city} by category. Whether you need a restaurant for a family dinner, a plumber for an urgent repair, or an IT consultancy for your digital transformation, you'll find it here. Simply browse the listings below, call directly, or send a WhatsApp message, all in one click.
+Use ListPak to browse businesses in ${city} by category. Whether you need a restaurant for a family dinner, a plumber for an urgent repair, or an IT consultancy for your digital transformation, you'll find it here. Simply browse the listings below, call directly, or send a WhatsApp message, all in one click.
 
 ### Commercial Hubs and Business Districts in ${city}
 
@@ -207,11 +207,11 @@ When searching for businesses in ${city}, knowing these districts can help you f
 
 ### List Your Business in ${city}: Free!
 
-Are you a business owner in ${city}? Get your business listed on PakBizBranches for free. Our directory helps local businesses in ${city} reach thousands of potential customers every month. Add your business name, address, contact details, and a description, and you'll appear in search results for customers in ${city} looking for your services.
+Are you a business owner in ${city}? Get your business listed on ListPak for free. Our directory helps local businesses in ${city} reach thousands of potential customers every month. Add your business name, address, contact details, and a description, and you'll appear in search results for customers in ${city} looking for your services.
 
 To build trust, business owners can include official registration indicators. If your business is registered with the Federal Board of Revenue, you can add your FBR NTN. If you are incorporated, you can reference your Securities and Exchange Commission of Pakistan registration details. Adding affiliation signals from local business chambers like the Karachi Chamber of Commerce and Industry or the Lahore Chamber of Commerce and Industry helps verify your company profile.
 
-PakBizBranches is committed to helping the business community grow in ${city}. Join hundreds of businesses already listed and start receiving customer enquiries today. No subscription fees, no hidden charges, just a free, high quality business listing on Pakistan's leading directory.
+ListPak is committed to helping the business community grow in ${city}. Join hundreds of businesses already listed and start receiving customer enquiries today. No subscription fees, no hidden charges, just a free, high quality business listing on Pakistan's leading directory.
 
 ### Browse ${city} Businesses by Category
 
@@ -227,7 +227,7 @@ export function generateCategoryContent(categorySlug: string): string {
 
   return `## ${info.label} Businesses in Pakistan: Complete Directory
 
-Pakistan has a thriving ${info.label.toLowerCase()} sector with thousands of businesses serving customers across all major cities. PakBizBranches brings you the most comprehensive directory of ${info.description} across Pakistan, updated regularly with new listings.
+Pakistan has a thriving ${info.label.toLowerCase()} sector with thousands of businesses serving customers across all major cities. ListPak brings you the most comprehensive directory of ${info.description} across Pakistan, updated regularly with new listings.
 
 ### Find the Best ${info.label} Businesses
 
@@ -237,9 +237,9 @@ Whether you are in Karachi, Lahore, Islamabad, or any other region, finding qual
 
 This category includes ${info.examples.slice(0, 5).join(', ')}, and much more. Each listing provides the business name, phone number, and a detailed description, everything you need to choose the right partner for your needs.
 
-### Why Use PakBizBranches for ${info.label}?
+### Why Use ListPak for ${info.label}?
 
-PakBizBranches is a leading free business directory with listings from over one hundred and fifty cities. These ${info.label} listings are user-submitted and verified, ensuring you get accurate and helpful information. We cover providers of all sizes, from individual freelancers to large established companies.
+ListPak is a leading free business directory with listings from over one hundred and fifty cities. These ${info.label} listings are user-submitted and verified, ensuring you get accurate and helpful information. We cover providers of all sizes, from individual freelancers to large established companies.
 
 Our platform makes it easy to compare different options side by side, contact them directly, and even visit their websites or social media pages. No registration required, just browse and connect.
 
@@ -249,7 +249,7 @@ This sector is distributed across the country, with major concentrations in Kara
 
 ### Add Your ${info.label} Business: Free!
 
-If you operate a ${info.label.toLowerCase()} business anywhere in Pakistan, you can list it on PakBizBranches for free. Thousands of potential customers search for ${info.label.toLowerCase()} services every day. Get discovered by adding your complete business profile with no cost, no credit card, and no subscription required.
+If you operate a ${info.label.toLowerCase()} business anywhere in Pakistan, you can list it on ListPak for free. Thousands of potential customers search for ${info.label.toLowerCase()} services every day. Get discovered by adding your complete business profile with no cost, no credit card, and no subscription required.
 
 Browse the ${info.label} businesses listed below and connect with the right provider for your needs today.`
 }
@@ -268,7 +268,7 @@ export function generateCityCategoryContent(city: string, categorySlug: string):
 
   return `## ${catInfo.label} Businesses in ${city}: Local Directory
 
-Looking for reliable ${catInfo.label.toLowerCase()} services in ${city}? You have come to the right place. PakBizBranches features a comprehensive, up-to-date directory of ${catInfo.description} specifically in ${city}, ${cityInfo.province}.
+Looking for reliable ${catInfo.label.toLowerCase()} services in ${city}? You have come to the right place. ListPak features a comprehensive, up-to-date directory of ${catInfo.description} specifically in ${city}, ${cityInfo.province}.
 
 ### Why ${city} for ${catInfo.label}?
 
@@ -291,11 +291,11 @@ When selecting a ${catInfo.label.toLowerCase()} business in ${city}, consider th
 
 To build trust, verify their legal registration. Many businesses list their FBR NTN or reference their Securities and Exchange Commission of Pakistan registration. You can check if they are registered with the local chamber of commerce like the Lahore Chamber of Commerce and Industry or the Karachi Chamber of Commerce and Industry.
 
-PakBizBranches makes it easy to compare multiple ${catInfo.label.toLowerCase()} businesses in ${city} at a glance.
+ListPak makes it easy to compare multiple ${catInfo.label.toLowerCase()} businesses in ${city} at a glance.
 
 ### List Your ${catInfo.label} Business in ${city}: Free!
 
-Are you a ${catInfo.label.toLowerCase()} business owner in ${city}? Get your business in front of thousands of local customers by listing it on PakBizBranches, completely free. Add your contact details, address, description, and website to get started today.
+Are you a ${catInfo.label.toLowerCase()} business owner in ${city}? Get your business in front of thousands of local customers by listing it on ListPak, completely free. Add your contact details, address, description, and website to get started today.
 
 Browse all ${catInfo.label} businesses in ${city} below.`
 }

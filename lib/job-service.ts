@@ -5,6 +5,7 @@ import { db } from './firebase'
 import { collection, getDocs, query, where, limit, addDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore'
 import { normalizeSlug } from './db-service'
 import { JOB_SLUG_ALIASES } from './job-url'
+import { sanitizeText, sanitizeUrl } from './sanitizer'
 
 let memoryJobsCache: JobItem[] = [...MOCK_JOBS]
 
@@ -174,12 +175,12 @@ export const getJobBySlug = cache(async function getJobBySlug(idOrSlug: string):
 })
 
 export async function saveJobToDatabase(jobData: Partial<JobItem>): Promise<JobItem> {
-  const title = jobData.title || 'New Job Opportunity'
-  const company = jobData.company || 'Hiring Employer'
+  const title = sanitizeText(jobData.title || 'New Job Opportunity', 120)
+  const company = sanitizeText(jobData.company || 'Hiring Employer', 120)
   
   const rawCities = (jobData.cities && jobData.cities.length > 0)
-    ? jobData.cities
-    : [jobData.city || 'Karachi']
+    ? jobData.cities.map(c => sanitizeText(c, 60))
+    : [sanitizeText(jobData.city || 'Karachi', 60)]
   const cities = Array.from(new Set(rawCities))
   
   const citySummary = cities.length === 1
@@ -194,37 +195,37 @@ export async function saveJobToDatabase(jobData: Partial<JobItem>): Promise<JobI
     title,
     company,
     companySlug: jobData.companySlug || normalizeSlug(company),
-    companyLogo: jobData.companyLogo || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
+    companyLogo: sanitizeUrl(jobData.companyLogo || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80'),
     city: citySummary,
     cities: cities,
-    province: jobData.province || 'Sindh',
-    country: jobData.country || 'Pakistan',
-    category: jobData.category || 'Technology & IT',
-    department: jobData.department || 'General',
-    type: jobData.type || 'Full-time',
-    employmentType: jobData.employmentType || jobData.type || 'Full-time',
-    salary: jobData.salary || 'Negotiable',
-    experience: jobData.experience || '1 - 3 Years',
-    education: jobData.education || 'Bachelor Degree',
-    skills: jobData.skills || ['Communication'],
+    province: sanitizeText(jobData.province || 'Sindh', 60),
+    country: 'Pakistan',
+    category: sanitizeText(jobData.category || 'Technology & IT', 80),
+    department: sanitizeText(jobData.department || 'General', 80),
+    type: sanitizeText(jobData.type || 'Full-time', 40),
+    employmentType: sanitizeText(jobData.employmentType || jobData.type || 'Full-time', 40),
+    salary: sanitizeText(jobData.salary || 'Negotiable', 80),
+    experience: sanitizeText(jobData.experience || '1 - 3 Years', 60),
+    education: sanitizeText(jobData.education || 'Bachelor Degree', 80),
+    skills: Array.isArray(jobData.skills) ? jobData.skills.map(s => sanitizeText(s, 50)) : ['Communication'],
     vacancies: Number(jobData.vacancies) || 1,
-    genderPreference: jobData.genderPreference || 'Any',
-    ageRequirement: jobData.ageRequirement || 'N/A',
-    deadline: jobData.deadline || 'Open until filled',
-    joiningDate: jobData.joiningDate || 'Immediate',
-    workingHours: jobData.workingHours || '09:00 AM - 06:00 PM',
-    shiftType: jobData.shiftType || 'Day Shift',
-    benefits: jobData.benefits || ['Health Insurance', 'Paid Leaves'],
+    genderPreference: sanitizeText(jobData.genderPreference || 'Any', 40),
+    ageRequirement: sanitizeText(jobData.ageRequirement || 'N/A', 40),
+    deadline: sanitizeText(jobData.deadline || 'Open until filled', 60),
+    joiningDate: sanitizeText(jobData.joiningDate || 'Immediate', 60),
+    workingHours: sanitizeText(jobData.workingHours || '09:00 AM - 06:00 PM', 60),
+    shiftType: sanitizeText(jobData.shiftType || 'Day Shift', 40),
+    benefits: Array.isArray(jobData.benefits) ? jobData.benefits.map(b => sanitizeText(b, 60)) : ['Health Insurance', 'Paid Leaves'],
     postedDate: 'Just now',
-    description: jobData.description || `Job opening for ${title} at ${company}.`,
-    responsibilities: jobData.responsibilities || ['Perform core job responsibilities.'],
-    requirements: jobData.requirements || ['Relevant experience in field.'],
-    preferredQualifications: jobData.preferredQualifications || [],
-    applicationWebsite: jobData.applicationWebsite || '',
-    applicationEmail: jobData.applicationEmail || '',
+    description: sanitizeText(jobData.description || `Job opening for ${title} at ${company}.`, 5000),
+    responsibilities: Array.isArray(jobData.responsibilities) ? jobData.responsibilities.map(r => sanitizeText(r, 200)) : ['Perform core job responsibilities.'],
+    requirements: Array.isArray(jobData.requirements) ? jobData.requirements.map(rq => sanitizeText(rq, 200)) : ['Relevant experience in field.'],
+    preferredQualifications: Array.isArray(jobData.preferredQualifications) ? jobData.preferredQualifications.map(pq => sanitizeText(pq, 200)) : [],
+    applicationWebsite: sanitizeUrl(jobData.applicationWebsite || ''),
+    applicationEmail: sanitizeText(jobData.applicationEmail || '', 120),
     applicationMethod: jobData.applicationMethod || 'both',
-    applicationUrl: jobData.applicationUrl || jobData.applicationWebsite || '',
-    verified: true,
+    applicationUrl: sanitizeUrl(jobData.applicationUrl || jobData.applicationWebsite || ''),
+    verified: false, // Trust protocol: requires admin verification
     isFeatured: false,
     status: 'pending' // PENDING WORKFLOW
   }

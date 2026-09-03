@@ -51,7 +51,7 @@ export default function HeroSection() {
 
         <div className="mt-6 sm:mt-8 bg-white/10 backdrop-blur-md rounded-xl p-4 sm:p-6 max-w-2xl mx-auto border border-white/20">
           <p className="text-white text-sm sm:text-base font-medium">
-            PakBizBranches connects Pakistani business owners with potential buyers across all major cities.
+            ListPak connects Pakistani business owners, professionals, and employers with customers and candidates across all major cities.
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-2 text-xs sm:text-sm text-slate-100 font-medium">
             <span className="bg-white/10 px-3 py-1 rounded-full">Easy Online Submission</span>

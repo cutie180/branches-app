@@ -1,0 +1,9 @@
+# ListPak Authorized Digital Sellers (ads.txt)
+# Website: https://www.listpak.com
+# Google AdSense Publisher Record
+# 
+# IMPORTANT INSTRUCTION:
+# Once your Google AdSense account application is approved and you receive your Publisher ID (pub-XXXXXXXXXXXXXXXX),
+# uncomment and update the line below with your real 16-digit publisher ID:
+#
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0

@@ -48,7 +48,7 @@ export default function TermsPage() {
 
           <h2 className="text-xl font-bold text-[#0f2b3d] mt-8 mb-4">4. Business Listings & Submissions</h2>
           <p className="mb-4">
-            Users who add business listings represent that the information provided is accurate and that they have the right to publish it. PakBizBranches reserves the right to review, edit, or remove any listing at its sole discretion if it violates our quality standards or community guidelines.
+            Users who add business listings represent that the information provided is accurate and that they have the right to publish it. ListPak reserves the right to review, edit, or remove any listing at its sole discretion if it violates our quality standards or community guidelines.
           </p>
 
           <h2 className="text-xl font-bold text-[#0f2b3d] mt-8 mb-4">5. Prohibited Activities</h2>
@@ -58,7 +58,7 @@ export default function TermsPage() {
 
           <h2 className="text-[#0f2b3d] font-bold text-xl mt-8 mb-4">6. Limitation of Liability</h2>
           <p className="mb-4">
-            PakBizBranches is a directory service. We do not guarantee the quality, safety, or legality of services provided by the businesses listed on our platform. In no event will we be liable to you or any third party for any direct, indirect, consequential, exemplary, incidental, special, or punitive damages arising from your use of the Site.
+            ListPak is a directory service. We do not guarantee the quality, safety, or legality of services provided by the businesses listed on our platform. In no event will we be liable to you or any third party for any direct, indirect, consequential, exemplary, incidental, special, or punitive damages arising from your use of the Site.
           </p>
 
           <h2 className="text-xl font-bold text-[#0f2b3d] mt-8 mb-4">7. Governing Law</h2>

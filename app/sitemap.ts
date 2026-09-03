@@ -28,9 +28,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 1.0,
   }
 
-  // 2. Core Portal Pages
+  // 2. Core Portal Pages (Excludes /search as internal search is noindexed)
   const corePages = [
-    '/search',
     '/categories',
     '/cities',
     '/prayer-times-pakistan',

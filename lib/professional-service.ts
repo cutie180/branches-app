@@ -3,6 +3,7 @@ import { MOCK_PROFESSIONALS, MOCK_VERIFICATION_REQUESTS, ProfessionalItem, Profe
 import { db } from './firebase'
 import { collection, getDocs, query, where, limit, addDoc, doc, updateDoc, deleteDoc, setDoc, orderBy } from 'firebase/firestore'
 import { normalizeSlug } from './db-service'
+import { sanitizeText, sanitizeUrl, sanitizePhone } from './sanitizer'
 
 /**
  * Generate clean SEO friendly slug for professionals.
@@ -75,22 +76,11 @@ let memoryProfessionalsCache: ProfessionalItem[] = [...MOCK_PROFESSIONALS]
 let memoryVerificationRequestsCache: ProfessionalVerificationRequest[] = [...MOCK_VERIFICATION_REQUESTS]
 let memoryInquiriesCache: ProfessionalInquiry[] = []
 
-export const GENERATE_STARTER_PROFESSIONAL_REVIEWS = (proName: string) => [
-  {
-    id: 'rev-pro-1-' + Date.now(),
-    userName: 'Omer Farooq',
-    rating: 5,
-    date: 'Just now',
-    comment: `Extremely professional experience working with ${proName}. Highly skilled, punctual, and attentive to requirements.`
-  },
-  {
-    id: 'rev-pro-2-' + Date.now(),
-    userName: 'Fatima Noor',
-    rating: 5,
-    date: '2 days ago',
-    comment: `Great communication and top-quality work delivered by ${proName}. Exceeded expectations!`
-  }
-]
+/**
+ * Deprecated review helper: returns empty array to strictly comply with Google AdSense
+ * policy prohibiting fake or automated user testimonials.
+ */
+export const GENERATE_STARTER_PROFESSIONAL_REVIEWS = (_proName: string): any[] => []
 
 export function normalizeProfessionalDoc(docId: string, data: Partial<ProfessionalItem>): ProfessionalItem {
   const proName = data.fullName || data.name || 'Verified Professional'
@@ -155,7 +145,7 @@ export function normalizeProfessionalDoc(docId: string, data: Partial<Profession
     languages: data.languages || ['Urdu', 'English'],
     previousExperience: data.previousExperience || [],
     servicesOffered: data.servicesOffered || [],
-    reviews: data.reviews && data.reviews.length > 0 ? data.reviews : GENERATE_STARTER_PROFESSIONAL_REVIEWS(proName),
+    reviews: data.reviews && data.reviews.length > 0 ? data.reviews : [],
     faqs: data.faqs || [],
 
     linkedin: data.linkedin,
@@ -357,29 +347,29 @@ export async function saveProfessionalToDatabase(proData: Partial<ProfessionalIt
     userId: proData.userId || '',
     username,
     slug: username,
-    name,
-    fullName: name,
-    title: title || 'Professional Specialist',
-    profession: profession || 'Specialist',
-    category: proData.category || 'Professional / Job Seeker',
-    specialization: proData.specialization || profession,
-    city: proData.city || 'Karachi',
-    province: proData.province || 'Sindh',
-    country: proData.country || 'Pakistan',
-    address: proData.address || '',
-    googleMapUrl: proData.googleMapUrl || '',
-    rating: 5.0,
-    reviewCount: 2,
-    hourlyRate: proData.hourlyRate || 'Negotiable',
-    availability: proData.availability || 'Open to Work',
-    gender: proData.gender || '',
-    avatar: proData.avatar || '',
-    coverImage: proData.coverImage || 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1200&q=80',
-    bio: proData.bio || `Verified ${profession} profile on ListPak.`,
-    about: proData.about || proData.bio || '',
-    skills: proData.skills || [profession],
-    experienceYears: Number(proData.experienceYears) || 1,
-    verified: false, // Must be verified by admin after Rs. 50 fee
+    name: sanitizeText(name, 100),
+    fullName: sanitizeText(name, 100),
+    title: sanitizeText(title || 'Professional Specialist', 120),
+    profession: sanitizeText(profession || 'Specialist', 80),
+    category: sanitizeText(proData.category || 'Professional / Job Seeker', 80),
+    specialization: sanitizeText(proData.specialization || profession, 120),
+    city: sanitizeText(proData.city || 'Karachi', 60),
+    province: sanitizeText(proData.province || 'Sindh', 60),
+    country: 'Pakistan',
+    address: sanitizeText(proData.address || '', 250),
+    googleMapUrl: sanitizeUrl(proData.googleMapUrl || ''),
+    rating: 0,
+    reviewCount: 0,
+    hourlyRate: sanitizeText(proData.hourlyRate || 'Negotiable', 60),
+    availability: sanitizeText(proData.availability || 'Open to Work', 60),
+    gender: sanitizeText(proData.gender || '', 20),
+    avatar: sanitizeUrl(proData.avatar || ''),
+    coverImage: sanitizeUrl(proData.coverImage || 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1200&q=80'),
+    bio: sanitizeText(proData.bio || `Professional profile on ListPak.`, 5000),
+    about: sanitizeText(proData.about || proData.bio || '', 5000),
+    skills: Array.isArray(proData.skills) ? proData.skills.map(s => sanitizeText(s, 50)) : [sanitizeText(profession, 50)],
+    experienceYears: Number(proData.experienceYears) || 0,
+    verified: false, // Must be verified by admin after verification review
     isFeatured: false,
     status: 'pending', // PENDING WORKFLOW
     profileStatus: 'PENDING',
@@ -387,40 +377,52 @@ export async function saveProfessionalToDatabase(proData: Partial<ProfessionalIt
     verificationRequestStatus: 'NOT_REQUESTED',
     submittedAt: nowIso,
 
-    phone: proData.phone || '',
-    email: proData.email || '',
-    whatsapp: proData.whatsapp || '',
-    website: proData.website || '',
-    portfolio: proData.portfolio || '',
-    resumeUrl: proData.resumeUrl || '',
-    currentCompany: proData.currentCompany || '',
+    phone: sanitizePhone(proData.phone || ''),
+    email: sanitizeText(proData.email || '', 120),
+    whatsapp: sanitizePhone(proData.whatsapp || ''),
+    website: sanitizeUrl(proData.website || ''),
+    portfolio: sanitizeUrl(proData.portfolio || ''),
+    resumeUrl: sanitizeUrl(proData.resumeUrl || ''),
+    currentCompany: sanitizeText(proData.currentCompany || '', 120),
 
-    education: proData.education || [],
-    certifications: proData.certifications || [],
-    languages: proData.languages || ['Urdu', 'English'],
-    previousExperience: proData.previousExperience || [],
-    servicesOffered: proData.servicesOffered || [],
-    reviews: GENERATE_STARTER_PROFESSIONAL_REVIEWS(name),
+    education: Array.isArray(proData.education) ? proData.education.map((e: any) => ({
+      degree: sanitizeText(e.degree, 100),
+      institution: sanitizeText(e.institution, 120),
+      year: sanitizeText(e.year, 20),
+    })) : [],
+    certifications: Array.isArray(proData.certifications) ? proData.certifications.map(c => sanitizeText(c, 150)) : [],
+    languages: Array.isArray(proData.languages) ? proData.languages.map(l => sanitizeText(l, 40)) : ['Urdu', 'English'],
+    previousExperience: Array.isArray(proData.previousExperience) ? proData.previousExperience.map((pe: any) => ({
+      role: sanitizeText(pe.role, 100),
+      company: sanitizeText(pe.company, 120),
+      duration: sanitizeText(pe.duration, 40),
+      description: sanitizeText(pe.description, 1000),
+    })) : [],
+    servicesOffered: Array.isArray(proData.servicesOffered) ? proData.servicesOffered.map(s => sanitizeText(s, 100)) : [],
+    reviews: [],
     faqs: [],
 
-    linkedin: proData.linkedin || '',
-    github: proData.github || '',
-    facebook: proData.facebook || '',
-    instagram: proData.instagram || '',
-    twitter: proData.twitter || '',
-    youtube: proData.youtube || '',
-    behance: proData.behance || '',
-    dribbble: proData.dribbble || '',
-    stackoverflow: proData.stackoverflow || '',
-    medium: proData.medium || '',
-    fiverr: proData.fiverr || '',
-    upwork: proData.upwork || '',
-    freelancer: proData.freelancer || '',
-    kaggle: proData.kaggle || '',
-    researchgate: proData.researchgate || '',
-    orcid: proData.orcid || '',
-    googleScholar: proData.googleScholar || '',
-    customSocialLinks: proData.customSocialLinks || [],
+    linkedin: sanitizeUrl(proData.linkedin || ''),
+    github: sanitizeUrl(proData.github || ''),
+    facebook: sanitizeUrl(proData.facebook || ''),
+    instagram: sanitizeUrl(proData.instagram || ''),
+    twitter: sanitizeUrl(proData.twitter || ''),
+    youtube: sanitizeUrl(proData.youtube || ''),
+    behance: sanitizeUrl(proData.behance || ''),
+    dribbble: sanitizeUrl(proData.dribbble || ''),
+    stackoverflow: sanitizeUrl(proData.stackoverflow || ''),
+    medium: sanitizeUrl(proData.medium || ''),
+    fiverr: sanitizeUrl(proData.fiverr || ''),
+    upwork: sanitizeUrl(proData.upwork || ''),
+    freelancer: sanitizeUrl(proData.freelancer || ''),
+    kaggle: sanitizeUrl(proData.kaggle || ''),
+    researchgate: sanitizeUrl(proData.researchgate || ''),
+    orcid: sanitizeUrl(proData.orcid || ''),
+    googleScholar: sanitizeUrl(proData.googleScholar || ''),
+    customSocialLinks: Array.isArray(proData.customSocialLinks) ? proData.customSocialLinks.map((sl: any) => ({
+      platform: sanitizeText(sl.platform, 40),
+      url: sanitizeUrl(sl.url),
+    })) : [],
     dynamicFields: proData.dynamicFields || {}
   }
 

@@ -2,18 +2,18 @@ import { Search, Users, Globe, Award, TrendingUp, MapPin } from 'lucide-react'
 
 export default function AboutSection() {
   return (
-    <section className="w-full border-y border-gray-100 bg-gradient-to-b from-slate-50/80 to-white" aria-labelledby="what-is-pakbizbranches">
+    <section className="w-full border-y border-gray-100 bg-gradient-to-b from-slate-50/80 to-white" aria-labelledby="what-is-listpak">
       <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20 max-w-5xl">
         <div className="text-center mb-10 sm:mb-12">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 text-primary px-3 py-1.5 text-xs font-semibold uppercase tracking-wide mb-4">
             <Globe className="w-3.5 h-3.5" />
             Pakistan Free Business Directory
           </span>
-          <h2 id="what-is-pakbizbranches" className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 tracking-tight">
-            What is PakBizBranches?
+          <h2 id="what-is-listpak" className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 tracking-tight">
+            What is ListPak?
           </h2>
           <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            PakBizBranches is the leading Pakistan free business directory. Find verified <strong>local businesses by city</strong> and{' '}
+            ListPak is the leading Pakistan free business directory. Find verified <strong>local businesses by city</strong> and{' '}
             <a className="text-primary font-medium hover:underline" href="/categories/" title="Browse all business categories in Pakistan">
               business categories in Pakistan
             </a>
@@ -67,7 +67,7 @@ export default function AboutSection() {
           <div className="inline-flex flex-col items-center gap-3 sm:gap-4">
             <a 
               href="/add-business/"
-              title="Add your business listing for free on PakBizBranches"
+              title="Add your business listing for free on ListPak"
               className="relative overflow-visible inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-semibold bg-emerald-600 hover:bg-emerald-700 text-white h-12 px-6 py-4 sm:py-5 md:py-6 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 transition-colors"
             >
               <span className="relative z-10 inline-flex items-center">

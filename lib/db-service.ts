@@ -2,6 +2,7 @@ import { cache } from 'react'
 import { MOCK_BUSINESSES, BusinessItem, ContactMessage } from './data'
 import { db } from './firebase'
 import { collection, getDocs, query, where, limit, addDoc, doc, updateDoc, deleteDoc, setDoc } from 'firebase/firestore'
+import { sanitizeText, sanitizeUrl, sanitizePhone } from './sanitizer'
 
 // Memory cache store for super fast reads and SSG generation
 let memoryBusinessesCache: BusinessItem[] = [...MOCK_BUSINESSES]
@@ -65,45 +66,10 @@ export function generateBusinessSlug(name: string, cities?: string[] | string): 
 }
 
 /**
- * Generates 5 realistic starter reviews for new business listings
+ * Deprecated review helper: returns empty array to strictly comply with Google AdSense
+ * policy prohibiting fabricated customer reviews or artificial ratings.
  */
-export const GENERATE_STARTER_REVIEWS = (businessName: string) => [
-  {
-    id: 'rev-starter-1-' + Date.now(),
-    userName: 'Tariq Mehmood',
-    rating: 5,
-    date: 'Just now',
-    comment: `Excellent service and a very professional team at ${businessName}. Highly recommended for anyone looking for reliable solutions.`
-  },
-  {
-    id: 'rev-starter-2-' + Date.now(),
-    userName: 'Saima Khan',
-    rating: 5,
-    date: '1 day ago',
-    comment: `Great overall experience from start to finish with ${businessName}. Friendly staff and outstanding customer support.`
-  },
-  {
-    id: 'rev-starter-3-' + Date.now(),
-    userName: 'Bilal Ahmed',
-    rating: 5,
-    date: '2 days ago',
-    comment: `${businessName} exceeded expectations with quality service, quick response times, and professional communication.`
-  },
-  {
-    id: 'rev-starter-4-' + Date.now(),
-    userName: 'Hamza Sheikh',
-    rating: 5,
-    date: '3 days ago',
-    comment: `Very satisfied with the experience at ${businessName}. Everything was handled efficiently and exactly as promised.`
-  },
-  {
-    id: 'rev-starter-5-' + Date.now(),
-    userName: 'Zainab Fatima',
-    rating: 5,
-    date: '4 days ago',
-    comment: `Highly recommended. The staff at ${businessName} were knowledgeable, courteous, and delivered excellent service throughout.`
-  }
-]
+export const GENERATE_STARTER_REVIEWS = (_businessName: string): any[] => []
 
 export function normalizeBusinessDoc(docId: string, data: any): BusinessItem {
   const bName = data.businessName || data.name || 'Verified Business'
@@ -491,30 +457,34 @@ export const getBusinessBySlug = cache(async function getBusinessBySlug(slug: st
  * Save new business with status: "pending" by default
  */
 export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>): Promise<BusinessItem> {
-  const name = businessData.name || 'New Business'
+  const cleanName = sanitizeText(businessData.name || 'New Business', 120)
   const inputLocations = businessData.locations && businessData.locations.length > 0
-    ? businessData.locations
-    : [{ city: businessData.city || 'Karachi', address: businessData.address || 'Pakistan', isPrimary: true }]
+    ? businessData.locations.map(l => ({
+        ...l,
+        city: sanitizeText(l.city, 60),
+        address: sanitizeText(l.address, 250),
+      }))
+    : [{ city: sanitizeText(businessData.city || 'Karachi', 60), address: sanitizeText(businessData.address || 'Pakistan', 250), isPrimary: true }]
 
   const primaryLoc = inputLocations.find(l => l.isPrimary) || inputLocations[0]
-  const summaryCity = primaryLoc.city || businessData.city || 'Karachi'
-  const summaryAddress = primaryLoc.address || businessData.address || 'Pakistan'
+  const summaryCity = primaryLoc.city || sanitizeText(businessData.city || 'Karachi', 60)
+  const summaryAddress = primaryLoc.address || sanitizeText(businessData.address || 'Pakistan', 250)
   const allCities = Array.from(new Set(inputLocations.map(l => l.city).filter(Boolean)))
 
-  const slug = businessData.slug || generateBusinessSlug(name, allCities)
+  const slug = businessData.slug || generateBusinessSlug(cleanName, allCities)
   const bizId = businessData.id || ('biz-' + Date.now())
 
   const newBiz: BusinessItem = {
     id: bizId,
     userId: businessData.userId || '',
     slug,
-    name,
-    category: businessData.category || 'Services',
-    categoryId: businessData.categoryId || 'services',
+    name: cleanName,
+    category: sanitizeText(businessData.category || 'Services', 80),
+    categoryId: sanitizeText(businessData.categoryId || 'services', 80),
     city: summaryCity,
     cities: allCities,
     locations: inputLocations,
-    province: businessData.province || 'Pakistan',
+    province: sanitizeText(businessData.province || 'Pakistan', 80),
     rating: 0,
     reviewCount: 0,
     verified: false,
@@ -522,19 +492,19 @@ export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>
     isFeatured: false,
     status: 'pending', // MANDATORY PENDING WORKFLOW
     paymentStatus: businessData.paymentStatus || (businessData.paymentScreenshot ? 'PENDING' : 'UNPAID'),
-    paymentScreenshot: businessData.paymentScreenshot || '',
+    paymentScreenshot: sanitizeUrl(businessData.paymentScreenshot || ''),
     paymentDetails: businessData.paymentDetails,
     submittedAt: new Date().toISOString(),
-    ownerName: businessData.ownerName || 'Business Representative',
-    phone: businessData.phone || '+92 300 0000000',
-    whatsapp: businessData.whatsapp || '923000000000',
-    email: businessData.email || 'contact@business.pk',
-    website: businessData.website || 'https://www.listpak.com',
+    ownerName: sanitizeText(businessData.ownerName || 'Business Representative', 80),
+    phone: sanitizePhone(businessData.phone || '+92 300 0000000'),
+    whatsapp: sanitizePhone(businessData.whatsapp || '923000000000'),
+    email: sanitizeText(businessData.email || 'contact@business.pk', 120),
+    website: sanitizeUrl(businessData.website || 'https://www.listpak.com'),
     address: summaryAddress,
-    coverImage: businessData.coverImage || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
-    logo: businessData.logo || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
-    description: businessData.description || 'Newly registered business on ListPak.',
-    services: businessData.services || ['Professional Services'],
+    coverImage: sanitizeUrl(businessData.coverImage || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80'),
+    logo: sanitizeUrl(businessData.logo || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80'),
+    description: sanitizeText(businessData.description || 'Newly registered business on ListPak.', 5000),
+    services: Array.isArray(businessData.services) ? businessData.services.map(s => sanitizeText(s, 60)) : ['Professional Services'],
     operatingHours: businessData.operatingHours || { 'Monday - Saturday': '09:00 AM - 07:00 PM' },
     features: [],
     reviews: [],

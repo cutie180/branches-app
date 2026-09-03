@@ -4,15 +4,13 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { Menu, X, Plus, Building2, Search, Briefcase, Users, BookOpen } from 'lucide-react'
+import { Menu, X, Plus, Building2, Search, Briefcase, Users } from 'lucide-react'
 
 const navLinks = [
   { href: '/search', label: 'Businesses', icon: Building2 },
   { href: '/jobs', label: 'Jobs', icon: Briefcase, badge: 'Hiring' },
   { href: '/professionals', label: 'Professionals', icon: Users },
   { href: '/categories', label: 'Categories' },
-  { href: '/cities', label: 'Cities' },
-  { href: '/blog', label: 'Blog', icon: BookOpen },
 ]
 
 export default function Navbar() {

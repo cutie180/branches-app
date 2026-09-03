@@ -5,7 +5,19 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/admin', '/admin/*', '/api/*', '/login', '/register', '/dashboard/*'],
+      disallow: [
+        '/admin',
+        '/admin/*',
+        '/api/*',
+        '/login',
+        '/login/*',
+        '/register',
+        '/register/*',
+        '/dashboard',
+        '/dashboard/*',
+        '/business-dashboard',
+        '/business-dashboard/*',
+      ],
     },
     sitemap: 'https://www.listpak.com/sitemap.xml',
   }

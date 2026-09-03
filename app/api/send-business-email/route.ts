@@ -4,7 +4,7 @@ export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'PakBizBranches <onboarding@resend.dev>'
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'ListPak <onboarding@resend.dev>'
 const WHATSAPP_NUMBER = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || process.env.WHATSAPP_BUSINESS_NUMBER || '923001234567').replace(/[^0-9]/g, '')
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.listpak.com'
 
@@ -49,7 +49,7 @@ function buildHtml(data: SubmissionEmailPayload) {
                 Hi there,
               </p>
               <p style="margin:0 0 24px;font-size:16px;line-height:1.6;color:#475569;">
-                Thank you for listing your business with PakBizBranches! Your listing is now live and visible to thousands of potential customers across Pakistan.
+                Thank you for listing your business with ListPak! Your listing is now live and visible to thousands of potential customers across Pakistan.
               </p>
 
               <h2 style="margin:0 0 12px;font-size:18px;color:#0f2b3d;">Your Submission Summary</h2>
@@ -71,38 +71,41 @@ function buildHtml(data: SubmissionEmailPayload) {
                   <td style="padding:12px 16px;color:#0f172a;font-size:14px;border-bottom:1px solid #e2e8f0;">${escapeHtml(data.phone)}</td>
                 </tr>
                 <tr>
-                  <td style="padding:12px 16px;background:#f8fafc;font-weight:600;color:#334155;font-size:14px;vertical-align:top;">Description</td>
-                  <td style="padding:12px 16px;color:#0f172a;font-size:14px;line-height:1.5;">${escapeHtml(data.description)}</td>
+                  <td style="padding:12px 16px;background:#f8fafc;font-weight:600;color:#334155;font-size:14px;">Description</td>
+                  <td style="padding:12px 16px;color:#0f172a;font-size:14px;">${escapeHtml(data.description)}</td>
                 </tr>
               </table>
 
-              <h2 style="margin:0 0 12px;font-size:18px;color:#0f2b3d;">Your Business is Now Live At</h2>
-              <p style="margin:0 0 24px;font-size:14px;line-height:1.6;">
-                <a href="${businessUrl}" style="color:#2563eb;text-decoration:none;font-weight:600;word-break:break-all;">${businessUrl}</a>
-              </p>
-
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
                 <tr>
                   <td align="center">
-                    <a href="${businessUrl}" style="display:inline-block;padding:14px 32px;background:#0f2b3d;color:#ffffff;text-decoration:none;border-radius:12px;font-weight:600;font-size:15px;">View Your Listing</a>
+                    <a href="${businessUrl}" style="display:inline-block;padding:14px 28px;background:#2563eb;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;border-radius:10px;">
+                      View Your Live Listing
+                    </a>
                   </td>
                 </tr>
               </table>
 
-              <div style="background:#ecfdf5;border:1px solid #a7f3d0;border-radius:12px;padding:20px;margin-bottom:24px;">
-                <h3 style="margin:0 0 8px;font-size:16px;color:#065f46;">Want More Visibility?</h3>
-                <p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:#047857;">
-                  Feature your business to appear at the top of search results and attract more customers.
-                </p>
-                <a href="${whatsappUrl}" style="display:inline-block;padding:12px 24px;background:#16a34a;color:#ffffff;text-decoration:none;border-radius:10px;font-weight:600;font-size:14px;">Contact us on WhatsApp</a>
-              </div>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;margin-bottom:24px;">
+                <tr>
+                  <td style="padding:20px;">
+                    <h3 style="margin:0 0 8px;font-size:16px;color:#166534;">Want More Customers? Feature Your Business!</h3>
+                    <p style="margin:0 0 14px;font-size:14px;line-height:1.5;color:#15803d;">
+                      Get listed at the top of search results and attract 5x more leads with a Featured Listing.
+                    </p>
+                    <a href="${whatsappUrl}" style="display:inline-block;padding:10px 20px;background:#16a34a;color:#ffffff;font-size:13px;font-weight:600;text-decoration:none;border-radius:8px;">
+                      Feature on WhatsApp
+                    </a>
+                  </td>
+                </tr>
+              </table>
 
               <p style="margin:24px 0 0;font-size:14px;line-height:1.6;color:#64748b;">
                 If you have any questions, simply reply to this email or contact us on WhatsApp.
               </p>
               <p style="margin:12px 0 0;font-size:14px;line-height:1.6;color:#64748b;">
                 Best regards,<br />
-                <strong style="color:#0f172a;">The PakBizBranches Team</strong>
+                <strong style="color:#0f172a;">The ListPak Team</strong>
               </p>
             </td>
           </tr>
@@ -110,7 +113,7 @@ function buildHtml(data: SubmissionEmailPayload) {
           <tr>
             <td style="padding:20px 32px;background:#f8fafc;border-top:1px solid #e2e8f0;text-align:center;">
               <p style="margin:0;font-size:12px;color:#94a3b8;">
-                © ${new Date().getFullYear()} PakBizBranches. Pakistan's leading business directory.
+                © ${new Date().getFullYear()} ListPak. Pakistan's leading business directory.
               </p>
             </td>
           </tr>
@@ -145,7 +148,7 @@ Want to feature your business for more visibility?
 Contact us on WhatsApp: ${whatsappUrl}
 
 Best regards,
-The PakBizBranches Team`
+The ListPak Team`
 }
 
 function escapeHtml(str: string) {

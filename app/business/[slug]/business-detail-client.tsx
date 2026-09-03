@@ -6,7 +6,7 @@ import { Phone, Mail, MapPin, MessageCircle, Building2, ShieldCheck, Star, Clock
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { BusinessItem } from '@/lib/data'
-import { getBusinessBySlug, GENERATE_STARTER_REVIEWS } from '@/lib/db-service'
+import { getBusinessBySlug } from '@/lib/db-service'
 import ClaimBusinessModal from '@/components/business/claim-business-modal'
 import ReviewModal from '@/components/business/review-modal'
 import { toast } from 'sonner'
@@ -22,9 +22,9 @@ export default function BusinessDetailClient({ slug }: { slug: string }) {
   useEffect(() => {
     async function loadData() {
       const data = await getBusinessBySlug(slug)
-      if (data && (!data.reviews || data.reviews.length === 0)) {
-        data.reviews = GENERATE_STARTER_REVIEWS(data.name)
-        data.reviewCount = 5
+      if (data) {
+        data.reviews = data.reviews || []
+        data.reviewCount = data.reviews.length
       }
       setBiz(data)
       setLoading(false)
