@@ -454,6 +454,67 @@ export interface ProfessionalItem {
 
 export const MOCK_BUSINESSES: BusinessItem[] = [
   {
+    "id": "biz-1788874377351",
+    "slug": "crust-crave-karachi",
+    "name": "Crust & Crave",
+    "metaTitle": "Crust & Crave – Fast Food & Chinese Restaurant in Bahria Town Karachi | ListPak",
+    "metaDescription": "Crust & Crave is a top fast food and Chinese restaurant in Precinct 10A, Bahria Town Karachi. Dine-in, takeaway, and fast home delivery available.",
+    "canonical": "https://www.listpak.com/business/crust-crave-karachi/",
+    "introduction": "Crust & Crave is a premier fast food and casual dining restaurant located in Precinct 10A, Bahria Town Karachi. Serving gourmet burgers, thin-crust pizza, crispy fried specialties, flavorful Chinese dishes, and continental cuisine.",
+    "category": "Restaurants & Food",
+    "categoryId": "restaurants",
+    "secondaryCategories": [
+      "Fast Food",
+      "Chinese Food",
+      "Pizza & Burgers"
+    ],
+    "city": "Karachi",
+    "cities": [
+      "Karachi"
+    ],
+    "province": "Sindh",
+    "address": "Plot 214, Ali Dino Tower, Lane 22 Old Commercial, Bahria Town, Karachi, 75300",
+    "locations": [
+      {
+        "city": "Karachi",
+        "address": "Plot 214, Ali Dino Tower, Lane 22 Old Commercial, Bahria Town, Karachi, 75300",
+        "isPrimary": true
+      }
+    ],
+    "phone": "0305 5161212",
+    "whatsapp": "923055161212",
+    "email": "info@crustandcrave.pk",
+    "website": "https://crustandcrave.pk",
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "/crust-and-crave-logo.jpg",
+    "description": "Crust & Crave is one of the top restaurants in Bahria Town Karachi, located in Precinct 10A and serving a wide variety of delicious meals for every craving. Our menu includes juicy burgers, crispy fries, flavorful Chinese food, fried favorites, grilled dishes, rice meals, noodles, dumplings, appetizers, soups, refreshing beverages, and tasty desserts.\n\nAs one of the popular Bahria Town Karachi restaurants, Crust & Crave brings together local and international flavors with fresh ingredients, generous portions, and consistent quality. Our Chinese food options include delicious stir-fried rice, noodles, dumplings, and appetizers that are perfect for sharing with family and friends.\n\nIf you are searching for a family-friendly dining experience, Crust & Crave is a great choice. We welcome families, friends, couples, and anyone looking for a satisfying meal in a comfortable setting. From quick bites to complete meals, our menu offers plenty of options for different tastes and occasions.\n\nAs a trusted fast food restaurant in Bahria Town Karachi, we focus on great taste, hygiene, friendly service, and value. Customers can enjoy convenient dine-in, takeaway, and doorstep delivery options. Whether you are craving a burger, Chinese meal, grilled food, rice, noodles, or something sweet after dinner, Crust & Crave has something delicious to enjoy.\n\nVisit Crust & Crave for fresh food, variety, generous portions, friendly service, and a memorable dining experience in Precinct 10A. Whether dining in or ordering online, enjoy quality meals made to satisfy your cravings every day, right here in Bahria Town Karachi with us, every time.",
+    "services": [
+      "Fast food delivery",
+      "Chinese Food delivery",
+      "Dinner",
+      "Breakfast",
+      "Dine-in",
+      "Takeaway"
+    ],
+    "operatingHours": {
+      "Monday - Saturday": "09:00 AM - 07:00 PM"
+    },
+    "rating": 5,
+    "reviewCount": 1,
+    "verified": true,
+    "isClaimed": false,
+    "isFeatured": true,
+    "status": "approved",
+    "paymentStatus": "VERIFIED",
+    "features": [
+      "Verified Business Profile",
+      "Home Delivery Available",
+      "Family Seating Available"
+    ],
+    "reviews": [],
+    "faqs": []
+  },
+  {
     "id": "shadab-group-real-estate-builders",
     "slug": "shadab-group-real-estate-builders",
     "name": "Shadab Group Real Estate & Builders",

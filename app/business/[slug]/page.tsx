@@ -3,7 +3,7 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Phone, Mail, MapPin, MessageCircle, ShieldCheck, Star, Clock, CheckCircle2, Building2, Briefcase, Award, Sparkles } from 'lucide-react'
+import { Phone, Mail, MapPin, MessageCircle, ShieldCheck, Star, Clock, CheckCircle2, Building2, Briefcase, Award, Sparkles, Globe, ExternalLink } from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { getAllBusinesses, getBusinessBySlug } from '@/lib/db-service'
@@ -82,6 +82,7 @@ export default async function BusinessPage(props: { params: Promise<{ slug: stri
     name: biz.name,
     description: biz.metaDescription || biz.description,
     url: biz.canonical || `https://www.listpak.com/business/${slug}`,
+    sameAs: biz.website && biz.website !== 'https://www.listpak.com' ? [biz.website] : undefined,
     telephone: intlPhone,
     email: biz.email,
     image: biz.coverImage || biz.logo,
@@ -220,6 +221,7 @@ export default async function BusinessPage(props: { params: Promise<{ slug: stri
                   width={144}
                   height={144}
                   priority
+                  unoptimized={typeof biz.logo === 'string' && (biz.logo.startsWith('data:') || biz.logo.startsWith('/'))}
                   sizes="(max-width: 640px) 112px, 144px"
                   quality={85}
                   className="w-full h-full object-cover"
@@ -266,6 +268,22 @@ export default async function BusinessPage(props: { params: Promise<{ slug: stri
                       <span>0 customer reviews</span>
                     )}
                   </span>
+                  {biz.website && biz.website !== 'https://www.listpak.com' && (
+                    <>
+                      <span>•</span>
+                      <a
+                        href={biz.website.startsWith('http') ? biz.website : `https://${biz.website}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-blue-300 hover:text-white transition-colors underline decoration-blue-400/50 hover:decoration-white font-medium"
+                        title={`Visit official website: ${biz.website}`}
+                      >
+                        <Globe className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                        <span>{biz.website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}</span>
+                        <ExternalLink className="w-3 h-3 opacity-75" />
+                      </a>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -449,6 +467,19 @@ export default async function BusinessPage(props: { params: Promise<{ slug: stri
               <h2 className="font-bold text-slate-900 text-sm uppercase tracking-wider">Contact {biz.name}</h2>
               
               <div className="space-y-2.5">
+                {biz.website && biz.website !== 'https://www.listpak.com' && (
+                  <a
+                    href={biz.website.startsWith('http') ? biz.website : `https://${biz.website}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 hover:scale-[1.01]"
+                  >
+                    <Globe className="w-4 h-4" />
+                    <span>Visit Official Website</span>
+                    <ExternalLink className="w-3.5 h-3.5 opacity-80" />
+                  </a>
+                )}
+
                 <a
                   href={`tel:${biz.phone}`}
                   className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition-colors flex items-center justify-center gap-2"

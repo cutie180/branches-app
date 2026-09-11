@@ -2,7 +2,7 @@ import { cache } from 'react'
 import { MOCK_BUSINESSES, BusinessItem, ContactMessage } from './data'
 import { db } from './firebase'
 import { collection, getDocs, query, where, limit, addDoc, doc, updateDoc, deleteDoc, setDoc } from 'firebase/firestore'
-import { sanitizeText, sanitizeUrl, sanitizePhone } from './sanitizer'
+import { sanitizeText, sanitizeUrl, sanitizeImageUrl, sanitizePhone } from './sanitizer'
 
 // Memory cache store for super fast reads and SSG generation
 let memoryBusinessesCache: BusinessItem[] = [...MOCK_BUSINESSES]
@@ -157,9 +157,22 @@ export function normalizeBusinessDoc(docId: string, data: any): BusinessItem {
     address: primaryLoc.address || data.address || 'Commercial Center, Pakistan',
     locations: docLocations,
     coverImage: data.coverImage || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
-    logo: (itemSlug === 'shadab-group-real-estate-builders' && (!data.logo || data.logo.includes('unsplash') || data.logo.includes('placeholder')))
-      ? '/shadab-group-logo.png'
-      : (data.logo || data.logoUrl || (itemSlug === 'shadab-group-real-estate-builders' ? '/shadab-group-logo.png' : 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80')),
+    logo: (() => {
+      const isCrustCrave = itemSlug === 'crust-crave-karachi' || itemSlug.includes('crust-crave')
+      const isShadab = itemSlug === 'shadab-group-real-estate-builders'
+      const rawLogo = (data.logo || data.logoUrl || '').trim()
+
+      if (isCrustCrave && (!rawLogo || rawLogo.includes('unsplash') || rawLogo.includes('placeholder'))) {
+        return '/crust-and-crave-logo.jpg'
+      }
+      if (isShadab && (!rawLogo || rawLogo.includes('unsplash') || rawLogo.includes('placeholder'))) {
+        return '/shadab-group-logo.png'
+      }
+      if (rawLogo) {
+        return rawLogo
+      }
+      return 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80'
+    })(),
     description: data.description || data.aboutText || 'Verified business listing on ListPak.',
     metaTitle: data.metaTitle,
     metaDescription: data.metaDescription,
@@ -492,7 +505,7 @@ export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>
     isFeatured: false,
     status: 'pending', // MANDATORY PENDING WORKFLOW
     paymentStatus: businessData.paymentStatus || (businessData.paymentScreenshot ? 'PENDING' : 'UNPAID'),
-    paymentScreenshot: sanitizeUrl(businessData.paymentScreenshot || ''),
+    paymentScreenshot: sanitizeImageUrl(businessData.paymentScreenshot || ''),
     paymentDetails: businessData.paymentDetails,
     submittedAt: new Date().toISOString(),
     ownerName: sanitizeText(businessData.ownerName || 'Business Representative', 80),
@@ -501,8 +514,8 @@ export async function saveBusinessToDatabase(businessData: Partial<BusinessItem>
     email: sanitizeText(businessData.email || 'contact@business.pk', 120),
     website: sanitizeUrl(businessData.website || 'https://www.listpak.com'),
     address: summaryAddress,
-    coverImage: sanitizeUrl(businessData.coverImage || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80'),
-    logo: sanitizeUrl(businessData.logo || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80'),
+    coverImage: sanitizeImageUrl(businessData.coverImage || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80'),
+    logo: sanitizeImageUrl(businessData.logo || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80'),
     description: sanitizeText(businessData.description || 'Newly registered business on ListPak.', 5000),
     services: Array.isArray(businessData.services) ? businessData.services.map(s => sanitizeText(s, 60)) : ['Professional Services'],
     operatingHours: businessData.operatingHours || { 'Monday - Saturday': '09:00 AM - 07:00 PM' },
