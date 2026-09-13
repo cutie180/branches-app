@@ -102,7 +102,7 @@ export function normalizeBusinessDoc(docId: string, data: any): BusinessItem {
     paymentMethod,
     referenceNumber: refNumber,
     paymentScreenshot: screenshot,
-    amount: Number(data.amount || data.paymentDetails?.amount || 20),
+    amount: Number(data.amount || data.paymentDetails?.amount || 50),
     paymentDate: data.paymentDate || data.submittedAt || data.createdAt || new Date().toISOString()
   } : undefined)
 
@@ -571,7 +571,7 @@ export async function updateBusinessPaymentProof(
     paymentMethod: payment.paymentMethod,
     referenceNumber: payment.referenceNumber || '',
     paymentScreenshot: payment.paymentScreenshot,
-    amount: payment.amount || 20,
+    amount: payment.amount || 50,
     paymentDate: nowIso
   }
 

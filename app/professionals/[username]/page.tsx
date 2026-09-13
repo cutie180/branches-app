@@ -7,7 +7,7 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { getProfessionalByUsername, getAllProfessionals } from '@/lib/professional-service'
 import { 
-  Users, MapPin, ShieldCheck, Star, Mail, Phone, Award, CheckCircle2, ArrowLeft, 
+  Users, MapPin, ShieldCheck, Star, Mail, Phone, Award, CheckCircle2, ArrowLeft, ArrowRight,
   Globe, Linkedin, Github, Facebook, Twitter, Instagram, Youtube, MessageCircle, ExternalLink, 
   Briefcase, Calendar, GraduationCap, Building2, Check, Sparkles
 } from 'lucide-react'
@@ -158,11 +158,11 @@ export default async function ProfessionalDetailPage(props: { params: Promise<{ 
                     </span>
                   ) : (
                     <span
-                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-red-700 text-xs font-bold border border-red-200 shadow-2xs"
-                      title="This profile has not completed ListPak verification."
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-red-800 text-xs font-extrabold border border-red-300 shadow-2xs"
+                      title="This profile has not completed ListPak verification (Verification: Rs. 50)."
                     >
-                      <span className="text-red-600 font-extrabold">✕</span>
-                      <span>Not Verified</span>
+                      <span className="text-sm">🚩</span>
+                      <span>Unverified Profile</span>
                     </span>
                   )}
                 </div>
@@ -217,6 +217,39 @@ export default async function ProfessionalDetailPage(props: { params: Promise<{ 
 
       {/* Main Body */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-8">
+        {/* UNVERIFIED RED FLAG ALERT & INSTANT VERIFICATION PAYMENT CTA */}
+        {(!pro.verified && pro.verificationStatus !== 'VERIFIED') && (
+          <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-red-50 via-amber-50 to-orange-50 border-2 border-red-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-in fade-in-50">
+            <div className="flex items-start sm:items-center gap-3.5">
+              <div className="w-11 h-11 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center shrink-0 border border-red-200 shadow-inner">
+                <span className="text-2xl">🚩</span>
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-red-700 bg-red-100 px-2 py-0.5 rounded-md border border-red-200">
+                    Unverified Red Flag Notice
+                  </span>
+                  <span className="text-[11px] font-bold text-slate-500">• Public Profile</span>
+                </div>
+                <h3 className="text-sm sm:text-base font-extrabold text-slate-900 mt-0.5">
+                  This profile is publicly live but unverified.
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed mt-0.5">
+                  Are you {pro.name}? Remove this red flag and unlock the official <strong>Green Verified Badge (✓ Verified Professional)</strong> for <strong>Rs. 50 only</strong>.
+                </p>
+              </div>
+            </div>
+
+            <Link
+              href={`/dashboard/professional/verify?username=${encodeURIComponent(pro.username)}`}
+              className="w-full sm:w-auto px-5 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer hover:scale-[1.02]"
+            >
+              <ShieldCheck className="w-4 h-4" />
+              <span>Pay for Verification (Rs. 50)</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        )}
         
         {/* Dedicated Social Links & Contact Card */}
         {socialLinks.length > 0 && (

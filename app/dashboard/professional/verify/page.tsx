@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { 
@@ -14,8 +14,9 @@ import { toast } from 'sonner'
 import { ProfessionalItem } from '@/lib/data'
 import { getAllProfessionals, getProfessionalForDashboard } from '@/lib/professional-service'
 
-export default function ProfessionalVerificationPage() {
+function ProfessionalVerificationContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [profile, setProfile] = useState<ProfessionalItem | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -80,14 +81,17 @@ export default function ProfessionalVerificationPage() {
     async function load() {
       setLoading(true)
       try {
-        let userEmail = ''
-        const session = sessionStorage.getItem('listpak_user_session')
-        if (session) {
-          const parsed = JSON.parse(session)
-          userEmail = parsed.email || parsed.username || ''
+        const urlUsername = searchParams.get('username') || ''
+        let userIdentifier = urlUsername
+        if (!userIdentifier) {
+          const session = sessionStorage.getItem('listpak_user_session')
+          if (session) {
+            const parsed = JSON.parse(session)
+            userIdentifier = parsed.username || parsed.email || ''
+          }
         }
 
-        const pro = await getProfessionalForDashboard(userEmail)
+        const pro = await getProfessionalForDashboard(userIdentifier)
         setProfile(pro)
 
         if (pro?.verificationRequestStatus === 'PENDING') {
@@ -100,7 +104,7 @@ export default function ProfessionalVerificationPage() {
       }
     }
     load()
-  }, [])
+  }, [searchParams])
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     setErrorMsg('')
@@ -681,5 +685,21 @@ export default function ProfessionalVerificationPage() {
 
       <Footer />
     </div>
+  )
+}
+
+export default function ProfessionalVerificationPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
+        <Navbar />
+        <div className="flex-1 flex items-center justify-center p-12">
+          <p className="text-slate-500 text-sm font-semibold">Loading verification details...</p>
+        </div>
+        <Footer />
+      </div>
+    }>
+      <ProfessionalVerificationContent />
+    </Suspense>
   )
 }

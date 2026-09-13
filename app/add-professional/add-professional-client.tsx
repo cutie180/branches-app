@@ -414,8 +414,8 @@ export default function AddProfessionalClient() {
           .filter(Boolean),
         customSocialLinks: formData.customSocialLinks.map((link) => ({ platform: link.name, url: link.url })),
         experienceYears: Number(formData.experienceYears) || 0,
-        status: 'pending',
-        profileStatus: 'PENDING',
+        status: 'approved',
+        profileStatus: 'APPROVED',
         verified: false,
         verificationStatus: 'UNVERIFIED',
         verificationRequestStatus: 'NOT_REQUESTED'
@@ -489,15 +489,15 @@ export default function AddProfessionalClient() {
             </div>
             
             <div className="space-y-3">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-700 text-xs font-bold border border-amber-200">
-                <ShieldCheck className="w-4 h-4 text-amber-600" />
-                <span>Pending Admin Approval</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <span>Profile Auto-Approved &amp; Publicly Live!</span>
               </span>
               <h2 className="text-2xl font-extrabold text-slate-900">
-                Your professional profile has been submitted successfully.
+                Your professional profile is now live across Pakistan!
               </h2>
               <p className="text-slate-600 text-sm max-w-lg mx-auto leading-relaxed">
-                Your profile has been saved and sent to our admin team for review. Our team will review and approve your profile as soon as possible.
+                Your profile has been automatically approved and published. Anyone can now view your public portfolio, credentials, and skills on ListPak.
               </p>
             </div>
 
@@ -507,56 +507,71 @@ export default function AddProfessionalClient() {
                 <span className="font-bold text-slate-900">{formData.fullName} ({formData.title})</span>
               </div>
               <div className="flex justify-between text-slate-600">
-                <span>Profile Slug:</span>
-                <span className="font-mono text-slate-900 font-bold">/professionals/{submittedUsername}</span>
+                <span>Live Public URL:</span>
+                <Link
+                  href={`/professionals/${submittedUsername}`}
+                  target="_blank"
+                  className="font-mono text-blue-600 hover:text-blue-800 font-bold underline flex items-center gap-1"
+                >
+                  <span>/professionals/{submittedUsername}</span>
+                  <ExternalLink className="w-3 h-3" />
+                </Link>
               </div>
               <div className="flex justify-between text-slate-600">
                 <span>Profile Status:</span>
-                <span className="text-amber-600 font-extrabold">PENDING APPROVAL</span>
+                <span className="text-emerald-600 font-extrabold flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>APPROVED &amp; LIVE</span>
+                </span>
               </div>
               <div className="flex justify-between text-slate-600">
                 <span>Verification Status:</span>
-                <span className="text-slate-500 font-bold">UNVERIFIED</span>
+                <span className="text-red-600 font-extrabold flex items-center gap-1">
+                  <span>🚩 UNVERIFIED (Red Flag)</span>
+                </span>
               </div>
             </div>
 
             {/* Verification Promotion Card */}
-            <div className="p-5 bg-gradient-to-br from-emerald-50 via-teal-50 to-blue-50 rounded-2xl border border-emerald-200 text-left space-y-3 max-w-md mx-auto">
+            <div className="p-5 bg-gradient-to-br from-amber-50 via-orange-50 to-emerald-50 rounded-2xl border-2 border-amber-200 text-left space-y-3 max-w-md mx-auto">
               <div className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 text-white flex items-center justify-center shrink-0 shadow-xs">
                   <ShieldCheck className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm">Next Step: Verify Your Profile (Rs. 50)</h4>
+                  <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm">Remove Red Flag: Verify Your Profile (Rs. 50)</h4>
                   <p className="text-[11px] text-slate-600 leading-relaxed mt-0.5">
-                    Unlock the official <strong>Green Verified Badge</strong>, priority search ranking, and eligibility to <strong>apply directly for jobs on ListPak</strong>.
+                    Your public page currently displays an <strong>Unverified red flag</strong>. Verify for Rs. 50 to earn the official <strong>Green Verified Badge</strong>, gain client trust, and unlock profile editing.
                   </p>
                 </div>
               </div>
 
               <Link
-                href="/dashboard/professional/verify"
-                className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                href={`/dashboard/professional/verify?username=${encodeURIComponent(submittedUsername)}`}
+                className="w-full py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-extrabold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <ShieldCheck className="w-4 h-4" />
-                <span>Verify Profile Now (Rs. 50)</span>
+                <span>Pay for Verification (Rs. 50)</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
 
             <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center">
               <Link
-                href="/dashboard/professional"
+                href={`/professionals/${submittedUsername}`}
+                target="_blank"
                 className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Eye className="w-4 h-4" />
+                <span>View Live Public Page</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </Link>
+              <Link
+                href="/dashboard/professional"
+                className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl transition-colors flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Go to Dashboard</span>
                 <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link
-                href="/jobs"
-                className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl transition-colors cursor-pointer"
-              >
-                Browse Job Vacancies
               </Link>
             </div>
           </div>

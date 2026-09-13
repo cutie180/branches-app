@@ -369,10 +369,12 @@ export async function saveProfessionalToDatabase(proData: Partial<ProfessionalIt
     about: sanitizeText(proData.about || proData.bio || '', 5000),
     skills: Array.isArray(proData.skills) ? proData.skills.map(s => sanitizeText(s, 50)) : [sanitizeText(profession, 50)],
     experienceYears: Number(proData.experienceYears) || 0,
-    verified: false, // Must be verified by admin after verification review
+    verified: false, // Verification is separate and costs Rs. 50
     isFeatured: false,
-    status: 'pending', // PENDING WORKFLOW
-    profileStatus: 'PENDING',
+    status: 'approved', // Auto-approved upon creation so public profile is immediately live
+    profileStatus: 'APPROVED',
+    approvedAt: nowIso,
+    approvedBy: 'system_auto_approved',
     verificationStatus: 'UNVERIFIED',
     verificationRequestStatus: 'NOT_REQUESTED',
     submittedAt: nowIso,
