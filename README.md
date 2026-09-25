@@ -231,4 +231,4 @@ For support and questions:
 
 ---
 
-**PakBizBranches** - Connecting Businesses Across Pakistan
+**PakBizBranches** - Connecting Businesses Across Pakistan.
