@@ -37,13 +37,13 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
     title,
     description,
     alternates: {
-      canonical: `https://listpak.com/companies/${slug}/`,
+      canonical: `https://www.listpak.com/companies/${slug}/`,
     },
     openGraph: {
       title,
       description,
       siteName: 'ListPak',
-      url: `https://listpak.com/companies/${slug}/`,
+      url: `https://www.listpak.com/companies/${slug}/`,
       locale: 'en_PK',
       type: 'website',
       images: company?.logo ? [{ url: company.logo, alt: name }] : undefined,

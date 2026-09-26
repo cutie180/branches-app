@@ -3,7 +3,7 @@ import { CATEGORIES, CITIES, BusinessItem } from './data'
 export const VERIFICATION_DISCLAIMER =
   "ListPak verification indicates that the listing or profile completed ListPak's verification process. Verification does not independently guarantee every claim made by the business or individual."
 
-export const CANONICAL_DOMAIN = 'https://listpak.com'
+export const CANONICAL_DOMAIN = 'https://www.listpak.com'
 
 export function toCanonicalUrl(path: string): string {
   const clean = path.replace(/^\/+|\/+$/g, '')

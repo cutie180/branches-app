@@ -19,6 +19,6 @@ export default function robots(): MetadataRoute.Robots {
         '/business-dashboard/*',
       ],
     },
-    sitemap: 'https://listpak.com/sitemap.xml',
+    sitemap: 'https://www.listpak.com/sitemap.xml',
   }
 }

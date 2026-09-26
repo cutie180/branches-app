@@ -6,12 +6,12 @@ export const metadata: Metadata = {
   title: 'Verification Policy | ListPak - Pakistan Business Directory',
   description: 'How ListPak verifies business profiles, addresses, contact details, and professional credentials across Pakistan.',
   alternates: {
-    canonical: 'https://listpak.com/verification-policy/',
+    canonical: 'https://www.listpak.com/verification-policy/',
   },
   openGraph: {
     title: 'Verification Policy | ListPak - Pakistan Business Directory',
     description: 'How ListPak verifies business profiles, addresses, contact details, and professional credentials across Pakistan.',
-    url: 'https://listpak.com/verification-policy/',
+    url: 'https://www.listpak.com/verification-policy/',
     type: 'website',
   },
 }

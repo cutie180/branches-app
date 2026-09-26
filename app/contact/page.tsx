@@ -50,7 +50,7 @@ export default function ContactPage() {
     '@type': 'ContactPage',
     name: 'Contact ListPak: Free Business Listing Website Pakistan',
     description: 'Contact ListPak support for business listing assistance, professional profile help, job-posting questions, directory support, and technical issues.',
-    url: 'https://listpak.com/contact/',
+    url: 'https://www.listpak.com/contact/',
   }
 
   return (

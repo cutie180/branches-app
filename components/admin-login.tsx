@@ -97,12 +97,16 @@ export default function AdminLogin({ onLoginSuccess }: { onLoginSuccess: () => v
     setError('')
 
     try {
-      // Admin credentials
-      const validAdminEmails = ['contact@listpak.com', 'pakbizbrances@gmail.com']
-      const validAdminPassword = 'Imran@6230$%'
+      // Admin credentials (configurable via env vars with fallbacks)
+      const configuredEmails = process.env.NEXT_PUBLIC_ADMIN_EMAILS
+        ? process.env.NEXT_PUBLIC_ADMIN_EMAILS.split(',').map(e => e.trim().toLowerCase())
+        : []
+      const validAdminEmails = Array.from(new Set([...configuredEmails, 'contact@listpak.com', 'pakbizbrances@gmail.com']))
+      const configuredPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD
+      const validPasswords = [configuredPassword, 'Imran@6230$%', 'listpak2026', 'admin123'].filter(Boolean)
       
       // Check if credentials match
-      if (validAdminEmails.includes(email.trim().toLowerCase()) && (password === validAdminPassword || password === 'listpak2026' || password === 'admin123')) {
+      if (validAdminEmails.includes(email.trim().toLowerCase()) && validPasswords.includes(password)) {
         // Clear failed attempts on successful login
         clearFailedAttempts(email)
         localStorage.setItem('admin_authenticated', 'true')

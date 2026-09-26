@@ -18,12 +18,12 @@ export const metadata: Metadata = {
   title: "Pakistan Business Directory, Jobs & Professionals | ListPak",
   description: "Find businesses, companies, jobs, services and professionals across Pakistan. Search by city and category or add your free business listing on ListPak.",
   alternates: {
-    canonical: 'https://listpak.com/',
+    canonical: 'https://www.listpak.com/',
   },
   openGraph: {
     title: "Pakistan Business Directory, Jobs & Professionals | ListPak",
     description: "Find businesses, companies, jobs, services and professionals across Pakistan. Search by city and category or add your free business listing on ListPak.",
-    url: 'https://listpak.com/',
+    url: 'https://www.listpak.com/',
     siteName: 'ListPak',
     locale: 'en_PK',
     type: 'website',
@@ -121,7 +121,7 @@ export default async function HomePage() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'ListPak',
-    url: 'https://listpak.com/',
+    url: 'https://www.listpak.com/',
     potentialAction: {
       '@type': 'SearchAction',
       target: 'https://listpak.com/search?q={search_term_string}',

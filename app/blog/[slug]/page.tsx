@@ -30,13 +30,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description,
     keywords: post ? [post.focusKeyword, 'Business Directory Pakistan', 'Pakistan Business Directory', 'Local Business Directory', 'Company Directory Pakistan'] : [],
     alternates: {
-      canonical: `https://listpak.com/blog/${slug}/`,
+      canonical: `https://www.listpak.com/blog/${slug}/`,
     },
-    authors: post?.authorName ? [{ name: post.authorName, url: post.authorUrl }] : [{ name: 'ListPak Editorial Team', url: 'https://listpak.com/about/' }],
+    authors: post?.authorName ? [{ name: post.authorName, url: post.authorUrl }] : [{ name: 'ListPak Editorial Team', url: 'https://www.listpak.com/about/' }],
     openGraph: {
       title: `${cleanTitle} | ListPak`,
       description,
-      url: `https://listpak.com/blog/${slug}/`,
+      url: `https://www.listpak.com/blog/${slug}/`,
       siteName: 'ListPak',
       locale: 'en_PK',
       type: 'article',

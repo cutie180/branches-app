@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: 'Cookie Policy | ListPak - Pakistan Business Directory',
   description: 'Understand how ListPak uses cookies, web analytics, and Google AdSense advertising tracking technologies to provide a secure and customized experience.',
   alternates: {
-    canonical: 'https://listpak.com/cookie-policy/',
+    canonical: 'https://www.listpak.com/cookie-policy/',
   },
   robots: { index: true, follow: true },
 }

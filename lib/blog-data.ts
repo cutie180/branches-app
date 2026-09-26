@@ -341,7 +341,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
     readTime: '12 min read',
     excerpt: 'A practical guide to comparing Pakistani software houses by capabilities, cities, industries, careers, and trustworthy evidence.',
     authorName: 'ListPak Editorial Team',
-    authorUrl: 'https://listpak.com/about/',
+    authorUrl: 'https://www.listpak.com/about/',
     content: NEW_BLOG_CONTENT['best-software-houses-pakistan-2026'],
     relatedSlugs: ['it-jobs-in-pakistan', 'jobs-in-pakistan', 'universities-in-pakistan']
   },
@@ -357,7 +357,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
     readTime: '12 min read',
     excerpt: 'A practical Pakistan job-search guide covering role keywords, cities, reputable sources, applications, verification, and follow-up.',
     authorName: 'ListPak Editorial Team',
-    authorUrl: 'https://listpak.com/about/',
+    authorUrl: 'https://www.listpak.com/about/',
     content: NEW_BLOG_CONTENT['how-to-find-jobs-in-pakistan-2026'],
     relatedSlugs: ['jobs-in-pakistan', 'it-jobs-in-pakistan', 'best-software-houses-pakistan-2026']
   },
@@ -373,7 +373,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
     readTime: '12 min read',
     excerpt: 'Learn how fresh graduates in Pakistan can find legitimate remote roles, build proof of skill, and avoid work-from-home scams.',
     authorName: 'ListPak Editorial Team',
-    authorUrl: 'https://listpak.com/about/',
+    authorUrl: 'https://www.listpak.com/about/',
     content: NEW_BLOG_CONTENT['remote-jobs-pakistan-fresh-graduates'],
     relatedSlugs: ['jobs-in-pakistan', 'it-jobs-in-pakistan', 'how-to-find-jobs-in-pakistan-2026']
   },
@@ -389,7 +389,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
     readTime: '10 min read',
     excerpt: 'A city-and-skill guide for accountant, finance, audit, tax, payroll, and bookkeeping job seekers in Pakistan.',
     authorName: 'ListPak Editorial Team',
-    authorUrl: 'https://listpak.com/about/',
+    authorUrl: 'https://www.listpak.com/about/',
     content: NEW_BLOG_CONTENT['accountant-jobs-pakistan-city-guide'],
     relatedSlugs: ['jobs-in-pakistan', 'universities-in-pakistan']
   },
@@ -405,7 +405,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
     readTime: '10 min read',
     excerpt: 'A practical guide to finding and comparing local services in Pakistan by city, category, service area, and trustworthy listing information.',
     authorName: 'ListPak Editorial Team',
-    authorUrl: 'https://listpak.com/about/',
+    authorUrl: 'https://www.listpak.com/about/',
     content: NEW_BLOG_CONTENT['local-services-pakistan-by-city'],
     relatedSlugs: ['restaurants-in-pakistan', 'top-business-directory-websites-pakistan', 'local-seo-pakistan-businesses-google-ranking']
   },
@@ -421,7 +421,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
     readTime: '10 min read',
     excerpt: 'A verification-first guide to finding Pakistani professionals by specialization, city, service, credentials, and public evidence.',
     authorName: 'ListPak Editorial Team',
-    authorUrl: 'https://listpak.com/about/',
+    authorUrl: 'https://www.listpak.com/about/',
     content: NEW_BLOG_CONTENT['how-to-find-trusted-professionals-pakistan'],
     relatedSlugs: ['professionals', 'local-services-pakistan-by-city', 'jobs-in-pakistan']
   },
@@ -437,7 +437,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
     readTime: '11 min read',
     excerpt: 'A source-led guide to researching Pakistani startups across fintech, SaaS, logistics, health, education, e-commerce, and agriculture.',
     authorName: 'ListPak Editorial Team',
-    authorUrl: 'https://listpak.com/about/',
+    authorUrl: 'https://www.listpak.com/about/',
     content: NEW_BLOG_CONTENT['best-startups-pakistan-2026'],
     relatedSlugs: ['best-software-houses-pakistan-2026', 'jobs-in-pakistan', 'it-jobs-in-pakistan']
   },
@@ -453,7 +453,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
     readTime: '10 min read',
     excerpt: 'A city-focused guide to discovering Lahore restaurants, software companies, schools, hospitals, agencies, retailers, and local service providers.',
     authorName: 'ListPak Editorial Team',
-    authorUrl: 'https://listpak.com/about/',
+    authorUrl: 'https://www.listpak.com/about/',
     content: NEW_BLOG_CONTENT['businesses-in-lahore-by-category'],
     relatedSlugs: ['restaurants-in-karachi', 'top-business-directory-websites-pakistan', 'local-services-pakistan-by-city']
   },
@@ -469,7 +469,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
     readTime: '10 min read',
     excerpt: 'A practical Lahore job guide for SEO, social media, content, paid media, e-commerce, email, design, and growth candidates.',
     authorName: 'ListPak Editorial Team',
-    authorUrl: 'https://listpak.com/about/',
+    authorUrl: 'https://www.listpak.com/about/',
     content: NEW_BLOG_CONTENT['digital-marketing-jobs-lahore-guide'],
     relatedSlugs: ['it-jobs-in-pakistan', 'jobs-in-pakistan', 'businesses-in-lahore-by-category']
   }

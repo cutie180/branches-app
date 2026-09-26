@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: 'Terms of Service | ListPak Pakistan Business Directory',
   description: 'Read the ListPak terms of service. Learn the rules and guidelines for listing and searching businesses on our free Pakistan directory.',
   alternates: {
-    canonical: 'https://listpak.com/terms/',
+    canonical: 'https://www.listpak.com/terms/',
   },
   robots: { index: true, follow: true },
 }

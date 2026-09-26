@@ -21,7 +21,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "Pakistan Business Directory, Jobs & Professionals | ListPak",
   description: "Find businesses, companies, jobs, services and professionals across Pakistan. Search by city and category or add your free business listing on ListPak.",
-  metadataBase: new URL('https://listpak.com'),
+  metadataBase: new URL('https://www.listpak.com'),
   keywords: [
     'ListPak Pakistan',
     'Pakistan business directory',
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Pakistan Business Directory, Jobs & Professionals | ListPak",
     description: "Find businesses, companies, jobs, services and professionals across Pakistan. Search by city and category or add your free business listing on ListPak.",
-    url: 'https://listpak.com/',
+    url: 'https://www.listpak.com/',
     siteName: 'ListPak',
     locale: 'en_PK',
     type: 'website',
@@ -68,10 +68,10 @@ export default function RootLayout({
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'ListPak',
-    url: 'https://listpak.com/',
+    url: 'https://www.listpak.com/',
     potentialAction: {
       '@type': 'SearchAction',
-      target: 'https://listpak.com/search?q={search_term_string}',
+      target: 'https://www.listpak.com/search?q={search_term_string}',
       'query-input': 'required name=search_term_string'
     }
   }
@@ -80,8 +80,8 @@ export default function RootLayout({
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'ListPak',
-    url: 'https://listpak.com/',
-    logo: 'https://listpak.com/logo.png',
+    url: 'https://www.listpak.com/',
+    logo: 'https://www.listpak.com/logo.png',
     telephone: '+92 334 5636230',
     email: 'admin@listpak.com',
     address: {

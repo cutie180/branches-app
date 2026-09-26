@@ -131,7 +131,7 @@ export default async function CityDetailPage(props: { params: Promise<{ slug: st
     name: `Businesses in ${cityName}, Pakistan`,
     description: `Explore businesses, services, jobs and professionals in ${cityName}, Pakistan.`,
     url: canonicalUrl,
-    isPartOf: { '@type': 'WebSite', name: 'ListPak', url: 'https://listpak.com/' },
+    isPartOf: { '@type': 'WebSite', name: 'ListPak', url: 'https://www.listpak.com/' },
     mainEntity: {
       '@type': 'ItemList',
       itemListElement: cityBusinesses.map((biz, idx) => ({

@@ -15,12 +15,12 @@ export const metadata: Metadata = {
   description: "Meet Muhammad Imran, Founder & CEO of ListPak (https://www.imrandigitals.com). Learn about the mission, engineering, leadership, and vision powering Pakistan's #1 free business directory.",
   keywords: "who is the founder of ListPak, founder of ListPak, CEO of ListPak, Muhammad Imran, Muhammad Imran ListPak, Muhammad Imran Imran Digitals, ListPak CEO, who created ListPak, Pakistan business directory founder, Muhammad Imran web developer, Imran Digitals",
   alternates: {
-    canonical: 'https://listpak.com/about/',
+    canonical: 'https://www.listpak.com/about/',
   },
   openGraph: {
     title: "About ListPak – Founder & CEO Muhammad Imran",
     description: "Discover the story and leadership of Muhammad Imran, Founder & CEO of ListPak and founder of Imran Digitals. Connecting 10,000+ Pakistani businesses across 150+ cities.",
-    url: 'https://listpak.com/about/',
+    url: 'https://www.listpak.com/about/',
     siteName: 'ListPak',
     locale: 'en_PK',
     type: 'profile',
@@ -185,10 +185,10 @@ export default function AboutPage() {
         '@id': 'https://listpak.com/#organization',
         name: 'ListPak',
         alternateName: ['ListPak.com', 'ListPak Pakistan Business Directory'],
-        url: 'https://listpak.com/',
+        url: 'https://www.listpak.com/',
         logo: {
           '@type': 'ImageObject',
-          url: 'https://listpak.com/logo.png',
+          url: 'https://www.listpak.com/logo.png',
           width: 512,
           height: 512
         },
@@ -266,7 +266,7 @@ export default function AboutPage() {
       {
         '@type': 'AboutPage',
         '@id': 'https://listpak.com/about/#webpage',
-        url: 'https://listpak.com/about/',
+        url: 'https://www.listpak.com/about/',
         name: 'About ListPak – Founder Muhammad Imran & Pakistan Business Directory',
         description: 'Learn about ListPak and its Founder & CEO Muhammad Imran, who built Pakistan\'s premier 100% free business directory.',
         isPartOf: {

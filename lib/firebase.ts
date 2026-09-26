@@ -4,12 +4,12 @@ import { getStorage } from "firebase/storage"
 import { getAuth } from "firebase/auth"
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCR9gjxmjYsO_kmHOp_qX4tfoPyJU5tQmg",
-  authDomain: "branches-app-7669d.firebaseapp.com",
-  projectId: "branches-app-7669d",
-  storageBucket: "branches-app-7669d.firebasestorage.app",
-  messagingSenderId: "507847972478",
-  appId: "1:507847972478:web:b9d8c79d50a85a253cea2f"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyCR9gjxmjYsO_kmHOp_qX4tfoPyJU5tQmg",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "branches-app-7669d.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "branches-app-7669d",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "branches-app-7669d.firebasestorage.app",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "507847972478",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:507847972478:web:b9d8c79d50a85a253cea2f"
 }
 
 // Initialize Firebase

@@ -72,7 +72,7 @@ export async function generateMetadata(props: {
   const citySlug = cityName.toLowerCase().replace(/\s+/g, '-')
   const title = `Prayer Times in ${cityName} Today – Namaz Timings ${cityName}`
   const description = `Check today's prayer times in ${cityName}, Pakistan with Fajr, Sunrise, Dhuhr, Asr, Maghrib and Isha timings. Accurate live Namaz timings and countdown for ${cityName}.`
-  const canonicalUrl = `https://listpak.com/prayer-times-${citySlug}-today/`
+  const canonicalUrl = `https://www.listpak.com/prayer-times-${citySlug}-today/`
 
   return {
     title,
@@ -132,7 +132,7 @@ export default async function CityPrayerTimesPage(props: {
   }
 
   const citySlug = cityName.toLowerCase().replace(/\s+/g, '-')
-  const baseUrl = 'https://listpak.com'
+  const baseUrl = 'https://www.listpak.com'
   const pageUrl = `${baseUrl}/prayer-times-${citySlug}-today/`
   const pkNow = getPakistanDateTime()
   const displayDate = formatPakistanDisplayDate(pkNow)

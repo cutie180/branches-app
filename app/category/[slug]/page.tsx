@@ -83,7 +83,7 @@ export default async function CategoryDetailPage(props: { params: Promise<{ slug
     name: `${cat.name} in Pakistan`,
     description: `Find ${cat.name} in Pakistan by city. Browse local businesses, services and listings on ListPak.`,
     url: canonicalUrl,
-    isPartOf: { '@type': 'WebSite', name: 'ListPak', url: 'https://listpak.com/' },
+    isPartOf: { '@type': 'WebSite', name: 'ListPak', url: 'https://www.listpak.com/' },
     mainEntity: {
       '@type': 'ItemList',
       itemListElement: businesses.map((biz, idx) => ({

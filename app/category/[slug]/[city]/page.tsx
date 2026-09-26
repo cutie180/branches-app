@@ -128,7 +128,7 @@ export default async function CategoryCityLandingPage(props: {
     isPartOf: {
       '@type': 'WebSite',
       name: 'ListPak',
-      url: 'https://listpak.com/'
+      url: 'https://www.listpak.com/'
     },
     mainEntity: {
       '@type': 'ItemList',

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Disclaimer | ListPak - Pakistan Business Ecosystem',
   description: 'Legal disclaimer for ListPak business directory listings, professional talent profiles, job postings, and third-party content accuracy.',
   alternates: {
-    canonical: 'https://listpak.com/disclaimer/',
+    canonical: 'https://www.listpak.com/disclaimer/',
   },
 }
 

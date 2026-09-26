@@ -8,11 +8,11 @@ import { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Business Categories in Pakistan | ListPak Directory Hub',
   description: 'Explore business categories in Pakistan including restaurants, technology, healthcare, real estate, construction, education, retail, and local services.',
-  alternates: { canonical: 'https://listpak.com/categories/' },
+  alternates: { canonical: 'https://www.listpak.com/categories/' },
   openGraph: {
     title: 'Business Categories in Pakistan | ListPak Directory Hub',
     description: 'Explore business categories in Pakistan including restaurants, technology, healthcare, real estate, construction, education, retail, and local services.',
-    url: 'https://listpak.com/categories/',
+    url: 'https://www.listpak.com/categories/',
     type: 'website',
   },
 }

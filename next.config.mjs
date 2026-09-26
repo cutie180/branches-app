@@ -95,19 +95,7 @@ const nextConfig = {
   },
 
   async redirects() {
-    return [
-      {
-        source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'www.listpak.com',
-          },
-        ],
-        destination: 'https://listpak.com/:path*',
-        permanent: true,
-      },
-    ]
+    return []
   },
 
   async rewrites() {
