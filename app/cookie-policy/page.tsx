@@ -47,7 +47,7 @@ export default function CookiePolicyPage() {
               <div className="border border-slate-200 rounded-xl p-4 bg-slate-50">
                 <h3 className="font-bold text-slate-900 mb-1">B. Performance &amp; Analytics Cookies</h3>
                 <p className="text-xs text-slate-600">
-                  We utilize analytics tools, including <strong>Google Analytics</strong> (tag: <code>G-N09JN0NJ2R</code>), Google Tag Manager (<code>GTM-KNK59XWQ</code>), and Microsoft Clarity (<code>y0jpwahv9h</code>), to measure user engagement, monitor page speed, and detect technical errors. These cookies collect aggregated, anonymous diagnostic metrics without directly identifying individual visitors.
+                  We utilize analytics tools, including <strong>Google Analytics</strong> (tag: <code>G-N09JN0NJ2R</code>), Google Tag Manager (<code>GTM-KNK59XWQ</code>), and Microsoft Clarity (<code>yowgk7mfbf</code>), to measure user engagement, monitor page speed, and detect technical errors. These cookies collect aggregated, anonymous diagnostic metrics without directly identifying individual visitors.
                 </p>
               </div>
 
