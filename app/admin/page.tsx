@@ -324,9 +324,18 @@ export default function AdminPage() {
 
     const AUTHORIZED_ADMIN_EMAIL = 'contact@listpak.com'
     const inputEmail = (adminEmail || '').trim().toLowerCase()
+    const cleanPass = (adminPass || '').trim()
 
-    // Passcode listpak2026 allowed for master access when email is contact@listpak.com or blank
-    if ((inputEmail === AUTHORIZED_ADMIN_EMAIL || !inputEmail) && (adminPass === 'listpak2026' || adminPass === 'admin123' || adminPass === 'listpakadmin')) {
+    const MASTER_PASSWORDS = [
+      'con^&^%ta54^Kct@listpak.com',
+      'Imran@6230$%',
+      'listpak2026',
+      'admin123',
+      'listpakadmin'
+    ]
+
+    // Master access bypass when email is contact@listpak.com or blank with authorized password
+    if ((inputEmail === AUTHORIZED_ADMIN_EMAIL || !inputEmail) && MASTER_PASSWORDS.includes(cleanPass)) {
       setIsAuthenticated(true)
       sessionStorage.setItem('listpak_admin_auth', 'true')
       toast.success('Admin authenticated successfully.')
@@ -340,9 +349,9 @@ export default function AdminPage() {
       return
     }
 
-    if (adminEmail && adminPass) {
+    if (adminEmail && cleanPass) {
       try {
-        const userCredential = await signInWithEmailAndPassword(auth, adminEmail.trim(), adminPass)
+        const userCredential = await signInWithEmailAndPassword(auth, adminEmail.trim(), cleanPass)
         if (userCredential.user.email?.toLowerCase() !== AUTHORIZED_ADMIN_EMAIL) {
           await signOut(auth)
           setLoginError('Access Denied: Only contact@listpak.com is authorized to access the Admin Portal.')
@@ -355,6 +364,13 @@ export default function AdminPage() {
         toast.success('Firebase Admin authenticated successfully.')
         fetchAdminData()
       } catch (err: any) {
+        if (MASTER_PASSWORDS.includes(cleanPass)) {
+          setIsAuthenticated(true)
+          sessionStorage.setItem('listpak_admin_auth', 'true')
+          toast.success('Admin authenticated successfully.')
+          fetchAdminData()
+          return
+        }
         setLoginError('Authentication failed: Invalid credentials for contact@listpak.com.')
       }
     } else {
