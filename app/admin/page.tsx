@@ -8,7 +8,7 @@ import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebas
 import { 
   Building2, ShieldCheck, CheckCircle2, XCircle, Trash2, Search, Filter, LogOut, 
   Eye, EyeOff, RefreshCw, Phone, Mail, MapPin, ExternalLink, Lock, Inbox, AlertTriangle, Users, 
-  BookOpen, Star, Sparkles, Check, Briefcase, DollarSign, Clock, FileText, ChevronRight, X
+  BookOpen, Star, Sparkles, Check, Briefcase, DollarSign, Clock, FileText, ChevronRight, X, Calendar
 } from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
@@ -389,11 +389,24 @@ export default function AdminPage() {
 
   const handleApprove = async (id: string, name: string) => {
     setActionLoading(id)
+    const approvedAtIso = new Date().toISOString()
     try {
       await approveBusiness(id, adminUid)
-      setAllBusinesses(prev => prev.map(b => b.id === id ? { ...b, status: 'approved' } : b))
+      setAllBusinesses(prev => prev.map(b => b.id === id ? {
+        ...b,
+        status: 'approved',
+        paymentStatus: 'VERIFIED',
+        approvedAt: approvedAtIso,
+        approvedBy: adminUid
+      } : b))
       if (selectedBiz?.id === id) {
-        setSelectedBiz({ ...selectedBiz, status: 'approved' })
+        setSelectedBiz({
+          ...selectedBiz,
+          status: 'approved',
+          paymentStatus: 'VERIFIED',
+          approvedAt: approvedAtIso,
+          approvedBy: adminUid
+        })
       }
       toast.success(`"${name}" is officially approved and live on ListPak!`)
     } catch (err) {
@@ -450,6 +463,44 @@ export default function AdminPage() {
     await deleteContactMessage(msgId)
     setContactMessages(prev => prev.filter(m => m.id !== msgId))
     toast.success('Message deleted.')
+  }
+
+  const formatDateTime = (dateStr?: string | null): { date: string; time: string; relative: string; full: string } | null => {
+    if (!dateStr) return null
+    const d = new Date(dateStr)
+    if (isNaN(d.getTime())) return null
+
+    const date = d.toLocaleDateString('en-US', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    })
+
+    const time = d.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    })
+
+    const diffMs = Date.now() - d.getTime()
+    const diffMins = Math.floor(diffMs / 60000)
+    const diffHours = Math.floor(diffMins / 60)
+    const diffDays = Math.floor(diffHours / 24)
+
+    let relative = ''
+    if (diffMins < 1) relative = 'Just now'
+    else if (diffMins < 60) relative = `${diffMins}m ago`
+    else if (diffHours < 24) relative = `${diffHours}h ago`
+    else if (diffDays === 1) relative = 'Yesterday'
+    else if (diffDays < 30) relative = `${diffDays}d ago`
+    else relative = date
+
+    return {
+      date,
+      time,
+      relative,
+      full: `${date} at ${time}`
+    }
   }
 
   const pendingListings = allBusinesses
@@ -942,6 +993,28 @@ export default function AdminPage() {
                             </button>
                           </div>
 
+                          {/* RECEIVED DATE & TIME BANNER */}
+                          {(() => {
+                            const dt = formatDateTime(biz.submittedAt || (biz as any).createdAt || (biz as any).lastRequestedAt)
+                            return (
+                              <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/90 rounded-xl text-xs text-amber-900">
+                                <div className="flex items-center gap-1.5 font-bold">
+                                  <Calendar className="w-3.5 h-3.5 text-amber-700 shrink-0" />
+                                  <span className="text-amber-800">Received On:</span>
+                                  <span className="font-extrabold text-amber-950">
+                                    {dt ? `${dt.date} • ${dt.time}` : 'Pending Submission Timestamp'}
+                                  </span>
+                                </div>
+                                {dt && (
+                                  <span className="px-2 py-0.5 rounded-full bg-white/90 border border-amber-300 text-amber-900 text-[10px] font-extrabold flex items-center gap-1 shadow-2xs">
+                                    <Clock className="w-3 h-3 text-amber-600" />
+                                    <span>{dt.relative}</span>
+                                  </span>
+                                )}
+                              </div>
+                            )
+                          })()}
+
                           {/* Contact Details */}
                           <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 grid grid-cols-2 gap-2 text-xs text-slate-700">
                             <div>
@@ -1407,10 +1480,11 @@ export default function AdminPage() {
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
                       <tr className="bg-slate-50 border-b border-slate-200 text-slate-900 font-bold uppercase tracking-wider">
-                        <th className="py-4 px-4">Business Name & Category</th>
-                        <th className="py-4 px-4">City & Locations</th>
-                        <th className="py-4 px-4">Owner & Contact</th>
-                        <th className="py-4 px-4">Status & Fee Proof</th>
+                        <th className="py-4 px-4">Business Name &amp; Category</th>
+                        <th className="py-4 px-4">City &amp; Locations</th>
+                        <th className="py-4 px-4">Owner &amp; Contact</th>
+                        <th className="py-4 px-4">Status &amp; Fee Proof</th>
+                        <th className="py-4 px-4">Timeline (Received / Approved)</th>
                         <th className="py-4 px-4 text-right">Actions</th>
                       </tr>
                     </thead>
@@ -1493,6 +1567,93 @@ export default function AdminPage() {
                                     <Eye className="w-3 h-3 text-blue-600" />
                                     <span>Proof Attached</span>
                                   </button>
+                                )}
+                              </td>
+                              <td className="py-4 px-4 text-xs">
+                                {isApproved && (
+                                  <div className="space-y-1">
+                                    <div className="flex items-center gap-1 text-[11px] font-extrabold text-emerald-800">
+                                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                                      <span>Approved</span>
+                                    </div>
+                                    {(() => {
+                                      const approvedDt = formatDateTime(biz.approvedAt)
+                                      const submittedDt = formatDateTime(biz.submittedAt || (biz as any).createdAt)
+                                      if (approvedDt) {
+                                        return (
+                                          <div className="space-y-0.5">
+                                            <div className="font-extrabold text-slate-800 text-xs flex items-center gap-1">
+                                              <Calendar className="w-3 h-3 text-emerald-600 shrink-0" />
+                                              <span>{approvedDt.date}</span>
+                                            </div>
+                                            <div className="text-[11px] text-slate-600 flex items-center gap-1">
+                                              <Clock className="w-3 h-3 text-slate-400 shrink-0" />
+                                              <span>{approvedDt.time}</span>
+                                              <span className="text-[10px] text-emerald-700 font-semibold">({approvedDt.relative})</span>
+                                            </div>
+                                          </div>
+                                        )
+                                      }
+                                      if (submittedDt) {
+                                        return (
+                                          <div className="space-y-0.5">
+                                            <div className="font-semibold text-slate-800 text-xs flex items-center gap-1">
+                                              <Calendar className="w-3 h-3 text-slate-400 shrink-0" />
+                                              <span>{submittedDt.date}</span>
+                                            </div>
+                                            <div className="text-[10px] text-slate-400">Pre-verified roster</div>
+                                          </div>
+                                        )
+                                      }
+                                      return <span className="text-[11px] text-slate-400">Roster Approved</span>
+                                    })()}
+                                  </div>
+                                )}
+
+                                {isPending && (
+                                  <div className="space-y-1">
+                                    <div className="flex items-center gap-1 text-[11px] font-extrabold text-amber-800">
+                                      <Clock className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                                      <span>Received / Pending</span>
+                                    </div>
+                                    {(() => {
+                                      const dt = formatDateTime(biz.submittedAt || (biz as any).createdAt)
+                                      if (dt) {
+                                        return (
+                                          <div className="space-y-0.5">
+                                            <div className="font-extrabold text-slate-800 text-xs flex items-center gap-1">
+                                              <Calendar className="w-3 h-3 text-amber-600 shrink-0" />
+                                              <span>{dt.date}</span>
+                                            </div>
+                                            <div className="text-[11px] text-amber-800 flex items-center gap-1">
+                                              <Clock className="w-3 h-3 text-amber-500 shrink-0" />
+                                              <span>{dt.time}</span>
+                                              <span className="text-[10px] text-amber-700 font-semibold">({dt.relative})</span>
+                                            </div>
+                                          </div>
+                                        )
+                                      }
+                                      return <span className="text-[11px] text-slate-400">Pending Review</span>
+                                    })()}
+                                  </div>
+                                )}
+
+                                {isRejected && (
+                                  <div className="space-y-1">
+                                    <div className="flex items-center gap-1 text-[11px] font-extrabold text-red-700">
+                                      <XCircle className="w-3.5 h-3.5 text-red-600 shrink-0" />
+                                      <span>Rejected</span>
+                                    </div>
+                                    {(() => {
+                                      const dt = formatDateTime((biz as any).rejectedAt || biz.submittedAt)
+                                      return dt ? (
+                                        <div className="space-y-0.5 text-slate-600">
+                                          <div className="font-semibold text-xs">{dt.date}</div>
+                                          <div className="text-[10px] text-slate-400">{dt.time}</div>
+                                        </div>
+                                      ) : <span className="text-[11px] text-slate-400">-</span>
+                                    })()}
+                                  </div>
                                 )}
                               </td>
                               <td className="py-4 px-4 text-right space-x-1.5">
@@ -2236,6 +2397,51 @@ export default function AdminPage() {
                   <div><strong>Email:</strong> {selectedBiz.email}</div>
                   <div><strong>Website:</strong> {selectedBiz.website}</div>
                   <div className="col-span-2"><strong>Address:</strong> {selectedBiz.address}</div>
+                </div>
+
+                {/* TIMELINE METADATA: RECEIVED & APPROVAL DATES */}
+                <div className="p-3.5 bg-gradient-to-r from-slate-50 to-blue-50/40 rounded-xl border border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <span className="text-[10px] text-slate-500 font-bold uppercase flex items-center gap-1">
+                      <Calendar className="w-3 h-3 text-slate-500" />
+                      Received in Admin Panel
+                    </span>
+                    {(() => {
+                      const dt = formatDateTime(selectedBiz.submittedAt || (selectedBiz as any).createdAt)
+                      return dt ? (
+                        <div className="mt-0.5">
+                          <span className="font-extrabold text-slate-900 block">{dt.date} at {dt.time}</span>
+                          <span className="text-[11px] text-slate-500">({dt.relative})</span>
+                        </div>
+                      ) : (
+                        <span className="text-slate-400 block mt-0.5">Initial directory roster</span>
+                      )
+                    })()}
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-500 font-bold uppercase flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                      Approval Date &amp; Time
+                    </span>
+                    {(() => {
+                      const dt = formatDateTime(selectedBiz.approvedAt)
+                      if (dt) {
+                        return (
+                          <div className="mt-0.5">
+                            <span className="font-extrabold text-emerald-800 block">{dt.date} at {dt.time}</span>
+                            <span className="text-[11px] text-emerald-700">({dt.relative})</span>
+                          </div>
+                        )
+                      }
+                      if (selectedBiz.status === 'approved') {
+                        return <span className="font-bold text-emerald-700 block mt-0.5">Approved &amp; Live</span>
+                      }
+                      if (selectedBiz.status === 'rejected') {
+                        return <span className="font-bold text-red-600 block mt-0.5">Rejected Listing</span>
+                      }
+                      return <span className="font-bold text-amber-700 block mt-0.5">Awaiting Administrative Approval</span>
+                    })()}
+                  </div>
                 </div>
 
                 {selectedBiz.paymentScreenshot && (
