@@ -28,8 +28,8 @@ export default function CookieConsentBanner() {
     try {
       const consent = localStorage.getItem(COOKIE_CONSENT_KEY)
       if (!consent) {
-        // Small delay to prevent layout pop on immediate page load
-        const timer = setTimeout(() => setShowBanner(true), 800)
+        // Defer banner display to allow smooth FCP and LCP completion without layout shifts
+        const timer = setTimeout(() => setShowBanner(true), 2500)
         return () => clearTimeout(timer)
       } else {
         const storedPrefs = localStorage.getItem(COOKIE_PREFS_KEY)

@@ -156,19 +156,32 @@ export function normalizeBusinessDoc(docId: string, data: any): BusinessItem {
     website: data.website || data.websiteUrl || 'https://listpak.com',
     address: primaryLoc.address || data.address || 'Commercial Center, Pakistan',
     locations: docLocations,
-    coverImage: data.coverImage || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
+    coverImage: (() => {
+      const rawCover = (data.coverImage || data.coverUrl || '').trim()
+      if (rawCover.startsWith('data:image/')) {
+        return `/api/biz-logo?id=${encodeURIComponent(docId)}&type=cover`
+      }
+      return rawCover || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80'
+    })(),
     logo: (() => {
       const isCrustCrave = itemSlug === 'crust-crave-karachi' || itemSlug.includes('crust-crave')
-      const isShadab = itemSlug === 'shadab-group-real-estate-builders'
+      const isShadab = itemSlug === 'shadab-group-real-estate-builders' || itemSlug.includes('shadab')
+      const isIndrive = itemSlug.includes('indrive') || bName.toLowerCase().includes('indrive')
       const rawLogo = (data.logo || data.logoUrl || '').trim()
 
-      if (isCrustCrave && (!rawLogo || rawLogo.includes('unsplash') || rawLogo.includes('placeholder'))) {
+      if (isCrustCrave) {
         return '/crust-and-crave-logo.jpg'
       }
-      if (isShadab && (!rawLogo || rawLogo.includes('unsplash') || rawLogo.includes('placeholder'))) {
+      if (isShadab) {
         return '/shadab-group-logo.png'
       }
+      if (isIndrive) {
+        return '/indrive-logo.png'
+      }
       if (rawLogo) {
+        if (rawLogo.startsWith('data:image/')) {
+          return `/api/biz-logo?id=${encodeURIComponent(docId)}`
+        }
         return rawLogo
       }
       return 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80'

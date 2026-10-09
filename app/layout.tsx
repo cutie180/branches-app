@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
-import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import './globals.css'
 import ClientProviders from '@/components/client-providers'
 
@@ -9,13 +9,6 @@ const inter = Inter({
   display: 'swap',
   variable: '--font-inter',
   weight: ['400', '600', '700'],
-})
-
-const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-plus-jakarta',
-  weight: ['600', '700'],
 })
 
 export const metadata: Metadata = {
@@ -101,18 +94,14 @@ export default function RootLayout({
   }
 
   return (
-    <html lang="en" className={`${inter.variable} ${plusJakarta.variable}`}>
+    <html lang="en" className={inter.variable}>
       <head>
         <meta name="google-adsense-account" content="ca-pub-3836871693569517" />
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3836871693569517"
-          crossOrigin="anonymous"
-        />
         <meta name="msvalidate.01" content="32107703ABE97F472472231CBA07F2E5" />
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://firebasestorage.googleapis.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify([organizationSchema, websiteSchema]) }}
@@ -131,8 +120,14 @@ export default function RootLayout({
 
         {/* Deferred Non-Blocking Scripts via Next/Script */}
         <Script
+          id="google-adsense"
+          strategy="lazyOnload"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3836871693569517"
+          crossOrigin="anonymous"
+        />
+        <Script
           id="clarity-script"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `
               (function(c,l,a,r,i,t,y){
