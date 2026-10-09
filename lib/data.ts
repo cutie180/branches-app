@@ -178,6 +178,22 @@ export interface BusinessItem {
   faqs: { question: string; answer: string }[]
 }
 
+export interface RejectedBusinessNotice {
+  id: string
+  businessId: string
+  businessName: string
+  category?: string
+  city?: string
+  ownerName?: string
+  ownerEmail?: string
+  userId?: string
+  phone?: string
+  rejectionReason: string
+  rejectedAt: string
+  rejectedBy?: string
+  dismissed?: boolean
+}
+
 export interface ContactMessage {
   id: string
   name: string

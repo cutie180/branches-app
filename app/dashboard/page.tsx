@@ -10,8 +10,8 @@ import {
   Sparkles, ArrowRight, Star, Clock, AlertCircle, RefreshCw, ExternalLink, 
   Copy, LogIn, UserPlus, LogOut, X, Zap, ChevronRight, Eye, EyeOff, Lock
 } from 'lucide-react'
-import { BusinessItem } from '@/lib/data'
-import { getUserBusinesses, updateBusinessPaymentProof } from '@/lib/db-service'
+import { BusinessItem, RejectedBusinessNotice } from '@/lib/data'
+import { getUserBusinesses, updateBusinessPaymentProof, getRejectedBusinessNotices, dismissRejectedBusinessNotice } from '@/lib/db-service'
 import { auth } from '@/lib/firebase'
 import { 
   signInWithEmailAndPassword, 
@@ -69,7 +69,9 @@ function DashboardContent() {
   const [currentUser, setCurrentUser] = useState<{ uid?: string; name?: string; email?: string; role?: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const [userBusinesses, setUserBusinesses] = useState<BusinessItem[]>([])
+  const [rejectedNotices, setRejectedNotices] = useState<RejectedBusinessNotice[]>([])
   const [isLoadingBusinesses, setIsLoadingBusinesses] = useState(false)
+  const [isDismissingNotice, setIsDismissingNotice] = useState<string | null>(null)
 
   // Auth Mode for non-logged in users
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login')
@@ -170,6 +172,38 @@ function DashboardContent() {
       console.warn('Failed to load user businesses:', err)
     } finally {
       setIsLoadingBusinesses(false)
+    }
+
+    // Automatically fetch rejected business notices as well
+    fetchRejectedNotices(email, uid)
+  }
+
+  const fetchRejectedNotices = async (email?: string, uid?: string) => {
+    const identifier = email || uid || ''
+    if (!identifier) return
+    try {
+      const notices = await getRejectedBusinessNotices(identifier)
+      if (notices.length === 0 && uid && uid !== identifier) {
+        const byUid = await getRejectedBusinessNotices(uid)
+        setRejectedNotices(byUid)
+      } else {
+        setRejectedNotices(notices)
+      }
+    } catch (err) {
+      console.warn('Failed to load rejected business notices:', err)
+    }
+  }
+
+  const handleDismissNotice = async (noticeId: string) => {
+    setIsDismissingNotice(noticeId)
+    try {
+      await dismissRejectedBusinessNotice(noticeId)
+      setRejectedNotices(prev => prev.filter(n => n.id !== noticeId))
+      toast.success('Notice dismissed.')
+    } catch (err) {
+      toast.error('Failed to dismiss notice.')
+    } finally {
+      setIsDismissingNotice(null)
     }
   }
 
@@ -624,9 +658,9 @@ function DashboardContent() {
               <p className="text-2xl font-extrabold text-emerald-900">{approvedCount}</p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-1">
-              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Modifications Needed</span>
-              <p className="text-2xl font-extrabold text-slate-900">{rejectedCount}</p>
+            <div className="p-4 rounded-2xl bg-red-50/80 border border-red-200 space-y-1">
+              <span className="text-[11px] font-bold text-red-700 uppercase tracking-wider">Rejected &amp; Removed</span>
+              <p className="text-2xl font-extrabold text-red-900">{rejectedNotices.length}</p>
             </div>
           </div>
         </div>
@@ -662,6 +696,107 @@ function DashboardContent() {
             >
               <X className="w-4 h-4" />
             </button>
+          </div>
+        )}
+
+        {/* REJECTED BUSINESS NOTICES & RESTORED QUOTA SECTION */}
+        {rejectedNotices.length > 0 && (
+          <div className="space-y-4 animate-in fade-in-50">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
+                <h2 className="text-base sm:text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                  <AlertCircle className="w-5 h-5 text-red-600" />
+                  <span>Business Submission Notifications ({rejectedNotices.length})</span>
+                </h2>
+              </div>
+              <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                Data Removed • Space Available to Add New Business
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4">
+              {rejectedNotices.map((notice) => (
+                <div
+                  key={notice.id}
+                  className="p-5 sm:p-6 rounded-3xl bg-red-50/70 border-2 border-red-200 shadow-sm space-y-4 transition-all"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-red-200/60 pb-3">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="px-2.5 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-extrabold uppercase tracking-wider">
+                        Listing Rejected &amp; Removed
+                      </span>
+                      {notice.category && (
+                        <span className="text-[11px] font-bold text-slate-700 bg-white px-2.5 py-0.5 rounded-md border border-slate-200">
+                          {notice.category}
+                        </span>
+                      )}
+                      {notice.city && (
+                        <span className="text-[11px] font-medium text-slate-600 bg-white/80 px-2 py-0.5 rounded-md border border-slate-200">
+                          {notice.city}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-[11px] text-slate-500 font-medium">
+                        {notice.rejectedAt ? new Date(notice.rejectedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Recently'}
+                      </span>
+                      <button
+                        onClick={() => handleDismissNotice(notice.id)}
+                        disabled={isDismissingNotice === notice.id}
+                        className="text-xs text-slate-500 hover:text-red-700 font-bold px-2.5 py-1 rounded-lg hover:bg-red-100 transition cursor-pointer"
+                        title="Dismiss notice"
+                      >
+                        {isDismissingNotice === notice.id ? 'Dismissing...' : 'Dismiss Notice'}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <h3 className="text-base sm:text-lg font-extrabold text-slate-900">
+                      Listing &ldquo;{notice.businessName}&rdquo; was not approved
+                    </h3>
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                      Our moderation team reviewed your submission and rejected the listing due to directory compliance standards.
+                    </p>
+                  </div>
+
+                  {/* REJECTION REASON BOX */}
+                  <div className="p-4 rounded-2xl bg-white border border-red-300 shadow-xs space-y-1.5">
+                    <div className="flex items-center gap-1.5 text-xs font-extrabold text-red-900 uppercase tracking-wider">
+                      <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+                      <span>Rejection Reason:</span>
+                    </div>
+                    <p className="text-sm font-semibold text-red-950 leading-relaxed pl-5">
+                      &ldquo;{notice.rejectionReason}&rdquo;
+                    </p>
+                  </div>
+
+                  {/* RESTORED SPACE & DIRECT ADD BUSINESS CTA */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-emerald-50 border border-emerald-200">
+                    <div className="flex items-start gap-2.5">
+                      <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                      <div className="space-y-0.5">
+                        <p className="text-xs font-extrabold text-emerald-950">
+                          Database Storage Space Restored
+                        </p>
+                        <p className="text-[11px] text-emerald-800 leading-relaxed">
+                          The rejected business data has been completely removed from our active database. You now have free space in your account to submit a new or revised business listing.
+                        </p>
+                      </div>
+                    </div>
+
+                    <Link
+                      href="/add-business"
+                      className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
+                    >
+                      <Building2 className="w-4 h-4" />
+                      <span>+ Register New Business</span>
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 

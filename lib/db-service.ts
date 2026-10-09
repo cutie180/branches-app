@@ -1,5 +1,5 @@
 import { cache } from 'react'
-import { MOCK_BUSINESSES, BusinessItem, ContactMessage } from './data'
+import { MOCK_BUSINESSES, BusinessItem, ContactMessage, RejectedBusinessNotice } from './data'
 import { db } from './firebase'
 import { collection, getDocs, query, where, limit, addDoc, doc, updateDoc, deleteDoc, setDoc } from 'firebase/firestore'
 import { sanitizeText, sanitizeUrl, sanitizeImageUrl, sanitizePhone } from './sanitizer'
@@ -256,6 +256,65 @@ function updateStoredCustomBusiness(idOrSlug: string, updates: Partial<BusinessI
   } catch (_) {}
 }
 
+const LOCAL_REJECTED_NOTICES_KEY = 'listpak_rejected_business_notices'
+
+export function removeStoredCustomBusiness(idOrSlug: string, altSlug?: string) {
+  if (typeof window === 'undefined') return
+  try {
+    const norm = (idOrSlug || '').toLowerCase().trim()
+    const altNorm = (altSlug || '').toLowerCase().trim()
+    const current = getStoredCustomBusinesses()
+    const updated = current.filter(b => {
+      const bId = (b.id || '').toLowerCase().trim()
+      const bSlug = (b.slug || '').toLowerCase().trim()
+      const matchPrimary = bId === norm || bSlug === norm
+      const matchAlt = altNorm ? (bId === altNorm || bSlug === altNorm) : false
+      return !matchPrimary && !matchAlt
+    })
+    localStorage.setItem(LOCAL_CUSTOM_BIZ_KEY, JSON.stringify(updated))
+
+    const rawIds = localStorage.getItem(LOCAL_USER_BIZ_IDS_KEY)
+    if (rawIds) {
+      const ids: string[] = JSON.parse(rawIds)
+      const filteredIds = ids.filter(i => {
+        const iNorm = i.toLowerCase().trim()
+        return iNorm !== norm && (!altNorm || iNorm !== altNorm)
+      })
+      localStorage.setItem(LOCAL_USER_BIZ_IDS_KEY, JSON.stringify(filteredIds))
+    }
+  } catch (_) {}
+}
+
+export function getStoredRejectedNotices(): RejectedBusinessNotice[] {
+  if (typeof window === 'undefined') return []
+  try {
+    const raw = localStorage.getItem(LOCAL_REJECTED_NOTICES_KEY)
+    if (!raw) return []
+    const parsed = JSON.parse(raw)
+    return Array.isArray(parsed) ? parsed : []
+  } catch (_) {
+    return []
+  }
+}
+
+export function saveStoredRejectedNotice(notice: RejectedBusinessNotice) {
+  if (typeof window === 'undefined') return
+  try {
+    const current = getStoredRejectedNotices()
+    const updated = [notice, ...current.filter(n => n.id !== notice.id && n.businessId !== notice.businessId)]
+    localStorage.setItem(LOCAL_REJECTED_NOTICES_KEY, JSON.stringify(updated))
+  } catch (_) {}
+}
+
+export function dismissStoredRejectedNotice(noticeId: string) {
+  if (typeof window === 'undefined') return
+  try {
+    const current = getStoredRejectedNotices()
+    const updated = current.map(n => n.id === noticeId ? { ...n, dismissed: true } : n).filter(n => !n.dismissed)
+    localStorage.setItem(LOCAL_REJECTED_NOTICES_KEY, JSON.stringify(updated))
+  } catch (_) {}
+}
+
 /**
  * Fetch all businesses. If includePending is false (default), returns ONLY approved businesses.
  */
@@ -377,25 +436,195 @@ export async function approveBusiness(id: string, adminUid: string): Promise<boo
   return true
 }
 
-export async function rejectBusiness(id: string, reason?: string): Promise<boolean> {
-  const norm = id.toLowerCase().trim()
-  const idx = memoryBusinessesCache.findIndex(b => b.id === id || b.slug.toLowerCase() === norm)
-  if (idx !== -1) {
-    memoryBusinessesCache[idx].status = 'rejected'
-    memoryBusinessesCache[idx].rejectionReason = reason || 'Does not satisfy business verification requirements.'
+export async function rejectBusiness(
+  id: string, 
+  reason?: string,
+  adminUid?: string
+): Promise<{ success: boolean; notice?: RejectedBusinessNotice }> {
+  const norm = (id || '').trim().toLowerCase()
+  const cleanReason = (reason || '').trim() || 'Does not satisfy business verification requirements.'
+  
+  // 1. Locate the business first before deleting so we retain its info for the user's rejection notice
+  let targetBiz = memoryBusinessesCache.find(b => b.id.toLowerCase() === norm || b.slug.toLowerCase() === norm)
+  
+  if (!targetBiz && typeof window !== 'undefined') {
+    const localList = getStoredCustomBusinesses()
+    targetBiz = localList.find(b => b.id.toLowerCase() === norm || b.slug.toLowerCase() === norm)
   }
 
-  updateStoredCustomBusiness(id, {
-    status: 'rejected',
-    rejectedAt: new Date().toISOString(),
-    rejectionReason: reason || 'Does not satisfy business verification requirements.'
-  })
+  // If not found in cache or local, check Firestore
+  if (!targetBiz) {
+    try {
+      const snap = await getDocs(query(collection(db, 'businesses'), where('id', '==', id), limit(1)))
+      if (!snap.empty) {
+        targetBiz = normalizeBusinessDoc(snap.docs[0].id, snap.docs[0].data())
+      } else {
+        const qSlug = query(collection(db, 'businesses'), where('slug', '==', norm), limit(1))
+        const snapSlug = await getDocs(qSlug)
+        if (!snapSlug.empty) {
+          targetBiz = normalizeBusinessDoc(snapSlug.docs[0].id, snapSlug.docs[0].data())
+        }
+      }
+    } catch (e) {
+      console.warn('Error locating business before rejection:', e)
+    }
+  }
 
-  await updateBusinessInFirestore(id, {
-    status: 'rejected',
+  // 2. Formulate the rejection notice for the user
+  const noticeId = `rej-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`
+  const notice: RejectedBusinessNotice = {
+    id: noticeId,
+    businessId: targetBiz?.id || id,
+    businessName: targetBiz?.name || 'Business Submission',
+    category: targetBiz?.category || 'Services',
+    city: targetBiz?.city || 'Pakistan',
+    ownerName: targetBiz?.ownerName || '',
+    ownerEmail: (targetBiz?.email || '').toLowerCase().trim(),
+    userId: (targetBiz?.userId || '').trim(),
+    phone: targetBiz?.phone || '',
+    rejectionReason: cleanReason,
     rejectedAt: new Date().toISOString(),
-    rejectionReason: reason || 'Does not satisfy business verification requirements.'
-  })
+    rejectedBy: adminUid || 'admin-master',
+    dismissed: false
+  }
+
+  // 3. Store rejection notice in Firestore so it's delivered to the user's dashboard in the cloud
+  try {
+    const cleanNotice = JSON.parse(JSON.stringify(notice))
+    await setDoc(doc(db, 'rejected_business_notices', noticeId), cleanNotice)
+  } catch (err) {
+    console.warn('Failed to save rejection notice to Firestore, trying addDoc:', err)
+    try {
+      await addDoc(collection(db, 'rejected_business_notices'), JSON.parse(JSON.stringify(notice)))
+    } catch (innerErr) {
+      console.warn('Could not addDoc rejection notice:', innerErr)
+    }
+  }
+
+  // 4. Save to localStorage for instant local/offline availability
+  saveStoredRejectedNotice(notice)
+
+  // 5. REMOVE BUSINESS DATA FROM DATABASE to free up space for the user
+  // Delete from Firestore
+  try {
+    await deleteDoc(doc(db, 'businesses', id))
+  } catch (_) {}
+
+  if (targetBiz?.id && targetBiz.id !== id) {
+    try {
+      await deleteDoc(doc(db, 'businesses', targetBiz.id))
+    } catch (_) {}
+  }
+
+  try {
+    const qBySlug = query(collection(db, 'businesses'), where('slug', '==', norm), limit(5))
+    const snapSlug = await getDocs(qBySlug)
+    for (const d of snapSlug.docs) {
+      await deleteDoc(d.ref)
+    }
+  } catch (_) {}
+
+  try {
+    const qById = query(collection(db, 'businesses'), where('id', '==', id), limit(5))
+    const snapId = await getDocs(qById)
+    for (const d of snapId.docs) {
+      await deleteDoc(d.ref)
+    }
+  } catch (_) {}
+
+  // Delete from memory cache
+  memoryBusinessesCache = memoryBusinessesCache.filter(
+    b => b.id.toLowerCase() !== norm && 
+         b.id !== (targetBiz?.id || '') && 
+         b.slug.toLowerCase() !== norm && 
+         b.slug.toLowerCase() !== (targetBiz?.slug || '').toLowerCase()
+  )
+
+  // Remove from localStorage
+  removeStoredCustomBusiness(id, targetBiz?.slug)
+
+  return { success: true, notice }
+}
+
+export async function deleteBusiness(id: string): Promise<boolean> {
+  const norm = id.toLowerCase().trim()
+  try {
+    await deleteDoc(doc(db, 'businesses', id))
+  } catch (_) {}
+
+  try {
+    const qSlug = query(collection(db, 'businesses'), where('slug', '==', norm), limit(5))
+    const snap = await getDocs(qSlug)
+    for (const d of snap.docs) {
+      await deleteDoc(d.ref)
+    }
+  } catch (_) {}
+
+  memoryBusinessesCache = memoryBusinessesCache.filter(b => b.id.toLowerCase() !== norm && b.slug.toLowerCase() !== norm)
+  removeStoredCustomBusiness(id)
+  return true
+}
+
+export async function getRejectedBusinessNotices(emailOrUid: string): Promise<RejectedBusinessNotice[]> {
+  const norm = (emailOrUid || '').trim().toLowerCase()
+  if (!norm) return []
+  const normDigits = norm.replace(/[^0-9]/g, '')
+
+  const localNotices = getStoredRejectedNotices()
+  const list: RejectedBusinessNotice[] = [...localNotices]
+
+  try {
+    const snap = await getDocs(collection(db, 'rejected_business_notices'))
+    snap.forEach(d => {
+      const data = d.data() as RejectedBusinessNotice
+      if (!data.dismissed) {
+        list.push({ ...data, id: d.id || data.id })
+      }
+    })
+  } catch (err) {
+    console.warn('Error fetching Firestore rejected_business_notices:', err)
+  }
+
+  // Deduplicate by notice id or businessId
+  const seen = new Set<string>()
+  const uniqueNotices: RejectedBusinessNotice[] = []
+  for (const n of list) {
+    const key = n.id || `${n.businessId}-${n.rejectedAt}`
+    if (!seen.has(key) && !n.dismissed) {
+      seen.add(key)
+      uniqueNotices.push(n)
+    }
+  }
+
+  // Filter for matching user
+  return uniqueNotices
+    .filter(n => {
+      const nEmail = (n.ownerEmail || '').toLowerCase().trim()
+      const nUid = (n.userId || '').toLowerCase().trim()
+      const nPhone = (n.phone || '').replace(/[^0-9]/g, '')
+      return (
+        nEmail === norm ||
+        nUid === norm ||
+        (normDigits.length >= 7 && nPhone.includes(normDigits))
+      )
+    })
+    .sort((a, b) => new Date(b.rejectedAt).getTime() - new Date(a.rejectedAt).getTime())
+}
+
+export async function dismissRejectedBusinessNotice(noticeId: string): Promise<boolean> {
+  if (!noticeId) return false
+  dismissStoredRejectedNotice(noticeId)
+
+  try {
+    const ref = doc(db, 'rejected_business_notices', noticeId)
+    await updateDoc(ref, { dismissed: true })
+  } catch (_) {
+    try {
+      await deleteDoc(doc(db, 'rejected_business_notices', noticeId))
+    } catch (err) {
+      console.warn('Error dismissing notice in Firestore:', err)
+    }
+  }
 
   return true
 }

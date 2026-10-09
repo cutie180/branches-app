@@ -12,8 +12,8 @@ import {
 } from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
-import { CATEGORIES, CITIES, BusinessItem } from '@/lib/data'
-import { saveBusinessToDatabase, getUserBusinesses, updateBusinessPaymentProof, normalizeSlug } from '@/lib/db-service'
+import { CATEGORIES, CITIES, BusinessItem, RejectedBusinessNotice } from '@/lib/data'
+import { saveBusinessToDatabase, getUserBusinesses, updateBusinessPaymentProof, normalizeSlug, getRejectedBusinessNotices, dismissRejectedBusinessNotice } from '@/lib/db-service'
 import StickyWebsiteBanner from '@/components/business/sticky-website-banner'
 import { auth } from '@/lib/firebase'
 import { 
@@ -121,7 +121,9 @@ export default function AddBusinessClient() {
   // Active View State: 'form' | 'my-businesses'
   const [activeView, setActiveView] = useState<'form' | 'my-businesses'>('form')
   const [userBusinesses, setUserBusinesses] = useState<BusinessItem[]>([])
+  const [rejectedNotices, setRejectedNotices] = useState<RejectedBusinessNotice[]>([])
   const [isLoadingUserBusinesses, setIsLoadingUserBusinesses] = useState(false)
+  const [isDismissingNotice, setIsDismissingNotice] = useState<string | null>(null)
   const [selectedBizModal, setSelectedBizModal] = useState<BusinessItem | null>(null)
 
   // Payment Screen & "Why Fee" Modal State
@@ -223,10 +225,25 @@ export default function AddBusinessClient() {
     try {
       const list = await getUserBusinesses(emailOrUid)
       setUserBusinesses(list)
+      const notices = await getRejectedBusinessNotices(emailOrUid)
+      setRejectedNotices(notices)
     } catch (err) {
       console.warn('Failed to load user businesses:', err)
     } finally {
       setIsLoadingUserBusinesses(false)
+    }
+  }
+
+  const handleDismissNotice = async (noticeId: string) => {
+    setIsDismissingNotice(noticeId)
+    try {
+      await dismissRejectedBusinessNotice(noticeId)
+      setRejectedNotices(prev => prev.filter(n => n.id !== noticeId))
+      toast.success('Notice dismissed.')
+    } catch (err) {
+      toast.error('Failed to dismiss notice.')
+    } finally {
+      setIsDismissingNotice(null)
     }
   }
 
@@ -1198,6 +1215,94 @@ export default function AddBusinessClient() {
                     </button>
                   </div>
                 </div>
+
+                {/* REJECTED BUSINESS NOTICES BANNER */}
+                {rejectedNotices.length > 0 && (
+                  <div className="space-y-4 animate-in fade-in-50">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
+                        <h3 className="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
+                          <AlertCircle className="w-4 h-4 text-red-600" />
+                          <span>Listing Moderation Notices ({rejectedNotices.length})</span>
+                        </h3>
+                      </div>
+                      <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                        Space Restored • Free Slot Available
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-4">
+                      {rejectedNotices.map((notice) => (
+                        <div
+                          key={notice.id}
+                          className="p-5 rounded-3xl bg-red-50/80 border-2 border-red-200 shadow-sm space-y-3.5 transition-all"
+                        >
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-red-200/60 pb-3">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="px-2.5 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-extrabold uppercase tracking-wider">
+                                Rejected &amp; Removed
+                              </span>
+                              {notice.category && (
+                                <span className="text-[11px] font-bold text-slate-700 bg-white px-2 py-0.5 rounded-md border border-slate-200">
+                                  {notice.category}
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <span className="text-[11px] text-slate-500 font-medium">
+                                {notice.rejectedAt ? new Date(notice.rejectedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Recently'}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => handleDismissNotice(notice.id)}
+                                disabled={isDismissingNotice === notice.id}
+                                className="text-xs text-slate-500 hover:text-red-700 font-bold px-2 py-1 rounded-lg hover:bg-red-100 transition cursor-pointer"
+                              >
+                                {isDismissingNotice === notice.id ? 'Dismissing...' : 'Dismiss Notice'}
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="space-y-1">
+                            <h4 className="text-base font-extrabold text-slate-900">
+                              Listing &ldquo;{notice.businessName}&rdquo; was not approved
+                            </h4>
+                            <p className="text-xs text-slate-600">
+                              Our moderation team reviewed your submission and removed the listing due to directory compliance standards.
+                            </p>
+                          </div>
+
+                          <div className="p-3.5 rounded-2xl bg-white border border-red-300 shadow-xs space-y-1">
+                            <div className="flex items-center gap-1.5 text-xs font-extrabold text-red-900 uppercase tracking-wider">
+                              <AlertCircle className="w-3.5 h-3.5 text-red-600 shrink-0" />
+                              <span>Rejection Reason:</span>
+                            </div>
+                            <p className="text-xs font-semibold text-red-950 leading-relaxed pl-5">
+                              &ldquo;{notice.rejectionReason}&rdquo;
+                            </p>
+                          </div>
+
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200">
+                            <div className="flex items-start gap-2">
+                              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                              <p className="text-xs text-emerald-900 font-medium">
+                                <strong className="font-extrabold text-emerald-950">Space Restored:</strong> The rejected listing data has been completely removed from the database. You have free space to submit a new or revised business.
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => { setActiveView('form'); setSubmittedSlug(null); setActivePaymentBiz(null); }}
+                              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-xs transition shrink-0 cursor-pointer"
+                            >
+                              + Register Business Now
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {isLoadingUserBusinesses ? (
                   <div className="p-12 text-center bg-white rounded-3xl border border-slate-200">
