@@ -50,6 +50,7 @@ export const metadata: Metadata = {
     other: {
       'msvalidate.01': '32107703ABE97F472472231CBA07F2E5',
       'google-adsense-account': 'ca-pub-3836871693569517',
+      'monetag': '1a911321e9436a56f5358362c3fdb901',
     },
   },
 }
@@ -96,6 +97,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <head>
+        <meta name="monetag" content="1a911321e9436a56f5358362c3fdb901" />
         <meta name="google-adsense-account" content="ca-pub-3836871693569517" />
         <meta name="msvalidate.01" content="32107703ABE97F472472231CBA07F2E5" />
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
