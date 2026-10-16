@@ -28,9 +28,26 @@ export default function CookieConsentBanner() {
     try {
       const consent = localStorage.getItem(COOKIE_CONSENT_KEY)
       if (!consent) {
-        // Defer banner display to allow smooth FCP and LCP completion without layout shifts
-        const timer = setTimeout(() => setShowBanner(true), 2500)
-        return () => clearTimeout(timer)
+        // Show banner on first user interaction or when idle (after 6s) to ensure zero impact on FCP/LCP
+        const triggerBanner = () => {
+          setShowBanner(true)
+          cleanup()
+        }
+        const cleanup = () => {
+          clearTimeout(timer)
+          window.removeEventListener('scroll', triggerBanner)
+          window.removeEventListener('touchstart', triggerBanner)
+          window.removeEventListener('keydown', triggerBanner)
+          window.removeEventListener('click', triggerBanner)
+        }
+
+        const timer = setTimeout(triggerBanner, 6000)
+        window.addEventListener('scroll', triggerBanner, { passive: true, once: true })
+        window.addEventListener('touchstart', triggerBanner, { passive: true, once: true })
+        window.addEventListener('keydown', triggerBanner, { passive: true, once: true })
+        window.addEventListener('click', triggerBanner, { passive: true, once: true })
+
+        return cleanup
       } else {
         const storedPrefs = localStorage.getItem(COOKIE_PREFS_KEY)
         if (storedPrefs) {

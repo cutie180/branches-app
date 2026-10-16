@@ -64,6 +64,7 @@ export default function Navbar() {
           <div className="hidden sm:flex items-center gap-3">
             <Link
               href="/search"
+              aria-label="Search Directory"
               className="p-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/70 transition-colors flex items-center gap-1.5 text-sm font-medium"
               title="Search Directory"
             >
@@ -73,6 +74,7 @@ export default function Navbar() {
 
             <Link
               href="/dashboard"
+              aria-label="Business & Profile Dashboard"
               className="px-3.5 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/70 transition-colors flex items-center gap-1.5 text-sm font-medium"
               title="Business & Profile Dashboard"
             >
