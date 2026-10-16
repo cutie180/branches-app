@@ -97,12 +97,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <head>
-        <script
-          src="https://quge5.com/88/tag.min.js"
-          data-zone="294881"
-          async
-          data-cfasync="false"
-        />
         <meta name="monetag" content="1a911321e9436a56f5358362c3fdb901" />
         <meta name="google-adsense-account" content="ca-pub-3836871693569517" />
         <meta name="msvalidate.01" content="32107703ABE97F472472231CBA07F2E5" />
