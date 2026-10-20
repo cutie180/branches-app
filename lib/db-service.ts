@@ -187,6 +187,8 @@ export function normalizeBusinessDoc(docId: string, data: any): BusinessItem {
       return 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80'
     })(),
     description: data.description || data.aboutText || 'Verified business listing on ListPak.',
+    seoTitle: data.seoTitle,
+    seoDescription: data.seoDescription,
     metaTitle: data.metaTitle,
     metaDescription: data.metaDescription,
     canonical: data.canonical,

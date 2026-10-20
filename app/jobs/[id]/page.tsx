@@ -6,7 +6,17 @@ import { notFound, redirect } from 'next/navigation'
 import { BreadcrumbSchema } from '@/components/seo/breadcrumb-schema'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
-import { getJobBySlug, getAllJobs, getMatchingCandidatesForJob, isExpiredJob } from '@/lib/job-service'
+import { 
+  getJobBySlug, 
+  getAllJobs, 
+  getMatchingCandidatesForJob, 
+  isExpiredJob,
+  getJobDatePosted,
+  getJobValidThrough,
+  parseJobSalary,
+  stripMarkdown,
+  formatJobMetaDescription
+} from '@/lib/job-service'
 import { 
   Briefcase, MapPin, Building2, Calendar, CheckCircle2, ExternalLink, Mail, 
   ArrowLeft, ArrowRight, ShieldCheck, Globe, Info, Users, Sparkles, UserCheck, Check,
@@ -39,7 +49,9 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
   const publicSlug = job ? getPublicJobSlug(job) : idOrSlug
   const canonicalUrl = toCanonicalUrl(`jobs/${publicSlug}`)
   const title = job ? `${job.title} at ${job.company} in ${job.city} | ListPak Jobs` : 'Job Vacancy | ListPak'
-  const description = job ? `${job.description.slice(0, 160)}... Review role details, qualifications, salary, and application routes on ListPak.` : `Review current job opportunities in Pakistan on the ListPak jobs directory.`
+  const description = job 
+    ? formatJobMetaDescription(job)
+    : 'Review current job opportunities in Pakistan on the ListPak jobs directory.'
 
   return {
     title,
@@ -54,17 +66,18 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
       url: canonicalUrl,
       locale: 'en_PK',
       type: 'article',
-      images: job?.companyLogo ? [{ url: job.companyLogo, alt: job.company }] : undefined,
+      images: job?.companyLogo && !job.companyLogo.includes('images.unsplash.com') 
+        ? [{ url: job.companyLogo, alt: job.company }] 
+        : undefined,
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
     },
-    robots: {
-      index: !isExpired,
-      follow: true,
-    },
+    robots: isExpired 
+      ? { index: false, follow: false }
+      : { index: true, follow: true },
   }
 }
 
@@ -102,11 +115,28 @@ export default async function JobDetailPage(props: { params: Promise<{ id: strin
   const matchingCandidates = matchingCandidatesRaw.slice(0, 4)
 
   const websiteUrl = job.applicationWebsite || job.applicationUrl || ''
-  const datePosted = /^\d{4}-\d{2}-\d{2}/.test(job.postedDate || '') ? job.postedDate : undefined
-  const validThroughDate = job.deadline && !/open until filled/i.test(job.deadline) ? new Date(job.deadline) : null
-  const validThrough = validThroughDate && !Number.isNaN(validThroughDate.getTime())
-    ? validThroughDate.toISOString()
-    : undefined
+  const datePosted = getJobDatePosted(job)
+  const validThrough = getJobValidThrough(job)
+  const parsedSalary = parseJobSalary(job.salary)
+  const cleanDescription = stripMarkdown(job.description)
+
+  const isRemote = job.city.toLowerCase() === 'remote' || 
+    (job.cities && job.cities.some(c => c.toLowerCase() === 'remote')) ||
+    /remote/i.test(job.type || '') ||
+    /remote/i.test(job.title || '')
+
+  const cleanSameAs = websiteUrl && 
+    !websiteUrl.includes('Verify') && 
+    !websiteUrl.includes('source result') && 
+    /^https?:\/\//i.test(websiteUrl)
+      ? websiteUrl
+      : undefined
+
+  const cleanLogo = job.companyLogo && 
+    !job.companyLogo.includes('images.unsplash.com') && 
+    /^https?:\/\//i.test(job.companyLogo)
+      ? job.companyLogo
+      : undefined
 
   const canonicalUrl = toCanonicalUrl(`jobs/${publicJobSlug}`)
   const citySlug = normalizeCitySlug(job.city)
@@ -133,21 +163,40 @@ export default async function JobDetailPage(props: { params: Promise<{ id: strin
     '@context': 'https://schema.org',
     '@type': 'JobPosting',
     title: job.title,
-    description: job.description,
+    description: cleanDescription,
     identifier: {
       '@type': 'PropertyValue',
       name: job.company,
       value: job.id
     },
-    ...(datePosted ? { datePosted } : {}),
-    ...(validThrough ? { validThrough } : {}),
+    datePosted,
+    validThrough,
     employmentType: (job.type || 'FULL_TIME').toUpperCase().replace('-', '_'),
     directApply: true,
+    ...(parsedSalary ? {
+      baseSalary: {
+        '@type': 'MonetaryAmount',
+        currency: 'PKR',
+        value: {
+          '@type': 'QuantitativeValue',
+          minValue: parsedSalary.minValue,
+          maxValue: parsedSalary.maxValue,
+          unitText: parsedSalary.unitText,
+        }
+      }
+    } : {}),
+    ...(isRemote ? {
+      jobLocationType: 'TELECOMMUTE',
+      applicantLocationRequirements: {
+        '@type': 'Country',
+        name: 'Pakistan'
+      }
+    } : {}),
     hiringOrganization: {
       '@type': 'Organization',
       name: job.company,
-      sameAs: job.applicationWebsite || undefined,
-      logo: job.companyLogo
+      ...(cleanSameAs ? { sameAs: cleanSameAs } : {}),
+      ...(cleanLogo ? { logo: cleanLogo } : {}),
     },
     jobLocation: jobLocations,
     url: canonicalUrl,

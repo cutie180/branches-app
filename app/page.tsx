@@ -12,17 +12,19 @@ import { CATEGORIES, TOP_CITIES, MOCK_JOBS, MOCK_PROFESSIONALS } from '@/lib/dat
 import { getAllBusinesses } from '@/lib/db-service'
 import { getPublicJobPath } from '@/lib/job-url'
 
+import { HOMEPAGE_SEO } from '@/lib/city-seo-overrides'
+
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: "Pakistan Business Directory, Jobs & Professionals | ListPak",
-  description: "Find businesses, companies, jobs, services and professionals across Pakistan. Search by city and category or add your free business listing on ListPak.",
+  title: HOMEPAGE_SEO.title,
+  description: HOMEPAGE_SEO.description,
   alternates: {
     canonical: 'https://www.listpak.com/',
   },
   openGraph: {
-    title: "Pakistan Business Directory, Jobs & Professionals | ListPak",
-    description: "Find businesses, companies, jobs, services and professionals across Pakistan. Search by city and category or add your free business listing on ListPak.",
+    title: HOMEPAGE_SEO.title,
+    description: HOMEPAGE_SEO.description,
     url: 'https://www.listpak.com/',
     siteName: 'ListPak',
     locale: 'en_PK',
@@ -30,29 +32,12 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Pakistan Business Directory, Jobs & Professionals | ListPak",
-    description: "Find businesses, companies, jobs, services and professionals across Pakistan. Search by city and category or add your free business listing on ListPak.",
+    title: HOMEPAGE_SEO.title,
+    description: HOMEPAGE_SEO.description,
   },
 }
 
-const FAQS = [
-  {
-    question: 'What is ListPak Ecosystem?',
-    answer: 'ListPak is a Pakistan-focused discovery platform connecting businesses, employers, job seekers, and professionals through category and city-based pages.'
-  },
-  {
-    question: 'Is listing a business on ListPak free?',
-    answer: 'Businesses can submit a listing through ListPak. Owners should provide accurate contact information, services, operating hours, and other details required during submission.'
-  },
-  {
-    question: 'How do employers post jobs on ListPak?',
-    answer: 'Employers can use the Post a Job flow to provide position details, experience requirements, location, and application information. Publication depends on the site’s current workflow and review requirements.'
-  },
-  {
-    question: 'How does business verification work on ListPak?',
-    answer: 'Business owners can use the available claim or verification workflow when it is offered for their listing and should submit only accurate supporting information.'
-  }
-]
+const FAQS = HOMEPAGE_SEO.faqs
 
 const USE_CASES = [
   {

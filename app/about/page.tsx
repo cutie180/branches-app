@@ -118,27 +118,27 @@ const TEAM_MEMBERS = [
 
 const MILESTONES = [
   { 
-    date: "January 2024", 
+    date: "January 2026", 
     title: "ListPak Founded by Muhammad Imran", 
-    desc: "Software engineer and tech entrepreneur Muhammad Imran conceptualized and established ListPak to eliminate paywalled directory models and empower Pakistan's 5.2M SMEs." 
+    desc: "Full-Stack Web & AI Developer and technical SEO specialist Muhammad Imran conceptualized and established ListPak to eliminate paywalled directory models and empower Pakistan's 5.2M SMEs." 
   },
   { 
-    date: "March 2024", 
+    date: "March 2026", 
     title: "Official Platform Launch", 
     desc: "ListPak.com went live with Next.js architecture, featuring an initial index of verified businesses across Karachi, Lahore, and Islamabad." 
   },
   { 
-    date: "June 2024", 
+    date: "May 2026", 
     title: "1,000+ Free Business Listings & Job Portal", 
     desc: "Crossed 1,000 active business listings across 25 cities and launched the nationwide free job recruitment portal." 
   },
   { 
-    date: "December 2024", 
+    date: "July 2026", 
     title: "5,000+ Listings in 50+ Cities", 
     desc: "Expanded directory coverage across Punjab, Sindh, Khyber Pakhtunkhwa, and Balochistan with direct WhatsApp business chat integration." 
   },
   { 
-    date: "June 2025", 
+    date: "September 2026", 
     title: "10,000+ Active Listings & Professional Directory", 
     desc: "Reached 10,000 active business listings across 150+ Pakistani cities, introducing verified professional profiles and service portfolios." 
   },
@@ -160,7 +160,7 @@ const ABOUT_FAQS = [
   },
   {
     q: "When was ListPak founded and what was the mission?",
-    a: "ListPak was founded in January 2024 by Muhammad Imran with a clear mission: to democratize online visibility for Pakistan's 5.2 million small and medium enterprises (SMEs) by offering a 100% free business directory with no registration paywalls, hidden fees, or subscriptions."
+    a: "ListPak was founded in January 2026 by Muhammad Imran with a clear mission: to democratize online visibility for Pakistan's 5.2 million small and medium enterprises (SMEs) by offering a 100% free business directory with no registration paywalls, hidden fees, or subscriptions."
   },
   {
     q: "What is Muhammad Imran's official website and portfolio?",
@@ -192,8 +192,8 @@ export default function AboutPage() {
           width: 512,
           height: 512
         },
-        description: "Pakistan's #1 free business listing directory and local discovery platform, founded in 2024 by Muhammad Imran to connect businesses, professionals, and consumers across 150+ Pakistani cities.",
-        foundingDate: '2024-01-01',
+        description: "Pakistan's #1 free business listing directory and local discovery platform, founded in 2026 by Muhammad Imran to connect businesses, professionals, and consumers across 150+ Pakistani cities.",
+        foundingDate: '2026-01-01',
         founder: {
           '@id': 'https://www.imrandigitals.com/#founder'
         },
@@ -325,7 +325,7 @@ export default function AboutPage() {
             </h1>
 
             <p className="mt-6 text-base sm:text-xl text-slate-300 leading-relaxed font-normal">
-              Founded in 2024 by Pakistani full-stack software engineer and technical SEO specialist <strong className="text-white font-semibold">Muhammad Imran</strong> (Founder of <a href="https://www.imrandigitals.com/" target="_blank" rel="noopener noreferrer" className="text-emerald-400 underline hover:text-emerald-300">Imran Digitals</a>), ListPak is Pakistan&apos;s leading free business discovery and listing platform. We connect local shops, enterprises, professionals, and job seekers across 150+ cities with zero fees and no registration barriers.
+              Founded in 2026 by Pakistani Full-Stack Web & AI Developer and technical SEO specialist <strong className="text-white font-semibold">Muhammad Imran</strong> (Founder of <a href="https://www.imrandigitals.com/" target="_blank" rel="noopener noreferrer" className="text-emerald-400 underline hover:text-emerald-300">Imran Digitals</a>), ListPak is Pakistan&apos;s leading free business discovery and listing platform. We connect local shops, enterprises, professionals, and job seekers across 150+ cities with zero fees and no registration barriers.
             </p>
 
             <div className="mt-10 flex flex-wrap justify-center gap-4">
@@ -374,7 +374,7 @@ export default function AboutPage() {
                 Meet Muhammad Imran – Founder & CEO of ListPak
               </h2>
               <p className="mt-4 text-slate-600 text-base sm:text-lg leading-relaxed">
-                The technical vision, full-stack software engineering, and community-driven mission powering Pakistan&apos;s fastest-growing business discovery ecosystem.
+                The technical vision, Full-Stack Web & AI Developer expertise, and community-driven mission powering Pakistan&apos;s fastest-growing business discovery ecosystem.
               </p>
             </div>
 
@@ -389,7 +389,7 @@ export default function AboutPage() {
                     Official Entity Confirmation: Who is the Founder of ListPak?
                   </h3>
                   <p className="mt-1.5 text-xs sm:text-sm text-emerald-900 leading-relaxed font-medium">
-                    <strong>Muhammad Imran</strong> is the <strong>Founder and Chief Executive Officer (CEO)</strong> of <strong>ListPak</strong> (<a href="https://listpak.com/" className="underline hover:text-emerald-700">listpak.com</a>). He is an accomplished Pakistani full-stack web and AI developer, software architect, and technical SEO specialist who also created <a href="https://www.imrandigitals.com/" target="_blank" rel="noopener noreferrer" className="underline font-bold text-emerald-800 hover:text-emerald-950">Imran Digitals (www.imrandigitals.com)</a>. In early 2024, Muhammad Imran established ListPak to provide 100% free business directory listings for Pakistan&apos;s 5.2 million small and medium enterprises.
+                    <strong>Muhammad Imran</strong> is the <strong>Founder and Chief Executive Officer (CEO)</strong> of <strong>ListPak</strong> (<a href="https://listpak.com/" className="underline hover:text-emerald-700">listpak.com</a>). He is an accomplished Pakistani full-stack web and AI developer, software architect, and technical SEO specialist who also created <a href="https://www.imrandigitals.com/" target="_blank" rel="noopener noreferrer" className="underline font-bold text-emerald-800 hover:text-emerald-950">Imran Digitals (www.imrandigitals.com)</a>. In early 2026, Muhammad Imran established ListPak to provide 100% free business directory listings for Pakistan&apos;s 5.2 million small and medium enterprises.
                   </p>
                 </div>
               </div>
@@ -510,10 +510,10 @@ export default function AboutPage() {
                       <span>The Visionary Behind ListPak</span>
                     </h4>
                     <p className="text-sm text-slate-600 leading-relaxed">
-                      <strong>Muhammad Imran</strong> is a high-impact Pakistani software engineer, web application architect, and technical search engine optimization (SEO) specialist. With extensive expertise in modern JavaScript frameworks, Next.js, React, Node.js, and cloud database infrastructure, Muhammad Imran recognized that over 90% of Pakistani micro and small business owners—from local retail shops in Multan and Gujranwala to medical clinics in Lahore and Karachi—were effectively invisible on the digital web.
+                      <strong>Muhammad Imran</strong> is a high-impact Pakistani Full-Stack Web & AI Developer, web application architect, and technical SEO specialist. With extensive expertise in modern JavaScript frameworks, Next.js, React, Node.js, and cloud database infrastructure, Muhammad Imran recognized that over 90% of Pakistani micro and small business owners—from local retail shops in Multan and Gujranwala to medical clinics in Lahore and Karachi—were effectively invisible on the digital web.
                     </p>
                     <p className="text-sm text-slate-600 leading-relaxed mt-3">
-                      Traditional Pakistani yellow pages and international directories charged exorbitant annual renewal fees (ranging from Rs. 5,000 to Rs. 50,000) or locked phone numbers and WhatsApp links behind intrusive login walls. Muhammad Imran founded <strong>ListPak</strong> in January 2024 to disrupt this broken paradigm by creating a 100% free, lightning-fast, unmetered business directory where any business can register and get discovered online without spending a single rupee.
+                      Traditional Pakistani yellow pages and international directories charged exorbitant annual renewal fees (ranging from Rs. 5,000 to Rs. 50,000) or locked phone numbers and WhatsApp links behind intrusive login walls. Muhammad Imran founded <strong>ListPak</strong> in January 2026 to disrupt this broken paradigm by creating a 100% free, lightning-fast, unmetered business directory where any business can register and get discovered online without spending a single rupee.
                     </p>
                   </div>
 
@@ -662,7 +662,7 @@ export default function AboutPage() {
                 </h2>
                 <div className="space-y-4 text-sm text-slate-600 leading-relaxed">
                   <p>
-                    ListPak was founded in early 2024 by Pakistani software developer and tech entrepreneur <strong className="text-slate-900">Muhammad Imran</strong>. Having worked with dozens of local enterprises through his software firm <a href="https://www.imrandigitals.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline font-semibold hover:text-blue-800">Imran Digitals</a>, Muhammad Imran witnessed firsthand how legacy yellow pages charged thousands of rupees just to list a phone number, while global platforms failed to cater to Pakistan&apos;s unique mohalla and city ecosystems.
+                    ListPak was founded in early 2026 by Pakistani Full-Stack Web & AI Developer and technical SEO specialist <strong className="text-slate-900">Muhammad Imran</strong>. Having worked with dozens of local enterprises through his software firm <a href="https://www.imrandigitals.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline font-semibold hover:text-blue-800">Imran Digitals</a>, Muhammad Imran witnessed firsthand how legacy yellow pages charged thousands of rupees just to list a phone number, while global platforms failed to cater to Pakistan&apos;s unique mohalla and city ecosystems.
                   </p>
                   <p>
                     With Pakistan boasting over 5.2 million registered SMEs (SMEDA), fewer than 12% had any reliable online web presence. Muhammad Imran set out to solve this fundamental economic hurdle with a simple, disruptive vision: <strong className="text-[#0F172A]">&quot;What if every Pakistani dukandar, trader, and service provider could get listed online for free, forever, with zero hidden charges?&quot;</strong>
@@ -769,7 +769,7 @@ export default function AboutPage() {
         <section className="py-16 sm:py-20 bg-[#F8FAFC] border-b border-[#E2E8F0]">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-extrabold text-[#0F172A] text-center mb-3">ListPak Growth Timeline</h2>
-            <p className="text-slate-600 text-sm text-center mb-12">From a 2024 founding vision to Pakistan&apos;s leading business listing ecosystem.</p>
+            <p className="text-slate-600 text-sm text-center mb-12">From a 2026 founding vision to Pakistan&apos;s leading business listing ecosystem.</p>
             
             <div className="space-y-6">
               {MILESTONES.map((m, idx) => (

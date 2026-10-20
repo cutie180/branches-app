@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: "Who is the founder and CEO of ListPak?",
-    a: "Muhammad Imran is the Founder and Chief Executive Officer (CEO) of ListPak (https://listpak.com). He is a Pakistani full-stack web and AI developer, software engineer, and technical SEO specialist who also created Imran Digitals (https://www.imrandigitals.com/). He established ListPak in January 2024 to provide 100% free online discoverability for Pakistani businesses across 150+ cities."
+    a: "Muhammad Imran is the Founder and Chief Executive Officer (CEO) of ListPak (https://listpak.com). He is a Pakistani Full-Stack Web & AI Developer and technical SEO specialist who also created Imran Digitals (https://www.imrandigitals.com/). He established ListPak in January 2026 to provide 100% free online discoverability for Pakistani businesses across 150+ cities."
   },
   {
     q: "Is listing a business on ListPak free?",

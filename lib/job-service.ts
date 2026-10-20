@@ -9,11 +9,8 @@ import { sanitizeText, sanitizeUrl } from './sanitizer'
 
 let memoryJobsCache: JobItem[] = [...MOCK_JOBS]
 
-export function isExpiredJob(job: JobItem): boolean {
-  if (!job.deadline || /open until filled/i.test(job.deadline)) return false
-  const deadline = new Date(job.deadline)
-  return !Number.isNaN(deadline.getTime()) && deadline.getTime() < Date.now()
-}
+export { isExpiredJob, getJobDatePosted, getJobValidThrough, parseJobSalary, stripMarkdown, formatJobMetaDescription } from './job-schema-helpers'
+import { isExpiredJob } from './job-schema-helpers'
 
 export const getAllJobs = cache(async function getAllJobs(includePending: boolean = false): Promise<JobItem[]> {
   try {

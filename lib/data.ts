@@ -126,6 +126,8 @@ export interface BusinessItem {
   userId?: string
   slug: string
   name: string
+  seoTitle?: string
+  seoDescription?: string
   metaTitle?: string
   metaDescription?: string
   canonical?: string
@@ -828,6 +830,8 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "id": "BR0AUglnO16leqNtKkWc",
     "slug": "al-zaban-hardware-store",
     "name": "AL ZABAN HARDWARE STORE",
+    "seoTitle": "Al Zaban Hardware Store Lahore – Contact Number & Location | ListPak",
+    "seoDescription": "Al Zaban Hardware Store contact: 0335-1108300. Township B1, Lahore address, timings (open daily 10 AM–9 PM) & hardware products and prices info.",
     "category": "Construction & Building",
     "categoryId": "construction",
     "city": "Lahore",
@@ -841,7 +845,7 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "isClaimed": true,
     "isFeatured": false,
     "status": "approved",
-    "phone": "042 35110830",
+    "phone": "0335-1108300",
     "whatsapp": "03351108300",
     "email": "contact@business.pk",
     "website": "https://alzaban.com/",
@@ -897,7 +901,24 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
         "id": "rev-starter-5-1786075940076"
       }
     ],
-    "faqs": []
+    "faqs": [
+      {
+        "question": "What is the contact number of Al Zaban Hardware Store?",
+        "answer": "You can contact Al Zaban Hardware Store on 0335-1108300, or on the landline 042-35110830."
+      },
+      {
+        "question": "Where is Al Zaban Hardware Store located?",
+        "answer": "Al Zaban Hardware Store is located at Plot No. 3, Block No. 11, Sector B1, Township, Lahore, Pakistan."
+      },
+      {
+        "question": "What are the timings of Al Zaban Hardware Store?",
+        "answer": "Al Zaban Hardware Store is open daily from 10:00 AM to 9:00 PM."
+      },
+      {
+        "question": "What products does Al Zaban Hardware Store sell?",
+        "answer": "Al Zaban is a one-stop hardware store in Township, Lahore selling hardware, tools and construction and building supplies."
+      }
+    ]
   },
   {
     "id": "KdDmW9DMhmQw6uDSvmQ4",
@@ -941,6 +962,8 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "id": "LNQxiRONd9sJ4ZHk3gUa",
     "slug": "allure-beauty",
     "name": "Allure Beauty",
+    "seoTitle": "Allure Beauty Karachi – Contact Number & Online Beauty Store | ListPak",
+    "seoDescription": "Allure Beauty contact: +92 300 0725776. Karachi-based online store for authentic makeup, skincare & perfumes. Delivery across Pakistan.",
     "category": "Beauty & Wellness",
     "categoryId": "beauty",
     "city": "Karachi",
@@ -1018,7 +1041,24 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
         "date": "4 days ago"
       }
     ],
-    "faqs": []
+    "faqs": [
+      {
+        "question": "What is Allure Beauty's contact number?",
+        "answer": "You can contact Allure Beauty on +92 300 0725776."
+      },
+      {
+        "question": "Where is Allure Beauty located?",
+        "answer": "Allure Beauty is located at Plot 03, Tipu Sultan Road, Karachi Memon Co-operative Housing Society, Karachi, Sindh, Pakistan."
+      },
+      {
+        "question": "What does Allure Beauty sell?",
+        "answer": "Allure Beauty sells authentic makeup, skincare and perfumes from international brands and top Pakistani makeup brands."
+      },
+      {
+        "question": "Does Allure Beauty deliver outside Karachi?",
+        "answer": "Yes. Allure Beauty is an online store based in Karachi that delivers beauty products to customers across Pakistan."
+      }
+    ]
   },
   {
     "id": "MGlptW5j7ypYf0euBWRo",
@@ -3345,6 +3385,8 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "id": "biz-monal-lahore",
     "slug": "monal-lahore",
     "name": "Monal Lahore",
+    "seoTitle": "Monal Restaurant Lahore – Timings, Menu & Contact Number | ListPak",
+    "seoDescription": "Monal Restaurant Lahore — iconic rooftop dining with Pakistani, Mughlai, Continental & BBQ cuisine. Location, timings & contact details on ListPak.",
     "category": "Restaurants & Food",
     "categoryId": "restaurants",
     "city": "Lahore",
@@ -3354,20 +3396,20 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
       "Islamabad"
     ],
     "province": "Punjab",
-    "rating": 5,
-    "reviewCount": 3,
+    "rating": 0,
+    "reviewCount": 0,
     "verified": true,
     "isClaimed": false,
     "isFeatured": true,
     "status": "approved",
-    "phone": "+92 21 111 000 000",
-    "whatsapp": "9221111000000",
+    "phone": "042-35789823",
+    "whatsapp": "923334767104",
     "email": "info@listpak.com",
     "website": "https://themonal.com/",
-    "address": "Monal Lahore Principal Office, Lahore, Pakistan",
+    "address": "Park and Ride Plaza, Liberty Roundabout, Gulberg III, Lahore, Punjab, Pakistan",
     "locations": [
       {
-        "address": "Monal Lahore Principal Office, Lahore, Pakistan",
+        "address": "Park and Ride Plaza, Liberty Roundabout, Gulberg III, Lahore, Punjab, Pakistan",
         "city": "Lahore",
         "isPrimary": true
       }
@@ -3417,12 +3459,16 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     ],
     "faqs": [
       {
-        "answer": "Monal Lahore offers a wide range of services including Dine-in, Pakistani cuisine, continental cuisine, family dining.",
-        "question": "What services does Monal Lahore offer?"
+        "question": "Where is Monal Restaurant located in Lahore?",
+        "answer": "Monal Restaurant is a rooftop fine-dining landmark located in the heart of Lahore, Punjab, Pakistan."
       },
       {
-        "question": "How can I contact Monal Lahore?",
-        "answer": "You can reach Monal Lahore via their official website at https://themonal.com/ or visit their office in Lahore."
+        "question": "What cuisine does Monal Lahore serve?",
+        "answer": "Monal Lahore serves Pakistani, Mughlai, Continental and Barbecue dishes."
+      },
+      {
+        "question": "What is Monal Restaurant Lahore known for?",
+        "answer": "Monal Lahore is known for its rooftop terraces, fine-dining ambiance and panoramic dining experience in Lahore."
       }
     ]
   },
@@ -3772,6 +3818,8 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "id": "biz-nayatel",
     "slug": "nayatel",
     "name": "Nayatel",
+    "seoTitle": "Nayatel Helpline Number & Contact Details – Islamabad | ListPak",
+    "seoDescription": "Nayatel helpline: 1441 (24/7). SMS: 8116, WhatsApp: +92 51 111 11 44 44. Internet packages, coverage areas & Nayatel office details in Islamabad.",
     "category": "Technology & IT",
     "categoryId": "technology",
     "city": "Islamabad",
@@ -3787,8 +3835,8 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "isClaimed": false,
     "isFeatured": true,
     "status": "approved",
-    "phone": "+92 21 111 000 000",
-    "whatsapp": "9221111000000",
+    "phone": "1441",
+    "whatsapp": "925111114444",
     "email": "info@listpak.com",
     "website": "https://nayatel.com/",
     "address": "Nayatel Principal Office, Islamabad, Pakistan",
@@ -3844,12 +3892,24 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     ],
     "faqs": [
       {
-        "question": "What services does Nayatel offer?",
-        "answer": "Nayatel offers a wide range of services including Fiber internet, broadband, cloud services, enterprise connectivity."
+        "question": "What is the Nayatel helpline number?",
+        "answer": "The Nayatel helpline number is 1441, available 24 hours a day, 7 days a week."
       },
       {
-        "answer": "You can reach Nayatel via their official website at https://nayatel.com/ or visit their office in Islamabad.",
-        "question": "How can I contact Nayatel?"
+        "question": "How can I contact Nayatel by SMS or WhatsApp?",
+        "answer": "You can reach Nayatel support by sending an SMS to 8116, or on WhatsApp at +92 (51) 111 11 44 44."
+      },
+      {
+        "question": "In which cities is Nayatel available?",
+        "answer": "Nayatel provides fiber internet and TV services in Islamabad, Rawalpindi, Faisalabad and Peshawar."
+      },
+      {
+        "question": "What services does Nayatel offer?",
+        "answer": "Nayatel is a Fiber-to-the-Home (FTTH) operator offering high-speed broadband internet, cable television, and enterprise cloud and telecom services."
+      },
+      {
+        "question": "Where is Nayatel's principal office?",
+        "answer": "Nayatel's principal office is in Islamabad, Pakistan."
       }
     ]
   },
@@ -3942,6 +4002,8 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "id": "biz-orange-line-metro-lahore",
     "slug": "orange-line-metro-station-timing-and-routes",
     "name": "Orange Line Metro Station Timings & Routes",
+    "seoTitle": "Orange Line Metro Lahore – Timings, 26 Stations & Route | ListPak",
+    "seoDescription": "Orange Line Metro Lahore: 26 stations from Dera Gujran to Ali Town across 27.1 km. Train timings, station list, route & helpline (042) 111-222-627.",
     "category": "Transport & Logistics",
     "categoryId": "transportation",
     "city": "Lahore",
@@ -4001,12 +4063,20 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     ],
     "faqs": [
       {
-        "answer": "Orange Line Metro operates daily from 06:00 AM to 10:00 PM, 7 days a week, with trains every 5-7 minutes during peak hours.",
-        "question": "What are the orange line train timing hours in Lahore?"
+        "question": "How many stations does the Orange Line Metro Lahore have?",
+        "answer": "The Orange Line Metro Train in Lahore has 26 stations along a 27.1 km corridor."
       },
       {
-        "question": "How many stations are in the orange line station list?",
-        "answer": "There are 26 stations on the Orange Line Lahore route, starting from Ali Town Station and ending at Dera Gujran Station."
+        "question": "What is the Orange Line Metro route in Lahore?",
+        "answer": "The Orange Line runs from Dera Gujran to Ali Town, following the corridor from Raiwind Road to Dera Gujran in Lahore."
+      },
+      {
+        "question": "How many passengers use the Orange Line Metro daily?",
+        "answer": "The Orange Line Metro Train serves over 250,000 passengers every day in Lahore."
+      },
+      {
+        "question": "What is the Orange Line Metro helpline number?",
+        "answer": "You can contact the Orange Line Metro service on (042) 111-222-627."
       }
     ]
   },
@@ -5878,6 +5948,8 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     "id": "rKDe20jKUZSgUX2aK7wz",
     "slug": "rahber-travels",
     "name": "Rahber Travels",
+    "seoTitle": "Rahber Travels Lahore – Contact Number, Adda Address & Timings | ListPak",
+    "seoDescription": "Rahber Travels contact number: 0307-5553045. Rehbar Adda on Band Road, Lahore — timings (open daily 10 AM–9 PM), routes & ticket info.",
     "category": "Travel & Tourism",
     "categoryId": "travel",
     "city": "Lahore",
@@ -5947,7 +6019,28 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
         "date": "4 days ago"
       }
     ],
-    "faqs": []
+    "faqs": [
+      {
+        "question": "What is the contact number of Rahber Travels in Lahore?",
+        "answer": "You can contact Rahber Travels (also known as Rehbar Travels) in Lahore on 0307-5553045."
+      },
+      {
+        "question": "Where is Rehbar Adda Lahore located?",
+        "answer": "Rahber Travels' terminal (Rehbar Adda) is located on Band Road East, Dholanwal Nagra Town, Lahore, Punjab, Pakistan."
+      },
+      {
+        "question": "What are the timings of Rahber Travels Lahore?",
+        "answer": "Rahber Travels is open daily from 10:00 AM to 9:00 PM."
+      },
+      {
+        "question": "Is Rahber Travels the same as Rehbar Travels?",
+        "answer": "Yes. Rahber Travels is also known as Rehbar Travels, Rahbar Travel and Rehbar Bus Service — they are the same Lahore-based intercity travel operator."
+      },
+      {
+        "question": "Does Rahber Travels offer intercity bus service?",
+        "answer": "Yes. Rahber Travels operates intercity passenger transport and travel services across Punjab and neighboring regions of Pakistan."
+      }
+    ]
   },
   {
     "id": "y9aedlzMIGoQprjE5W0C",
@@ -6064,9 +6157,9 @@ export const MOCK_JOBS: JobItem[] = [
       "Official Internship Completion Certificate & Professional Recommendation",
       "Mentorship and constructive feedback from experienced SEO leads"
     ],
-    "postedAt": "2026-09-04T12:00:00.000Z",
+    "postedAt": "2026-10-16T09:07:00.000Z",
     "postedDate": "Just now",
-    "expiresAt": "2027-12-31T23:59:59.000Z",
+    "expiresAt": "2026-11-15T09:07:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "verified": true,
@@ -6096,8 +6189,8 @@ export const MOCK_JOBS: JobItem[] = [
     "responsibilities": [],
     "requirements": [],
     "skills": [],
-    "postedAt": "2026-08-23T14:04:53.807Z",
-    "expiresAt": "2026-09-22T14:04:53.807Z",
+    "postedAt": "2026-10-17T10:14:00.000Z",
+    "expiresAt": "2026-11-16T10:14:00.000Z",
     "status": "approved",
     "isFeatured": false,
     "applicationEmail": "jobs@listpak.com",
@@ -6125,8 +6218,8 @@ export const MOCK_JOBS: JobItem[] = [
     "responsibilities": [],
     "requirements": [],
     "skills": [],
-    "postedAt": "2026-08-23T14:04:53.807Z",
-    "expiresAt": "2026-09-22T14:04:53.807Z",
+    "postedAt": "2026-10-18T11:21:00.000Z",
+    "expiresAt": "2026-11-17T11:21:00.000Z",
     "status": "approved",
     "isFeatured": false,
     "applicationEmail": "jobs@listpak.com",
@@ -6170,8 +6263,8 @@ export const MOCK_JOBS: JobItem[] = [
       "financial records",
       "reporting"
     ],
-    "postedAt": "2026-08-23T14:04:53.807Z",
-    "expiresAt": "2026-09-22T14:04:53.807Z",
+    "postedAt": "2026-10-19T12:28:00.000Z",
+    "expiresAt": "2026-11-18T12:28:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
@@ -6215,8 +6308,8 @@ export const MOCK_JOBS: JobItem[] = [
       "Excel",
       "reporting"
     ],
-    "postedAt": "2026-08-23T14:04:53.807Z",
-    "expiresAt": "2026-09-22T14:04:53.807Z",
+    "postedAt": "2026-10-15T13:35:00.000Z",
+    "expiresAt": "2026-11-14T13:35:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
@@ -6263,13 +6356,13 @@ export const MOCK_JOBS: JobItem[] = [
       "Amazon PPC",
       "Excel"
     ],
-    "postedAt": "2026-08-23T14:04:53.807Z",
-    "expiresAt": "2026-09-22T14:04:53.807Z",
+    "postedAt": "2026-10-16T14:42:00.000Z",
+    "expiresAt": "2026-11-15T14:42:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
     "applicationWhatsapp": "+923000000000",
-    "applicationWebsite": "Verify current direct application URL from the source result"
+    "applicationWebsite": ""
   },
   {
     "id": "job-back-end-developer-meshsquare",
@@ -6308,13 +6401,13 @@ export const MOCK_JOBS: JobItem[] = [
       "system design",
       "debugging"
     ],
-    "postedAt": "2026-08-23T14:04:53.807Z",
-    "expiresAt": "2026-09-22T14:04:53.807Z",
+    "postedAt": "2026-10-17T15:49:00.000Z",
+    "expiresAt": "2026-11-16T15:49:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
     "applicationWhatsapp": "+923000000000",
-    "applicationWebsite": "Verify current direct application URL from the source result"
+    "applicationWebsite": ""
   },
   {
     "id": "job-content-writer-content-management-executive-texas-lab-technologies",
@@ -6355,8 +6448,8 @@ export const MOCK_JOBS: JobItem[] = [
       "social content",
       "research"
     ],
-    "postedAt": "2026-08-23T14:04:53.807Z",
-    "expiresAt": "2026-09-22T14:04:53.807Z",
+    "postedAt": "2026-10-18T16:56:00.000Z",
+    "expiresAt": "2026-11-17T16:56:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
@@ -6404,13 +6497,13 @@ export const MOCK_JOBS: JobItem[] = [
       "Google Sheets",
       "typing"
     ],
-    "postedAt": "2026-08-23T14:04:53.808Z",
-    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "postedAt": "2026-10-19T17:03:00.000Z",
+    "expiresAt": "2026-11-18T17:03:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
     "applicationWhatsapp": "+923000000000",
-    "applicationWebsite": "Verify current direct application URL from the source result"
+    "applicationWebsite": ""
   },
   {
     "id": "job-digital-marketing-executive-ags-leads",
@@ -6447,13 +6540,13 @@ export const MOCK_JOBS: JobItem[] = [
       "analytics",
       "content"
     ],
-    "postedAt": "2026-08-23T14:04:53.808Z",
-    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "postedAt": "2026-10-15T08:10:00.000Z",
+    "expiresAt": "2026-11-14T08:10:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
     "applicationWhatsapp": "+923000000000",
-    "applicationWebsite": "Verify current direct application URL from the source result"
+    "applicationWebsite": ""
   },
   {
     "id": "job-digital-marketing-manager-moldech",
@@ -6490,13 +6583,13 @@ export const MOCK_JOBS: JobItem[] = [
       "social media",
       "analytics"
     ],
-    "postedAt": "2026-08-23T14:04:53.808Z",
-    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "postedAt": "2026-10-16T09:17:00.000Z",
+    "expiresAt": "2026-11-15T09:17:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
     "applicationWhatsapp": "+923000000000",
-    "applicationWebsite": "Verify current direct application URL from the source result"
+    "applicationWebsite": ""
   },
   {
     "id": "job-e-commerce-data-entry-offneo",
@@ -6534,13 +6627,13 @@ export const MOCK_JOBS: JobItem[] = [
       "Excel/Sheets",
       "accuracy"
     ],
-    "postedAt": "2026-08-23T14:04:53.808Z",
-    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "postedAt": "2026-10-17T10:24:00.000Z",
+    "expiresAt": "2026-11-16T10:24:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
     "applicationWhatsapp": "+923000000000",
-    "applicationWebsite": "Verify current direct application URL from the source result"
+    "applicationWebsite": ""
   },
   {
     "id": "job-email-marketing-intern-iyrix-technologies",
@@ -6580,13 +6673,13 @@ export const MOCK_JOBS: JobItem[] = [
       "campaign reporting",
       "analytics"
     ],
-    "postedAt": "2026-08-23T14:04:53.808Z",
-    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "postedAt": "2026-10-18T11:31:00.000Z",
+    "expiresAt": "2026-11-17T11:31:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
     "applicationWhatsapp": "+923000000000",
-    "applicationWebsite": "Verify current direct application URL from the source result"
+    "applicationWebsite": ""
   },
   {
     "id": "job-evening-shift-call-center-agent-students-freshers-smarthubinnovations",
@@ -6601,11 +6694,11 @@ export const MOCK_JOBS: JobItem[] = [
     ],
     "type": "Full-time",
     "category": "Customer Service & BPO",
-    "salary": "Up to PKR 40,000 / month",
+    "salary": "PKR 45,000 - 75,000 / month",
     "experience": "2 - 4 Years",
     "vacancies": 1,
     "genderPreference": "Any",
-    "description": "SmartHubInnovations is hiring energetic, fluent English speakers for Evening Shift Call Center Agent positions at our modern customer support center in Islamabad. This role is perfectly suited for university students and fresh graduates looking for a well-paying, professional evening job with international client exposure.\n\n### Key Responsibilities\n- Handle inbound and outbound customer inquiries for international campaigns (USA, UK, and Canada).\n- Provide accurate product information, assist with order status tracking, and resolve customer grievances courteously.\n- Maintain detailed call logs, update CRM records, and escalate technical issues to senior tier-2 support.\n- Meet daily and weekly customer satisfaction (CSAT) scores and target key performance indicators (KPIs).\n\n### Candidate Requirements\n- Intermediate (F.A / F.Sc / I.Com / A-Levels) or Bachelor's degree (ongoing or completed).\n- Fluent spoken English with clear pronunciation and confident conversational ability.\n- Active listening skills, patience, and professional telephone etiquette.\n- Willingness to work evening / night shifts (e.g., 6:00 PM to 2:00 AM or 8:00 PM to 4:00 AM).\n- Prior call center or customer support experience is a plus, but freshers with strong English are warmly welcomed.\n\n### Compensation & Facilities\n- Basic Fixed Salary: PKR 45,000 - PKR 75,000 + Daily and Monthly Performance Bonuses (Earn up to PKR 100,000+).\n- Free office dinner, snacks, and tea.\n- Safe, comfortable working environment with high security.",
+    "description": "SmartHubInnovations is hiring energetic, fluent English speakers for Evening Shift Call Center Agent positions at our modern customer support center in Karachi. This role is perfectly suited for university students and fresh graduates looking for a well-paying, professional evening job with international client exposure.\n\n### Key Responsibilities\n- Handle inbound and outbound customer inquiries for international campaigns (USA, UK, and Canada).\n- Provide accurate product information, assist with order status tracking, and resolve customer grievances courteously.\n- Maintain detailed call logs, update CRM records, and escalate technical issues to senior tier-2 support.\n- Meet daily and weekly customer satisfaction (CSAT) scores and target key performance indicators (KPIs).\n\n### Candidate Requirements\n- Intermediate (F.A / F.Sc / I.Com / A-Levels) or Bachelor's degree (ongoing or completed).\n- Fluent spoken English with clear pronunciation and confident conversational ability.\n- Active listening skills, patience, and professional telephone etiquette.\n- Willingness to work evening / night shifts (e.g., 6:00 PM to 2:00 AM or 8:00 PM to 4:00 AM).\n- Prior call center or customer support experience is a plus, but freshers with strong English are warmly welcomed.\n\n### Compensation & Facilities\n- Basic Fixed Salary: PKR 45,000 - PKR 75,000 + Daily and Monthly Performance Bonuses (Earn up to PKR 100,000+).\n- Free office dinner, snacks, and tea.\n- Safe, comfortable working environment with high security.",
     "responsibilities": [
       "Execute primary responsibilities for Evening Shift Call Center Agent - Students & Freshers with high quality and diligence.",
       "Collaborate actively with team members, supervisors, and cross-functional stakeholders.",
@@ -6625,13 +6718,13 @@ export const MOCK_JOBS: JobItem[] = [
       "typing",
       "CRM basics"
     ],
-    "postedAt": "2026-08-23T14:04:53.808Z",
-    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "postedAt": "2026-10-19T12:38:00.000Z",
+    "expiresAt": "2026-11-18T12:38:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
     "applicationWhatsapp": "+923000000000",
-    "applicationWebsite": "Verify current direct application URL from the source result"
+    "applicationWebsite": ""
   },
   {
     "id": "job-front-end-engineer-remote-eventmobi",
@@ -6670,13 +6763,13 @@ export const MOCK_JOBS: JobItem[] = [
       "end-to-end testing",
       "performance optimization"
     ],
-    "postedAt": "2026-08-23T14:04:53.808Z",
-    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "postedAt": "2026-10-15T13:45:00.000Z",
+    "expiresAt": "2026-11-14T13:45:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
     "applicationWhatsapp": "+923000000000",
-    "applicationWebsite": "Verify current direct application URL from the source result"
+    "applicationWebsite": ""
   },
   {
     "id": "job-full-stack-developer-exora-ai",
@@ -6716,8 +6809,8 @@ export const MOCK_JOBS: JobItem[] = [
       "frontend integration",
       "databases"
     ],
-    "postedAt": "2026-08-23T14:04:53.808Z",
-    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "postedAt": "2026-10-16T14:52:00.000Z",
+    "expiresAt": "2026-11-15T14:52:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
@@ -6762,13 +6855,13 @@ export const MOCK_JOBS: JobItem[] = [
       "APIs",
       "Git"
     ],
-    "postedAt": "2026-08-23T14:04:53.808Z",
-    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "postedAt": "2026-10-17T15:59:00.000Z",
+    "expiresAt": "2026-11-16T15:59:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
     "applicationWhatsapp": "+923000000000",
-    "applicationWebsite": "Verify current direct application URL from the source result"
+    "applicationWebsite": ""
   },
   {
     "id": "job-graphic-designer-remote-winqle-tech-pvt-ltd",
@@ -6807,13 +6900,13 @@ export const MOCK_JOBS: JobItem[] = [
       "social media design",
       "Adobe or equivalent tools"
     ],
-    "postedAt": "2026-08-23T14:04:53.808Z",
-    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "postedAt": "2026-10-18T16:06:00.000Z",
+    "expiresAt": "2026-11-17T16:06:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
     "applicationWhatsapp": "+923000000000",
-    "applicationWebsite": "Verify current direct application URL from the source result"
+    "applicationWebsite": ""
   },
   {
     "id": "job-junior-developer-contentstudio",
@@ -6855,8 +6948,8 @@ export const MOCK_JOBS: JobItem[] = [
       "APIs",
       "databases"
     ],
-    "postedAt": "2026-08-23T14:04:53.808Z",
-    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "postedAt": "2026-10-19T17:13:00.000Z",
+    "expiresAt": "2026-11-18T17:13:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
@@ -6902,13 +6995,13 @@ export const MOCK_JOBS: JobItem[] = [
       "JavaScript",
       "REST APIs"
     ],
-    "postedAt": "2026-08-23T14:04:53.808Z",
-    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "postedAt": "2026-10-15T08:20:00.000Z",
+    "expiresAt": "2026-11-14T08:20:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
     "applicationWhatsapp": "+923000000000",
-    "applicationWebsite": "Verify current direct application URL from the source result"
+    "applicationWebsite": ""
   },
   {
     "id": "job-junior-react-native-developer-zavya-pakistan",
@@ -6951,8 +7044,8 @@ export const MOCK_JOBS: JobItem[] = [
       "GitHub",
       "Android publishing"
     ],
-    "postedAt": "2026-08-23T14:04:53.808Z",
-    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "postedAt": "2026-10-16T09:27:00.000Z",
+    "expiresAt": "2026-11-15T09:27:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
@@ -6998,8 +7091,8 @@ export const MOCK_JOBS: JobItem[] = [
       "HTML/CSS",
       "Git"
     ],
-    "postedAt": "2026-08-23T14:04:53.808Z",
-    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "postedAt": "2026-10-17T10:34:00.000Z",
+    "expiresAt": "2026-11-16T10:34:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
@@ -7044,13 +7137,13 @@ export const MOCK_JOBS: JobItem[] = [
       "student feedback",
       "subject knowledge"
     ],
-    "postedAt": "2026-08-23T14:04:53.808Z",
-    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "postedAt": "2026-10-18T11:41:00.000Z",
+    "expiresAt": "2026-11-17T11:41:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
     "applicationWhatsapp": "+923000000000",
-    "applicationWebsite": "Verify current direct application URL from the source result"
+    "applicationWebsite": ""
   },
   {
     "id": "job-online-research-virtual-assistant-bpo-solutions-pvt-ltd",
@@ -7091,13 +7184,13 @@ export const MOCK_JOBS: JobItem[] = [
       "digital marketing",
       "Excel/Sheets"
     ],
-    "postedAt": "2026-08-23T14:04:53.808Z",
-    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "postedAt": "2026-10-19T12:48:00.000Z",
+    "expiresAt": "2026-11-18T12:48:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
     "applicationWhatsapp": "+923000000000",
-    "applicationWebsite": "Verify current direct application URL from the source result"
+    "applicationWebsite": ""
   },
   {
     "id": "job-online-teachers-required-for-o-igcse-a-levels-for-all-subjects-zohaib-asad-academies",
@@ -7135,13 +7228,13 @@ export const MOCK_JOBS: JobItem[] = [
       "assessment design",
       "subject specialization"
     ],
-    "postedAt": "2026-08-23T14:04:53.808Z",
-    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "postedAt": "2026-10-15T13:55:00.000Z",
+    "expiresAt": "2026-11-14T13:55:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
     "applicationWhatsapp": "+923000000000",
-    "applicationWebsite": "Verify current direct application URL from the source result"
+    "applicationWebsite": ""
   },
   {
     "id": "job-remote-administration-internship-alis-academy",
@@ -7183,8 +7276,8 @@ export const MOCK_JOBS: JobItem[] = [
       "Google Workspace",
       "Microsoft Office"
     ],
-    "postedAt": "2026-08-23T14:04:53.808Z",
-    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "postedAt": "2026-10-16T14:02:00.000Z",
+    "expiresAt": "2026-11-15T14:02:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
@@ -7228,13 +7321,13 @@ export const MOCK_JOBS: JobItem[] = [
       "digital communication",
       "patient support"
     ],
-    "postedAt": "2026-08-23T14:04:53.808Z",
-    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "postedAt": "2026-10-17T15:09:00.000Z",
+    "expiresAt": "2026-11-16T15:09:00.000Z",
     "status": "approved",
     "isFeatured": true,
     "applicationEmail": "careers@listpak.com",
     "applicationWhatsapp": "+923000000000",
-    "applicationWebsite": "Verify current direct application URL from the source result"
+    "applicationWebsite": ""
   },
   {
     "id": "jpmE5jqP3cuAjJ6wRS8i",
@@ -7257,8 +7350,8 @@ export const MOCK_JOBS: JobItem[] = [
     "responsibilities": [],
     "requirements": [],
     "skills": [],
-    "postedAt": "2026-08-23T14:04:53.808Z",
-    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "postedAt": "2026-10-18T16:16:00.000Z",
+    "expiresAt": "2026-11-17T16:16:00.000Z",
     "status": "approved",
     "isFeatured": false,
     "applicationEmail": "jobs@listpak.com",
@@ -7286,8 +7379,8 @@ export const MOCK_JOBS: JobItem[] = [
     "responsibilities": [],
     "requirements": [],
     "skills": [],
-    "postedAt": "2026-08-23T14:04:53.808Z",
-    "expiresAt": "2026-09-22T14:04:53.808Z",
+    "postedAt": "2026-10-19T17:23:00.000Z",
+    "expiresAt": "2026-11-18T17:23:00.000Z",
     "status": "approved",
     "isFeatured": false,
     "applicationEmail": "jobs@listpak.com",
