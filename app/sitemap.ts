@@ -118,7 +118,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Error fetching companies for sitemap:', err)
   }
 
-  // 5. Active Cities (Only index cities that have real businesses, jobs, or professionals)
+  // 5. Active Cities (Only index cities that have real businesses, jobs, companies, or professionals)
   const activeCitySlugs = new Set<string>()
   rawBusinesses.forEach(b => {
     if (b.city) activeCitySlugs.add(normalizeCitySlug(b.city))
@@ -126,9 +126,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   })
   rawJobs.forEach(j => {
     if (j.city) activeCitySlugs.add(normalizeCitySlug(j.city))
+    if (j.cities) j.cities.forEach(c => activeCitySlugs.add(normalizeCitySlug(c)))
   })
   rawProfessionals.forEach(p => {
     if (p.city) activeCitySlugs.add(normalizeCitySlug(p.city))
+  })
+  rawCompanies.forEach(comp => {
+    if (comp.city) activeCitySlugs.add(normalizeCitySlug(comp.city))
+    if (comp.branchLocations) comp.branchLocations.forEach(c => activeCitySlugs.add(normalizeCitySlug(c)))
   })
   activeCitySlugs.delete('pakistan')
   activeCitySlugs.delete('remote')
@@ -180,7 +185,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   )
   const companyRoutes = approvedCompanies.map((comp) => ({
     url: canonicalUrl(`/companies/${comp.slug}`),
-    lastModified: currentDate,
+    lastModified: safeDate(comp.approvedAt || comp.submittedAt, currentDate),
     changeFrequency: 'weekly' as const,
     priority: 0.9,
   }))
@@ -200,7 +205,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // 11. Blog Post Pages
   const rawPostsList = Object.values(BLOG_POSTS)
-  const blogPostsBySlug = new Map<string, { slug: string; date: string }>()
+  const blogPostsBySlug = new Map<string, (typeof rawPostsList)[number]>()
   for (const post of rawPostsList) {
     if (post && post.slug && !blogPostsBySlug.has(post.slug)) {
       blogPostsBySlug.set(post.slug, post)
@@ -209,13 +214,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const allBlogPosts = Array.from(blogPostsBySlug.values())
   const blogRoutes = allBlogPosts.map((post) => ({
     url: canonicalUrl(`/blog/${post.slug}`),
-    lastModified: safeDate(post.date, currentDate),
+    lastModified: safeDate(post.dateModified || post.date, currentDate),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
   }))
 
-  // 12. City Prayer Times Pages for Top Pakistani Cities
-  const prayerCityRoutes = TOP_CITIES.map((city) => ({
+  // 12. City Prayer Times Pages for all Pakistani Cities
+  const prayerCityRoutes = CITIES.map((city) => ({
     url: canonicalUrl(`/prayer-times-${city.toLowerCase().replace(/\s+/g, '-')}-today`),
     lastModified: currentDate,
     changeFrequency: 'daily' as const,

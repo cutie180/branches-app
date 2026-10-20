@@ -4,7 +4,9 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { CATEGORIES, TOP_CITIES } from '@/lib/data'
 import { getAllBusinesses } from '@/lib/db-service'
-import { MapPin, Sparkles, FileText, Briefcase, Building2, Store } from 'lucide-react'
+import { getAllCompanies } from '@/lib/company-service'
+import { BLOG_POSTS } from '@/lib/blog-data'
+import { MapPin, Sparkles, FileText, Briefcase, Building2, Store, BookOpen, Clock } from 'lucide-react'
 
 export const revalidate = 3600
 
@@ -17,8 +19,13 @@ export const metadata: Metadata = {
 }
 
 export default async function HTMLSitemapPage() {
-  const businesses = await getAllBusinesses(false)
+  const [businesses, companies] = await Promise.all([
+    getAllBusinesses(false),
+    getAllCompanies(false)
+  ])
   const approvedBusinesses = businesses.filter(b => (b.status || 'approved') === 'approved')
+  const approvedCompanies = companies.filter(c => (c.status || 'approved') === 'approved')
+  const blogList = Object.values(BLOG_POSTS)
 
   return (
     <>
@@ -99,6 +106,56 @@ export default async function HTMLSitemapPage() {
               {TOP_CITIES.map(city => (
                 <Link key={city} href={`/city/${city.toLowerCase()}`} className="hover:text-emerald-600 hover:underline">
                   • {city} Business Directory
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Editorial Blog Guides & Articles */}
+          <div>
+            <h2 className="text-xl font-bold text-slate-900 border-b border-slate-200 pb-2 mb-4 flex items-center gap-2">
+              <BookOpen className="w-5 h-5 text-indigo-600" />
+              <span>Editorial Business Guides & Knowledge Base ({blogList.length})</span>
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 text-xs text-slate-600">
+              {blogList.map(post => (
+                <Link key={post.slug} href={`/blog/${post.slug}`} className="hover:text-indigo-600 hover:underline flex items-center gap-1.5 p-1.5 bg-slate-50/50 rounded-lg border border-slate-100">
+                  <span className="text-indigo-500 font-bold">•</span>
+                  <span className="font-semibold text-slate-800 truncate">{post.title}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Verified Companies */}
+          {approvedCompanies.length > 0 && (
+            <div>
+              <h2 className="text-xl font-bold text-slate-900 border-b border-slate-200 pb-2 mb-4 flex items-center gap-2">
+                <Briefcase className="w-5 h-5 text-cyan-600" />
+                <span>Verified Hiring Companies ({approvedCompanies.length})</span>
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 text-xs text-slate-600">
+                {approvedCompanies.map(comp => (
+                  <Link key={comp.id || comp.slug} href={`/companies/${comp.slug}`} className="hover:text-cyan-600 hover:underline flex items-center gap-1.5 p-1.5 bg-slate-50/50 rounded-lg border border-slate-100">
+                    <span className="text-cyan-500 font-bold">•</span>
+                    <span className="font-semibold text-slate-800 truncate">{comp.name}</span>
+                    <span className="text-slate-400 text-[10px]">({comp.city || 'Pakistan'})</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Pakistan City Prayer Times */}
+          <div>
+            <h2 className="text-xl font-bold text-slate-900 border-b border-slate-200 pb-2 mb-4 flex items-center gap-2">
+              <Clock className="w-5 h-5 text-emerald-600" />
+              <span>Daily Prayer Times by City ({TOP_CITIES.length})</span>
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 text-xs text-slate-600">
+              {TOP_CITIES.map(city => (
+                <Link key={city} href={`/prayer-times-${city.toLowerCase().replace(/\s+/g, '-')}-today`} className="hover:text-emerald-600 hover:underline">
+                  • {city} Prayer Times
                 </Link>
               ))}
             </div>

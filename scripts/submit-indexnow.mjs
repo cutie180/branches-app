@@ -9,34 +9,59 @@ async function runIndexNowSubmission() {
   console.log("Gathering all URLs for IndexNow batch submission...");
   
   const urls = new Set([
-    `https://${HOST}`,
-    `https://${HOST}/prayer-times-pakistan`,
-    `https://${HOST}/prayer-times-lahore-today`,
-    `https://${HOST}/prayer-times-karachi-today`,
-    `https://${HOST}/prayer-times-islamabad-today`,
-    `https://${HOST}/prayer-times-rawalpindi-today`,
-    `https://${HOST}/prayer-times-faisalabad-today`,
-    `https://${HOST}/prayer-times-multan-today`,
-    `https://${HOST}/prayer-times-peshawar-today`,
-    `https://${HOST}/prayer-times-quetta-today`,
-    `https://${HOST}/prayer-times-bahawalpur-today`,
-    `https://${HOST}/prayer-times-gujranwala-today`,
-    `https://${HOST}/prayer-times-sialkot-today`,
-    `https://${HOST}/prayer-times-hyderabad-today`,
-    `https://${HOST}/prayer-times-sargodha-today`,
-    `https://${HOST}/prayer-times-sukkur-today`,
-    `https://${HOST}/prayer-times-abbottabad-today`,
-    `https://${HOST}/categories`,
-    `https://${HOST}/cities`,
-    `https://${HOST}/professionals`,
-    `https://${HOST}/jobs`,
-    `https://${HOST}/blog`,
-    `https://${HOST}/contact`,
-    `https://${HOST}/about`,
-    `https://${HOST}/terms`,
-    `https://${HOST}/privacy`,
-    `https://${HOST}/add-business`,
-    `https://${HOST}/add-professional`,
+    `https://${HOST}/`,
+    `https://${HOST}/prayer-times-pakistan/`,
+    `https://${HOST}/prayer-times-lahore-today/`,
+    `https://${HOST}/prayer-times-karachi-today/`,
+    `https://${HOST}/prayer-times-islamabad-today/`,
+    `https://${HOST}/prayer-times-rawalpindi-today/`,
+    `https://${HOST}/prayer-times-faisalabad-today/`,
+    `https://${HOST}/prayer-times-multan-today/`,
+    `https://${HOST}/prayer-times-peshawar-today/`,
+    `https://${HOST}/prayer-times-quetta-today/`,
+    `https://${HOST}/prayer-times-bahawalpur-today/`,
+    `https://${HOST}/prayer-times-gujranwala-today/`,
+    `https://${HOST}/prayer-times-sialkot-today/`,
+    `https://${HOST}/prayer-times-hyderabad-today/`,
+    `https://${HOST}/prayer-times-sargodha-today/`,
+    `https://${HOST}/prayer-times-sukkur-today/`,
+    `https://${HOST}/prayer-times-abbottabad-today/`,
+    `https://${HOST}/categories/`,
+    `https://${HOST}/cities/`,
+    `https://${HOST}/professionals/`,
+    `https://${HOST}/jobs/`,
+    `https://${HOST}/companies/`,
+    `https://${HOST}/blog/`,
+    `https://${HOST}/contact/`,
+    `https://${HOST}/about/`,
+    `https://${HOST}/terms/`,
+    `https://${HOST}/privacy/`,
+    `https://${HOST}/add-business/`,
+    `https://${HOST}/add-professional/`,
+    `https://${HOST}/html-sitemap/`,
+    `https://${HOST}/blog/restaurants-in-lahore/`,
+    `https://${HOST}/blog/best-solar-companies-pakistan/`,
+    `https://${HOST}/blog/best-free-business-listing-websites-pakistan-2026/`,
+    `https://${HOST}/blog/best-banks-in-pakistan/`,
+    `https://${HOST}/blog/restaurants-in-karachi/`,
+    `https://${HOST}/blog/restaurants-in-pakistan/`,
+    `https://${HOST}/blog/best-universities-computer-science-pakistan/`,
+    `https://${HOST}/blog/universities-in-pakistan/`,
+    `https://${HOST}/blog/it-jobs-in-pakistan/`,
+    `https://${HOST}/blog/jobs-in-pakistan/`,
+    `https://${HOST}/blog/top-business-directory-websites-pakistan/`,
+    `https://${HOST}/blog/how-to-list-business-free-listpak-guide/`,
+    `https://${HOST}/blog/local-seo-pakistan-businesses-google-ranking/`,
+    `https://${HOST}/blog/free-job-posting-pakistan-hire-employees/`,
+    `https://${HOST}/blog/best-software-houses-pakistan-2026/`,
+    `https://${HOST}/blog/how-to-find-jobs-in-pakistan-2026/`,
+    `https://${HOST}/blog/remote-jobs-pakistan-fresh-graduates/`,
+    `https://${HOST}/blog/accountant-jobs-pakistan-city-guide/`,
+    `https://${HOST}/blog/local-services-pakistan-by-city/`,
+    `https://${HOST}/blog/how-to-find-trusted-professionals-pakistan/`,
+    `https://${HOST}/blog/best-startups-pakistan-2026/`,
+    `https://${HOST}/blog/businesses-in-lahore-by-category/`,
+    `https://${HOST}/blog/digital-marketing-jobs-lahore-guide/`,
   ]);
 
   // Load database dump
@@ -48,7 +73,7 @@ async function runIndexNowSubmission() {
     if (dump.professionals) {
       dump.professionals.forEach(p => {
         const slug = p.username || p.slug || p.id;
-        urls.add(`https://${HOST}/professionals/${slug}`);
+        urls.add(`https://${HOST}/professionals/${slug}/`);
       });
     }
 
@@ -56,7 +81,7 @@ async function runIndexNowSubmission() {
     if (dump.jobs) {
       dump.jobs.forEach(j => {
         const slug = j.slug || j.id;
-        urls.add(`https://${HOST}/jobs/${slug}`);
+        urls.add(`https://${HOST}/jobs/${slug}/`);
       });
     }
 
@@ -64,7 +89,7 @@ async function runIndexNowSubmission() {
     if (dump.businesses) {
       dump.businesses.forEach(b => {
         const slug = b.slug || b.id;
-        urls.add(`https://${HOST}/business/${slug}`);
+        urls.add(`https://${HOST}/business/${slug}/`);
       });
     }
   }

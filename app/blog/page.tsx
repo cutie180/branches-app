@@ -15,6 +15,42 @@ export const metadata: Metadata = {
 
 const FEATURED_POSTS = [
   {
+    slug: 'best-free-business-listing-websites-pakistan-2026',
+    title: '12 Best Free Business Listing Sites in Pakistan 2026 (ListPak Ranked #1)',
+    excerpt: 'Free business listing sites in Pakistan that actually get you Google visibility in 2026 — features, traffic & how to list on each. Start with ListPak.',
+    category: 'Local SEO & Growth',
+    date: 'October 20, 2026',
+    readTime: '15 min read',
+    icon: Sparkles
+  },
+  {
+    slug: 'restaurants-in-lahore',
+    title: '15 Best Restaurants in Lahore 2026 – Food Street to MM Alam Road',
+    excerpt: 'The best restaurants in Lahore in 2026: Monal, Salt\'n Pepper, Food Street favourites & rooftop spots — cuisines, locations & contact numbers.',
+    category: 'Lahore Food Guide',
+    date: 'October 20, 2026',
+    readTime: '14 min read',
+    icon: Sparkles
+  },
+  {
+    slug: 'best-solar-companies-pakistan',
+    title: 'Top 10 Solar Companies in Pakistan 2026 – Prices, Panels & Installers',
+    excerpt: 'Best solar companies in Pakistan 2026: compare installers in Karachi, Lahore & Islamabad — panel prices, net metering & contact details.',
+    category: 'Solar Energy & Tech',
+    date: 'October 20, 2026',
+    readTime: '15 min read',
+    icon: Sparkles
+  },
+  {
+    slug: 'best-banks-in-pakistan',
+    title: 'Top 10 Banks in Pakistan 2026 – Best for Accounts, Loans & Digital Banking',
+    excerpt: 'Pakistan\'s best banks in 2026 ranked: Meezan, HBL, UBL, MCB, Allied & more — account types, digital banking, branches & contact details.',
+    category: 'Finance & Banking',
+    date: 'October 20, 2026',
+    readTime: '15 min read',
+    icon: Sparkles
+  },
+  {
     slug: 'restaurants-in-karachi',
     title: 'Restaurants in Karachi 2026: Food, Cuisines, Areas & Dining Guide',
     excerpt: 'Explore restaurants in Karachi by cuisine, area, budget and occasion, including Pakistani food, BBQ, cafés, family dining, fast food and fine dining.',
