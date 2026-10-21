@@ -116,7 +116,18 @@ const nextConfig = {
   },
 
   async redirects() {
-    return []
+    return [
+      {
+        source: '/businesses',
+        destination: '/search/',
+        permanent: true,
+      },
+      {
+        source: '/businesses/',
+        destination: '/search/',
+        permanent: true,
+      },
+    ]
   },
 
   async rewrites() {

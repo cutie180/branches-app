@@ -6079,6 +6079,451 @@ export const MOCK_BUSINESSES: BusinessItem[] = [
     ],
     "reviews": [],
     "faqs": []
+  },
+  {
+    "id": "biz-1787722353097",
+    "slug": "mughal-foods",
+    "name": "Mughal Foods",
+    "metaTitle": "Mughal Foods – Retail & Shopping in Karachi | ListPak",
+    "metaDescription": "Here is the extended version with 30 additional words added (taking your total well past the 250-word minimum) so you can copy and paste it right in:\n\nMughal Fo",
+    "canonical": "https://www.listpak.com/business/mughal-foods/",
+    "introduction": "Here is the extended version with 30 additional words added (taking your total well past the 250-word minimum) so you can copy and paste it right in:\n\nMughal Foods is a flagship consumer brand operati",
+    "category": "Retail & Shopping",
+    "categoryId": "retail",
+    "secondaryCategories": [],
+    "city": "Karachi",
+    "cities": [
+      "Karachi"
+    ],
+    "province": "Pakistan",
+    "address": "C69-71, 12th Commercial Lane, DHA Phase 2 EXT, Karachi  75500, Pakistan",
+    "locations": [
+      {
+        "city": "Karachi",
+        "address": "C69-71, 12th Commercial Lane, DHA Phase 2 EXT, Karachi  75500, Pakistan",
+        "isPrimary": true
+      }
+    ],
+    "phone": "(+92 21) 111 427 421",
+    "whatsapp": "9221111427421",
+    "email": "contact@garibsons.com",
+    "website": "https://foodsbymughal.com/about-us/",
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Here is the extended version with 30 additional words added (taking your total well past the 250-word minimum) so you can copy and paste it right in:\n\nMughal Foods is a flagship consumer brand operating under the umbrella of Garibsons Pvt Ltd rice company, established in 1976. As one of the premier rice exporters Pakistan relies on for global trade, Garibsons has built a legacy of trust, purity, and exceptional quality over nearly five decades. Mughal Foods extends this legacy directly to consumer kitchens, offering premium Basmati rice, non-Basmati rice, and essential food staples crafted to meet the highest international standards.   \n\nOur food brand story is deeply rooted in Pakistan’s rich agricultural heritage. We source our grains directly from the fertile lands of the Indus Basin, combining traditional farming wisdom with state-of-the-art milling, processing, and packaging technologies. Every grain of rice undergoes rigorous quality checks to guarantee long grain lengths, natural aroma, clean texture, and rich taste.   \n\nThe history of Mughal rice brand reflects continuous innovation and a commitment to customer satisfaction. From fulfilling large-scale international bulk orders across 100+ countries to providing neatly packaged rice for everyday household meals, Mughal Foods prioritizes health, authenticity, and unmatched consistency.   \n\nTo learn more about Mughal foods by Garibsons, our brand brings decades of milling experience, advanced agricultural research, and stringent quality control straight to home kitchens across the globe. We take immense pride in delivering pure, aromatic, and nutrient-packed rice varieties that cater to diverse culinary needs worldwide. Whether you are cooking traditional biryani, pilaf, or simple daily meals, our products guarantee a royal dining experience every single time.   \n\nExplore our complete product line and corporate background by visiting our official website: Mughal Foods",
+    "services": [
+      "Premium Basmati Rice",
+      "Long Grain White Rice",
+      "Parboiled Rice",
+      "Organic Basmati Rice",
+      "Wholesale Rice Export",
+      "Kitchen Staples",
+      "Retail Rice Packaging",
+      "Global Grain Supply"
+    ],
+    "operatingHours": {
+      "Monday - Saturday": "09:00 AM - 07:00 PM"
+    },
+    "rating": 0,
+    "reviewCount": 0,
+    "verified": false,
+    "isClaimed": false,
+    "isFeatured": false,
+    "status": "approved",
+    "paymentStatus": "VERIFIED",
+    "features": [],
+    "reviews": [],
+    "faqs": [],
+    "submittedAt": "2026-08-26T05:32:33.097Z",
+    "approvedAt": "2026-08-27T12:58:18.778Z",
+    "approvedBy": "admin-master",
+    "ownerName": "Business Representative"
+  },
+  {
+    "id": "biz-1787535300705",
+    "slug": "sansar24",
+    "name": "sansar24",
+    "metaTitle": "sansar24 – Education & Training in Multan | ListPak",
+    "metaDescription": "Sansar24 is a modern digital platform created to provide useful, practical, and easy-to-understand information for everyday readers. The website covers a wide r",
+    "canonical": "https://www.listpak.com/business/sansar24/",
+    "introduction": "Sansar24 is a modern digital platform created to provide useful, practical, and easy-to-understand information for everyday readers. The website covers a wide range of topics that help people discover",
+    "category": "Education & Training",
+    "categoryId": "education",
+    "secondaryCategories": [],
+    "city": "Multan",
+    "cities": [
+      "Multan"
+    ],
+    "province": "Pakistan",
+    "address": "Country: Pakistan",
+    "locations": [
+      {
+        "city": "Multan",
+        "address": "Country: Pakistan",
+        "isPrimary": true
+      }
+    ],
+    "phone": "+923000000001",
+    "whatsapp": "923000000001",
+    "email": "sansar9879@gmail.com",
+    "website": "https://sansar24.com/",
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Sansar24 is a modern digital platform created to provide useful, practical, and easy-to-understand information for everyday readers. The website covers a wide range of topics that help people discover new ideas, explore opportunities, learn valuable skills, and make informed decisions in their personal and professional lives.\n\nSansar24 publishes informative content about money-making opportunities, online earning, freelancing, business ideas, digital work, technology, travel, lifestyle, and everyday experiences. Its guides and articles explain different subjects in a simple, clear, and accessible manner, making them helpful for beginners, students, professionals, entrepreneurs, and experienced internet users.\n\nThe platform also shares practical suggestions for individuals interested in developing online skills, finding flexible work opportunities, understanding digital platforms, starting small businesses, and improving their knowledge. Readers can discover useful information about remote work, freelancing platforms, digital tools, online services, and modern business trends.\n\nTravel content on Sansar24 offers inspiration for exploring destinations, planning affordable trips, discovering useful travel tips, understanding local experiences, and making journeys more comfortable and enjoyable. Lifestyle articles provide ideas related to daily living, personal growth, productivity, and practical decision-making.\n\nSansar24 aims to keep every article straightforward, informative, relevant, and easy to follow. The content is designed to explain important topics without unnecessary complexity, helping readers understand information quickly and apply useful ideas in real life.\n\nWhether you are searching for information about online earning, freelancing, business, technology, travel, lifestyle, or practical guides, Sansar24 brings diverse topics together in one convenient digital space. Its goal is to share helpful knowledge, fresh ideas, useful resources, and accessible information for readers who want to learn, explore, grow, and discover new opportunities online.",
+    "services": [
+      "General Services"
+    ],
+    "operatingHours": {
+      "Monday - Saturday": "09:00 AM - 07:00 PM"
+    },
+    "rating": 0,
+    "reviewCount": 0,
+    "verified": false,
+    "isClaimed": false,
+    "isFeatured": false,
+    "status": "approved",
+    "paymentStatus": "VERIFIED",
+    "features": [],
+    "reviews": [],
+    "faqs": [],
+    "submittedAt": "2026-08-24T01:35:00.705Z",
+    "approvedAt": "2026-08-27T12:58:04.650Z",
+    "approvedBy": "admin-master",
+    "ownerName": "Business Representative"
+  },
+  {
+    "id": "biz-1787820622735",
+    "slug": "swapot",
+    "name": "swapot",
+    "metaTitle": "swapot – Furniture & Interior Decor in Lahore | ListPak",
+    "metaDescription": "Swapot focuses on making the used furniture experience more reliable and convenient. By encouraging clear product information and honest listings, the marketpla",
+    "canonical": "https://www.listpak.com/business/swapot/",
+    "introduction": "Swapot focuses on making the used furniture experience more reliable and convenient. By encouraging clear product information and honest listings, the marketplace helps create better communication bet",
+    "category": "Furniture & Interior Decor",
+    "categoryId": "furniture",
+    "secondaryCategories": [],
+    "city": "Lahore",
+    "cities": [
+      "Lahore"
+    ],
+    "province": "Pakistan",
+    "address": "436 M block model town lhr.",
+    "locations": [
+      {
+        "city": "Lahore",
+        "address": "436 M block model town lhr.",
+        "isPrimary": true
+      }
+    ],
+    "phone": "+923284888978",
+    "whatsapp": "923284888978",
+    "email": "innovadeltalent@gmail.com",
+    "website": "https://swapot.com/",
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Swapot focuses on making the used furniture experience more reliable and convenient. By encouraging clear product information and honest listings, the marketplace helps create better communication between buyers and sellers. This approach can save time and make the process of finding or selling furniture easier.With its focus on convenience, transparency, and accessibility, Swapot aims to build a trusted marketplace for used furniture in Pakistan. Whether you want to buy affordable furniture or sell items you no longer need, Swapot provides a simple digital platform where buyers and sellers can connect and discover new opportunities.Swapot is a modern online furniture marketplace in Pakistan designed to make buying and selling used furniture simple, transparent, and hassle-free. The platform connects buyers and sellers who are looking for quality pre-owned furniture at practical prices while providing a more convenient alternative to traditional furniture buying and selling methods.\n\nWhether you are looking for a sofa, bed, dining table, wardrobe, office furniture, chairs, tables, or other household items, Swapot brings a wide range of used furniture options together in one place. Buyers can explore available listings and compare furniture based on their needs, preferences, and budget.\n\nFor sellers, Swapot provides an easy way to showcase unwanted or unused furniture to potential buyers. Instead of dealing with complicated selling processes, sellers can list their furniture and provide important details such as condition, photographs, location, and price. This helps buyers understand what they are considering before making a decision.\n\nSwapot focuses on making the used furniture experience more reliable and convenient. By encouraging clear product information and honest listings, the marketplace helps create better communication between buyers and sellers. This approach can save time and make the process of finding or selling furniture easier.\n\nBuying pre-owned furniture can also be a practical choice for people furnishing a new home, upgrading their existing space, setting up an office, or simply searching for affordable furniture. Sellers can also give their existing furniture a second life instead of leaving it unused.\n\nWith its focus on convenience, transparency, and accessibility, Swapot aims to build a trusted marketplace for used furniture in Pakistan. Whether you want to buy affordable furniture or sell items you no longer need, Swapot provides a simple digital platform where buyers and sellers can connect and discover new opportunities.",
+    "services": [
+      "348"
+    ],
+    "operatingHours": {
+      "Monday - Saturday": "09:00 AM - 07:00 PM"
+    },
+    "rating": 0,
+    "reviewCount": 0,
+    "verified": false,
+    "isClaimed": false,
+    "isFeatured": false,
+    "status": "approved",
+    "paymentStatus": "VERIFIED",
+    "features": [],
+    "reviews": [],
+    "faqs": [],
+    "submittedAt": "2026-08-27T08:50:22.735Z",
+    "approvedAt": "2026-08-27T12:58:07.071Z",
+    "approvedBy": "admin-master",
+    "ownerName": "Business Representative"
+  },
+  {
+    "id": "biz-1787654363798",
+    "slug": "avon-commercial",
+    "name": "Avon Commercial",
+    "metaTitle": "Avon Commercial – Manufacturing & Industrial in Karachi | ListPak",
+    "metaDescription": "Avon Commercial is a sourcing and supply company serving businesses with a wide range of industrial chemicals, petrochemicals, textile fabrics, yarns, resins, a",
+    "canonical": "https://www.listpak.com/business/avon-commercial/",
+    "introduction": "Avon Commercial is a sourcing and supply company serving businesses with a wide range of industrial chemicals, petrochemicals, textile fabrics, yarns, resins, and other essential raw materials. The co",
+    "category": "Manufacturing & Industrial",
+    "categoryId": "manufacturing",
+    "secondaryCategories": [],
+    "city": "Karachi",
+    "cities": [
+      "Karachi"
+    ],
+    "province": "Pakistan",
+    "address": "5-C, 26th Street, Phase 6, D.H.A, Karachi",
+    "locations": [
+      {
+        "city": "Karachi",
+        "address": "5-C, 26th Street, Phase 6, D.H.A, Karachi",
+        "isPrimary": true
+      }
+    ],
+    "phone": "+923452183128",
+    "whatsapp": "+923452183128",
+    "email": "avoncommercialseo@gmail.com",
+    "website": "https://www.avoncommercial.net/",
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Avon Commercial is a sourcing and supply company serving businesses with a wide range of industrial chemicals, petrochemicals, textile fabrics, yarns, resins, and other essential raw materials. The company works with manufacturers and industrial buyers to provide dependable sourcing solutions for diverse production requirements. Its portfolio includes products such as hydrogen peroxide, hydrochloric acid, caustic soda, formic acid, sodium hydrosulfite, and other industrial chemicals, along with petrochemical materials and engineering resins used across different manufacturing applications.\nIn the textile sector, Avon Commercial supplies products including denim, rayon, corduroy, crepe, polypropylene spun bond non-woven fabric, Siro Yarn, BCF Yarn, and organic cotton. These materials are suitable for applications involving garments, weaving, knitting, carpets, floor coverings, and other textile products. Its petrochemical range also covers materials such as PTA, MEG, DEG, TEG, HDPE, PVC resin, PS resin, PC resin, nylon resin, PBT resin, PPS resin, ASA resin, acrylates, and BPA.\nBeyond product supply, Avon Commercial provides support throughout the sourcing and procurement process. Its services include supplier sourcing, quotations, order confirmation, production coordination, quality control, shipping, logistics, customs brokerage, warehousing, tariff calculations, transportation management, and after-sales assistance. This helps customers manage their material requirements while maintaining greater control over their supply chains.\nWith a diverse product portfolio and a focus on reliable sourcing, Avon Commercial supports businesses looking for industrial materials from established supply channels. Its approach is centered on understanding customer requirements, coordinating procurement, and facilitating the movement of products from suppliers to their intended destinations. Whether a business requires chemicals for industrial processes, resins for manufacturing, petrochemical materials, or fabrics and yarns for textile production, Avon Commercial provides sourcing and supply services designed to meet different commercial and manufacturing needs.",
+    "services": [
+      "Polyester Fiber",
+      "Cotton Yarn",
+      "Crepe Fabric",
+      "Corduroy Fabric",
+      "Rayon Fabric",
+      "Non-Woven Fabrics",
+      "Chemical",
+      "Scrap Metal",
+      "Petrochemical"
+    ],
+    "operatingHours": {
+      "Monday - Saturday": "09:00 AM - 07:00 PM"
+    },
+    "rating": 0,
+    "reviewCount": 0,
+    "verified": false,
+    "isClaimed": false,
+    "isFeatured": false,
+    "status": "approved",
+    "paymentStatus": "VERIFIED",
+    "features": [],
+    "reviews": [],
+    "faqs": [],
+    "submittedAt": "2026-08-25T10:39:23.798Z",
+    "approvedAt": "2026-08-27T12:58:10.875Z",
+    "approvedBy": "admin-master",
+    "ownerName": "Business Representative"
+  },
+  {
+    "id": "biz-1787827879700",
+    "slug": "artx-films",
+    "name": "Artx Films",
+    "metaTitle": "Artx Films – Media, PR & Advertising in Karachi | ListPak",
+    "metaDescription": "Artxfilms is a professional video production and photography company that helps businesses turn their ideas, products, services, and brand stories into engaging",
+    "canonical": "https://www.listpak.com/business/artx-films/",
+    "introduction": "Artxfilms is a professional video production and photography company that helps businesses turn their ideas, products, services, and brand stories into engaging visual content. With more than 14 years",
+    "category": "Media, PR & Advertising",
+    "categoryId": "media,",
+    "secondaryCategories": [],
+    "city": "Karachi",
+    "cities": [
+      "Karachi"
+    ],
+    "province": "Pakistan",
+    "address": "Plot no.43-H, 1 PECHS Block 6 Karachi",
+    "locations": [
+      {
+        "city": "Karachi",
+        "address": "Plot no.43-H, 1 PECHS Block 6 Karachi",
+        "isPrimary": true
+      }
+    ],
+    "phone": "+923343154626",
+    "whatsapp": "+923343154626",
+    "email": "artxfilmsoffice@gmail.com",
+    "website": "https://artxfilms.com",
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Artxfilms is a professional video production and photography company that helps businesses turn their ideas, products, services, and brand stories into engaging visual content. With more than 14 years of industry experience and over 800 completed projects, the company works with businesses across different industries to create content for marketing, communication, advertising, and digital platforms.\nThe company provides a wide range of creative production services, including corporate video production, digital video commercials, TV commercials, product photography, product videos, event coverage, aerial and drone filming, 360° video production, explainer videos, animation, and user-generated content. These services allow businesses to choose the right type of visual content according to their goals, audience, and communication needs.\nArtxfilms focuses on creating professional content that communicates a clear message. Its corporate video services can help companies present their history, services, team, workplace, achievements, and values in an engaging format. Commercial video production can also help brands promote products and services through creative visuals designed for advertising campaigns and digital marketing.\nFor businesses selling physical products, Artxfilms offers professional product photography and video production to showcase products from clear and appealing angles. High-quality visuals can be used across websites, online stores, social media platforms, brochures, advertisements, and other marketing materials.\nThe company also provides aerial filming and drone video production for projects that benefit from wide and dynamic views. Event video production can capture important moments from corporate gatherings, conferences, launches, exhibitions, and other business events. Animation and explainer videos provide another way to simplify complex ideas and make information easier for audiences to understand.\nFrom creative planning and filming to editing and post-production, Artxfilms manages different stages of the production process. Its team works to maintain consistency in visuals, storytelling, sound, and editing so that the final content reflects the purpose of each project.\nWhether a business needs a corporate film, commercial, product shoot, event video, animation, or other branded content, Artxfilms provides a range of production solutions under one roof. The company combines creative storytelling with professional production techniques to help businesses communicate their messages through effective and memorable visual content.",
+    "services": [
+      "product photography services",
+      "Product Videography services",
+      "corporate event video services",
+      "animated video production services"
+    ],
+    "operatingHours": {
+      "Monday - Saturday": "09:00 AM - 07:00 PM"
+    },
+    "rating": 0,
+    "reviewCount": 0,
+    "verified": false,
+    "isClaimed": false,
+    "isFeatured": false,
+    "status": "approved",
+    "paymentStatus": "VERIFIED",
+    "features": [],
+    "reviews": [],
+    "faqs": [],
+    "submittedAt": "2026-08-27T10:51:19.700Z",
+    "approvedAt": "2026-08-27T12:58:11.743Z",
+    "approvedBy": "admin-master",
+    "ownerName": "Business Representative"
+  },
+  {
+    "id": "biz-1787565082894",
+    "slug": "lake-view-resort",
+    "name": "Lake View Resort",
+    "metaTitle": "Lake View Resort – Travel & Tourism in Karachi | ListPak",
+    "metaDescription": "Lakeview Resort is a versatile destination for families, friends, corporate groups, and anyone looking for a relaxing break in a comfortable and enjoyable envir",
+    "canonical": "https://www.listpak.com/business/lake-view-resort/",
+    "introduction": "Lakeview Resort is a versatile destination for families, friends, corporate groups, and anyone looking for a relaxing break in a comfortable and enjoyable environment. The resort provides a range of f",
+    "category": "Travel & Tourism",
+    "categoryId": "travel",
+    "secondaryCategories": [],
+    "city": "Karachi",
+    "cities": [
+      "Karachi"
+    ],
+    "province": "Pakistan",
+    "address": "National Highway, Sultanabad, near Cafe Imran Restaurant Gharo.",
+    "locations": [
+      {
+        "city": "Karachi",
+        "address": "National Highway, Sultanabad, near Cafe Imran Restaurant Gharo.",
+        "isPrimary": true
+      }
+    ],
+    "phone": "+923111178643",
+    "whatsapp": "+923111178643",
+    "email": "rzaali1209@gmail.com",
+    "website": "https://lakeviewresortkhi.com",
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Lakeview Resort is a versatile destination for families, friends, corporate groups, and anyone looking for a relaxing break in a comfortable and enjoyable environment. The resort provides a range of facilities designed for day outings, overnight stays, celebrations, and group activities. Guests can choose from comfortable air-conditioned chalets and clubhouses while enjoying spacious outdoor areas, swimming pools, dining facilities, and recreational spaces.\n\nFamilies can spend quality time together with a variety of activities available at the resort. Guests can enjoy swimming, cricket, futsal, tennis, squash, horse riding, cycling, archery, quad biking, indoor games, and other recreational options. These facilities make the resort suitable for both relaxing visits and active days filled with entertainment.\n\nLakeview Resort also provides suitable spaces for special occasions and group gatherings. Birthday celebrations, weddings, anniversaries, family reunions, corporate events, team outings, and other functions can be arranged in dedicated areas. Spacious lawns and event facilities provide a convenient setting for guests who want to celebrate important moments with family, friends, colleagues, or business partners.\n\nFor visitors planning a family outing or a peaceful stay, the resort offers a combination of accommodation, food, entertainment, and outdoor activities in one location. Guests can enjoy their time at the pool, participate in sports, relax in open spaces, or simply spend the day with loved ones.\n\nWith its range of accommodation, recreational activities, dining options, and event facilities, Lakeview Resort is suitable for different types of visits and occasions. Whether planning a family picnic, corporate gathering, birthday celebration, wedding, or weekend stay, guests can find convenient facilities for spending quality time together and creating memorable moments.",
+    "services": [
+      "General Services"
+    ],
+    "operatingHours": {
+      "Monday - Saturday": "09:00 AM - 07:00 PM"
+    },
+    "rating": 0,
+    "reviewCount": 0,
+    "verified": false,
+    "isClaimed": false,
+    "isFeatured": false,
+    "status": "approved",
+    "paymentStatus": "VERIFIED",
+    "features": [],
+    "reviews": [],
+    "faqs": [],
+    "submittedAt": "2026-08-24T09:51:22.894Z",
+    "approvedAt": "2026-08-27T12:58:12.449Z",
+    "approvedBy": "admin-master",
+    "ownerName": "Business Representative"
+  },
+  {
+    "id": "biz-1787633708918",
+    "slug": "hutaib-industrial-solution",
+    "name": "Hutaib Industrial Solution",
+    "metaTitle": "Hutaib Industrial Solution – Manufacturing & Industrial in Karachi | ListPak",
+    "metaDescription": "Hutaib Industrial Solutions is a chemical supplier providing a wide range of industrial and specialty chemical products for businesses across Pakistan. The comp",
+    "canonical": "https://www.listpak.com/business/hutaib-industrial-solution/",
+    "introduction": "Hutaib Industrial Solutions is a chemical supplier providing a wide range of industrial and specialty chemical products for businesses across Pakistan. The company serves industries that require relia",
+    "category": "Manufacturing & Industrial",
+    "categoryId": "manufacturing",
+    "secondaryCategories": [],
+    "city": "Karachi",
+    "cities": [
+      "Karachi"
+    ],
+    "province": "Pakistan",
+    "address": "D-83, S.I.T.E., Industrial Area, Manghopir Road, Karachi, Pakistan",
+    "locations": [
+      {
+        "city": "Karachi",
+        "address": "D-83, S.I.T.E., Industrial Area, Manghopir Road, Karachi, Pakistan",
+        "isPrimary": true
+      }
+    ],
+    "phone": "+9221111052052",
+    "whatsapp": "0309 7772468",
+    "email": "hutaibseo@gmail.com",
+    "website": "https://hutaib.org/",
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Hutaib Industrial Solutions is a chemical supplier providing a wide range of industrial and specialty chemical products for businesses across Pakistan. The company serves industries that require reliable raw materials and practical chemical solutions for manufacturing, construction, textiles, coatings, cleaning, and other industrial applications. Its diverse product portfolio is designed to support different production processes and formulation requirements.\nThe company offers a selection of construction chemicals, including epoxy resin, concrete admixtures, SBR grades, redispersible polymer powders, and styrene acrylic products. These materials can be used in applications such as concrete modification, waterproofing, mortar production, bonding, coatings, and other construction-related formulations. Hutaib also supplies textile and silicone-based products, including hydrophilic silicone oils used in textile finishing and fabric treatment applications.\nIn addition to construction and textile chemicals, Hutaib Industrial Solutions provides surfactants and other specialty chemicals for various industrial formulations. These products can support applications involving cleaning products, surface treatment, emulsification, coatings, textile processing, and manufacturing. By maintaining a broad product range, the company helps businesses source different chemical materials according to their specific operational and formulation needs.\nHutaib focuses on supplying products that meet the practical requirements of industrial customers while providing product information and application-oriented support. Its team can assist businesses in identifying suitable chemical materials based on their intended use, formulation, and processing requirements. This makes the company a suitable sourcing partner for manufacturers, contractors, formulators, and other commercial customers.\nWith its range of construction chemicals, polymers, surfactants, silicone oils, textile chemicals, and specialty industrial materials, Hutaib Industrial Solutions supports businesses looking for dependable chemical supplies. The company continues to serve diverse industrial requirements by offering a varied portfolio of chemical products and solutions for different applications.",
+    "services": [
+      "Construction chemicals",
+      "textile chemicals",
+      "epoxy resin",
+      "SBR chemicals"
+    ],
+    "operatingHours": {
+      "Monday - Saturday": "09:00 AM - 07:00 PM"
+    },
+    "rating": 0,
+    "reviewCount": 0,
+    "verified": false,
+    "isClaimed": false,
+    "isFeatured": false,
+    "status": "approved",
+    "paymentStatus": "VERIFIED",
+    "features": [],
+    "reviews": [],
+    "faqs": [],
+    "submittedAt": "2026-08-25T04:55:08.918Z",
+    "approvedAt": "2026-08-27T12:58:13.289Z",
+    "approvedBy": "admin-master",
+    "ownerName": "Business Representative"
+  },
+  {
+    "id": "biz-1787784488742",
+    "slug": "estate-business",
+    "name": "Estate Business",
+    "metaTitle": "Estate Business – Real Estate & Property in Karachi | ListPak",
+    "metaDescription": "Estate Business is a professional real estate agency based in Karachi, specializing in property sales, purchases, rentals, and investment opportunities. We prov",
+    "canonical": "https://www.listpak.com/business/estate-business/",
+    "introduction": "Estate Business is a professional real estate agency based in Karachi, specializing in property sales, purchases, rentals, and investment opportunities. We provide reliable and personalized real estat",
+    "category": "Real Estate & Property",
+    "categoryId": "real",
+    "secondaryCategories": [],
+    "city": "Karachi",
+    "cities": [
+      "Karachi"
+    ],
+    "province": "Pakistan",
+    "address": "Street: 2 Plot no: 16C Office no: 4 DHA PHASE 5 Badar commercial karachi",
+    "locations": [
+      {
+        "city": "Karachi",
+        "address": "Street: 2 Plot no: 16C Office no: 4 DHA PHASE 5 Badar commercial karachi",
+        "isPrimary": true
+      }
+    ],
+    "phone": "03312670999",
+    "whatsapp": "03312670999",
+    "email": "estatebusiness.eb@gmail.com",
+    "website": "https://www.listpak.com",
+    "coverImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80",
+    "description": "Estate Business is a professional real estate agency based in Karachi, specializing in property sales, purchases, rentals, and investment opportunities. We provide reliable and personalized real estate solutions to individuals, families, investors, and businesses looking for residential and commercial properties across Karachi. Our services include property buying and selling, residential plots, commercial properties, houses, apartments, investment opportunities, property marketing, and assistance with new and upcoming real estate projects.\nAt Estate Business, our operating philosophy is based on transparency, professionalism, trust, and customer satisfaction. We understand that buying, selling, or investing in property is an important financial decision, which is why we aim to provide clients with clear information, practical market guidance, and professional assistance throughout the process. Our team works to understand each client's requirements, budget, location preferences, and investment goals before presenting suitable property options.\nWe focus on providing genuine property opportunities and helping clients make informed decisions based on available market information. Whether you are looking for a home, residential plot, commercial property, rental property, or a long-term investment opportunity, Estate Business is committed to making the real estate process simple, convenient, and professional.\nOur customer service approach is centered around responsive communication, honest dealing, and personalized support. We assist clients from the initial property search and consultation through negotiations and the completion of the transaction. Estate Business also provides property marketing support for owners and developers seeking to reach potential buyers and investors.\nWith a strong focus on Karachi's real estate market, including emerging and established communities such as DHA City Karachi and other major developments, Estate Business aims to connect clients with valuable property opportunities. Our goal is to build long-term relationships by delivering dependable real estate services, professional guidance, and a positive customer experience.",
+    "services": [
+      "Real Estate Consultancy",
+      "Property Buying & Selling",
+      "Residential Properties",
+      "Commercial Properties",
+      "Property Investment",
+      "Plot Buying & Selling",
+      "Property Marketing",
+      "DHA City Karachi Projects",
+      "Property Management"
+    ],
+    "operatingHours": {
+      "Monday - Saturday": "09:00 AM - 07:00 PM"
+    },
+    "rating": 0,
+    "reviewCount": 0,
+    "verified": false,
+    "isClaimed": false,
+    "isFeatured": false,
+    "status": "approved",
+    "paymentStatus": "VERIFIED",
+    "features": [],
+    "reviews": [],
+    "faqs": [],
+    "submittedAt": "2026-08-26T22:48:08.742Z",
+    "approvedAt": "2026-08-27T12:58:14.645Z",
+    "approvedBy": "admin-master",
+    "ownerName": "Business Representative"
   }
 ]
 

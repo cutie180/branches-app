@@ -50,15 +50,17 @@ export async function generateMetadata(props: {
   const catSlug = params.slug.toLowerCase()
   const citySlug = params.city.toLowerCase()
 
-  const allBiz = await getAllBusinesses(false)
-  const matchingBusinesses = filterBusinessesByCategoryAndCity(allBiz, catSlug, citySlug)
-
-  if (matchingBusinesses.length === 0) {
+  const cat = CATEGORIES.find(c => c.id === catSlug)
+  if (!cat) {
     return {
       title: 'Directory Page Not Found | ListPak',
       robots: { index: false, follow: false }
     }
   }
+
+  const allBiz = await getAllBusinesses(false)
+  const matchingBusinesses = filterBusinessesByCategoryAndCity(allBiz, catSlug, citySlug)
+  const isNoIndex = matchingBusinesses.length < 3
 
   const categoryName = getCategoryDisplayName(catSlug)
   const cityName = getCityDisplayName(citySlug)
@@ -86,10 +88,26 @@ export async function generateMetadata(props: {
       title,
       description
     },
-    robots: {
-      index: true,
-      follow: true
-    }
+    robots: isNoIndex
+      ? {
+          index: false,
+          follow: true,
+          googleBot: {
+            index: false,
+            follow: true
+          }
+        }
+      : {
+          index: true,
+          follow: true,
+          googleBot: {
+            index: true,
+            follow: true,
+            'max-video-preview': -1,
+            'max-image-preview': 'large',
+            'max-snippet': -1
+          }
+        }
   }
 }
 
@@ -100,12 +118,13 @@ export default async function CategoryCityLandingPage(props: {
   const catSlug = params.slug.toLowerCase()
   const citySlug = params.city.toLowerCase()
 
-  const allBiz = await getAllBusinesses(false)
-  const businesses = filterBusinessesByCategoryAndCity(allBiz, catSlug, citySlug)
-
-  if (businesses.length === 0) {
+  const cat = CATEGORIES.find(c => c.id === catSlug)
+  if (!cat) {
     notFound()
   }
+
+  const allBiz = await getAllBusinesses(false)
+  const businesses = filterBusinessesByCategoryAndCity(allBiz, catSlug, citySlug)
 
   const categoryName = getCategoryDisplayName(catSlug)
   const cityName = getCityDisplayName(citySlug)
@@ -248,8 +267,24 @@ export default async function CategoryCityLandingPage(props: {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {businesses.map((biz) => (
+          {businesses.length === 0 ? (
+            <div className="bg-white rounded-2xl p-12 text-center border border-slate-200 space-y-3">
+              <p className="text-slate-600 text-sm font-semibold">
+                No businesses currently listed under {categoryName} in {cityName}.
+              </p>
+              <p className="text-slate-400 text-xs">
+                Are you an owner in this sector in {cityName}? Register your listing for free discovery.
+              </p>
+              <Link
+                href="/add-business"
+                className="inline-block px-4 py-2 bg-orange-500 text-white text-xs font-bold rounded-xl mt-2"
+              >
+                Be the first to list your business free!
+              </Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {businesses.map((biz) => (
               <div
                 key={biz.id}
                 className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
@@ -333,6 +368,7 @@ export default async function CategoryCityLandingPage(props: {
               </div>
             ))}
           </div>
+          )}
         </section>
 
         {/* Cross-Link Section 1: Other Popular Categories in this City */}

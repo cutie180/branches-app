@@ -5,11 +5,12 @@ import { CATEGORIES } from '@/lib/data'
 import { getAllBusinesses } from '@/lib/db-service'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ShieldCheck, Star, ArrowRight, ArrowLeft, MapPin, Building2 } from 'lucide-react'
+import { HelpCircle, ShieldCheck, Star, ArrowRight, ArrowLeft, MapPin, Building2 } from 'lucide-react'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { BreadcrumbSchema } from '@/components/seo/breadcrumb-schema'
 import { getCategorySeoCopy } from '@/lib/seo-directory-content'
+import { getCategorySeoOverride } from '@/lib/category-seo-overrides'
 import {
   filterBusinessesByCategory,
   getCitiesWithListingsForCategory,
@@ -35,8 +36,12 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
       robots: { index: false, follow: false },
     }
   }
-  const title = `${cat.name} in Pakistan | ListPak`
-  const description = `Find ${cat.name} in Pakistan by city. Browse local businesses, services and listings on ListPak.`
+
+  const categorySeo = getCategorySeoOverride(cat.id)
+  const title = categorySeo?.title || `${cat.name} in Pakistan | ListPak`
+  const description =
+    categorySeo?.description ||
+    `Find ${cat.name} in Pakistan by city. Browse local businesses, services and listings on ListPak.`
   const canonicalUrl = toCanonicalUrl(`category/${cat.id}`)
 
   return {
@@ -73,6 +78,7 @@ export default async function CategoryDetailPage(props: { params: Promise<{ slug
   const activeCities = getCitiesWithListingsForCategory(allApproved, cat.id)
   const relatedCategories = CATEGORIES.filter(c => c.id !== cat.id).slice(0, 8)
   const seoCopy = getCategorySeoCopy(cat.id)
+  const categorySeo = getCategorySeoOverride(cat.id)
 
   const currentPath = `category/${cat.id}`
   const canonicalUrl = toCanonicalUrl(currentPath)
@@ -80,8 +86,8 @@ export default async function CategoryDetailPage(props: { params: Promise<{ slug
   const collectionSchema = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: `${cat.name} in Pakistan`,
-    description: `Find ${cat.name} in Pakistan by city. Browse local businesses, services and listings on ListPak.`,
+    name: categorySeo?.title || `${cat.name} in Pakistan`,
+    description: categorySeo?.description || `Find ${cat.name} in Pakistan by city. Browse local businesses, services and listings on ListPak.`,
     url: canonicalUrl,
     isPartOf: { '@type': 'WebSite', name: 'ListPak', url: 'https://www.listpak.com/' },
     mainEntity: {
@@ -120,6 +126,27 @@ export default async function CategoryDetailPage(props: { params: Promise<{ slug
     ]
   }
 
+  const faqSchema =
+    categorySeo?.faqs && categorySeo.faqs.length > 0
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: categorySeo.faqs.map((faq) => ({
+            '@type': 'Question',
+            name: faq.question,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: faq.answer,
+            },
+          })),
+        }
+      : null
+
+  const schemasToInject: any[] = [collectionSchema, breadcrumbSchema]
+  if (faqSchema) {
+    schemasToInject.push(faqSchema)
+  }
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
       <Navbar />
@@ -127,7 +154,7 @@ export default async function CategoryDetailPage(props: { params: Promise<{ slug
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify([collectionSchema, breadcrumbSchema]) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemasToInject) }}
       />
 
       <section className="bg-[#0F172A] text-white py-12 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
@@ -204,6 +231,18 @@ export default async function CategoryDetailPage(props: { params: Promise<{ slug
           </section>
         )}
 
+        {/* Category Intro Paragraph */}
+        {categorySeo?.intro && (
+          <section className="bg-white rounded-2xl border border-slate-200/80 p-6 space-y-3 shadow-xs">
+            <h2 className="text-base sm:text-lg font-extrabold text-slate-900">
+              About {cat.name} in Pakistan
+            </h2>
+            <p className="text-sm text-slate-700 leading-relaxed">
+              {categorySeo.intro}
+            </p>
+          </section>
+        )}
+
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
             <Building2 className="w-5 h-5 text-blue-600" />
@@ -261,6 +300,40 @@ export default async function CategoryDetailPage(props: { params: Promise<{ slug
               </div>
             ))}
           </div>
+        )}
+
+        {/* Visible FAQ Section matching FAQPage JSON-LD */}
+        {categorySeo?.faqs && categorySeo.faqs.length > 0 && (
+          <section className="bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-8 space-y-6 shadow-xs">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-blue-600 flex items-center gap-1.5">
+                <HelpCircle className="w-3.5 h-3.5" />
+                Frequently Asked Questions
+              </span>
+              <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight mt-1">
+                Frequently Asked Questions About {cat.name} in Pakistan
+              </h2>
+              <p className="text-slate-500 text-xs sm:text-sm mt-1">
+                Verified answers to common questions about finding and listing {cat.name.toLowerCase()} businesses in Pakistan.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              {categorySeo.faqs.map((faq, idx) => (
+                <div
+                  key={idx}
+                  className="bg-[#F8FAFC] rounded-xl p-5 border border-slate-200/80 space-y-2"
+                >
+                  <h3 className="font-bold text-slate-900 text-sm sm:text-base">
+                    {faq.question}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    {faq.answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
         )}
 
         {/* Related Categories */}

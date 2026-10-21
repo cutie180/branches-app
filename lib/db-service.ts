@@ -107,13 +107,18 @@ export function normalizeBusinessDoc(docId: string, data: any): BusinessItem {
   } : undefined)
 
   // Determine normalized status:
-  // User-submitted listings (with userId or submittedAt/createdAt) are pending unless explicitly approved
   let itemStatus: 'pending' | 'approved' | 'rejected' = 'approved'
   if (rawStatus === 'rejected') {
     itemStatus = 'rejected'
-  } else if (rawStatus === 'approved' || (data.approvedAt && rawStatus !== 'pending')) {
+  } else if (
+    rawStatus === 'approved' ||
+    rawStatus === 'active' ||
+    rawStatus === 'published' ||
+    data.isApproved === true ||
+    (data.approvedAt && rawStatus !== 'pending')
+  ) {
     itemStatus = 'approved'
-  } else if (rawStatus === 'pending' || rawStatus === 'pending_approval' || data.submittedAt || data.userId || (data.createdAt && !data.approvedAt) || screenshot || rawPaymentStatus === 'PENDING') {
+  } else if (rawStatus === 'pending' || rawStatus === 'pending_approval' || (data.createdAt && !data.approvedAt) || screenshot || rawPaymentStatus === 'PENDING') {
     itemStatus = 'pending'
   }
 
@@ -637,9 +642,26 @@ export async function getFeaturedBusinesses(limitCount: number = 9): Promise<Bus
   return featured.slice(0, limitCount)
 }
 
+function matchesBusinessSlug(b: BusinessItem, normalized: string): boolean {
+  const norm = (normalized || '').toLowerCase().trim().replace(/\/+$/, '')
+  const bSlug = (b.slug || '').toLowerCase().trim().replace(/\/+$/, '')
+  const bId = (b.id || '').toLowerCase().trim()
+  const bNameNorm = normalizeSlug(b.name || '')
+  if (bSlug === norm || bId === norm || bNameNorm === norm) return true
+  if (b.city) {
+    const cityNorm = normalizeSlug(b.city)
+    if (`${bNameNorm}-${cityNorm}` === norm) return true
+    if (`${bSlug}-${cityNorm}` === norm) return true
+  }
+  const bSlugBase = bSlug.replace(/-in-[a-z0-9-]+$/, '').replace(/-[a-z0-9]+$/, '')
+  const normBase = norm.replace(/-in-[a-z0-9-]+$/, '').replace(/-[a-z0-9]+$/, '')
+  if (bSlugBase && normBase && bSlugBase === normBase) return true
+  return false
+}
+
 export const getBusinessBySlug = cache(async function getBusinessBySlug(slug: string): Promise<BusinessItem | null> {
   const raw = decodeURIComponent(slug || '').trim()
-  const normalized = raw.toLowerCase()
+  const normalized = raw.toLowerCase().replace(/\/+$/, '')
   if (!normalized) return null
 
   // 1. Live Firestore check for real-time approved status
@@ -656,7 +678,6 @@ export const getBusinessBySlug = cache(async function getBusinessBySlug(slug: st
       if (item.status === 'approved') {
         return item
       }
-      return null
     }
 
     // Direct doc lookup by ID
@@ -675,37 +696,31 @@ export const getBusinessBySlug = cache(async function getBusinessBySlug(slug: st
 
   // 2. Local storage check
   const localItems = getStoredCustomBusinesses()
-  const localFound = localItems.find(b => 
-    b.slug.toLowerCase() === normalized || 
-    b.id.toLowerCase() === normalized ||
-    normalizeSlug(b.name) === normalized ||
-    (b.city && `${normalizeSlug(b.name)}-${normalizeSlug(b.city)}` === normalized)
-  )
+  const localFound = localItems.find(b => matchesBusinessSlug(b, normalized))
   if (localFound && (localFound.status || 'approved') === 'approved') {
     return localFound
   }
 
-  // 3. Memory cache check (with city suffix fallback matching)
-  const cached = memoryBusinessesCache.find(b => 
-    b.slug.toLowerCase() === normalized || 
-    b.id.toLowerCase() === normalized ||
-    normalizeSlug(b.name) === normalized ||
-    (b.city && `${normalizeSlug(b.name)}-${normalizeSlug(b.city)}` === normalized)
-  )
+  // 3. Memory cache check
+  const cached = memoryBusinessesCache.find(b => matchesBusinessSlug(b, normalized))
   if (cached && (cached.status || 'approved') === 'approved') {
     return cached
   }
 
   // 4. Mock businesses check
-  const mockFound = MOCK_BUSINESSES.find(b => 
-    b.slug.toLowerCase() === normalized || 
-    b.id.toLowerCase() === normalized ||
-    normalizeSlug(b.name) === normalized ||
-    (b.city && `${normalizeSlug(b.name)}-${normalizeSlug(b.city)}` === normalized)
-  )
+  const mockFound = MOCK_BUSINESSES.find(b => matchesBusinessSlug(b, normalized))
   if (mockFound && (mockFound.status || 'approved') === 'approved') {
     return mockFound
   }
+
+  // 5. Final fallback: perform broader lookup across all approved businesses
+  try {
+    const all = await getAllBusinesses(false)
+    const match = all.find(b => matchesBusinessSlug(b, normalized))
+    if (match) {
+      return match
+    }
+  } catch (_) {}
 
   return null
 })

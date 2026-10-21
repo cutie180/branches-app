@@ -31,6 +31,22 @@ import { MapPin, ChevronRight, Home, Calendar, Clock, Compass, HelpCircle, FileT
 export const revalidate = 3600 // 1-hour ISR revalidation
 export const dynamicParams = true
 
+export const INDEXABLE_PRAYER_SLUGS = new Set([
+  'islamabad',
+  'kallar-syedan',
+  'lahore',
+  'shujabad',
+  'sohawa',
+  'timergara',
+  'rawalpindi',
+  'sarai-alamgir',
+  'samundri',
+  'hassan-abdal',
+  'batkhela',
+  'peshawar',
+  'karachi',
+])
+
 /**
  * Helper to match URL slug to Pakistani City Name
  */
@@ -70,6 +86,7 @@ export async function generateMetadata(props: {
   }
 
   const citySlug = cityName.toLowerCase().replace(/\s+/g, '-')
+  const isIndexable = INDEXABLE_PRAYER_SLUGS.has(citySlug)
   const title = `Prayer Times in ${cityName} Today – Namaz Timings ${cityName}`
   const description = `Check today's prayer times in ${cityName}, Pakistan with Fajr, Sunrise, Dhuhr, Asr, Maghrib and Isha timings. Accurate live Namaz timings and countdown for ${cityName}.`
   const canonicalUrl = `https://www.listpak.com/prayer-times-${citySlug}-today/`
@@ -80,17 +97,26 @@ export async function generateMetadata(props: {
     alternates: {
       canonical: canonicalUrl,
     },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        'max-video-preview': -1,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
-      },
-    },
+    robots: isIndexable
+      ? {
+          index: true,
+          follow: true,
+          googleBot: {
+            index: true,
+            follow: true,
+            'max-video-preview': -1,
+            'max-image-preview': 'large',
+            'max-snippet': -1,
+          },
+        }
+      : {
+          index: false,
+          follow: true,
+          googleBot: {
+            index: false,
+            follow: true,
+          },
+        },
     openGraph: {
       title,
       description,
