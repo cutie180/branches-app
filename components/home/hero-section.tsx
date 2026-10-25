@@ -14,7 +14,7 @@ export default function HeroSection() {
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <p className="inline-flex items-center gap-2 text-[#60a5fa] font-semibold text-sm mb-2 tracking-wide uppercase">
           <span className="w-4 h-px bg-[#60a5fa]" />
-          Pakistan&apos;s #1 Business Directory
+          Pakistan Business Directory
           <span className="w-4 h-px bg-[#60a5fa]" />
         </p>
 

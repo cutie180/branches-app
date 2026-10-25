@@ -1577,7 +1577,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
                   <div className="mt-8 pt-8 border-t border-slate-200 text-center bg-[#F8FAFC] p-8 rounded-2xl border border-[#E2E8F0]">
                     <h3 className="text-xl font-bold text-[#0F172A] mb-2">Ready to List Your Business Free?</h3>
-                    <p className="text-xs text-slate-600 mb-6">Join 10,000+ businesses already growing on Pakistan&apos;s #1 free directory.</p>
+                    <p className="text-xs text-slate-600 mb-6">Join businesses across Pakistan already listed on ListPak — listing is free.</p>
                     <Link
                       href="/add-business"
                       className="px-8 py-3.5 bg-[#F97316] hover:bg-[#EA580C] text-white font-bold rounded-xl transition-colors shadow-md text-sm inline-block"

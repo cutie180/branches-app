@@ -42,11 +42,9 @@ export const metadata: Metadata = {
 }
 
 const STATS = [
-  { number: "10,000+", label: "Verified Business Listings" },
-  { number: "150+", label: "Pakistani Cities Covered" },
-  { number: "50+", label: "Business & Trade Categories" },
-  { number: "5,000+", label: "Professional Profiles" },
-  { number: "1,000+", label: "Active Jobs & Opportunities" },
+  { number: "100+", label: "Business & Professional Listings" },
+  { number: "25+", label: "Business & Trade Categories" },
+  { number: "50+", label: "Cities & Towns Covered" },
   { number: "100% Free", label: "Zero Fees & No Registration Walls" }
 ]
 
@@ -76,7 +74,7 @@ const FOUNDER_PROJECTS = [
   {
     name: "ListPak.com",
     role: "Founder, CEO & Chief Architect",
-    desc: "Pakistan's leading 100% free business directory and local discovery platform, serving 10,000+ businesses and professionals across 150+ cities nationwide.",
+    desc: "Pakistan's free business directory and local discovery platform, connecting businesses and professionals with customers across Pakistan.",
     url: "https://listpak.com/"
   },
   {
@@ -139,13 +137,13 @@ const MILESTONES = [
   },
   { 
     date: "September 2026", 
-    title: "10,000+ Active Listings & Professional Directory", 
-    desc: "Reached 10,000 active business listings across 150+ Pakistani cities, introducing verified professional profiles and service portfolios." 
+    title: "Professional Directory Launch", 
+    desc: "Introduced professional profiles and service portfolios alongside business listings, with direct WhatsApp contact on every page." 
   },
   { 
     date: "2026 (Current)", 
-    title: "Pakistan's #1 Free Business Directory", 
-    desc: "Serving hundreds of thousands of monthly visitors with zero registration paywalls, industry-leading Core Web Vitals, and AI-optimized search discovery." 
+    title: "A Growing Free Business Directory", 
+    desc: "Serving visitors across Pakistan with zero registration paywalls and fast, mobile-first pages built for local discovery." 
   }
 ]
 
@@ -192,7 +190,7 @@ export default function AboutPage() {
           width: 512,
           height: 512
         },
-        description: "Pakistan's #1 free business listing directory and local discovery platform, founded in 2026 by Muhammad Imran to connect businesses, professionals, and consumers across 150+ Pakistani cities.",
+        description: "Pakistan's free business listing directory and local discovery platform, founded by Muhammad Imran to connect businesses, professionals, and consumers across Pakistan.",
         foundingDate: '2026-01-01',
         founder: {
           '@id': 'https://www.imrandigitals.com/#founder'
@@ -317,7 +315,7 @@ export default function AboutPage() {
             
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs sm:text-sm font-semibold mb-6">
               <Sparkles className="w-4 h-4 text-emerald-400" />
-              <span>Founded by Muhammad Imran • Pakistan&apos;s #1 Free Business Directory</span>
+              <span>Founded by Muhammad Imran • Pakistan&apos;s Free Business Directory</span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
@@ -707,7 +705,7 @@ export default function AboutPage() {
                   href="/add-business"
                   className="block text-center py-3.5 bg-[#2563EB] hover:bg-blue-700 text-white font-bold rounded-xl transition-colors shadow-md text-sm"
                 >
-                  Join 10,000+ Listed Businesses Free
+                  Add Your Business – It&apos;s Free
                 </Link>
               </div>
             </div>

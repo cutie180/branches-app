@@ -75,7 +75,7 @@ export default function AboutSection() {
                 <span className="ml-2 underline underline-offset-4 decoration-emerald-300">Free</span>
               </span>
             </a>
-            <p className="text-xs sm:text-sm text-gray-500 mt-2">Join thousands of businesses already listed</p>
+            <p className="text-xs sm:text-sm text-gray-500 mt-2">Join businesses across Pakistan already listed</p>
           </div>
         </div>
       </div>
