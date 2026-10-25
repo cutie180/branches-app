@@ -1,6 +1,7 @@
 import React from 'react'
 import { Metadata } from 'next'
 import { getAllBusinesses } from '@/lib/db-service'
+import { clampMeta, fitTitle } from '@/lib/utils'
 import { getAllJobs } from '@/lib/job-service'
 import { getAllProfessionals } from '@/lib/professional-service'
 import { getCitySeoOverride } from '@/lib/city-seo-overrides'
@@ -62,10 +63,22 @@ export async function generateMetadata(props: {
   const hasData =
     cityBusinesses.length > 0 || cityJobs.length > 0 || cityPros.length > 0
 
-  const title = citySeo?.title || `Businesses in ${cityName}, Pakistan | ListPak`
-  const description =
+  const title = citySeo?.title
+    ? clampMeta(citySeo.title, 65)
+    : fitTitle([
+        `Businesses & Services in ${cityName}, Pakistan | ListPak`,
+        `Businesses in ${cityName}, Pakistan — Directory & Jobs | ListPak`,
+        `Businesses in ${cityName}, Pakistan | ListPak`,
+        `Businesses in ${cityName} | ListPak`,
+      ])
+  let description = clampMeta(
     citySeo?.description ||
-    `Explore businesses, services, jobs and professionals in ${cityName}, Pakistan. Browse verified local listings on ListPak.`
+      `Explore businesses, services, jobs and professionals in ${cityName}, Pakistan. Browse verified local listings on ListPak.`,
+    160
+  )
+  if (description.length < 120) {
+    description = clampMeta(`${description} Find phone numbers, opening hours and directions on ListPak.`, 160)
+  }
   const canonicalUrl = toCanonicalUrl(`city/${citySlug}`)
 
   return {

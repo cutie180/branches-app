@@ -4,7 +4,7 @@ import Footer from '@/components/footer'
 
 export const metadata: Metadata = {
   title: 'Refund Policy | ListPak Commercial & Premium Services',
-  description: 'Terms and conditions governing refunds for premium business verification, advertising banners, and promoted job posts.',
+  description: 'Terms and conditions governing refunds for premium business verification, advertising banners and promoted job posts on ListPak — eligibility and process.',
   alternates: {
     canonical: 'https://www.listpak.com/refund-policy/',
   },

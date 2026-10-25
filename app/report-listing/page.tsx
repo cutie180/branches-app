@@ -6,7 +6,7 @@ import { AlertTriangle, ShieldCheck } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Report a Listing | ListPak Business Directory Integrity',
-  description: 'Report inaccurate, closed, copyright infringing, or fraudulent business listings on ListPak for rapid admin review.',
+  description: 'Report an inaccurate, closed, copyright-infringing or fraudulent business listing on ListPak for rapid admin review and correction or removal.',
   alternates: {
     canonical: 'https://www.listpak.com/report-listing/',
   },

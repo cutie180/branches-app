@@ -24,7 +24,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'restaurants-in-karachi': {
     slug: 'restaurants-in-karachi',
     title: 'Restaurants in Karachi 2026: Food, Cuisines, Areas & Dining Guide',
-    metaTitle: 'Restaurants in Karachi 2026: Food, Cuisines, Areas & Dining Guide',
+    metaTitle: 'Restaurants in Karachi 2026: Food, Areas & Dining Guide',
     metaDescription: 'Explore restaurants in Karachi by cuisine, area, budget and occasion, including Pakistani food, BBQ, cafés, family dining, fast food and fine dining.',
     focusKeyword: 'Restaurants in Karachi',
     category: 'Karachi Food Guide',
@@ -65,7 +65,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'restaurants-in-pakistan': {
     slug: 'restaurants-in-pakistan',
     title: '25 Best Restaurants in Pakistan 2026 – Karachi, Lahore & Islamabad',
-    metaTitle: '25 Best Restaurants in Pakistan 2026 – Karachi, Lahore & Islamabad',
+    metaTitle: 'Restaurants in Pakistan: Best Places to Eat by City',
     metaDescription: 'Pakistan\'s best restaurants in 2026 across Karachi, Lahore & Islamabad — top picks by cuisine, area & budget, with contact details.',
     focusKeyword: 'Restaurants in Pakistan',
     category: 'Restaurants & Food',
@@ -106,7 +106,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'best-universities-computer-science-pakistan': {
     slug: 'best-universities-computer-science-pakistan',
     title: 'Best Universities for Computer Science in Pakistan 2026 – Top 12 Ranked',
-    metaTitle: 'Best Universities for Computer Science in Pakistan 2026 – Top 12 Ranked',
+    metaTitle: 'Best Universities for Computer Science in Pakistan',
     metaDescription: 'Top universities for BS Computer Science in Pakistan 2026: NUST, FAST-NUCES, LUMS, COMSATS & more — fees, merit, cities & admission details compared.',
     focusKeyword: 'Computer Science Universities in Pakistan',
     category: 'CS & Tech Education',
@@ -147,8 +147,8 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'universities-in-pakistan': {
     slug: 'universities-in-pakistan',
     title: 'Universities in Pakistan 2026: Programs, Admissions & Cities',
-    metaTitle: 'Universities in Pakistan 2026: Programs, Admissions & Cities',
-    metaDescription: 'Explore universities in Pakistan, including public and private universities, popular degree programs, major university cities, admissions and how to choose the right institution.',
+    metaTitle: 'Universities in Pakistan: Admissions, Cities & Guide',
+    metaDescription: 'Explore universities in Pakistan, including public and private universities, popular degree programs, major university cities, admissions and how to choose',
     focusKeyword: 'Universities in Pakistan',
     category: 'Education & Universities',
     date: 'August 13, 2026',
@@ -188,8 +188,8 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'it-jobs-in-pakistan': {
     slug: 'it-jobs-in-pakistan',
     title: 'IT Jobs in Pakistan 2026: Fresh Graduate, Software & Remote Opportunities',
-    metaTitle: 'IT Jobs in Pakistan 2026: Fresh Graduate, Software & Remote Jobs',
-    metaDescription: 'Explore IT jobs in Pakistan for fresh graduates and experienced professionals, including software, web, AI, cybersecurity, digital marketing, internships and remote opportunities.',
+    metaTitle: 'IT Jobs in Pakistan 2026: Roles, Salaries & How to Apply',
+    metaDescription: 'Explore IT jobs in Pakistan for fresh graduates and experienced professionals, including software, web, AI, cybersecurity, digital marketing, internships',
     focusKeyword: 'IT Jobs in Pakistan',
     category: 'IT & Tech Careers',
     date: 'August 13, 2026',
@@ -229,8 +229,8 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'jobs-in-pakistan': {
     slug: 'jobs-in-pakistan',
     title: 'Jobs in Pakistan 2026: Government, Private, Online & Career Opportunities',
-    metaTitle: 'Jobs in Pakistan 2026: Government, Private & Online Career Opportunities',
-    metaDescription: 'Find jobs in Pakistan in 2026, including government, private, IT, teaching, banking, healthcare, remote, part-time and graduate opportunities. Learn how to find and apply for jobs.',
+    metaTitle: 'Jobs in Pakistan 2026: Latest Vacancies by City & Field',
+    metaDescription: 'Find jobs in Pakistan in 2026, including government, private, IT, teaching, banking, healthcare, remote, part-time and graduate opportunities. Learn how to',
     focusKeyword: 'Jobs in Pakistan',
     category: 'Jobs & Careers',
     date: 'August 13, 2026',
@@ -266,7 +266,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'top-business-directory-websites-pakistan': {
     slug: 'top-business-directory-websites-pakistan',
     title: 'Top Business Directories in Pakistan Compared (2026 Guide)',
-    metaTitle: 'Top Business Directories in Pakistan Compared (2026 Guide)',
+    metaTitle: 'Top Business Directory Websites in Pakistan (2026)',
     metaDescription: 'Compare the top online business directories in Pakistan in 2026. Discover how to list your company on ListPak and build high-authority local citations.',
     focusKeyword: 'Business Directory Pakistan',
     category: 'Directory Guide',
@@ -299,7 +299,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'how-to-list-business-free-listpak-guide': {
     slug: 'how-to-list-business-free-listpak-guide',
     title: 'How to List Your Business Free on ListPak – Complete Step-by-Step Guide 2026',
-    metaTitle: 'How to List Your Business Free on ListPak – Step-by-Step Guide 2026',
+    metaTitle: 'How to List Your Business Free on ListPak – Full Guide',
     metaDescription: 'Learn step-by-step how to list your business 100% free on ListPak Pakistan directory in 5 minutes to gain maximum local visibility.',
     focusKeyword: 'Free Business Listing Pakistan',
     category: 'Free Business Listing Guide',
@@ -330,7 +330,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'local-seo-pakistan-businesses-google-ranking': {
     slug: 'local-seo-pakistan-businesses-google-ranking',
     title: 'Local SEO for Pakistani Businesses: Improve Visibility in Your City',
-    metaTitle: 'Local SEO for Pakistani Businesses: Improve Visibility in Your City',
+    metaTitle: 'Local SEO for Pakistani Businesses: Rank in Your City',
     metaDescription: 'Learn practical local SEO strategies for Pakistani businesses to improve visibility across Karachi, Lahore, Islamabad, and other cities.',
     focusKeyword: 'Local SEO Pakistan',
     category: 'Local SEO Pakistan',
@@ -361,7 +361,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'free-job-posting-pakistan-hire-employees': {
     slug: 'free-job-posting-pakistan-hire-employees',
     title: 'Free Job Posting in Pakistan – How to Hire Employees Without Spending Money',
-    metaTitle: 'Free Job Posting in Pakistan – How to Hire Employees Without Spending Money',
+    metaTitle: 'Free Job Posting in Pakistan: Hire Without Spending',
     metaDescription: 'Complete guide to posting jobs free on ListPak job portal. Learn how to write compelling job descriptions and recruit skilled Pakistani talent.',
     focusKeyword: 'Free Job Posting Pakistan',
     category: 'Free Job Portal Guide',
@@ -392,7 +392,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'best-software-houses-pakistan-2026': {
     slug: 'best-software-houses-pakistan-2026',
     title: 'Top 15 Software Houses in Pakistan 2026 – Ranked by Clients & Reviews',
-    metaTitle: 'Top 15 Software Houses in Pakistan 2026 – Ranked by Clients & Reviews',
+    metaTitle: 'Top 15 Software Houses in Pakistan 2026 – Compared',
     metaDescription: 'Pakistan\'s top software houses in 2026: Systems Limited, Arbisoft, Netsol, 10Pearls & more. Services, locations & contact details — compare and hire.',
     focusKeyword: 'Best Software Houses in Pakistan',
     category: 'Companies & Technology',
@@ -408,7 +408,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'how-to-find-jobs-in-pakistan-2026': {
     slug: 'how-to-find-jobs-in-pakistan-2026',
     title: 'How to Find Jobs in Pakistan 2026 – Step-by-Step Guide (Free)',
-    metaTitle: 'How to Find Jobs in Pakistan 2026 – Step-by-Step Guide (Free)',
+    metaTitle: 'How to Find Jobs in Pakistan 2026: Step-by-Step Guide',
     metaDescription: 'Find jobs in Pakistan in 2026: where to search, how to apply, fresher tips & the latest Karachi, Lahore & Islamabad vacancies on ListPak Jobs.',
     focusKeyword: 'How to Find Jobs in Pakistan',
     category: 'Jobs & Careers',
@@ -424,7 +424,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'remote-jobs-pakistan-fresh-graduates': {
     slug: 'remote-jobs-pakistan-fresh-graduates',
     title: 'Remote Jobs in Pakistan for Fresh Graduates: Skills, Search & Safety Guide',
-    metaTitle: 'Remote Jobs in Pakistan for Fresh Graduates: Search & Safety Guide',
+    metaTitle: 'Remote Jobs in Pakistan for Fresh Graduates (2026)',
     metaDescription: 'Find and evaluate remote jobs in Pakistan for fresh graduates across technology, support, marketing, administration, tutoring, design, and virtual assistance.',
     focusKeyword: 'Remote Jobs in Pakistan for Fresh Graduates',
     category: 'Remote Work & Careers',
@@ -440,7 +440,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'accountant-jobs-pakistan-city-guide': {
     slug: 'accountant-jobs-pakistan-city-guide',
     title: 'Accountant Jobs in Pakistan: City, Skills & Application Guide',
-    metaTitle: 'Accountant Jobs in Pakistan: City, Skills & Application Guide',
+    metaTitle: 'Accountant Jobs in Pakistan: City-by-City Guide',
     metaDescription: 'Explore accountant and finance job searches in Karachi, Lahore, Islamabad, and Rawalpindi, including role types, skills, verification, and application tips.',
     focusKeyword: 'Accountant Jobs in Pakistan',
     category: 'Finance Careers',
@@ -456,7 +456,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'local-services-pakistan-by-city': {
     slug: 'local-services-pakistan-by-city',
     title: 'Local Services in Pakistan by City: How to Find Trusted Providers',
-    metaTitle: 'Local Services in Pakistan by City: Find Trusted Providers',
+    metaTitle: 'Local Services in Pakistan by City: Find Trusted Pros',
     metaDescription: 'Learn how to find plumbers, electricians, clinics, tutors, mechanics, agencies, and other local services in Pakistan by city, category, and area.',
     focusKeyword: 'Local Services in Pakistan',
     category: 'Local Business Discovery',
@@ -472,7 +472,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'how-to-find-trusted-professionals-pakistan': {
     slug: 'how-to-find-trusted-professionals-pakistan',
     title: 'How to Find Trusted Professionals in Pakistan: Verification Guide',
-    metaTitle: 'How to Find Trusted Professionals in Pakistan: Verification Guide',
+    metaTitle: 'How to Find Trusted Professionals in Pakistan',
     metaDescription: 'Learn how to compare Pakistani doctors, lawyers, accountants, developers, tutors, designers, and service professionals using profiles, evidence, and verification.',
     focusKeyword: 'Find Professionals in Pakistan',
     category: 'Professional Discovery',
@@ -488,7 +488,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'best-startups-pakistan-2026': {
     slug: 'best-startups-pakistan-2026',
     title: 'Best Startups in Pakistan 2026: Sectors, Signals & How to Research Them',
-    metaTitle: 'Best Startups in Pakistan 2026: Sectors & Research Guide',
+    metaTitle: 'Best Startups in Pakistan 2026: Founders & Sectors',
     metaDescription: 'Explore Pakistan startup sectors and learn how to research companies, products, founders, jobs, funding claims, and current operating signals responsibly.',
     focusKeyword: 'Best Startups in Pakistan',
     category: 'Entrepreneurship & Startups',
@@ -504,7 +504,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'businesses-in-lahore-by-category': {
     slug: 'businesses-in-lahore-by-category',
     title: 'Businesses in Lahore by Category: A Practical City Discovery Guide',
-    metaTitle: 'Businesses in Lahore by Category: City Discovery Guide',
+    metaTitle: 'Businesses in Lahore by Category: Complete Directory',
     metaDescription: 'Find and compare businesses in Lahore by category, neighborhood, service, address, hours, contact details, and trustworthy listing information.',
     focusKeyword: 'Businesses in Lahore',
     category: 'Lahore Business Guide',
@@ -520,7 +520,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'digital-marketing-jobs-lahore-guide': {
     slug: 'digital-marketing-jobs-lahore-guide',
     title: 'Digital Marketing Jobs in Lahore: Skills, Roles & Portfolio Guide',
-    metaTitle: 'Digital Marketing Jobs in Lahore: Skills & Portfolio Guide',
+    metaTitle: 'Digital Marketing Jobs in Lahore: Roles & Salaries',
     metaDescription: 'Explore digital marketing jobs in Lahore, including SEO, content, paid media, social media, e-commerce, email, design, and growth roles.',
     focusKeyword: 'Digital Marketing Jobs in Lahore',
     category: 'Digital Marketing Careers',
@@ -536,7 +536,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'restaurants-in-lahore': {
     slug: 'restaurants-in-lahore',
     title: '15 Best Restaurants in Lahore 2026 – Food Street to MM Alam Road',
-    metaTitle: '15 Best Restaurants in Lahore 2026 – Food Street to MM Alam Road',
+    metaTitle: 'Restaurants in Lahore 2026: Food, Areas & Dining Guide',
     metaDescription: 'The best restaurants in Lahore in 2026: Monal, Salt\'n Pepper, Food Street favourites & rooftop spots — cuisines, locations & contact numbers.',
     focusKeyword: 'Restaurants in Lahore',
     category: 'Lahore Food Guide',
@@ -570,7 +570,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'best-solar-companies-pakistan': {
     slug: 'best-solar-companies-pakistan',
     title: 'Top 10 Solar Companies in Pakistan 2026 – Prices, Panels & Installers',
-    metaTitle: 'Top 10 Solar Companies in Pakistan 2026 – Prices, Panels & Installers',
+    metaTitle: 'Best Solar Companies in Pakistan: Compare & Choose',
     metaDescription: 'Best solar companies in Pakistan 2026: compare installers in Karachi, Lahore & Islamabad — panel prices, net metering & contact details.',
     focusKeyword: 'Solar Companies in Pakistan',
     category: 'Solar Energy & Technology',
@@ -604,7 +604,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'best-free-business-listing-websites-pakistan-2026': {
     slug: 'best-free-business-listing-websites-pakistan-2026',
     title: '12 Best Free Business Listing Sites in Pakistan 2026 (ListPak Ranked #1)',
-    metaTitle: '12 Best Free Business Listing Sites in Pakistan 2026 (ListPak Ranked #1)',
+    metaTitle: 'Best Free Business Listing Websites in Pakistan 2026',
     metaDescription: 'Free business listing sites in Pakistan that actually get you Google visibility in 2026 — features, traffic & how to list on each. Start with ListPak.',
     focusKeyword: 'Free Business Listing Sites in Pakistan',
     category: 'Local SEO & Growth',
@@ -638,7 +638,7 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
   'best-banks-in-pakistan': {
     slug: 'best-banks-in-pakistan',
     title: 'Top 10 Banks in Pakistan 2026 – Best for Accounts, Loans & Digital Banking',
-    metaTitle: 'Top 10 Banks in Pakistan 2026 – Best for Accounts, Loans & Digital Banking',
+    metaTitle: 'Best Banks in Pakistan: Accounts, Services & Branches',
     metaDescription: 'Pakistan\'s best banks in 2026 ranked: Meezan, HBL, UBL, MCB, Allied & more — account types, digital banking, branches & contact details.',
     focusKeyword: 'Best Banks in Pakistan',
     category: 'Finance & Banking',

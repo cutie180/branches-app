@@ -24,6 +24,7 @@ import {
 } from 'lucide-react'
 import JobInteractiveApply from './job-interactive-apply'
 import { getPublicJobPath, getPublicJobSlug } from '@/lib/job-url'
+import { clampMeta, fitTitle } from '@/lib/utils'
 import { toCanonicalUrl, normalizeCitySlug, VERIFICATION_DISCLAIMER } from '@/lib/directory-helpers'
 
 export const dynamicParams = true
@@ -48,10 +49,21 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
   const jobCity = job ? job.city : 'Pakistan'
   const publicSlug = job ? getPublicJobSlug(job) : idOrSlug
   const canonicalUrl = toCanonicalUrl(`jobs/${publicSlug}`)
-  const title = job ? `${job.title} at ${job.company} in ${job.city} | ListPak Jobs` : 'Job Vacancy | ListPak'
-  const description = job 
-    ? formatJobMetaDescription(job)
+  const title = job
+    ? fitTitle([
+        `${job.title} at ${job.company} in ${job.city} | ListPak Jobs`,
+        `${job.title} at ${job.company} | ListPak Jobs`,
+        `${job.title} in ${job.city} | ListPak Jobs`,
+        `${job.title} | ListPak Jobs`,
+        job.title,
+      ])
+    : 'Job Vacancy | ListPak'
+  let description = job
+    ? clampMeta(formatJobMetaDescription(job), 160)
     : 'Review current job opportunities in Pakistan on the ListPak jobs directory.'
+  if (job && description.length < 120) {
+    description = clampMeta(`${description} This is a ${job.type || 'Full-time'} position based in ${job.city || 'Pakistan'}.`, 160)
+  }
 
   return {
     title,

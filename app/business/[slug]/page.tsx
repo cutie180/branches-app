@@ -1,5 +1,5 @@
 import React from 'react'
-import { excerpt } from '@/lib/utils'
+import { excerpt, clampMeta, fitTitle } from '@/lib/utils'
 import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -44,16 +44,32 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
 
   const override = getBusinessSeoOverride(slug)
 
-  const title = override?.title || biz?.seoTitle || biz?.metaTitle || `${businessName}${biz?.category ? ` – ${biz.category}` : ''}${biz?.city ? ` in ${biz.city}` : ''} | ListPak`
+  const rawTitle = override?.title || biz?.seoTitle || biz?.metaTitle
+  const title = rawTitle
+    ? clampMeta(rawTitle, 65)
+    : fitTitle([
+        biz?.category && biz?.city ? `${businessName} – ${biz.category} in ${biz.city} | ListPak` : '',
+        biz?.category && biz?.city ? `${businessName} – ${biz.category} in ${biz.city}` : '',
+        biz?.city ? `${businessName} in ${biz.city} | ListPak` : '',
+        `${businessName} | ListPak`,
+        businessName,
+      ])
   // Contact-intent snippet: searchers looking for "X helpline / contact number" see the
   // real phone number right in the SERP snippet instead of a generic promise.
   // Never use the placeholder default number (+92 305 7860084) in metadata.
   const realPhone = biz?.phone?.trim() && biz.phone.trim() !== '+92 305 7860084' ? biz.phone.trim() : null
   const realAddress = biz?.address?.trim() || null
+  // Keep only a short form of the address: multi-location businesses store every
+  // branch address in one field, which previously produced 800+ char descriptions.
+  const shortAddress = realAddress ? excerpt(realAddress, 60) : null
   const autoDescription = biz
-    ? `${biz.name}${realPhone ? ` – Call ${realPhone}` : ''}${biz.category ? `, ${biz.category}` : ''}${biz.city ? ` in ${biz.city}` : ''}, Pakistan.${realAddress ? ` ${realAddress}.` : ''} Find phone number, location, operating hours and services on ListPak.`
+    ? `${biz.name}${realPhone ? ` – Call ${realPhone}` : ''}${biz.category ? `, ${biz.category}` : ''}${biz.city ? ` in ${biz.city}` : ''}, Pakistan.${shortAddress ? ` ${shortAddress}.` : ''} Find phone number, location, operating hours and services on ListPak.`
     : `View business details, phone number, location, and contact information for ${businessName} on the ListPak business directory.`
-  const description = override?.description || biz?.seoDescription || biz?.metaDescription || autoDescription
+  const rawDescription = override?.description || biz?.seoDescription || biz?.metaDescription || autoDescription
+  let description = clampMeta(rawDescription, 160)
+  if (!override?.description && description.length < 120) {
+    description = clampMeta(`${description} Get contact details, services and directions on ListPak.`, 160)
+  }
   const canonicalUrl = toCanonicalUrl(`business/${slug}`)
 
   return {

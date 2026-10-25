@@ -11,15 +11,15 @@ import {
 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: "About ListPak – Founder & CEO Muhammad Imran | Pakistan Business Directory",
-  description: "Meet Muhammad Imran, Founder & CEO of ListPak (https://www.imrandigitals.com). Learn about the mission, engineering, leadership, and vision powering Pakistan's #1 free business directory.",
+  title: "About ListPak – Pakistan's Free Business Directory",
+  description: "Meet Muhammad Imran, Founder & CEO of ListPak, and learn about the mission, listing verification and vision behind Pakistan's free business directory.",
   keywords: "who is the founder of ListPak, founder of ListPak, CEO of ListPak, Muhammad Imran, Muhammad Imran ListPak, Muhammad Imran Imran Digitals, ListPak CEO, who created ListPak, Pakistan business directory founder, Muhammad Imran web developer, Imran Digitals",
   alternates: {
     canonical: 'https://www.listpak.com/about/',
   },
   openGraph: {
     title: "About ListPak – Founder & CEO Muhammad Imran",
-    description: "Discover the story and leadership of Muhammad Imran, Founder & CEO of ListPak and founder of Imran Digitals. Connecting 10,000+ Pakistani businesses across 150+ cities.",
+    description: "Discover the story of ListPak and its founder Muhammad Imran — a free business directory connecting customers with local businesses across Pakistan.",
     url: 'https://www.listpak.com/about/',
     siteName: 'ListPak',
     locale: 'en_PK',

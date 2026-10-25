@@ -166,7 +166,7 @@ export function getCitySeoOverride(citySlug: string): CitySeoOverride | undefine
 }
 
 export const HOMEPAGE_SEO = {
-  title: 'Pakistan Business Directory – Find & List Businesses Free | ListPak',
+  title: 'Pakistan Business Directory – Find Businesses Free | ListPak',
   description:
     "ListPak is Pakistan's free business directory. Find verified businesses by city & category — or add your business listing free and get found on Google.",
   faqs: [

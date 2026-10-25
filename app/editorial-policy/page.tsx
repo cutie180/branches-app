@@ -4,7 +4,7 @@ import Footer from '@/components/footer'
 
 export const metadata: Metadata = {
   title: 'Editorial Policy | ListPak - Pakistan Business Directory',
-  description: 'Our standards for publishing, reviewing, and fact-checking business listings, blogs, and market insights on ListPak.',
+  description: 'Our standards for publishing, reviewing and fact-checking business listings, blog guides and market insights on ListPak — and how corrections are handled.',
   alternates: {
     canonical: 'https://www.listpak.com/editorial-policy/',
   },

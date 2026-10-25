@@ -4,7 +4,7 @@ import Footer from '@/components/footer'
 
 export const metadata: Metadata = {
   title: 'Accessibility Statement | ListPak Digital Inclusivity',
-  description: 'Our commitment to web accessibility (WCAG 2.1) ensuring equal access for all users across Pakistan.',
+  description: 'Our commitment to web accessibility (WCAG 2.1) at ListPak — how we ensure equal access for all users across Pakistan and how to report a barrier.',
   alternates: {
     canonical: 'https://www.listpak.com/accessibility/',
   },

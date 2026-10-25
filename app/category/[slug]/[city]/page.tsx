@@ -1,5 +1,6 @@
 import React from 'react'
 import { excerpt } from '@/lib/utils'
+import { clampMeta } from '@/lib/utils'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -143,7 +144,7 @@ export default async function CategoryCityLandingPage(props: {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: `${categoryName} in ${cityName}, Pakistan`,
-    description: `Find ${categoryName.toLowerCase()} in ${cityName}, Pakistan. Browse local business listings, contact details and verified directory information on ListPak.`,
+    description: clampMeta(`Find ${categoryName.toLowerCase()} in ${cityName}, Pakistan. Browse local business listings, contact details and verified directory information on ListPak.`, 160),
     url: canonicalUrl,
     isPartOf: {
       '@type': 'WebSite',

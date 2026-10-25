@@ -7,11 +7,11 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Cities Directory Pakistan | ListPak Enterprise Hub',
-  description: 'Explore business listings, companies, jobs, services, and professionals across Pakistani cities including Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, and Peshawar.',
+  description: 'Explore business listings, companies, jobs, services and professionals across Pakistani cities — Karachi, Lahore, Islamabad, Rawalpindi and more.',
   alternates: { canonical: 'https://www.listpak.com/cities/' },
   openGraph: {
     title: 'Cities Directory Pakistan | ListPak Enterprise Hub',
-    description: 'Explore business listings, companies, jobs, services, and professionals across Pakistani cities including Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, and Peshawar.',
+    description: 'Explore business listings, companies, jobs, services and professionals across Pakistani cities — Karachi, Lahore, Islamabad, Rawalpindi and more.',
     url: 'https://www.listpak.com/cities/',
     type: 'website',
   },

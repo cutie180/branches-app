@@ -1,5 +1,6 @@
 import React from 'react'
 import { excerpt } from '@/lib/utils'
+import { clampMeta, fitTitle } from '@/lib/utils'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { CATEGORIES } from '@/lib/data'
@@ -39,10 +40,18 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
   }
 
   const categorySeo = getCategorySeoOverride(cat.id)
-  const title = categorySeo?.title || `${cat.name} in Pakistan | ListPak`
-  const description =
+  const title = categorySeo?.title
+    ? clampMeta(categorySeo.title, 65)
+    : fitTitle([
+        `${cat.name} in Pakistan — Businesses & Services | ListPak`,
+        `${cat.name} in Pakistan | ListPak`,
+        `${cat.name} | ListPak`,
+      ])
+  const description = clampMeta(
     categorySeo?.description ||
-    `Find ${cat.name} in Pakistan by city. Browse local businesses, services and listings on ListPak.`
+      `Find ${cat.name} in Pakistan by city. Compare local businesses with phone numbers, addresses, opening hours and services on ListPak.`,
+    160
+  )
   const canonicalUrl = toCanonicalUrl(`category/${cat.id}`)
 
   return {
@@ -88,7 +97,7 @@ export default async function CategoryDetailPage(props: { params: Promise<{ slug
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: categorySeo?.title || `${cat.name} in Pakistan`,
-    description: categorySeo?.description || `Find ${cat.name} in Pakistan by city. Browse local businesses, services and listings on ListPak.`,
+    description: categorySeo?.description || `Find ${cat.name} in Pakistan by city. Compare local businesses with phone numbers, addresses, opening hours and services on ListPak.`,
     url: canonicalUrl,
     isPartOf: { '@type': 'WebSite', name: 'ListPak', url: 'https://www.listpak.com/' },
     mainEntity: {

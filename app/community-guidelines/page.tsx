@@ -4,7 +4,7 @@ import Footer from '@/components/footer'
 
 export const metadata: Metadata = {
   title: 'Community Guidelines | ListPak - Pakistan Business Hub',
-  description: 'Standards of conduct for business owners, job seekers, employers, and consumers engaging on ListPak.',
+  description: 'Standards of conduct for business owners, job seekers, employers and consumers on ListPak — respectful behaviour, honest listings and fair reviews.',
   alternates: {
     canonical: 'https://www.listpak.com/community-guidelines/',
   },

@@ -6,6 +6,7 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { CompanyItem } from '@/lib/data'
 import { getAllCompanies } from '@/lib/company-service'
+import { excerpt } from '@/lib/utils'
 import Link from 'next/link'
 import { 
   Building2, MapPin, Search, ShieldCheck, Star, ArrowRight, Briefcase, 
@@ -162,7 +163,7 @@ export default function CompaniesPage() {
                   </div>
 
                   <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed">
-                    {comp.description}
+                    {excerpt(comp.description, 180)}
                   </p>
                 </div>
 
@@ -191,6 +192,35 @@ export default function CompaniesPage() {
           </div>
         )}
       </main>
+
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 w-full">
+        <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-4">
+          <h2 className="text-xl font-extrabold text-slate-900">About the ListPak Company Directory</h2>
+          <p className="text-sm text-slate-600 leading-relaxed">
+            The ListPak company directory collects employer profiles from across Pakistan — software houses,
+            hospitals, banks, manufacturers, agencies and service companies — so job seekers can research an
+            employer before applying. Each company page brings together the details that matter in one place:
+            what the company does, where it is based, its size and industry, contact information, and the jobs
+            it is currently hiring for.
+          </p>
+          <p className="text-sm text-slate-600 leading-relaxed">
+            For job seekers, a company profile is a reality check: confirm the employer exists, see its real
+            location and open roles, and apply through the channels the company itself publishes. For employers,
+            a profile is the home of your hiring on ListPak — candidates who find your job post can open your
+            company page to learn who you are before they apply, which improves both the number and the quality
+            of applications.
+          </p>
+          <p className="text-sm text-slate-600 leading-relaxed">
+            Employers can register a company profile free, keep it updated as details change, and connect it to
+            their job postings. If you are hiring now, you can also go straight to posting a vacancy.
+          </p>
+          <div className="flex flex-wrap gap-3 pt-1">
+            <Link href="/add-company" className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-colors">Register Company Profile</Link>
+            <Link href="/post-job" className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl transition-colors">Post a Job</Link>
+            <Link href="/jobs" className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl transition-colors">Browse Current Jobs</Link>
+          </div>
+        </div>
+      </section>
 
       <Footer />
     </div>

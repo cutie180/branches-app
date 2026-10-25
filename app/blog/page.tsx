@@ -6,7 +6,7 @@ import { BookOpen, Clock, ArrowRight, Sparkles, TrendingUp, ShieldCheck, Briefca
 
 export const metadata: Metadata = {
   title: 'ListPak Blog – Free Business Listing Tips, SEO Guides & Pakistan Business News',
-  description: 'Read ListPak blog for free business listing tips, local SEO guides, job posting strategies, and Pakistan business news. Expert advice for businesses in Karachi, Lahore, Islamabad.',
+  description: 'Read the ListPak blog for free business listing tips, local SEO guides, job posting strategies and Pakistan business news for Karachi, Lahore and Islamabad.',
   keywords: 'ListPak blog, free business listing tips, local SEO Pakistan, business directory guide, job posting tips Pakistan, Pakistan business news, online business marketing',
   alternates: {
     canonical: 'https://www.listpak.com/blog/',

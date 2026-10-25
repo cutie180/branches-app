@@ -3,6 +3,7 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { clampMeta, fitTitle, excerpt } from '@/lib/utils'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { getProfessionalByUsername, getAllProfessionals } from '@/lib/professional-service'
@@ -33,8 +34,20 @@ export async function generateMetadata(props: { params: Promise<{ username: stri
   const name = pro ? pro.name : username.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
   const profession = pro?.profession || pro?.title || 'Professional'
   const city = pro?.city || 'Pakistan'
-  const title = `${name} – ${profession} in ${city} | ListPak`
-  const description = pro ? `${pro.bio.slice(0, 160)}... Review verified credentials, portfolio, and contact details for ${name} on ListPak.` : `View the profile, skills, credentials, and contact details for ${name} on the ListPak professional directory.`
+  const title = fitTitle([
+    `${name} – ${profession} in ${city} | ListPak`,
+    `${name} – ${profession} in ${city}`,
+    `${name} in ${city} | ListPak`,
+    `${name} | ListPak`,
+    name,
+  ])
+  const bioPart = pro?.bio ? excerpt(pro.bio, 85) : ''
+  const description = clampMeta(
+    pro
+      ? `${bioPart}${bioPart ? ' ' : ''}Review credentials, experience and contact details for ${name} on ListPak.`
+      : `View the profile, skills, credentials, and contact details for ${name} on the ListPak professional directory.`,
+    158
+  )
   const canonicalUrl = toCanonicalUrl(`professionals/${username}`)
 
   return {

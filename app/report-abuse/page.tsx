@@ -6,7 +6,7 @@ import { ShieldAlert } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Report Abuse | ListPak Safety & Compliance',
-  description: 'Report spam, harassment, counterfeit listings, copyright violations, or abusive behavior on ListPak.',
+  description: 'Report spam, harassment, counterfeit listings, copyright violations or abusive behaviour on ListPak. Every report is reviewed by our team.',
   alternates: {
     canonical: 'https://www.listpak.com/report-abuse/',
   },

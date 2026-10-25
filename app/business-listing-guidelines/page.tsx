@@ -3,8 +3,8 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 
 export const metadata: Metadata = {
-  title: 'Business Listing Guidelines | ListPak',
-  description: 'Requirements for adding your company, shop, or professional service to ListPak free business directory.',
+  title: 'Business Listing Guidelines | ListPak Pakistan Directory',
+  description: 'Requirements and best practices for adding your company, shop or professional service to the ListPak free business directory — names, photos and contacts.',
   alternates: {
     canonical: 'https://www.listpak.com/business-listing-guidelines/',
   },
