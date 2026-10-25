@@ -1,4 +1,5 @@
 import React from 'react'
+import { excerpt } from '@/lib/utils'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { CATEGORIES } from '@/lib/data'
@@ -286,7 +287,7 @@ export default async function CategoryDetailPage(props: { params: Promise<{ slug
                       <span>{biz.reviewCount > 0 && biz.rating > 0 ? biz.rating : 'Active'}</span>
                     </div>
                   </div>
-                  <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">{biz.description}</p>
+                  <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">{excerpt(biz.description, 180)}</p>
                 </div>
                 <div className="pt-3 mt-3 border-t border-slate-100 flex justify-between items-center text-xs">
                   <span className="text-slate-400 font-medium">

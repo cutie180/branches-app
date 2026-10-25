@@ -1,4 +1,5 @@
 import React from 'react'
+import { excerpt } from '@/lib/utils'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -327,7 +328,7 @@ export default async function CategoryCityLandingPage(props: {
                   </div>
 
                   <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed">
-                    {biz.description}
+                    {excerpt(biz.description, 180)}
                   </p>
 
                   {biz.services && biz.services.length > 0 && (

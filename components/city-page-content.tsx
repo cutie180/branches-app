@@ -1,4 +1,5 @@
 import React from 'react'
+import { excerpt } from '@/lib/utils'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { getAllJobs } from '@/lib/job-service'
@@ -382,7 +383,7 @@ export default async function CityPageContent({
                       </span>
                     </div>
                     <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
-                      {biz.description}
+                      {excerpt(biz.description, 180)}
                     </p>
                   </div>
                   <div className="pt-3 mt-3 border-t border-slate-100 flex justify-between items-center text-xs">

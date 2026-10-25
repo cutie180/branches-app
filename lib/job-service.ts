@@ -10,6 +10,7 @@ import { sanitizeText, sanitizeUrl } from './sanitizer'
 let memoryJobsCache: JobItem[] = [...MOCK_JOBS]
 
 export { isExpiredJob, getJobDatePosted, getJobValidThrough, parseJobSalary, stripMarkdown, formatJobMetaDescription } from './job-schema-helpers'
+import { getPublicJobSlug } from './job-url'
 import { isExpiredJob } from './job-schema-helpers'
 
 export const getAllJobs = cache(async function getAllJobs(includePending: boolean = false): Promise<JobItem[]> {
@@ -167,6 +168,19 @@ export const getJobBySlug = cache(async function getJobBySlug(idOrSlug: string, 
   if (cached && (cached.status || 'approved') === 'approved' && (allowExpired || !isExpiredJob(cached))) {
     return cached
   }
+
+  // 3. Public-slug check: the sitemap and all job links publish the PUBLIC slug
+  // (short alias for legacy slugs, title-based slug for jobs without a stored
+  // slug). Those URLs must resolve back to the job — previously the short alias
+  // redirected from the legacy URL and then 404ed, and raw-id URLs were the
+  // only working form for slugless jobs.
+  try {
+    const all = await getAllJobs(true)
+    const byPublic = all.find(j => getPublicJobSlug(j).toLowerCase() === normalized)
+    if (byPublic && (byPublic.status || 'approved') === 'approved' && (allowExpired || !isExpiredJob(byPublic))) {
+      return byPublic
+    }
+  } catch (_) {}
 
   return null
 })

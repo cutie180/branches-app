@@ -306,6 +306,26 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
     date: 'August 1, 2026',
     readTime: '8 min read',
     excerpt: 'Learn exactly how to create your free business listing on ListPak in 5 minutes. This comprehensive guide covers everything from account creation to optimization tips for maximum visibility on Google.',
+    content: NEW_BLOG_CONTENT['how-to-list-business-free-listpak-guide'],
+    dateModified: 'October 23, 2026',
+    faqs: [
+      {
+        question: 'Is it free to list a business on ListPak?',
+        answer: 'Yes, submitting a business listing on ListPak is free. Your listing gets its own page with your name, services, address, hours and contact details once it passes review.'
+      },
+      {
+        question: 'How long does a ListPak listing take to be approved?',
+        answer: 'Listings go through a manual review to keep names, phone numbers and addresses genuine. Keep your details accurate and complete so the review is quick.'
+      },
+      {
+        question: 'What makes a listing get more calls?',
+        answer: 'A complete listing: a phone number that is answered in business hours, honest opening hours, services written as separate items, real photos, and reviews from actual customers.'
+      },
+      {
+        question: 'Can I update my listing after it is published?',
+        answer: 'Yes. Update your number, hours, address or services whenever they change — outdated contact details are the most common reason a good listing stops producing calls.'
+      }
+    ]
   },
   'local-seo-pakistan-businesses-google-ranking': {
     slug: 'local-seo-pakistan-businesses-google-ranking',
@@ -317,6 +337,26 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
     date: 'July 28, 2026',
     readTime: '12 min read',
     excerpt: 'Learn practical local SEO strategies for Pakistani businesses targeting searches such as restaurants in Lahore or plumbers in Karachi, with useful listing optimization guidance.',
+    content: NEW_BLOG_CONTENT['local-seo-pakistan-businesses-google-ranking'],
+    dateModified: 'October 23, 2026',
+    faqs: [
+      {
+        question: 'What is local SEO for a Pakistani business?',
+        answer: 'Local SEO is the work that helps your business appear when nearby customers search for a service plus a place, such as "plumber Karachi" or "salon near me". It rests on consistent business facts, a complete Google Business Profile, directory listings and genuine reviews.'
+      },
+      {
+        question: 'How long does local SEO take to show results?',
+        answer: 'There is no honest fixed timeline. Complete, consistent listings and real reviews compound over weeks and months; anyone promising a guaranteed page-one position in days is selling, not informing.'
+      },
+      {
+        question: 'Do directory listings really help a business rank?',
+        answer: 'Accurate listings on genuine directories confirm your name, address and phone number to Google and give customers more ways to reach you. Contradictory or fake listings do the opposite.'
+      },
+      {
+        question: 'Should a business buy reviews to rank faster?',
+        answer: 'No. Purchased reviews violate platform policies, are easy to spot, and can be removed in bulk. A steady request to real, satisfied customers works better and lasts.'
+      }
+    ]
   },
   'free-job-posting-pakistan-hire-employees': {
     slug: 'free-job-posting-pakistan-hire-employees',
@@ -328,6 +368,26 @@ export const BLOG_POSTS: Record<string, BlogPost> = {
     date: 'July 25, 2026',
     readTime: '10 min read',
     excerpt: 'Complete guide to posting jobs free on ListPak job portal. Learn how to write compelling job descriptions, attract qualified candidates, and hire employees in Pakistan.',
+    content: NEW_BLOG_CONTENT['free-job-posting-pakistan-hire-employees'],
+    dateModified: 'October 23, 2026',
+    faqs: [
+      {
+        question: 'Is job posting free on ListPak?',
+        answer: 'Yes, employers can post jobs on ListPak without paying a posting fee. A clear title, an honest salary range and a reachable contact number matter far more than any paid promotion.'
+      },
+      {
+        question: 'Why should a job post show the salary?',
+        answer: 'Candidates skip postings without salary information or apply and drop out at the interview. A real PKR range attracts applicants whose expectations you can actually meet.'
+      },
+      {
+        question: 'How can employers get better applications?',
+        answer: 'Name the role and city in the title, describe the actual daily work, separate must-have requirements from trainable skills, and respond to shortlisted candidates within two or three days.'
+      },
+      {
+        question: 'Can an employer charge candidates a fee?',
+        answer: 'No. Genuine employers never charge for interviews, forms, training or deposits. Fee demands are a hallmark of job scams in Pakistan and platforms remove such postings.'
+      }
+    ]
   },
   'best-software-houses-pakistan-2026': {
     slug: 'best-software-houses-pakistan-2026',

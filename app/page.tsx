@@ -1,4 +1,5 @@
 import Navbar from '@/components/navbar'
+import { excerpt } from '@/lib/utils'
 import Footer from '@/components/footer'
 import { Metadata } from 'next'
 import Link from 'next/link'
@@ -11,6 +12,7 @@ import {
 import { CATEGORIES, TOP_CITIES, MOCK_JOBS, MOCK_PROFESSIONALS } from '@/lib/data'
 import { getAllBusinesses } from '@/lib/db-service'
 import { getPublicJobPath } from '@/lib/job-url'
+import { filterBusinessesByCategory } from '@/lib/directory-helpers'
 
 import { HOMEPAGE_SEO } from '@/lib/city-seo-overrides'
 
@@ -97,6 +99,11 @@ const BUSINESS_RESOURCES = [
 
 export default async function HomePage() {
   const allBiz = await getAllBusinesses()
+  // Real per-category listing counts (never display invented numbers)
+  const categoryCounts = new Map<string, number>()
+  for (const cat of CATEGORIES) {
+    categoryCounts.set(cat.id, filterBusinessesByCategory(allBiz, cat.id).length)
+  }
   const featuredBusinesses = allBiz.slice(0, 6)
   const recentlyAddedBusinesses = allBiz.slice(6, 12).length > 0 ? allBiz.slice(6, 12) : allBiz.slice(0, 6)
   const featuredJobs = MOCK_JOBS.slice(0, 2)
@@ -355,7 +362,7 @@ export default async function HomePage() {
                     </div>
 
                     <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
-                      {biz.description}
+                      {excerpt(biz.description, 180)}
                     </p>
 
                     <div className="flex items-center gap-2 text-xs text-slate-500">
@@ -405,7 +412,7 @@ export default async function HomePage() {
                     <p className="text-xs text-slate-500">{biz.category} • {biz.city}</p>
                   </div>
                 </div>
-                <p className="text-xs text-slate-600 line-clamp-2">{biz.description}</p>
+                <p className="text-xs text-slate-600 line-clamp-2">{excerpt(biz.description, 180)}</p>
                 <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
                   <span className="text-emerald-600 font-bold">{biz.verified ? 'Verified Listing' : 'Business Listing'}</span>
                   <Link href={`/business/${biz.slug}`} className="text-blue-600 font-semibold hover:underline">
@@ -607,7 +614,7 @@ export default async function HomePage() {
                 <Link key={cat.id} href={`/category/${cat.id}`} className="p-5 bg-slate-800 rounded-2xl border border-slate-700 hover:border-blue-500 transition-colors">
                   <Building2 className="w-8 h-8 text-blue-400 mb-3" />
                   <h3 className="font-bold text-white text-sm">{cat.name}</h3>
-                  <p className="text-xs text-emerald-400 font-semibold mt-1">{cat.count.toLocaleString()} Active Listings</p>
+                  <p className="text-xs text-emerald-400 font-semibold mt-1">{(() => { const n = categoryCounts.get(cat.id) ?? 0; return n > 0 ? `${n.toLocaleString()} Active Listings` : 'Browse listings' })()}</p>
                 </Link>
               ))}
             </div>

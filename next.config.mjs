@@ -127,6 +127,80 @@ const nextConfig = {
         destination: '/search/',
         permanent: true,
       },
+      // Phase 0 SEO: old UBL slug is a dead 404 — consolidate its impressions onto the live slug
+      {
+        source: '/business/ubl-united-bank-limited',
+        destination: '/business/united-bank-limited-ubl/',
+        permanent: true,
+      },
+      {
+        source: '/business/ubl-united-bank-limited/',
+        destination: '/business/united-bank-limited-ubl/',
+        permanent: true,
+      },
+      // Phase 0 SEO: duplicate professional profile — consolidate onto the canonical username slug
+      {
+        source: '/professionals/salim-ghauri-founder-ceo-netsol-technologies',
+        destination: '/professionals/salim-ghauri-lahore/',
+        permanent: true,
+      },
+      {
+        source: '/professionals/salim-ghauri-founder-ceo-netsol-technologies/',
+        destination: '/professionals/salim-ghauri-lahore/',
+        permanent: true,
+      },
+      // Phase 0 SEO: old slugs that still earn GSC impressions but return 404 —
+      // consolidate each onto its live canonical page (targets verified live, 2026-10-23)
+      {
+        source: '/business/kolachi-restaurant-karachi',
+        destination: '/business/kolachi-restaurant/',
+        permanent: true,
+      },
+      {
+        source: '/business/kolachi-restaurant-karachi/',
+        destination: '/business/kolachi-restaurant/',
+        permanent: true,
+      },
+      {
+        source: '/business/meezan-bank-pakistan',
+        destination: '/business/meezan-bank-limited/',
+        permanent: true,
+      },
+      {
+        source: '/business/meezan-bank-pakistan/',
+        destination: '/business/meezan-bank-limited/',
+        permanent: true,
+      },
+      {
+        source: '/professionals/monis-rahman-founder-chairman-rozee',
+        destination: '/professionals/monis-rahman-lahore/',
+        permanent: true,
+      },
+      {
+        source: '/professionals/monis-rahman-founder-chairman-rozee/',
+        destination: '/professionals/monis-rahman-lahore/',
+        permanent: true,
+      },
+      {
+        source: '/professionals/jehan-ara-founder-ceo-katalyst-labs',
+        destination: '/professionals/jehan-ara-karachi/',
+        permanent: true,
+      },
+      {
+        source: '/professionals/jehan-ara-founder-ceo-katalyst-labs/',
+        destination: '/professionals/jehan-ara-karachi/',
+        permanent: true,
+      },
+      {
+        source: '/professionals/kalsoom-lakhani-cofounder-general-partner-i2i-ventures',
+        destination: '/professionals/kalsoom-lakhani-karachi/',
+        permanent: true,
+      },
+      {
+        source: '/professionals/kalsoom-lakhani-cofounder-general-partner-i2i-ventures/',
+        destination: '/professionals/kalsoom-lakhani-karachi/',
+        permanent: true,
+      },
     ]
   },
 

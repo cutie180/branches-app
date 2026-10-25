@@ -2710,7 +2710,7 @@ export default function AddBusinessClient() {
               </div>
               <h3 className="font-bold text-slate-900 text-base">Google Search Visibility</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Rank on page 1 of Google for local keywords like &quot;best service in [your city]&quot; with our high domain authority profile schema.
+                Get a clean business profile page with structured data that helps Google understand and show your listing for local searches.
               </p>
             </div>
 

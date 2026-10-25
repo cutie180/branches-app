@@ -35,63 +35,33 @@ export const KEPT_PRAYER_SLUGS = [
 ]
 
 /**
- * Generates a realistic, natural lastmod date strictly within the last 7 days (today down to 6 days ago).
- * - Distributes URLs across: Today (0d), Yesterday (1d), and days 2-6.
- * - Guaranteed: No URL in the sitemap is ever older than 7 days.
+ * Returns an HONEST lastmod date for the sitemap.
+ * - Uses the real record timestamp when one exists (Firestore Timestamp, ISO string, or Date).
+ * - Returns undefined when no real timestamp is available, so the URL ships WITHOUT lastmod
+ *   instead of a fabricated "recently updated" date (which erodes Google's trust in the sitemap).
  */
-function getRecentLastmod(
-  identifier: string,
-  minDaysAgo: number = 0,
-  maxDaysAgo: number = 6,
-  originalInput?: string | Date | null
-): Date {
-  const now = new Date()
-  const sevenDaysAgoMs = now.getTime() - (7 * 24 * 60 * 60 * 1000)
-
-  // If a valid original timestamp exists and is within the last 7 days, preserve it
-  if (originalInput) {
-    const parsed = new Date(originalInput)
-    if (!isNaN(parsed.getTime()) && parsed.getTime() >= sevenDaysAgoMs && parsed.getTime() <= now.getTime()) {
-      return parsed
+function honestLastmod(originalInput?: unknown): Date | undefined {
+  if (!originalInput) return undefined
+  try {
+    let date: Date | null = null
+    if (originalInput instanceof Date) {
+      date = originalInput
+    } else if (typeof originalInput === 'string' || typeof originalInput === 'number') {
+      date = new Date(originalInput)
+    } else if (typeof originalInput === 'object' && originalInput !== null) {
+      const o = originalInput as { toDate?: () => Date; seconds?: number }
+      if (typeof o.toDate === 'function') {
+        date = o.toDate() // Firestore Timestamp
+      } else if (typeof o.seconds === 'number') {
+        date = new Date(o.seconds * 1000)
+      }
     }
+    if (!date || isNaN(date.getTime())) return undefined
+    if (date.getTime() > Date.now()) return undefined // never a future date
+    return date
+  } catch {
+    return undefined
   }
-
-  // Deterministic seed based on identifier characters for stable, reproducible dates
-  let hash = 0
-  for (let i = 0; i < identifier.length; i++) {
-    hash = (hash << 5) - hash + identifier.charCodeAt(i)
-    hash |= 0
-  }
-
-  const safeMin = Math.max(0, Math.min(minDaysAgo, 6))
-  const safeMax = Math.max(safeMin, Math.min(maxDaysAgo, 6))
-  const span = safeMax - safeMin + 1
-  const daysAgo = safeMin + (Math.abs(hash) % span)
-
-  const result = new Date(now)
-  result.setDate(now.getDate() - daysAgo)
-
-  if (daysAgo === 0) {
-    // For today, set to recent daylight minutes, never exceeding the current moment
-    const minutesAgo = (Math.abs(hash) % 120) + 10
-    result.setTime(now.getTime() - (minutesAgo * 60 * 1000))
-  } else {
-    // For past days, daylight hours between 08:00 and 19:00 UTC
-    const hour = 8 + (Math.abs(hash >> 2) % 11)
-    const minute = Math.abs(hash >> 5) % 60
-    const second = Math.abs(hash >> 8) % 60
-    result.setHours(hour, minute, second, 0)
-  }
-
-  // Guaranteed clamp: never in the future and never older than 7 days
-  if (result.getTime() > now.getTime()) {
-    result.setTime(now.getTime() - 1000)
-  }
-  if (result.getTime() < sevenDaysAgoMs) {
-    result.setTime(sevenDaysAgoMs + 3600000)
-  }
-
-  return result
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -101,7 +71,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 1. Homepage (Updated Today)
   const homepageRoute = {
     url: canonicalUrl('/'),
-    lastModified: getRecentLastmod('/', 0, 0),
     changeFrequency: 'daily' as const,
     priority: 1.0,
   }
@@ -128,7 +97,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/support'
   ].map((route) => ({
     url: canonicalUrl(route),
-    lastModified: getRecentLastmod(route, 0, 2),
     changeFrequency: 'weekly' as const,
     priority: 0.7,
   }))
@@ -149,7 +117,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/report-abuse'
   ].map((route) => ({
     url: canonicalUrl(route),
-    lastModified: getRecentLastmod(route, 3, 6),
     changeFrequency: 'weekly' as const,
     priority: 0.3,
   }))
@@ -190,7 +157,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     return {
       url: canonicalUrl(`/category/${cat.id}`),
-      lastModified: getRecentLastmod(`category-${cat.id}`, 0, 3),
       changeFrequency: 'daily' as const,
       priority: 0.9,
     }
@@ -218,7 +184,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const cityRoutes = Array.from(activeCitySlugs).map((citySlug) => ({
     url: canonicalUrl(`/city/${citySlug}`),
-    lastModified: getRecentLastmod(`city-${citySlug}`, 0, 3),
     changeFrequency: 'daily' as const,
     priority: 0.9,
   }))
@@ -229,7 +194,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .filter((pair) => pair.count >= 3)
     .map((pair) => ({
       url: canonicalUrl(`/category/${pair.categorySlug}/${pair.citySlug}`),
-      lastModified: getRecentLastmod(`combo-${pair.categorySlug}-${pair.citySlug}`, 1, 4),
       changeFrequency: 'weekly' as const,
       priority: 0.85,
     }))
@@ -241,7 +205,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   )
   const businessRoutes = approvedBusinesses.map((biz) => ({
     url: canonicalUrl(`/business/${biz.slug}`),
-    lastModified: getRecentLastmod(biz.slug, 0, 5, biz.approvedAt || biz.submittedAt),
+    lastModified: honestLastmod(biz.approvedAt || biz.submittedAt),
     changeFrequency: 'weekly' as const,
     priority: 0.9,
   }))
@@ -254,7 +218,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   )
   const jobRoutes = approvedJobs.map((job) => ({
     url: canonicalUrl(getPublicJobPath(job)),
-    lastModified: getRecentLastmod(job.slug || job.id, 0, 2, job.postedDate || job.postedAt),
+    lastModified: honestLastmod(job.postedDate || job.postedAt),
     changeFrequency: 'weekly' as const,
     priority: 0.9,
   }))
@@ -266,7 +230,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   )
   const companyRoutes = approvedCompanies.map((comp) => ({
     url: canonicalUrl(`/companies/${comp.slug}`),
-    lastModified: getRecentLastmod(comp.slug, 1, 5, comp.approvedAt || comp.submittedAt),
+    lastModified: honestLastmod(comp.approvedAt || comp.submittedAt),
     changeFrequency: 'weekly' as const,
     priority: 0.9,
   }))
@@ -281,7 +245,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const proId = (pro.username || pro.slug || 'pro').trim()
     return {
       url: canonicalUrl(`/professionals/${proId}`),
-      lastModified: getRecentLastmod(proId, 1, 5, pro.approvedAt || pro.submittedAt || pro.verifiedAt),
+      lastModified: honestLastmod(pro.approvedAt || pro.submittedAt || pro.verifiedAt),
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     }
@@ -298,7 +262,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const allBlogPosts = Array.from(blogPostsBySlug.values())
   const blogRoutes = allBlogPosts.map((post) => ({
     url: canonicalUrl(`/blog/${post.slug}`),
-    lastModified: getRecentLastmod(post.slug, 0, 4, post.dateModified || post.date),
+    lastModified: honestLastmod(post.dateModified || post.date),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
   }))
@@ -306,7 +270,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 12. City Prayer Times Pages: Kept 13 Indexable Cities (Today or Yesterday)
   const prayerCityRoutes = KEPT_PRAYER_SLUGS.map((slug) => ({
     url: canonicalUrl(`/prayer-times-${slug}-today`),
-    lastModified: getRecentLastmod(`prayer-${slug}`, 0, 1),
     changeFrequency: 'daily' as const,
     priority: 0.7,
   }))
@@ -327,26 +290,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...blogRoutes,
   ]
 
-  // Deduplicate entries by URL and strictly enforce the 7-day age limit across the entire sitemap
+  // Deduplicate entries by URL. Dates stay honest: a missing, invalid, or future
+  // lastModified is dropped (no lastmod emitted) rather than fabricated.
   const seenUrls = new Set<string>()
   const deduplicatedRoutes: MetadataRoute.Sitemap = []
   const now = new Date()
-  const sevenDaysAgo = new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000))
 
   for (const item of allRoutes) {
     if (!seenUrls.has(item.url)) {
       seenUrls.add(item.url)
 
-      let date = item.lastModified instanceof Date ? item.lastModified : new Date(item.lastModified || now)
-      // Safety clamp: if date is invalid, older than 7 days, or in future, clamp within 0 to 6 days ago
-      if (isNaN(date.getTime()) || date < sevenDaysAgo || date > now) {
-        date = getRecentLastmod(item.url, 0, 6)
+      const raw = (item as { lastModified?: string | Date }).lastModified
+      const date = raw instanceof Date ? raw : raw ? new Date(raw) : undefined
+      const validDate =
+        date && !isNaN(date.getTime()) && date.getTime() <= now.getTime()
+          ? date
+          : undefined
+
+      const entry: MetadataRoute.Sitemap[number] = {
+        ...item,
+        lastModified: validDate,
       }
 
-      deduplicatedRoutes.push({
-        ...item,
-        lastModified: date,
-      })
+      deduplicatedRoutes.push(entry)
     }
   }
 

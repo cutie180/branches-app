@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect, useCallback, Suspense } from 'react'
+import { excerpt } from '@/lib/utils'
 import { useSearchParams } from 'next/navigation'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
@@ -453,7 +454,7 @@ function SearchContent() {
                           </div>
 
                           <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
-                            {biz.description}
+                            {excerpt(biz.description, 180)}
                           </p>
                           
                           <div className="flex items-center gap-2 text-xs text-slate-500">

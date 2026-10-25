@@ -1,6 +1,158 @@
 import type { BlogContentDocument } from '@/components/blog/article-content'
 
 export const NEW_BLOG_CONTENT: Record<string, BlogContentDocument> = {
+  'how-to-list-business-free-listpak-guide': {
+    intro: 'A directory listing only works when it is complete. Customers searching on Google decide in a few seconds whether to call a business, and they almost always pick the listing that shows a phone number, a real address, opening hours and a clear description of services. This guide walks through every step of creating a ListPak listing — and, more importantly, how to fill each field so the listing actually brings calls instead of just existing.',
+    sections: [
+      {
+        heading: 'Step 1: Create Your Account and Start the Listing',
+        paragraphs: [
+          'Register with an email address you check daily, because approval updates and customer enquiries are tied to it. From your dashboard, open Add Business and start with the exact business name customers see on your shop board or documents. Do not add keywords to the name — writing "Best Cheap Hair Salon Lahore" instead of your real name looks like spam, hurts trust, and can get the listing rejected during review.',
+          'Pick the city where the business physically operates. If you serve more than one city from separate branches, each branch should be its own listing with its own address and phone number, because customers filter by the city they are actually in.'
+        ],
+        links: [{ label: 'Add your business on ListPak', href: '/add-business' }]
+      },
+      {
+        heading: 'Step 2: Choose the Right Category and Services',
+        paragraphs: [
+          'The category decides which searches your listing appears in, so choose the one a customer would type — "Restaurants & Food" for a restaurant, "Home Services & Repairs" for a plumber or electrician. Then list your specific services as separate items: a salon should name haircuts, facials and bridal packages individually rather than writing "all services available".',
+          'Specific services matter because many searches are specific. A page that literally contains the words "AC repair" and "gas refill" can appear for those searches; a page that only says "all AC work" cannot.'
+        ],
+        bullets: [
+          'One main category that matches your primary trade',
+          'Services written as separate, searchable items — not "all services"',
+          'Areas and neighbourhoods you actually serve, named explicitly'
+        ]
+      },
+      {
+        heading: 'Step 3: Write a Description That Answers Real Questions',
+        paragraphs: [
+          'Write the description in plain language and answer the five questions every customer has: what you do, where you are, when you are open, how to reach you, and why someone should choose you. Two or three short paragraphs are enough — a description copied from another business or filled with repeated keywords reads as spam and performs worse.',
+          'Include the details that remove hesitation: home service availability, cash on delivery, female staff, parking, home visits, emergency availability or same-day service, if they are genuinely true for your business. Never publish prices, offers or timings you cannot honour — a listing that misleads people collects bad reviews quickly.'
+        ],
+        callout: 'Rule of thumb: if a line in your description would not be true next month, do not publish it.'
+      },
+      {
+        heading: 'Step 4: Add Contact Details Customers Can Act On',
+        paragraphs: [
+          'Add a mobile number that is answered during business hours and, if you use it for customers, a WhatsApp number — in Pakistan a large share of enquiries start as a WhatsApp message rather than a call. Add your opening hours honestly, including Friday breaks and Sunday closure if they apply, because "open now" searches are some of the highest-intent searches a local business can win.',
+          'Double-check the address format: shop or plot number, street or block, area, city. Customers copy this into Google Maps; a vague address loses the visit even when the listing ranked well.'
+        ]
+      },
+      {
+        heading: 'Step 5: Verification, Approval and Keeping the Listing Alive',
+        paragraphs: [
+          'After submission, the listing goes through a review so that names, numbers and addresses are genuine. Once approved, your page gets its own permanent ListPak address that you can share on Facebook, WhatsApp and your shop card. Verification options, where offered, simply confirm the business details were checked — they do not guarantee rankings, and no honest directory can promise a page-one position.',
+          'A listing is not a one-time task. Update it when your number, hours or address changes, add new services when you launch them, and ask satisfied customers to leave a review on your page. Listings with recent reviews and complete, current information are the ones customers call first.'
+        ],
+        links: [
+          { label: 'Read the local SEO guide for Pakistani businesses', href: '/blog/local-seo-pakistan-businesses-google-ranking' },
+          { label: 'Browse businesses already listed', href: '/categories' }
+        ]
+      }
+    ]
+  },
+  'local-seo-pakistan-businesses-google-ranking': {
+    intro: 'Local SEO in Pakistan is not a mystery and it is not a trick. When someone in Lahore searches for a plumber, a salon or a restaurant, Google shows the businesses it can verify are real, nearby and relevant — with complete details. This guide covers the practical steps a Pakistani business can take, in order of impact, to be one of those businesses.',
+    sections: [
+      {
+        heading: '1. Fix Your Basic Business Facts Everywhere',
+        paragraphs: [
+          'Google cross-checks your business name, address and phone number across the web. If your Facebook page says one number, a directory says another, and your board shows a third, Google trusts all of them less. Decide on one official format for your name, one address format and one primary phone number, and use exactly that everywhere — directories, social pages, WhatsApp Business profile and your own website if you have one.',
+          'This single discipline, often called NAP consistency, is the foundation. Every other step in this guide works better once it is in place.'
+        ],
+        bullets: [
+          'One business name — no keyword stuffing, no city names added artificially',
+          'One phone number format used everywhere, ideally a number on WhatsApp',
+          'One address format: house/shop, street, area, city'
+        ]
+      },
+      {
+        heading: '2. Claim and Complete Your Google Business Profile',
+        paragraphs: [
+          'For most local searches, the map results at the top of Google get the calls. A complete Google Business Profile — correct category, hours, photos, services and attributes — is the entry ticket. Choose the most specific primary category available, add your services individually, and set special hours for Ramazan, Eid and public holidays instead of leaving customers guessing.',
+          'Add real photos: the shopfront (so people can find you), the interior, your team at work and your products. Profiles with genuine photos receive noticeably more calls and direction requests than profiles with none, and stock photos do not build the same trust.'
+        ]
+      },
+      {
+        heading: '3. Get Listed in the Directories Your Customers Actually Use',
+        paragraphs: [
+          'After Google itself, customers find Pakistani businesses through local directories and social pages. A consistent listing on ListPak and a few other genuine directories gives Google more independent confirmations that your business exists at the address you claim — and gives customers more than one way to reach you.',
+          'Quality matters more than quantity. Ten accurate, complete listings on real directories help; a hundred auto-generated listings with wrong numbers and fake addresses actively hurt, because Google sees the contradictions.'
+        ],
+        links: [
+          { label: 'List your business free on ListPak', href: '/add-business' },
+          { label: 'Step-by-step listing guide', href: '/blog/how-to-list-business-free-listpak-guide' }
+        ]
+      },
+      {
+        heading: '4. Earn Reviews the Honest Way',
+        paragraphs: [
+          'Reviews are often the deciding factor between two businesses with similar listings. Ask satisfied customers directly — at the counter, on the invoice, or in a follow-up WhatsApp message with the link to your page. Make it easy and specific: "If you were happy with the repair, a short review on our page helps other customers find us."',
+          'Never buy reviews or post them yourself under other names. Fake reviews are usually easy to spot, they violate platform policies, and a single public accusation costs more trust than fifty reviews build. Reply to every review you receive, including the negative ones, calmly and briefly — future customers read your replies as closely as the reviews.'
+        ],
+        callout: 'Ten genuine reviews from real customers outperform a hundred purchased ones — and they cannot be deleted by a policy sweep.'
+      },
+      {
+        heading: '5. Match Your Page to How People Actually Search',
+        paragraphs: [
+          'Customers search with a service plus a place: "AC technician Gulberg", "bridal makeup near me", "car rental Islamabad airport". Your directory page and any web page you control should name your services and your areas in natural sentences, the way this guide named Gulberg and Islamabad above. One clear page per service and city beats one stuffed page trying to claim every keyword in Pakistan.',
+          'Finally, measure honestly. Check monthly how many calls and messages came from search, ask new customers how they found you, and improve the listings that are close to working before creating new ones. Local SEO compounds: complete information, consistent facts and real reviews keep paying off month after month.'
+        ]
+      }
+    ]
+  },
+  'free-job-posting-pakistan-hire-employees': {
+    intro: 'Employers in Pakistan lose good candidates for a simple reason: their job post looks like every other job post. "Staff required, handsome salary, contact immediately" attracts unqualified applications and repels serious ones. This guide shows how to write and publish a job posting — free on ListPak — that gets relevant applications within days.',
+    sections: [
+      {
+        heading: '1. Write a Job Title a Candidate Would Search For',
+        paragraphs: [
+          'Candidates search by role and city: "data entry operator Karachi", "Laravel developer remote", "call center agent evening shift Lahore". Your title should contain exactly that — the role, and where relevant the shift or work mode. Avoid internal titles nobody searches for, and avoid clickbait like "urgent hiring!!!" which reads as a scam signal to experienced candidates.',
+          'If the role has a common English and Urdu understanding — for example "salesman", "rider" or "accountant" — use the term candidates themselves use, not the fanciest version of it.'
+        ],
+        bullets: [
+          'Role + city or work mode in the title',
+          'Shift mentioned for call centre, retail and factory roles',
+          'No all-caps, no excessive punctuation, no "urgent" bait'
+        ]
+      },
+      {
+        heading: '2. State the Salary — Honestly and as a Range',
+        paragraphs: [
+          'Postings with a clear salary range consistently receive more and better applications than "salary will be discussed". A range such as PKR 50,000–70,000 per month, plus any commission, allowance or overtime structure, lets candidates self-select and saves you interviews with people whose expectations you cannot meet.',
+          'Only publish figures you will actually pay. Advertising a high salary to collect CVs and offering less at the interview destroys your reputation in exactly the worker networks you hire from, and platforms remove repeat offenders.'
+        ],
+        callout: 'If pay depends on experience, publish the real band for the role — "PKR 45,000–60,000 depending on experience" is honest and still attracts applicants.'
+      },
+      {
+        heading: '3. Describe the Actual Work and the Real Requirements',
+        paragraphs: [
+          'Write five to eight lines on what the person will do daily: the tasks, the tools (Excel, a POS system, a specific machine, a bike for delivery roles), the reporting line and the working hours. Then separate requirements into must-haves — a valid licence for a driver, a degree for an accountant — and nice-to-haves you can train.',
+          'Overlong requirement lists shrink your applicant pool without improving quality. If a fresh candidate can learn it in two weeks, it is not a requirement; it is training.'
+        ]
+      },
+      {
+        heading: '4. Publish the Posting and Share It Where Candidates Are',
+        paragraphs: [
+          'On ListPak, open Post a Job, choose the category and city, and paste the title, salary range, description and requirements you prepared above. Add a phone number or WhatsApp contact that candidates can actually reach — many candidates, especially for entry-level and shift roles, will message before they apply formally.',
+          'Share the published link in relevant Facebook groups and your own WhatsApp status. A single clear posting shared in three relevant places outperforms the same text pasted anonymously into thirty groups, where it looks like spam and gets ignored.'
+        ],
+        links: [
+          { label: 'Post a job on ListPak', href: '/post-job' },
+          { label: 'Browse current vacancies to see strong examples', href: '/jobs' }
+        ]
+      },
+      {
+        heading: '5. Screen Fairly, Respond Quickly, Never Charge Candidates',
+        paragraphs: [
+          'Shortlist against your must-haves only, call within two or three days while good candidates are still available, and keep interviews focused on the actual work — a short practical test beats an hour of generic questions. Tell unsuccessful candidates they were not selected; silence is why applicants assume every posting is fake.',
+          'One rule protects both sides: a genuine employer never charges candidates a fee for an interview, a form, training or "security deposit". Job scams using exactly those tricks are common in Pakistan, which is why serious candidates avoid any posting that hints at them — and why your posting should state clearly that applying is free.'
+        ]
+      }
+    ]
+  },
+
   'best-software-houses-pakistan-2026': {
     intro: 'Pakistan\'s information technology sector generates over $3 billion in annual software exports, powered by globally recognized software engineering consultancies, enterprise digital transformation leaders, and high-growth AI development studios. This 2026 ranked guide evaluates the top 15 software houses in Pakistan based on client reviews, technical specialization, engineering headcount, and verified international delivery records.',
     sections: [
