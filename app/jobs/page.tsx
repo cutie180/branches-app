@@ -12,13 +12,13 @@ import JobsFilterClient from '@/components/jobs/jobs-filter-client'
 export const revalidate = 0
 
 export const metadata: Metadata = {
-  title: 'Jobs in Pakistan 2026 – Latest Jobs in Karachi, Lahore & Islamabad | ListPak',
+  title: 'Jobs in Pakistan 2026 – Latest Vacancies | ListPak Jobs',
   description: 'Find the latest jobs in Pakistan — call center, IT, marketing, data entry & remote jobs in Karachi, Lahore, Islamabad. New vacancies added daily. Apply free.',
   alternates: {
     canonical: 'https://listpak.com/jobs/',
   },
   openGraph: {
-    title: 'Jobs in Pakistan 2026 – Latest Jobs in Karachi, Lahore & Islamabad | ListPak',
+    title: 'Jobs in Pakistan 2026 – Latest Vacancies | ListPak Jobs',
     description: 'Find the latest jobs in Pakistan — call center, IT, marketing, data entry & remote jobs in Karachi, Lahore, Islamabad. New vacancies added daily. Apply free.',
     url: 'https://listpak.com/jobs/',
     siteName: 'ListPak',
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Jobs in Pakistan 2026 – Latest Jobs in Karachi, Lahore & Islamabad | ListPak',
+    title: 'Jobs in Pakistan 2026 – Latest Vacancies | ListPak Jobs',
     description: 'Find the latest jobs in Pakistan — call center, IT, marketing, data entry & remote jobs in Karachi, Lahore, Islamabad. New vacancies added daily. Apply free.',
   },
 }
