@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const modifiedDate = post?.dateModified ? new Date(post.dateModified).toISOString() : publishedDate
 
   return {
-    title: `${cleanTitle} | ListPak Business Directory`,
+    title: fitTitle([`${cleanTitle} | ListPak`, cleanTitle]),
     description,
     keywords: post ? [post.focusKeyword, 'Business Directory Pakistan', 'Pakistan Business Directory', 'Local Business Directory', 'Company Directory Pakistan'] : [],
     alternates: {
