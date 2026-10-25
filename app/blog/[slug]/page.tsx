@@ -10,6 +10,7 @@ import {
   HelpCircle, ArrowRight, ShieldCheck, MapPin, Globe, Briefcase, Search, Star
 } from 'lucide-react'
 import { BLOG_POSTS } from '@/lib/blog-data'
+import { fitTitle } from '@/lib/utils'
 
 export const revalidate = 86400
 
