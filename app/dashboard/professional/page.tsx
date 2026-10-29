@@ -456,7 +456,7 @@ export default function ProfessionalDashboardPage() {
                 className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-xs rounded-xl shrink-0 shadow-xs flex items-center gap-1.5 cursor-pointer"
               >
                 <ShieldCheck className="w-4 h-4" />
-                <span>Verify Profile (Rs. 50)</span>
+                <span>Verify Profile (Rs. 99)</span>
               </Link>
             </div>
           )}

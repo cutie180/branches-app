@@ -158,7 +158,7 @@ function ProfessionalVerificationContent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           idOrUsername: profile.username || profile.id,
-          amount: 50,
+          amount: 99,
           paymentMethod,
           transactionRef: transactionRef.trim(),
           paymentScreenshot: screenshotBase64,
@@ -213,7 +213,7 @@ function ProfessionalVerificationContent() {
             {/* Fee badge */}
             <div className="p-4 bg-emerald-950/80 border-2 border-emerald-500/40 rounded-2xl text-center shrink-0 shadow-lg">
               <span className="text-[11px] uppercase font-bold text-emerald-400 tracking-wider block">Verification Fee</span>
-              <span className="text-3xl font-extrabold text-white">Rs. 50</span>
+              <span className="text-3xl font-extrabold text-white">Rs. 99</span>
               <span className="text-[10px] text-slate-400 block mt-0.5">One-time processing fee</span>
             </div>
           </div>
@@ -245,7 +245,7 @@ function ProfessionalVerificationContent() {
             <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-xs space-y-2 text-left max-w-md mx-auto">
               <div className="flex justify-between text-slate-600">
                 <span>Verification Fee:</span>
-                <span className="font-bold text-slate-900">Rs. 50</span>
+                <span className="font-bold text-slate-900">Rs. 99</span>
               </div>
               <div className="flex justify-between text-slate-600">
                 <span>Payment Method:</span>
@@ -287,7 +287,7 @@ function ProfessionalVerificationContent() {
               <div className="border-b border-slate-100 pb-4">
                 <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-amber-500" />
-                  <span>Why Pay Rs. 50 for Verification?</span>
+                  <span>Why Pay Rs. 99 for Verification?</span>
                 </h2>
                 <p className="text-xs text-slate-600 mt-1 leading-relaxed">
                   A verified professional profile helps clients identify professionals who have completed ListPak&apos;s verification process.
@@ -368,7 +368,7 @@ function ProfessionalVerificationContent() {
                 <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-1.5">
                   <div className="flex items-center gap-2 font-bold text-emerald-900 text-sm">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span>Only Rs. 50</span>
+                    <span>Only Rs. 99</span>
                   </div>
                   <p className="text-emerald-800 leading-relaxed">
                     The verification fee is intentionally affordable so that more Pakistani professionals can access the verification system.
@@ -382,7 +382,7 @@ function ProfessionalVerificationContent() {
               <div className="border-b border-slate-100 pb-4">
                 <h2 className="text-xl font-extrabold text-slate-900">Payment Instructions</h2>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Send <strong className="text-emerald-600">Rs. 50</strong> using any of the official payment accounts below and upload the screenshot proof.
+                  Send <strong className="text-emerald-600">Rs. 99</strong> using any of the official payment accounts below and upload the screenshot proof.
                 </p>
               </div>
 
@@ -419,7 +419,7 @@ function ProfessionalVerificationContent() {
                       <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
                         EasyPaisa Account Number
                       </span>
-                      <span className="text-[11px] font-bold text-slate-900">Rs. 50</span>
+                      <span className="text-[11px] font-bold text-slate-900">Rs. 99</span>
                     </div>
                     <div className="flex items-center justify-between gap-2">
                       <span className="font-mono text-sm sm:text-base font-extrabold text-slate-900 select-all tracking-wider">
@@ -488,7 +488,7 @@ function ProfessionalVerificationContent() {
                       <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
                         Mashreq Account Number
                       </span>
-                      <span className="text-[11px] font-bold text-slate-900">Rs. 50</span>
+                      <span className="text-[11px] font-bold text-slate-900">Rs. 99</span>
                     </div>
                     <div className="flex items-center justify-between gap-2">
                       <span className="font-mono text-sm sm:text-base font-extrabold text-slate-900 select-all tracking-wider">
@@ -569,7 +569,7 @@ function ProfessionalVerificationContent() {
                 </div>
                 <div className="flex justify-between items-center text-emerald-800 font-extrabold">
                   <span>Total Payable Amount:</span>
-                  <span className="text-sm">PKR 50 Only</span>
+                  <span className="text-sm">PKR 99 Only</span>
                 </div>
               </div>
 
@@ -587,7 +587,7 @@ function ProfessionalVerificationContent() {
                     <input
                       type="text"
                       disabled
-                      value="Rs. 50 (PKR)"
+                      value="Rs. 99 (PKR)"
                       className="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl font-bold text-slate-700 cursor-not-allowed"
                     />
                   </div>
@@ -611,7 +611,7 @@ function ProfessionalVerificationContent() {
                     Upload Payment Screenshot Proof *
                   </label>
                   <p className="text-[11px] text-slate-500 mb-2">
-                    Attach a clear screenshot or receipt photo showing the Rs. 50 transfer (JPG, PNG, or WebP up to 5MB).
+                    Attach a clear screenshot or receipt photo showing the Rs. 99 transfer (JPG, PNG, or WebP up to 5MB).
                   </p>
 
                   <div className="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-2xl p-6 text-center bg-slate-50 transition-colors">
@@ -672,7 +672,7 @@ function ProfessionalVerificationContent() {
                     disabled={isSubmitting}
                     className="w-full sm:w-auto px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                   >
-                    <span>{isSubmitting ? 'Submitting Request...' : 'Submit Verification Request (Rs. 50)'}</span>
+                    <span>{isSubmitting ? 'Submitting Request...' : 'Submit Verification Request (Rs. 99)'}</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>

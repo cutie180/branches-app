@@ -417,7 +417,7 @@ export default function JobInteractiveApply({
                           className="w-full px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-extrabold flex items-center justify-center gap-2 shadow-xs transition-all"
                         >
                           <ShieldCheck className="w-4 h-4" />
-                          <span>Verify Profile Now (Rs. 50)</span>
+                          <span>Verify Profile Now (Rs. 99)</span>
                           <ArrowRight className="w-3.5 h-3.5" />
                         </Link>
                       </div>

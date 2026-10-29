@@ -666,7 +666,7 @@ export default function AdminPage() {
                 ListPak Administration Panel
               </h1>
               <p className="text-xs sm:text-sm text-slate-300 mt-1">
-                Moderation queues for businesses, professional approvals, Rs. 50 verification requests, and hiring companies.
+                Moderation queues for businesses, professional approvals, Rs. 99 verification requests, and hiring companies.
               </p>
             </div>
             
@@ -735,7 +735,7 @@ export default function AdminPage() {
               }`}
             >
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>Verification Requests (Rs. 50)</span>
+              <span>Verification Requests (Rs. 99)</span>
               {stats.pendingVerReqs > 0 && (
                 <span className="px-2 py-0.5 rounded-full bg-amber-400 text-slate-900 text-[10px] font-extrabold animate-pulse">
                   {stats.pendingVerReqs} New
@@ -831,7 +831,7 @@ export default function AdminPage() {
                     onClick={() => { setActiveTab('verifications') }}
                     className="bg-purple-50 border border-purple-200 rounded-2xl p-5 shadow-xs space-y-1 cursor-pointer hover:scale-102 transition-all"
                   >
-                    <span className="text-[11px] font-bold text-purple-700 uppercase tracking-wider block">Pending Rs. 50 Verifications</span>
+                    <span className="text-[11px] font-bold text-purple-700 uppercase tracking-wider block">Pending Rs. 99 Verifications</span>
                     <p className="text-3xl font-extrabold text-purple-700">{stats.pendingVerReqs}</p>
                     <span className="text-[10px] text-purple-600 font-semibold">Awaiting payment check</span>
                   </div>
@@ -938,8 +938,8 @@ export default function AdminPage() {
                   </div>
 
                   <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200">
-                    <strong className="text-emerald-950 block mb-1">2. Verification (Rs. 50 Paid Trust Status):</strong>
-                    When an admin verifies the Rs. 50 receipt and clicks <strong>Approve Verification</strong>, the status becomes <code className="bg-white px-1 py-0.5 rounded text-emerald-700 font-bold">VERIFIED</code>. The profile receives the official green check mark and unlocks full profile editing access for the user.
+                    <strong className="text-emerald-950 block mb-1">2. Verification (Rs. 99 Paid Trust Status):</strong>
+                    When an admin verifies the Rs. 99 receipt and clicks <strong>Approve Verification</strong>, the status becomes <code className="bg-white px-1 py-0.5 rounded text-emerald-700 font-bold">VERIFIED</code>. The profile receives the official green check mark and unlocks full profile editing access for the user.
                   </div>
                 </div>
               </div>
@@ -1352,7 +1352,7 @@ export default function AdminPage() {
                 <div>
                   <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
                     <ShieldCheck className="w-6 h-6 text-emerald-600" />
-                    <span>Professional Verification Requests (Rs. 50 Fee Queue)</span>
+                    <span>Professional Verification Requests (Rs. 99 Fee Queue)</span>
                   </h2>
                   <p className="text-xs text-slate-500 mt-0.5">
                     Review payment screenshot proofs and transaction IDs submitted by Pakistani professionals.
@@ -1368,7 +1368,7 @@ export default function AdminPage() {
                 <div className="py-12 text-center space-y-2">
                   <ShieldCheck className="w-10 h-10 text-slate-400 mx-auto" />
                   <h3 className="font-bold text-slate-900 text-base">No Verification Requests Yet</h3>
-                  <p className="text-xs text-slate-500">When professionals submit their Rs. 50 payment receipt, it will appear here.</p>
+                  <p className="text-xs text-slate-500">When professionals submit their Rs. 99 payment receipt, it will appear here.</p>
                 </div>
               ) : (
                 <div className="space-y-4">

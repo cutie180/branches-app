@@ -539,9 +539,9 @@ export default function AddProfessionalClient() {
                   <ShieldCheck className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm">Remove Red Flag: Verify Your Profile (Rs. 50)</h4>
+                  <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm">Remove Red Flag: Verify Your Profile (Rs. 99)</h4>
                   <p className="text-[11px] text-slate-600 leading-relaxed mt-0.5">
-                    Your public page currently displays an <strong>Unverified red flag</strong>. Verify for Rs. 50 to earn the official <strong>Green Verified Badge</strong>, gain client trust, and unlock profile editing.
+                    Your public page currently displays an <strong>Unverified red flag</strong>. Verify for Rs. 99 to earn the official <strong>Green Verified Badge</strong>, gain client trust, and unlock profile editing.
                   </p>
                 </div>
               </div>
@@ -551,7 +551,7 @@ export default function AddProfessionalClient() {
                 className="w-full py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-extrabold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <ShieldCheck className="w-4 h-4" />
-                <span>Pay for Verification (Rs. 50)</span>
+                <span>Pay for Verification (Rs. 99)</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>

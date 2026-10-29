@@ -285,7 +285,7 @@ export default async function ProfessionalDetailPage(props: { params: Promise<{ 
                   This profile is publicly live but unverified.
                 </h3>
                 <p className="text-xs text-slate-600 leading-relaxed mt-0.5">
-                  Are you {pro.name}? Remove this red flag and unlock the official <strong>Green Verified Badge (✓ Verified Professional)</strong> for <strong>Rs. 50 only</strong>.
+                  Are you {pro.name}? Remove this red flag and unlock the official <strong>Green Verified Badge (✓ Verified Professional)</strong> for <strong>Rs. 99 only</strong>.
                 </p>
               </div>
             </div>
@@ -295,7 +295,7 @@ export default async function ProfessionalDetailPage(props: { params: Promise<{ 
               className="w-full sm:w-auto px-5 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer hover:scale-[1.02]"
             >
               <ShieldCheck className="w-4 h-4" />
-              <span>Pay for Verification (Rs. 50)</span>
+              <span>Pay for Verification (Rs. 99)</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

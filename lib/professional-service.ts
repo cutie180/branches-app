@@ -369,7 +369,7 @@ export async function saveProfessionalToDatabase(proData: Partial<ProfessionalIt
     about: sanitizeText(proData.about || proData.bio || '', 5000),
     skills: Array.isArray(proData.skills) ? proData.skills.map(s => sanitizeText(s, 50)) : [sanitizeText(profession, 50)],
     experienceYears: Number(proData.experienceYears) || 0,
-    verified: false, // Verification is separate and costs Rs. 50
+    verified: false, // Verification is separate and costs Rs. 99
     isFeatured: false,
     status: 'approved', // Auto-approved upon creation so public profile is immediately live
     profileStatus: 'APPROVED',
@@ -597,7 +597,7 @@ export async function getVerificationRequests(): Promise<ProfessionalVerificatio
 }
 
 /**
- * User submits verification payment request with Rs. 50 screenshot and transaction ref
+ * User submits verification payment request with Rs. 99 screenshot and transaction ref
  */
 export async function submitVerificationRequest(
   idOrUsername: string,
