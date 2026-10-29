@@ -954,7 +954,7 @@ export default function AdminPage() {
                 <div>
                   <h2 className="text-xl font-extrabold text-slate-900">Pending Business Submissions</h2>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Review user-submitted business listings, locations, and PKR 50 payment screenshots.
+                    Review user-submitted business listings, locations, and PKR 99 payment screenshots.
                   </p>
                 </div>
                 <span className="text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full">
@@ -1070,7 +1070,7 @@ export default function AdminPage() {
                               <div className="flex items-center justify-between text-xs">
                                 <span className="font-bold text-blue-950 flex items-center gap-1.5">
                                   <ShieldCheck className="w-4 h-4 text-blue-600" />
-                                  <span>Rs. 50 Fee Transfer ({paymentMethod})</span>
+                                  <span>Rs. 99 Fee Transfer ({paymentMethod})</span>
                                 </span>
                                 {refNumber && (
                                   <span className="font-mono text-[11px] font-bold text-blue-800 bg-white px-2 py-0.5 rounded border border-blue-200">
@@ -1088,7 +1088,7 @@ export default function AdminPage() {
                                 className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold rounded-xl shadow-xs flex items-center justify-center gap-1.5 cursor-pointer transition-all"
                               >
                                 <Eye className="w-4 h-4" />
-                                <span>See PKR 50 Payment Screenshot Proof</span>
+                                <span>See PKR 99 Payment Screenshot Proof</span>
                               </button>
                             </div>
                           ) : (
@@ -2326,7 +2326,7 @@ export default function AdminPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
                   <div className="flex items-center gap-1.5">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                    <span>Confirm Rs. 50 transfer amount</span>
+                    <span>Confirm Rs. 99 transfer amount</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
@@ -2484,13 +2484,13 @@ export default function AdminPage() {
 
                 {selectedBiz.paymentScreenshot && (
                   <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-between">
-                    <span className="font-bold text-blue-900">PKR 50 Listing Payment Proof Attached:</span>
+                    <span className="font-bold text-blue-900">PKR 99 Listing Payment Proof Attached:</span>
                     <button
                       type="button"
                       onClick={() => setSelectedScreenshot({
                         url: selectedBiz.paymentScreenshot!,
                         name: selectedBiz.name,
-                        ref: selectedBiz.paymentDetails?.referenceNumber || 'Listing Fee PKR 50'
+                        ref: selectedBiz.paymentDetails?.referenceNumber || 'Listing Fee PKR 99'
                       })}
                       className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer"
                     >
@@ -2606,7 +2606,7 @@ export default function AdminPage() {
                 </label>
                 <div className="flex flex-wrap gap-1.5">
                   {[
-                    'Invalid or unreadable PKR 50 payment receipt screenshot.',
+                    'Invalid or unreadable PKR 99 payment receipt screenshot.',
                     'Does not satisfy business verification requirements.',
                     'Incomplete or invalid contact information (phone, address).',
                     'Duplicate business listing already present on directory.',

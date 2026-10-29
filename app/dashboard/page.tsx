@@ -27,13 +27,13 @@ const PAYMENT_ACCOUNTS = {
     name: 'Easypaisa',
     accountNumber: '03105694507',
     accountTitle: 'Mutahira Nisa',
-    amount: 50
+    amount: 99
   },
   mashreq: {
     name: 'Mashreq Bank',
     accountNumber: '089200179683',
     accountTitle: 'Muhammad Imran',
-    amount: 50
+    amount: 99
   }
 }
 
@@ -384,7 +384,7 @@ function DashboardContent() {
         paymentMethod: account.name,
         referenceNumber: paymentRefNumber.trim() || 'N/A',
         paymentScreenshot: paymentScreenshotBase64,
-        amount: 50
+        amount: 99
       })
 
       if (!success) throw new Error('Update returned false')
@@ -898,8 +898,8 @@ function DashboardContent() {
                           </div>
                           <p className="text-[11px] text-amber-800 leading-relaxed">
                             {hasPaymentProof 
-                              ? 'Your PKR 50 payment proof has been attached. Our compliance team is verifying your details to publish your listing.'
-                              : 'Please upload your PKR 50 verification payment screenshot so your business moves to the top of the admin approval queue.'
+                              ? 'Your PKR 99 payment proof has been attached. Our compliance team is verifying your details to publish your listing.'
+                              : 'Please upload your PKR 99 verification payment screenshot so your business moves to the top of the admin approval queue.'
                             }
                           </p>
                         </div>
@@ -975,7 +975,7 @@ function DashboardContent() {
                           }`}
                         >
                           <Upload className="w-3.5 h-3.5" />
-                          <span>{hasPaymentProof ? 'Update Payment Proof' : 'Request Approval (Rs. 50)'}</span>
+                          <span>{hasPaymentProof ? 'Update Payment Proof' : 'Request Approval (Rs. 99)'}</span>
                         </button>
                       )}
                     </div>
@@ -998,7 +998,7 @@ function DashboardContent() {
                   Approval Request &amp; Fee
                 </span>
                 <h3 className="text-xl font-extrabold text-slate-900 mt-1">
-                  Request Fast Approval: PKR 50
+                  Request Fast Approval: PKR 99
                 </h3>
                 <p className="text-xs text-slate-500">
                   Business: <strong>{activePaymentBiz.name}</strong>
@@ -1027,7 +1027,7 @@ function DashboardContent() {
                 >
                   <div className="flex justify-between font-extrabold text-xs text-emerald-800 mb-1">
                     <span>Easypaisa</span>
-                    <span>Rs. 50</span>
+                    <span>Rs. 99</span>
                   </div>
                   <div className="text-[11px] text-slate-700 space-y-0.5">
                     <button
@@ -1052,7 +1052,7 @@ function DashboardContent() {
                 >
                   <div className="flex justify-between font-extrabold text-xs text-blue-800 mb-1">
                     <span>Mashreq Bank</span>
-                    <span>Rs. 50</span>
+                    <span>Rs. 99</span>
                   </div>
                   <div className="text-[11px] text-slate-700 space-y-0.5">
                     <button

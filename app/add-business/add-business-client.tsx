@@ -30,13 +30,13 @@ const PAYMENT_ACCOUNTS = {
     name: 'Easypaisa',
     accountNumber: '03105694507',
     accountTitle: 'Mutahira Nisa',
-    amount: 50
+    amount: 99
   },
   mashreq: {
     name: 'Mashreq Bank',
     accountNumber: '089200179683',
     accountTitle: 'Muhammad Imran',
-    amount: 50
+    amount: 99
   }
 }
 
@@ -57,19 +57,19 @@ const SUB_CATEGORIES: Record<string, string[]> = {
 
 const FAQS = [
   {
-    q: 'What is the PKR 50 standard listing fee for?',
-    a: 'The nominal PKR 50 fee covers secure cloud database hosting, multi-location storage, manual anti-spam verification by our compliance officers, and automated Google search indexing submission.'
+    q: 'What is the PKR 99 standard listing fee for?',
+    a: 'The nominal PKR 99 fee covers secure cloud database hosting, multi-location storage, manual anti-spam verification by our compliance officers, and automated Google search indexing submission.'
   },
   {
-    q: 'How can I pay the PKR 50 listing fee?',
-    a: 'You can easily transfer Rs. 50 via Easypaisa (03105694507 - Mutahira Nisa) or Mashreq Bank (089200179683 - Muhammad Imran) and upload a payment screenshot directly in this portal.'
+    q: 'How can I pay the PKR 99 listing fee?',
+    a: 'You can easily transfer Rs. 99 via Easypaisa (03105694507 - Mutahira Nisa) or Mashreq Bank (089200179683 - Muhammad Imran) and upload a payment screenshot directly in this portal.'
   },
   {
     q: 'How long does it take for my business to be approved after payment?',
     a: 'Once your payment proof is uploaded, our administrative team verifies and approves your listing within 1 to 2 hours. Once approved, your business profile goes live immediately on ListPak and is queued for Google indexing.'
   },
   {
-    q: 'What happens if I do not pay the PKR 50 fee?',
+    q: 'What happens if I do not pay the PKR 99 fee?',
     a: 'Unpaid draft listings that remain without payment verification will be automatically cleaned up and removed from your dashboard after 7 days.'
   },
   {
@@ -571,7 +571,7 @@ export default function AddBusinessClient() {
     window.scrollTo({ top: 400, behavior: 'smooth' })
   }
 
-  // Handle Form Submission: Saves Business Draft and Opens PKR 50 Payment Screen
+  // Handle Form Submission: Saves Business Draft and Opens PKR 99 Payment Screen
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!validateStep(3)) {
@@ -647,7 +647,7 @@ export default function AddBusinessClient() {
         fetchUserBusinesses(targetEmail || resolvedUserId)
       }
 
-      toast.success('Listing registered! Please upload PKR 50 payment proof to complete verification.')
+      toast.success('Listing registered! Please upload PKR 99 payment proof to complete verification.')
       window.scrollTo({ top: 200, behavior: 'smooth' })
     } catch (err) {
       console.error(err)
@@ -804,7 +804,7 @@ export default function AddBusinessClient() {
         paymentMethod: selectedAccount.name,
         referenceNumber: paymentRefNumber.trim() || 'N/A',
         paymentScreenshot: paymentScreenshotBase64,
-        amount: 50
+        amount: 99
       })
 
       if (!success) {
@@ -885,7 +885,7 @@ export default function AddBusinessClient() {
 
           <div className="pt-2 flex items-center justify-center gap-6 text-xs text-slate-600 font-semibold flex-wrap">
             <span className="flex items-center gap-1.5 text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 font-bold">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Listing Verification: Rs. 50 Only
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Listing Verification: Rs. 99 Only
             </span>
             <span className="flex items-center gap-1.5 text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-200 font-bold">
               <Clock className="w-4 h-4 text-blue-600" /> Fast 1-2 Hour Approval
@@ -1193,7 +1193,7 @@ export default function AddBusinessClient() {
                   <div>
                     <h2 className="text-xl font-extrabold text-slate-900">Your Submitted Listings & Status</h2>
                     <p className="text-xs text-slate-600 mt-1">
-                      Track your business submissions. Once PKR 50 payment is verified, your listing is approved by our team within 1–2 hours and goes live immediately.
+                      Track your business submissions. Once PKR 99 payment is verified, your listing is approved by our team within 1–2 hours and goes live immediately.
                     </p>
                   </div>
 
@@ -1371,7 +1371,7 @@ export default function AddBusinessClient() {
                               ) : (
                                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-[11px] font-extrabold animate-pulse">
                                   <AlertTriangle className="w-3.5 h-3.5 text-amber-700" />
-                                  <span>Awaiting Rs. 50 Fee</span>
+                                  <span>Awaiting Rs. 99 Fee</span>
                                 </span>
                               )}
                             </div>
@@ -1387,7 +1387,7 @@ export default function AddBusinessClient() {
                                 <div className="flex items-start justify-between gap-1">
                                   <div className="flex items-center gap-1.5 font-bold text-amber-900">
                                     <Zap className="w-4 h-4 text-amber-600 shrink-0" />
-                                    <span>Approval Pending (Rs. 50 Listing Fee)</span>
+                                    <span>Approval Pending (Rs. 99 Listing Fee)</span>
                                   </div>
                                   <button
                                     type="button"
@@ -1399,7 +1399,7 @@ export default function AddBusinessClient() {
                                   </button>
                                 </div>
                                 <p className="text-[11px] text-amber-800 leading-relaxed">
-                                  Submit your PKR 50 payment transfer screenshot to put your listing at the top of the admin approval queue.
+                                  Submit your PKR 99 payment transfer screenshot to put your listing at the top of the admin approval queue.
                                 </p>
                                 <button
                                   type="button"
@@ -1496,7 +1496,7 @@ export default function AddBusinessClient() {
             ) : (
               /* TAB CONTENT: ADD BUSINESS WIZARD, PAYMENT SCREEN, OR SUCCESS CONFIRMATION */
               <div>
-                {/* 1. PKR 50 PAYMENT SCREEN (OPENS DIRECTLY AFTER STEP 4 OR FROM DASHBOARD) */}
+                {/* 1. PKR 99 PAYMENT SCREEN (OPENS DIRECTLY AFTER STEP 4 OR FROM DASHBOARD) */}
                 {activePaymentBiz ? (
                   <div className="max-w-2xl mx-auto bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xl space-y-6 animate-in zoom-in-95">
                     <div className="flex justify-between items-start border-b border-slate-100 pb-4">
@@ -1505,7 +1505,7 @@ export default function AddBusinessClient() {
                           Step 5: Request Approval &amp; Payment Proof
                         </span>
                         <h2 className="text-2xl font-extrabold text-slate-900 mt-2">
-                          Request Approval: PKR 50 Listing Fee
+                          Request Approval: PKR 99 Listing Fee
                         </h2>
                         <p className="text-xs text-slate-500 mt-0.5">
                           Listing: <strong className="text-slate-900">{activePaymentBiz.name}</strong> • Submitting proof places your listing at the top of the admin approval queue.
@@ -1540,7 +1540,7 @@ export default function AddBusinessClient() {
                               <Zap className="w-4 h-4 text-emerald-600" />
                               Easypaisa
                             </span>
-                            <span className="text-xs font-bold text-slate-900">Rs. 50</span>
+                            <span className="text-xs font-bold text-slate-900">Rs. 99</span>
                           </div>
                           <div className="space-y-1 text-xs">
                             <div className="flex justify-between items-center text-slate-700">
@@ -1575,7 +1575,7 @@ export default function AddBusinessClient() {
                               <Building2 className="w-4 h-4 text-blue-600" />
                               Mashreq Bank
                             </span>
-                            <span className="text-xs font-bold text-slate-900">Rs. 50</span>
+                            <span className="text-xs font-bold text-slate-900">Rs. 99</span>
                           </div>
                           <div className="space-y-1 text-xs">
                             <div className="flex justify-between items-center text-slate-700">
@@ -1624,7 +1624,7 @@ export default function AddBusinessClient() {
                       </div>
                       <div className="flex justify-between items-center text-emerald-800 font-extrabold">
                         <span>Total Payable Amount:</span>
-                        <span className="text-sm">PKR 50 Only</span>
+                        <span className="text-sm">PKR 99 Only</span>
                       </div>
                     </div>
 
@@ -1728,7 +1728,7 @@ export default function AddBusinessClient() {
                       </h2>
 
                       <p className="text-sm text-slate-700 max-w-xl mx-auto leading-relaxed font-medium">
-                        Your listing for <strong className="text-slate-900 text-base">{submittedBizName || formData.businessName}</strong> and PKR 50 payment proof have been received and registered under your account.
+                        Your listing for <strong className="text-slate-900 text-base">{submittedBizName || formData.businessName}</strong> and PKR 99 payment proof have been received and registered under your account.
                       </p>
 
                       <div className="p-5 bg-gradient-to-br from-blue-50 to-indigo-50/50 rounded-2xl border border-blue-200 text-left max-w-xl mx-auto space-y-2.5 text-xs text-slate-700">
@@ -2372,7 +2372,7 @@ export default function AddBusinessClient() {
                             <div className="flex items-start gap-2.5">
                               <Zap className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
                               <div>
-                                <strong>Standard Verification Fee: Rs. 50 Only</strong>
+                                <strong>Standard Verification Fee: Rs. 99 Only</strong>
                                 <p className="text-[11px] text-emerald-800 mt-0.5">
                                   Pay via Easypaisa or Mashreq Bank in the next step to complete 1–2 hour verification.
                                 </p>
@@ -2420,7 +2420,7 @@ export default function AddBusinessClient() {
                             className="px-8 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-extrabold text-sm rounded-xl shadow-xl shadow-emerald-500/20 transition-all inline-flex items-center gap-2 cursor-pointer"
                           >
                             <CheckCircle2 className="w-5 h-5" />
-                            <span>{isSubmitting ? 'Registering...' : 'Submit & Proceed to Payment (PKR 50)'}</span>
+                            <span>{isSubmitting ? 'Registering...' : 'Submit & Proceed to Payment (PKR 99)'}</span>
                           </button>
                         )}
                       </div>
@@ -2546,7 +2546,7 @@ export default function AddBusinessClient() {
                     <Info className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-extrabold text-slate-900">Why Pay the PKR 50 Listing Fee?</h3>
+                    <h3 className="text-lg font-extrabold text-slate-900">Why Pay the PKR 99 Listing Fee?</h3>
                     <p className="text-xs text-slate-500">Transparent & Secure Ecosystem Operations</p>
                   </div>
                 </div>
@@ -2566,7 +2566,7 @@ export default function AddBusinessClient() {
                     <span>Dedicated Cloud Database & Platform Hosting</span>
                   </h4>
                   <p className="text-[11px] leading-relaxed">
-                    This modest nominal fee of <strong>PKR 50</strong> directly supports our enterprise-grade cloud database infrastructure, maintaining fast uptime, high-speed multi-city searches, and data storage for your business profile.
+                    This modest nominal fee of <strong>PKR 99</strong> directly supports our enterprise-grade cloud database infrastructure, maintaining fast uptime, high-speed multi-city searches, and data storage for your business profile.
                   </p>
                 </div>
 
@@ -2586,7 +2586,7 @@ export default function AddBusinessClient() {
                     <span>7-Day Inactive Clean-Up Policy</span>
                   </h4>
                   <p className="text-[11px] leading-relaxed">
-                    Please note: Unverified draft listings that remain without PKR 50 payment proof will be automatically cleaned up and removed from your dashboard after <strong>7 days</strong> from submission.
+                    Please note: Unverified draft listings that remain without PKR 99 payment proof will be automatically cleaned up and removed from your dashboard after <strong>7 days</strong> from submission.
                   </p>
                 </div>
               </div>
@@ -2728,9 +2728,9 @@ export default function AddBusinessClient() {
               <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold">
                 <Award className="w-5 h-5" />
               </div>
-              <h3 className="font-bold text-slate-900 text-base">Nominal PKR 50 Fee</h3>
+              <h3 className="font-bold text-slate-900 text-base">Nominal PKR 99 Fee</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Zero commission per lead and zero monthly subscriptions. One nominal Rs. 50 fee for permanent database hosting.
+                Zero commission per lead and zero monthly subscriptions. One nominal Rs. 99 fee for permanent database hosting.
               </p>
             </div>
 
