@@ -203,7 +203,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     (b.status || 'approved') === 'approved' && 
     Boolean(b.slug && b.slug.trim())
   )
-  const businessRoutes = approvedBusinesses.map((biz) => ({
+  // Slugs permanently redirected to a canonical twin (next.config.mjs) must
+  // not be advertised in the sitemap
+  const CONSOLIDATED_BUSINESS_SLUGS = new Set([
+    'rs-25000-premium-prize-bond-draw-schedule-overview-islamabad',
+    'ramzan-relief-package-eligibility-cnic-portal-services-islamabad',
+    'sngpl-online-bill-check-14-digit-account-id-lahore',
+  ])
+  const businessRoutes = approvedBusinesses
+    .filter((biz) => !CONSOLIDATED_BUSINESS_SLUGS.has(biz.slug))
+    .map((biz) => ({
     url: canonicalUrl(`/business/${biz.slug}`),
     lastModified: honestLastmod(biz.approvedAt || biz.submittedAt),
     changeFrequency: 'weekly' as const,

@@ -171,6 +171,38 @@ const nextConfig = {
         destination: '/business/meezan-bank-limited/',
         permanent: true,
       },
+      // AdSense review 2026-11-01: same-topic duplicate info listings (measured
+      // high content overlap, shared operator phone) consolidated onto one page
+      {
+        source: '/business/rs-25000-premium-prize-bond-draw-schedule-overview-islamabad',
+        destination: '/business/rs-25000-prize-bond-draw-schedule/',
+        permanent: true,
+      },
+      {
+        source: '/business/rs-25000-premium-prize-bond-draw-schedule-overview-islamabad/',
+        destination: '/business/rs-25000-prize-bond-draw-schedule/',
+        permanent: true,
+      },
+      {
+        source: '/business/ramzan-relief-package-eligibility-cnic-portal-services-islamabad',
+        destination: '/business/pm-ramzan-relief-package-cnic-eligibility-portal/',
+        permanent: true,
+      },
+      {
+        source: '/business/ramzan-relief-package-eligibility-cnic-portal-services-islamabad/',
+        destination: '/business/pm-ramzan-relief-package-cnic-eligibility-portal/',
+        permanent: true,
+      },
+      {
+        source: '/business/sngpl-online-bill-check-14-digit-account-id-lahore',
+        destination: '/business/sngpl-online-bill-check-14-digit/',
+        permanent: true,
+      },
+      {
+        source: '/business/sngpl-online-bill-check-14-digit-account-id-lahore/',
+        destination: '/business/sngpl-online-bill-check-14-digit/',
+        permanent: true,
+      },
       {
         source: '/professionals/monis-rahman-founder-chairman-rozee',
         destination: '/professionals/monis-rahman-lahore/',
