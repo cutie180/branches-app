@@ -35,19 +35,25 @@ export async function generateMetadata(props: { params: Promise<{ username: stri
   const profession = pro?.profession || pro?.title || 'Professional'
   const city = pro?.city || 'Pakistan'
   const title = fitTitle([
+    `${name} – ${profession} in ${city}, Pakistan | ListPak`,
+    `${name} – ${profession} in ${city} | ListPak Profile`,
     `${name} – ${profession} in ${city} | ListPak`,
     `${name} – ${profession} in ${city}`,
+    `${name} in ${city} | ListPak Professional Profile`,
     `${name} in ${city} | ListPak`,
     `${name} | ListPak`,
     name,
   ])
   const bioPart = pro?.bio ? excerpt(pro.bio, 85) : ''
-  const description = clampMeta(
+  let description = clampMeta(
     pro
       ? `${bioPart}${bioPart ? ' ' : ''}Review credentials, experience and contact details for ${name} on ListPak.`
       : `View the profile, skills, credentials, and contact details for ${name} on the ListPak professional directory.`,
     158
   )
+  if (description.length < 120) {
+    description = clampMeta(`${description} Find verified professionals and service providers across Pakistan on ListPak.`, 158)
+  }
   const canonicalUrl = toCanonicalUrl(`professionals/${username}`)
 
   return {

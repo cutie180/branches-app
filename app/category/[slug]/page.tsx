@@ -44,6 +44,7 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
     ? clampMeta(categorySeo.title, 65)
     : fitTitle([
         `${cat.name} in Pakistan — Businesses & Services | ListPak`,
+        `${cat.name} Businesses in Pakistan | ListPak`,
         `${cat.name} in Pakistan | ListPak`,
         `${cat.name} | ListPak`,
       ])

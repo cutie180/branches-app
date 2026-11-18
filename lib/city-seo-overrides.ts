@@ -14,7 +14,7 @@ export const CITY_SEO_OVERRIDES: Record<string, CitySeoOverride> = {
   lahore: {
     title: 'Businesses in Lahore – 60+ Verified Local Listings | ListPak',
     description:
-      'Browse 60+ verified businesses in Lahore — restaurants, software houses, services & more. Find contact numbers, addresses & reviews, or list your business free.',
+      'Browse 60+ businesses in Lahore — restaurants, software houses, services & more. Contact numbers, addresses & reviews, or list your business free.',
     intro:
       "Lahore is Pakistan's commercial and cultural capital, home to one of the country's densest business ecosystems — from Food Street restaurants and Township hardware markets to Gulberg software houses and Johar Town clinics. This directory lists verified Lahore businesses across restaurants & food, technology & IT, healthcare, real estate, retail, construction and more, with contact numbers, addresses and operating hours for each listing. Business owners can add their Lahore listing free and get a Google-indexed profile.",
     faqs: [
@@ -39,7 +39,7 @@ export const CITY_SEO_OVERRIDES: Record<string, CitySeoOverride> = {
   islamabad: {
     title: 'Businesses in Islamabad – 55+ Verified Local Listings | ListPak',
     description:
-      'Browse 55+ verified businesses in Islamabad — tech companies, restaurants, services & more. Contact numbers, addresses & reviews, or list your business free.',
+      'Browse 55+ businesses in Islamabad — tech companies, restaurants, services & more. Contact numbers, addresses & reviews, or list your business free.',
     intro:
       "Islamabad's planned sectors host Pakistan's highest concentration of tech companies, consultancies and government-adjacent services, alongside a growing restaurant and retail scene in F-6, F-7, Blue Area and G-9 Markaz. This directory lists verified Islamabad businesses across technology & IT, restaurants & food, healthcare, professional services and more, with contact numbers, addresses and operating hours. Business owners can add their Islamabad listing free.",
     faqs: [

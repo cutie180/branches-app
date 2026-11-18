@@ -6,7 +6,7 @@ import React from 'react'
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | ListPak Pakistan Business Directory',
-  description: 'Read the ListPak privacy policy. Learn how we collect, store, and protect your data, including Google AdSense advertising cookie disclosures and GDPR compliance.',
+  description: 'Read the ListPak privacy policy. Learn how we collect, store, and protect your data, including Google AdSense cookie disclosures and GDPR compliance.',
   alternates: {
     canonical: 'https://www.listpak.com/privacy/',
   },

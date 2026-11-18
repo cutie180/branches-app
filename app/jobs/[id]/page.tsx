@@ -53,6 +53,7 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
     ? fitTitle([
         `${job.title} at ${job.company} in ${job.city} | ListPak Jobs`,
         `${job.title} at ${job.company} | ListPak Jobs`,
+        `${job.title} in ${job.city}, Pakistan | ListPak Jobs`,
         `${job.title} in ${job.city} | ListPak Jobs`,
         `${job.title} | ListPak Jobs`,
         job.title,
@@ -63,6 +64,9 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
     : 'Review current job opportunities in Pakistan on the ListPak jobs directory.'
   if (job && description.length < 120) {
     description = clampMeta(`${description} This is a ${job.type || 'Full-time'} position based in ${job.city || 'Pakistan'}.`, 160)
+  }
+  if (job && description.length < 120) {
+    description = clampMeta(`${description} Find more jobs across Pakistan on ListPak.`, 160)
   }
 
   return {

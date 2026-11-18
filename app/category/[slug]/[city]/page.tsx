@@ -1,6 +1,6 @@
 import React from 'react'
 import { excerpt } from '@/lib/utils'
-import { clampMeta } from '@/lib/utils'
+import { clampMeta, fitTitle } from '@/lib/utils'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -67,7 +67,13 @@ export async function generateMetadata(props: {
   const categoryName = getCategoryDisplayName(catSlug)
   const cityName = getCityDisplayName(citySlug)
 
-  const title = `${categoryName} in ${cityName}, Pakistan | ListPak`
+  const title = fitTitle([
+    `${categoryName} in ${cityName}, Pakistan — Businesses & Services | ListPak`,
+    `${categoryName} Services in ${cityName}, Pakistan | ListPak`,
+    `${categoryName} in ${cityName}, Pakistan | ListPak`,
+    `${categoryName} in ${cityName} | ListPak`,
+    categoryName,
+  ])
   const description = `Find ${categoryName.toLowerCase()} in ${cityName}, Pakistan. Browse local listings, contact details and useful business information on ListPak.`
   const canonicalUrl = toCanonicalUrl(`category/${catSlug}/${citySlug}`)
 

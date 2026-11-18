@@ -48,6 +48,8 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
   const title = rawTitle
     ? clampMeta(rawTitle, 65)
     : fitTitle([
+        biz?.category && biz?.city ? `${businessName} – ${biz.category} in ${biz.city}, Pakistan | ListPak` : '',
+        biz?.category && biz?.city ? `${businessName} – ${biz.category} Services in ${biz.city} | ListPak` : '',
         biz?.category && biz?.city ? `${businessName} – ${biz.category} in ${biz.city} | ListPak` : '',
         biz?.category && biz?.city ? `${businessName} – ${biz.category} in ${biz.city}` : '',
         biz?.city ? `${businessName} in ${biz.city} | ListPak` : '',
@@ -61,14 +63,14 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
   const realAddress = biz?.address?.trim() || null
   // Keep only a short form of the address: multi-location businesses store every
   // branch address in one field, which previously produced 800+ char descriptions.
-  const shortAddress = realAddress ? excerpt(realAddress, 60) : null
+  const shortAddress = realAddress ? excerpt(realAddress, 45) : null
   const autoDescription = biz
     ? `${biz.name}${realPhone ? ` – Call ${realPhone}` : ''}${biz.category ? `, ${biz.category}` : ''}${biz.city ? ` in ${biz.city}` : ''}, Pakistan.${shortAddress ? ` ${shortAddress}.` : ''} Find phone number, location, operating hours and services on ListPak.`
     : `View business details, phone number, location, and contact information for ${businessName} on the ListPak business directory.`
   const rawDescription = override?.description || biz?.seoDescription || biz?.metaDescription || autoDescription
-  let description = clampMeta(rawDescription, 160)
+  let description = clampMeta(rawDescription, 152)
   if (!override?.description && description.length < 120) {
-    description = clampMeta(`${description} Get contact details, services and directions on ListPak.`, 160)
+    description = clampMeta(`${description} Get contact details, services and directions on ListPak.`, 152)
   }
   const canonicalUrl = toCanonicalUrl(`business/${slug}`)
 

@@ -86,7 +86,7 @@ export function getRealReviews(
 
 export const BUSINESS_SEO_OVERRIDES: Record<string, BusinessSeoOverride> = {
   'rahber-travels': {
-    title: 'Rahber Travels Lahore – Contact Number, Adda Address & Timings | ListPak',
+    title: 'Rahber Travels Lahore – Contact Number & Timings | ListPak',
     description:
       'Rahber Travels contact number: 0307-5553045. Rehbar Adda on Band Road, Lahore — timings (open daily 10 AM–9 PM), routes & ticket info.',
     phone: '0307-5553045',
@@ -118,7 +118,7 @@ export const BUSINESS_SEO_OVERRIDES: Record<string, BusinessSeoOverride> = {
   },
 
   'nayatel': {
-    title: 'Nayatel Helpline Number & Contact Details – Islamabad | ListPak',
+    title: 'Nayatel Helpline & Contact Details – Islamabad | ListPak',
     description:
       'Nayatel helpline: 1441 (24/7). SMS: 8116, WhatsApp: +92 51 111 11 44 44. Internet packages, coverage areas & Nayatel office details in Islamabad.',
     phone: '1441',
@@ -150,7 +150,7 @@ export const BUSINESS_SEO_OVERRIDES: Record<string, BusinessSeoOverride> = {
   },
 
   'orange-line-metro-station-timing-and-routes': {
-    title: 'Orange Line Metro Lahore – Timings, 26 Stations & Route | ListPak',
+    title: 'Orange Line Lahore – Timings, 26 Stations & Route | ListPak',
     description:
       'Orange Line Metro Lahore: 26 stations from Dera Gujran to Ali Town across 27.1 km. Train timings, station list, route & helpline (042) 111-222-627.',
     phone: '(042) 111-222-627',
@@ -230,7 +230,7 @@ export const BUSINESS_SEO_OVERRIDES: Record<string, BusinessSeoOverride> = {
   },
 
   'allure-beauty': {
-    title: 'Allure Beauty Karachi – Contact Number & Online Beauty Store | ListPak',
+    title: 'Allure Beauty Karachi – Contact & Beauty Store | ListPak',
     description:
       'Allure Beauty contact: +92 300 0725776. Karachi-based online store for authentic makeup, skincare & perfumes. Delivery across Pakistan.',
     phone: '+92 300 0725776',

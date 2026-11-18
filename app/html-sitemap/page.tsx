@@ -11,7 +11,7 @@ import { MapPin, Sparkles, FileText, Briefcase, Building2, Store, BookOpen, Cloc
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'HTML Sitemap | ListPak Directory Structure',
+  title: 'HTML Sitemap | ListPak Business Directory Structure',
   description: 'Complete directory index of all verified business listings, industry categories, major cities, job portals, blogs, and legal pages on ListPak.',
   alternates: {
     canonical: 'https://www.listpak.com/html-sitemap/',

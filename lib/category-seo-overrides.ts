@@ -64,7 +64,7 @@ export const CATEGORY_SEO_OVERRIDES: Record<string, CategorySeoOverride> = {
   technology: {
     title: 'IT Companies & Software Houses in Pakistan | ListPak',
     description:
-      'IT companies and software houses in Pakistan — Lahore, Islamabad, Karachi. Services, contact numbers & profiles. Compare and hire, or list your company free.',
+      'IT companies and software houses in Pakistan — Lahore, Islamabad, Karachi. Services, contact numbers & profiles. Compare and hire, or list yours free.',
     intro:
       "Pakistan's IT industry is concentrated in Lahore, Islamabad and Karachi, home to software houses, startups and outsourcing firms serving global clients. Browse verified technology company profiles with services and contact details.",
     faqs: [

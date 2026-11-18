@@ -4,7 +4,7 @@ import Footer from '@/components/footer'
 import { HelpCircle, ChevronDown } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Frequently Asked Questions (FAQs) | ListPak',
+  title: 'Frequently Asked Questions (FAQs) | ListPak Directory',
   description: 'Find answers to common questions about listing your business, verifying NTN credentials, posting jobs, and searching companies on ListPak.',
   alternates: {
     canonical: 'https://www.listpak.com/faqs/',
